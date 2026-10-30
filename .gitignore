@@ -1,0 +1,14 @@
+# Godot 4.x
+.godot/
+*.translation
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS & Temp
+.DS_Store
+*.tmp
+Thumbs.db

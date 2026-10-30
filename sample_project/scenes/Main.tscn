@@ -1,0 +1,341 @@
+[gd_scene load_steps=8 format=3 uid="uid://d3x1k5y7w2p0q"]
+
+[ext_resource type="Script" path="res://scripts/GameController.gd" id="1_game"]
+[ext_resource type="Script" path="res://scripts/MapGenerator.gd" id="2_map"]
+[ext_resource type="Script" path="res://scripts/MobileCamera.gd" id="3_cam"]
+[ext_resource type="Script" path="res://scripts/UIManager.gd" id="4_ui"]
+[ext_resource type="Script" path="res://scripts/EnemyAI.gd" id="5_ai"]
+[ext_resource type="Script" path="res://scripts/MenuRoot.gd" id="6_menu"]
+[ext_resource type="Script" path="res://scripts/Minimap.gd" id="7_minimap"]
+
+[node name="Main" type="Node2D"]
+script = ExtResource("1_game")
+
+[node name="MapGenerator" type="Node2D" parent="."]
+script = ExtResource("2_map")
+
+[node name="MobileCamera" type="Camera2D" parent="."]
+position = Vector2(270, 480)
+script = ExtResource("3_cam")
+
+[node name="EnemyAI" type="Node" parent="."]
+script = ExtResource("5_ai")
+
+[node name="UIManager" type="CanvasLayer" parent="."]
+script = ExtResource("4_ui")
+
+[node name="MenuRoot" type="Control" parent="UIManager"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("6_menu")
+
+[node name="Background" type="ColorRect" parent="UIManager/MenuRoot"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0.12, 0.14, 0.18, 0.98)
+
+[node name="ScrollContainer" type="ScrollContainer" parent="UIManager/MenuRoot"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 20.0
+offset_top = 24.0
+offset_right = -20.0
+offset_bottom = -24.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="UIManager/MenuRoot/ScrollContainer"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 12
+
+[node name="Title" type="Label" parent="UIManager/MenuRoot/ScrollContainer/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "⚔️ POCKET EMPIRES"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="UIManager/MenuRoot/ScrollContainer/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 14
+text = "Dikey Mobil RTS • 10 Medeniyet • Prosedürel Harita"
+horizontal_alignment = 1
+
+[node name="HSeparator" type="HSeparator" parent="UIManager/MenuRoot/ScrollContainer/VBox"]
+layout_mode = 2
+
+[node name="SelectedInfo" type="Label" parent="UIManager/MenuRoot/ScrollContainer/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.95, 0.85, 0.4, 1)
+theme_override_font_sizes/font_size = 13
+text = "Medeniyet Bilgisi..."
+autowrap_mode = 2
+
+[node name="CivHeader" type="Label" parent="UIManager/MenuRoot/ScrollContainer/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "👑 Medeniyetini Seç:"
+
+[node name="CivList" type="VBoxContainer" parent="UIManager/MenuRoot/ScrollContainer/VBox"]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="HSeparator2" type="HSeparator" parent="UIManager/MenuRoot/ScrollContainer/VBox"]
+layout_mode = 2
+
+[node name="MapLabel" type="Label" parent="UIManager/MenuRoot/ScrollContainer/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "🗺️ Harita Tipi:"
+
+[node name="MapOption" type="OptionButton" parent="UIManager/MenuRoot/ScrollContainer/VBox"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+
+[node name="EnemyLabel" type="Label" parent="UIManager/MenuRoot/ScrollContainer/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 15
+text = "🎯 Düşman Medeniyeti:"
+
+[node name="EnemyCivOption" type="OptionButton" parent="UIManager/MenuRoot/ScrollContainer/VBox"]
+custom_minimum_size = Vector2(0, 44)
+layout_mode = 2
+
+[node name="Spacer" type="Control" parent="UIManager/MenuRoot/ScrollContainer/VBox"]
+custom_minimum_size = Vector2(0, 16)
+layout_mode = 2
+
+[node name="StartButton" type="Button" parent="UIManager/MenuRoot/ScrollContainer/VBox"]
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 20
+text = "🚀 SEFERE BAŞLA"
+
+[node name="HUDRoot" type="Control" parent="UIManager"]
+visible = false
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="TopBar" type="PanelContainer" parent="UIManager/HUDRoot"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 54.0
+grow_horizontal = 2
+
+[node name="HBox" type="HBoxContainer" parent="UIManager/HUDRoot/TopBar"]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="CivLabel" type="Label" parent="UIManager/HUDRoot/TopBar/HBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 14
+text = "⚔️ Osmanlı"
+
+[node name="ResContainer" type="HBoxContainer" parent="UIManager/HUDRoot/TopBar/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 8
+alignment = 1
+
+[node name="FoodLabel" type="Label" parent="UIManager/HUDRoot/TopBar/HBox/ResContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.8, 0.3, 1)
+theme_override_font_sizes/font_size = 13
+text = "🌾 200"
+
+[node name="WoodLabel" type="Label" parent="UIManager/HUDRoot/TopBar/HBox/ResContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.5, 0.85, 0.5, 1)
+theme_override_font_sizes/font_size = 13
+text = "🪵 200"
+
+[node name="GoldLabel" type="Label" parent="UIManager/HUDRoot/TopBar/HBox/ResContainer"]
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.85, 0.2, 1)
+theme_override_font_sizes/font_size = 13
+text = "🪙 100"
+
+[node name="PopLabel" type="Label" parent="UIManager/HUDRoot/TopBar/HBox/ResContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "👥 3/10"
+
+[node name="IdleVillagerButton" type="Button" parent="UIManager/HUDRoot/TopBar/HBox"]
+visible = false
+layout_mode = 2
+theme_override_colors/font_color = Color(1, 0.8, 0.2, 1)
+theme_override_font_sizes/font_size = 12
+text = "⚠️ Boşta"
+
+[node name="SpeedButton" type="Button" parent="UIManager/HUDRoot/TopBar/HBox"]
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "▶️ 1x"
+
+[node name="Minimap" type="Control" parent="UIManager/HUDRoot"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -105.0
+offset_top = 62.0
+offset_right = -15.0
+offset_bottom = 197.0
+grow_horizontal = 0
+script = ExtResource("7_minimap")
+
+[node name="QuickButtons" type="HBoxContainer" parent="UIManager/HUDRoot"]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -250.0
+offset_top = -180.0
+offset_right = 250.0
+offset_bottom = -135.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/separation = 12
+alignment = 1
+
+[node name="ArmyButton" type="Button" parent="UIManager/HUDRoot/QuickButtons"]
+custom_minimum_size = Vector2(130, 42)
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "⚔️ Tüm Ordu"
+
+[node name="BaseButton" type="Button" parent="UIManager/HUDRoot/QuickButtons"]
+custom_minimum_size = Vector2(100, 42)
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "🏛️ Üs"
+
+[node name="BuildPanel" type="PanelContainer" parent="UIManager/HUDRoot"]
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -260.0
+offset_top = -265.0
+offset_right = 260.0
+offset_bottom = -130.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="VBox" type="VBoxContainer" parent="UIManager/HUDRoot/BuildPanel"]
+layout_mode = 2
+
+[node name="BuildTitle" type="Label" parent="UIManager/HUDRoot/BuildPanel/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 12
+text = "🔨 İnşaat Menüsü (Dokun ve Haritaya Yerleştir):"
+horizontal_alignment = 1
+
+[node name="BuildGrid" type="GridContainer" parent="UIManager/HUDRoot/BuildPanel/VBox"]
+layout_mode = 2
+size_flags_horizontal = 4
+columns = 4
+
+[node name="BottomDeck" type="PanelContainer" parent="UIManager/HUDRoot"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -125.0
+grow_horizontal = 2
+grow_vertical = 0
+
+[node name="HBox" type="HBoxContainer" parent="UIManager/HUDRoot/BottomDeck"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="SelectionInfo" type="VBoxContainer" parent="UIManager/HUDRoot/BottomDeck/HBox"]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+alignment = 1
+
+[node name="EntityNameLabel" type="Label" parent="UIManager/HUDRoot/BottomDeck/HBox/SelectionInfo"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 13
+text = "Seçilen Birim"
+
+[node name="HPBar" type="ProgressBar" parent="UIManager/HUDRoot/BottomDeck/HBox/SelectionInfo"]
+custom_minimum_size = Vector2(0, 10)
+layout_mode = 2
+show_percentage = false
+
+[node name="StatsLabel" type="Label" parent="UIManager/HUDRoot/BottomDeck/HBox/SelectionInfo"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.8, 0.8, 0.8, 1)
+theme_override_font_sizes/font_size = 11
+text = "⚔️ 10 | 🛡️ 2"
+
+[node name="ActionGrid" type="GridContainer" parent="UIManager/HUDRoot/BottomDeck/HBox"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+columns = 2
+
+[node name="GameOverModal" type="PanelContainer" parent="UIManager"]
+visible = false
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -190.0
+offset_top = -140.0
+offset_right = 190.0
+offset_bottom = 140.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="VBox" type="VBoxContainer" parent="UIManager/GameOverModal"]
+layout_mode = 2
+theme_override_constants/separation = 14
+alignment = 1
+
+[node name="TitleLabel" type="Label" parent="UIManager/GameOverModal/VBox"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 30
+text = "🏆 ZAFER!"
+horizontal_alignment = 1
+
+[node name="DescLabel" type="Label" parent="UIManager/GameOverModal/VBox"]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.9, 0.9, 0.9, 1)
+theme_override_font_sizes/font_size = 15
+text = "Süre: 03:45\nYok Edilen: 18"
+horizontal_alignment = 1
+
+[node name="RestartButton" type="Button" parent="UIManager/GameOverModal/VBox"]
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+text = "🔄 Tekrar Oyna"

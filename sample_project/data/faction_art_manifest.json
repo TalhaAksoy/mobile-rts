@@ -1,0 +1,816 @@
+{
+  "schema_version": 1,
+  "pack_name": "Pocket Empires HD-2D faction art (concept-derived)",
+  "quality": "preview_extractions_not_final_animation",
+  "target_engine": "Godot 4.x",
+  "unit_canvas_px": [
+    160,
+    160
+  ],
+  "special_canvas_px": [
+    192,
+    160
+  ],
+  "factions": [
+    {
+      "id": "ottomans",
+      "name_tr": "Osmanlılar",
+      "concept_sheet": "art/concept_sheets/ottomans.png",
+      "flag_reference": "art/flags/ottomans_reference.png",
+      "unit_ids": [
+        "villager",
+        "swordsman",
+        "spearman",
+        "archer",
+        "janissary"
+      ],
+      "units": {
+        "villager": {
+          "display_name_tr": "Köylü",
+          "display_name_en": "Villager",
+          "role": "villager",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/ottomans/villager/pose_01.png",
+            "pose_02": "art/units/ottomans/villager/pose_02.png",
+            "rear_reference": "art/units/ottomans/villager/rear_reference.png",
+            "action_reference": "art/units/ottomans/villager/action_reference.png"
+          }
+        },
+        "swordsman": {
+          "display_name_tr": "Kılıçlı Asker",
+          "display_name_en": "Swordsman",
+          "role": "swordsman",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/ottomans/swordsman/pose_01.png",
+            "pose_02": "art/units/ottomans/swordsman/pose_02.png",
+            "rear_reference": "art/units/ottomans/swordsman/rear_reference.png",
+            "action_reference": "art/units/ottomans/swordsman/action_reference.png"
+          }
+        },
+        "spearman": {
+          "display_name_tr": "Mızraklı Asker",
+          "display_name_en": "Spearman",
+          "role": "spearman",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/ottomans/spearman/pose_01.png",
+            "pose_02": "art/units/ottomans/spearman/pose_02.png",
+            "rear_reference": "art/units/ottomans/spearman/rear_reference.png",
+            "action_reference": "art/units/ottomans/spearman/action_reference.png"
+          }
+        },
+        "archer": {
+          "display_name_tr": "Okçu",
+          "display_name_en": "Archer",
+          "role": "archer",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/ottomans/archer/pose_01.png",
+            "pose_02": "art/units/ottomans/archer/pose_02.png",
+            "rear_reference": "art/units/ottomans/archer/rear_reference.png",
+            "action_reference": "art/units/ottomans/archer/action_reference.png"
+          }
+        },
+        "janissary": {
+          "display_name_tr": "Yeniçeri",
+          "display_name_en": "Janissary",
+          "role": "special",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/ottomans/janissary/pose_01.png",
+            "pose_02": "art/units/ottomans/janissary/pose_02.png",
+            "rear_reference": "art/units/ottomans/janissary/rear_reference.png",
+            "action_reference": "art/units/ottomans/janissary/action_reference.png"
+          }
+        }
+      }
+    },
+    {
+      "id": "byzantines",
+      "name_tr": "Bizanslılar",
+      "concept_sheet": "art/concept_sheets/byzantines.png",
+      "flag_reference": "art/flags/byzantines_reference.png",
+      "unit_ids": [
+        "villager",
+        "swordsman",
+        "spearman",
+        "archer",
+        "cataphract"
+      ],
+      "units": {
+        "villager": {
+          "display_name_tr": "Köylü",
+          "display_name_en": "Villager",
+          "role": "villager",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/byzantines/villager/pose_01.png",
+            "pose_02": "art/units/byzantines/villager/pose_02.png",
+            "rear_reference": "art/units/byzantines/villager/rear_reference.png",
+            "action_reference": "art/units/byzantines/villager/action_reference.png"
+          }
+        },
+        "swordsman": {
+          "display_name_tr": "Kılıçlı Asker",
+          "display_name_en": "Swordsman",
+          "role": "swordsman",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/byzantines/swordsman/pose_01.png",
+            "pose_02": "art/units/byzantines/swordsman/pose_02.png",
+            "rear_reference": "art/units/byzantines/swordsman/rear_reference.png",
+            "action_reference": "art/units/byzantines/swordsman/action_reference.png"
+          }
+        },
+        "spearman": {
+          "display_name_tr": "Mızraklı Asker",
+          "display_name_en": "Spearman",
+          "role": "spearman",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/byzantines/spearman/pose_01.png",
+            "pose_02": "art/units/byzantines/spearman/pose_02.png",
+            "rear_reference": "art/units/byzantines/spearman/rear_reference.png",
+            "action_reference": "art/units/byzantines/spearman/action_reference.png"
+          }
+        },
+        "archer": {
+          "display_name_tr": "Okçu",
+          "display_name_en": "Archer",
+          "role": "archer",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/byzantines/archer/pose_01.png",
+            "pose_02": "art/units/byzantines/archer/pose_02.png",
+            "rear_reference": "art/units/byzantines/archer/rear_reference.png",
+            "action_reference": "art/units/byzantines/archer/action_reference.png"
+          }
+        },
+        "cataphract": {
+          "display_name_tr": "Kataphrakt",
+          "display_name_en": "Cataphract",
+          "role": "special",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/byzantines/cataphract/pose_01.png",
+            "pose_02": "art/units/byzantines/cataphract/pose_02.png",
+            "rear_reference": "art/units/byzantines/cataphract/rear_reference.png",
+            "action_reference": "art/units/byzantines/cataphract/action_reference.png"
+          }
+        }
+      }
+    },
+    {
+      "id": "britons",
+      "name_tr": "Britanyalılar",
+      "concept_sheet": "art/concept_sheets/britons.png",
+      "flag_reference": "art/flags/britons_reference.png",
+      "unit_ids": [
+        "villager",
+        "swordsman",
+        "spearman",
+        "archer",
+        "longbowman"
+      ],
+      "units": {
+        "villager": {
+          "display_name_tr": "Köylü",
+          "display_name_en": "Villager",
+          "role": "villager",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/britons/villager/pose_01.png",
+            "pose_02": "art/units/britons/villager/pose_02.png",
+            "rear_reference": "art/units/britons/villager/rear_reference.png",
+            "action_reference": "art/units/britons/villager/action_reference.png"
+          }
+        },
+        "swordsman": {
+          "display_name_tr": "Kılıçlı Asker",
+          "display_name_en": "Swordsman",
+          "role": "swordsman",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/britons/swordsman/pose_01.png",
+            "pose_02": "art/units/britons/swordsman/pose_02.png",
+            "rear_reference": "art/units/britons/swordsman/rear_reference.png",
+            "action_reference": "art/units/britons/swordsman/action_reference.png"
+          }
+        },
+        "spearman": {
+          "display_name_tr": "Mızraklı Asker",
+          "display_name_en": "Spearman",
+          "role": "spearman",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/britons/spearman/pose_01.png",
+            "pose_02": "art/units/britons/spearman/pose_02.png",
+            "rear_reference": "art/units/britons/spearman/rear_reference.png",
+            "action_reference": "art/units/britons/spearman/action_reference.png"
+          }
+        },
+        "archer": {
+          "display_name_tr": "Okçu",
+          "display_name_en": "Archer",
+          "role": "archer",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/britons/archer/pose_01.png",
+            "pose_02": "art/units/britons/archer/pose_02.png",
+            "rear_reference": "art/units/britons/archer/rear_reference.png",
+            "action_reference": "art/units/britons/archer/action_reference.png"
+          }
+        },
+        "longbowman": {
+          "display_name_tr": "Uzun Yaycı",
+          "display_name_en": "Longbowman",
+          "role": "special",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/britons/longbowman/pose_01.png",
+            "pose_02": "art/units/britons/longbowman/pose_02.png",
+            "rear_reference": "art/units/britons/longbowman/rear_reference.png",
+            "action_reference": "art/units/britons/longbowman/action_reference.png"
+          }
+        }
+      }
+    },
+    {
+      "id": "franks",
+      "name_tr": "Franklar",
+      "concept_sheet": "art/concept_sheets/franks.png",
+      "flag_reference": "art/flags/franks_reference.png",
+      "unit_ids": [
+        "villager",
+        "swordsman",
+        "spearman",
+        "archer",
+        "knight"
+      ],
+      "units": {
+        "villager": {
+          "display_name_tr": "Köylü",
+          "display_name_en": "Villager",
+          "role": "villager",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/franks/villager/pose_01.png",
+            "pose_02": "art/units/franks/villager/pose_02.png",
+            "rear_reference": "art/units/franks/villager/rear_reference.png",
+            "action_reference": "art/units/franks/villager/action_reference.png"
+          }
+        },
+        "swordsman": {
+          "display_name_tr": "Kılıçlı Asker",
+          "display_name_en": "Swordsman",
+          "role": "swordsman",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/franks/swordsman/pose_01.png",
+            "pose_02": "art/units/franks/swordsman/pose_02.png",
+            "rear_reference": "art/units/franks/swordsman/rear_reference.png",
+            "action_reference": "art/units/franks/swordsman/action_reference.png"
+          }
+        },
+        "spearman": {
+          "display_name_tr": "Mızraklı Asker",
+          "display_name_en": "Spearman",
+          "role": "spearman",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/franks/spearman/pose_01.png",
+            "pose_02": "art/units/franks/spearman/pose_02.png",
+            "rear_reference": "art/units/franks/spearman/rear_reference.png",
+            "action_reference": "art/units/franks/spearman/action_reference.png"
+          }
+        },
+        "archer": {
+          "display_name_tr": "Okçu",
+          "display_name_en": "Archer",
+          "role": "archer",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/franks/archer/pose_01.png",
+            "pose_02": "art/units/franks/archer/pose_02.png",
+            "rear_reference": "art/units/franks/archer/rear_reference.png",
+            "action_reference": "art/units/franks/archer/action_reference.png"
+          }
+        },
+        "knight": {
+          "display_name_tr": "Şövalye",
+          "display_name_en": "Knight",
+          "role": "special",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/franks/knight/pose_01.png",
+            "pose_02": "art/units/franks/knight/pose_02.png",
+            "rear_reference": "art/units/franks/knight/rear_reference.png",
+            "action_reference": "art/units/franks/knight/action_reference.png"
+          }
+        }
+      }
+    },
+    {
+      "id": "mongols",
+      "name_tr": "Moğollar",
+      "concept_sheet": "art/concept_sheets/mongols.png",
+      "flag_reference": "art/flags/mongols_reference.png",
+      "unit_ids": [
+        "villager",
+        "swordsman",
+        "spearman",
+        "archer",
+        "horse_archer"
+      ],
+      "units": {
+        "villager": {
+          "display_name_tr": "Köylü",
+          "display_name_en": "Villager",
+          "role": "villager",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/mongols/villager/pose_01.png",
+            "pose_02": "art/units/mongols/villager/pose_02.png",
+            "rear_reference": "art/units/mongols/villager/rear_reference.png",
+            "action_reference": "art/units/mongols/villager/action_reference.png"
+          }
+        },
+        "swordsman": {
+          "display_name_tr": "Kılıçlı Asker",
+          "display_name_en": "Swordsman",
+          "role": "swordsman",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/mongols/swordsman/pose_01.png",
+            "pose_02": "art/units/mongols/swordsman/pose_02.png",
+            "rear_reference": "art/units/mongols/swordsman/rear_reference.png",
+            "action_reference": "art/units/mongols/swordsman/action_reference.png"
+          }
+        },
+        "spearman": {
+          "display_name_tr": "Mızraklı Asker",
+          "display_name_en": "Spearman",
+          "role": "spearman",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/mongols/spearman/pose_01.png",
+            "pose_02": "art/units/mongols/spearman/pose_02.png",
+            "rear_reference": "art/units/mongols/spearman/rear_reference.png",
+            "action_reference": "art/units/mongols/spearman/action_reference.png"
+          }
+        },
+        "archer": {
+          "display_name_tr": "Okçu",
+          "display_name_en": "Archer",
+          "role": "archer",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/mongols/archer/pose_01.png",
+            "pose_02": "art/units/mongols/archer/pose_02.png",
+            "rear_reference": "art/units/mongols/archer/rear_reference.png",
+            "action_reference": "art/units/mongols/archer/action_reference.png"
+          }
+        },
+        "horse_archer": {
+          "display_name_tr": "Atlı Okçu",
+          "display_name_en": "Horse Archer",
+          "role": "special",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/mongols/horse_archer/pose_01.png",
+            "pose_02": "art/units/mongols/horse_archer/pose_02.png",
+            "rear_reference": "art/units/mongols/horse_archer/rear_reference.png",
+            "action_reference": "art/units/mongols/horse_archer/action_reference.png"
+          }
+        }
+      }
+    },
+    {
+      "id": "teutons",
+      "name_tr": "Tötonlar",
+      "concept_sheet": "art/concept_sheets/teutons.png",
+      "flag_reference": "art/flags/teutons_reference.png",
+      "unit_ids": [
+        "villager",
+        "swordsman",
+        "spearman",
+        "archer",
+        "teutonic_knight"
+      ],
+      "units": {
+        "villager": {
+          "display_name_tr": "Köylü",
+          "display_name_en": "Villager",
+          "role": "villager",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/teutons/villager/pose_01.png",
+            "pose_02": "art/units/teutons/villager/pose_02.png",
+            "rear_reference": "art/units/teutons/villager/rear_reference.png",
+            "action_reference": "art/units/teutons/villager/action_reference.png"
+          }
+        },
+        "swordsman": {
+          "display_name_tr": "Kılıçlı Asker",
+          "display_name_en": "Swordsman",
+          "role": "swordsman",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/teutons/swordsman/pose_01.png",
+            "pose_02": "art/units/teutons/swordsman/pose_02.png",
+            "rear_reference": "art/units/teutons/swordsman/rear_reference.png",
+            "action_reference": "art/units/teutons/swordsman/action_reference.png"
+          }
+        },
+        "spearman": {
+          "display_name_tr": "Mızraklı Asker",
+          "display_name_en": "Spearman",
+          "role": "spearman",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/teutons/spearman/pose_01.png",
+            "pose_02": "art/units/teutons/spearman/pose_02.png",
+            "rear_reference": "art/units/teutons/spearman/rear_reference.png",
+            "action_reference": "art/units/teutons/spearman/action_reference.png"
+          }
+        },
+        "archer": {
+          "display_name_tr": "Okçu",
+          "display_name_en": "Archer",
+          "role": "archer",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/teutons/archer/pose_01.png",
+            "pose_02": "art/units/teutons/archer/pose_02.png",
+            "rear_reference": "art/units/teutons/archer/rear_reference.png",
+            "action_reference": "art/units/teutons/archer/action_reference.png"
+          }
+        },
+        "teutonic_knight": {
+          "display_name_tr": "Töton Şövalyesi",
+          "display_name_en": "Teutonic Knight",
+          "role": "special",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/teutons/teutonic_knight/pose_01.png",
+            "pose_02": "art/units/teutons/teutonic_knight/pose_02.png",
+            "rear_reference": "art/units/teutons/teutonic_knight/rear_reference.png",
+            "action_reference": "art/units/teutons/teutonic_knight/action_reference.png"
+          }
+        }
+      }
+    },
+    {
+      "id": "japanese",
+      "name_tr": "Japonlar",
+      "concept_sheet": "art/concept_sheets/japanese.png",
+      "flag_reference": "art/flags/japanese_reference.png",
+      "unit_ids": [
+        "villager",
+        "swordsman",
+        "spearman",
+        "archer",
+        "samurai"
+      ],
+      "units": {
+        "villager": {
+          "display_name_tr": "Köylü",
+          "display_name_en": "Villager",
+          "role": "villager",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/japanese/villager/pose_01.png",
+            "pose_02": "art/units/japanese/villager/pose_02.png",
+            "rear_reference": "art/units/japanese/villager/rear_reference.png",
+            "action_reference": "art/units/japanese/villager/action_reference.png"
+          }
+        },
+        "swordsman": {
+          "display_name_tr": "Kılıçlı Asker",
+          "display_name_en": "Swordsman",
+          "role": "swordsman",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/japanese/swordsman/pose_01.png",
+            "pose_02": "art/units/japanese/swordsman/pose_02.png",
+            "rear_reference": "art/units/japanese/swordsman/rear_reference.png",
+            "action_reference": "art/units/japanese/swordsman/action_reference.png"
+          }
+        },
+        "spearman": {
+          "display_name_tr": "Mızraklı Asker",
+          "display_name_en": "Spearman",
+          "role": "spearman",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/japanese/spearman/pose_01.png",
+            "pose_02": "art/units/japanese/spearman/pose_02.png",
+            "rear_reference": "art/units/japanese/spearman/rear_reference.png",
+            "action_reference": "art/units/japanese/spearman/action_reference.png"
+          }
+        },
+        "archer": {
+          "display_name_tr": "Okçu",
+          "display_name_en": "Archer",
+          "role": "archer",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/japanese/archer/pose_01.png",
+            "pose_02": "art/units/japanese/archer/pose_02.png",
+            "rear_reference": "art/units/japanese/archer/rear_reference.png",
+            "action_reference": "art/units/japanese/archer/action_reference.png"
+          }
+        },
+        "samurai": {
+          "display_name_tr": "Samuray",
+          "display_name_en": "Samurai",
+          "role": "special",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/japanese/samurai/pose_01.png",
+            "pose_02": "art/units/japanese/samurai/pose_02.png",
+            "rear_reference": "art/units/japanese/samurai/rear_reference.png",
+            "action_reference": "art/units/japanese/samurai/action_reference.png"
+          }
+        }
+      }
+    },
+    {
+      "id": "saracens",
+      "name_tr": "Sarazenler",
+      "concept_sheet": "art/concept_sheets/saracens.png",
+      "flag_reference": "art/flags/saracens_reference.png",
+      "unit_ids": [
+        "villager",
+        "swordsman",
+        "spearman",
+        "archer",
+        "mamluk"
+      ],
+      "units": {
+        "villager": {
+          "display_name_tr": "Köylü",
+          "display_name_en": "Villager",
+          "role": "villager",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/saracens/villager/pose_01.png",
+            "pose_02": "art/units/saracens/villager/pose_02.png",
+            "rear_reference": "art/units/saracens/villager/rear_reference.png",
+            "action_reference": "art/units/saracens/villager/action_reference.png"
+          }
+        },
+        "swordsman": {
+          "display_name_tr": "Kılıçlı Asker",
+          "display_name_en": "Swordsman",
+          "role": "swordsman",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/saracens/swordsman/pose_01.png",
+            "pose_02": "art/units/saracens/swordsman/pose_02.png",
+            "rear_reference": "art/units/saracens/swordsman/rear_reference.png",
+            "action_reference": "art/units/saracens/swordsman/action_reference.png"
+          }
+        },
+        "spearman": {
+          "display_name_tr": "Mızraklı Asker",
+          "display_name_en": "Spearman",
+          "role": "spearman",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/saracens/spearman/pose_01.png",
+            "pose_02": "art/units/saracens/spearman/pose_02.png",
+            "rear_reference": "art/units/saracens/spearman/rear_reference.png",
+            "action_reference": "art/units/saracens/spearman/action_reference.png"
+          }
+        },
+        "archer": {
+          "display_name_tr": "Okçu",
+          "display_name_en": "Archer",
+          "role": "archer",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/saracens/archer/pose_01.png",
+            "pose_02": "art/units/saracens/archer/pose_02.png",
+            "rear_reference": "art/units/saracens/archer/rear_reference.png",
+            "action_reference": "art/units/saracens/archer/action_reference.png"
+          }
+        },
+        "mamluk": {
+          "display_name_tr": "Memlûk Süvarisi",
+          "display_name_en": "Mamluk",
+          "role": "special",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/saracens/mamluk/pose_01.png",
+            "pose_02": "art/units/saracens/mamluk/pose_02.png",
+            "rear_reference": "art/units/saracens/mamluk/rear_reference.png",
+            "action_reference": "art/units/saracens/mamluk/action_reference.png"
+          }
+        }
+      }
+    },
+    {
+      "id": "vikings",
+      "name_tr": "Vikingler",
+      "concept_sheet": "art/concept_sheets/vikings.png",
+      "flag_reference": "art/flags/vikings_reference.png",
+      "unit_ids": [
+        "villager",
+        "swordsman",
+        "spearman",
+        "archer",
+        "berserker"
+      ],
+      "units": {
+        "villager": {
+          "display_name_tr": "Köylü",
+          "display_name_en": "Villager",
+          "role": "villager",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/vikings/villager/pose_01.png",
+            "pose_02": "art/units/vikings/villager/pose_02.png",
+            "rear_reference": "art/units/vikings/villager/rear_reference.png",
+            "action_reference": "art/units/vikings/villager/action_reference.png"
+          }
+        },
+        "swordsman": {
+          "display_name_tr": "Kılıçlı Asker",
+          "display_name_en": "Swordsman",
+          "role": "swordsman",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/vikings/swordsman/pose_01.png",
+            "pose_02": "art/units/vikings/swordsman/pose_02.png",
+            "rear_reference": "art/units/vikings/swordsman/rear_reference.png",
+            "action_reference": "art/units/vikings/swordsman/action_reference.png"
+          }
+        },
+        "spearman": {
+          "display_name_tr": "Mızraklı Asker",
+          "display_name_en": "Spearman",
+          "role": "spearman",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/vikings/spearman/pose_01.png",
+            "pose_02": "art/units/vikings/spearman/pose_02.png",
+            "rear_reference": "art/units/vikings/spearman/rear_reference.png",
+            "action_reference": "art/units/vikings/spearman/action_reference.png"
+          }
+        },
+        "archer": {
+          "display_name_tr": "Okçu",
+          "display_name_en": "Archer",
+          "role": "archer",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/vikings/archer/pose_01.png",
+            "pose_02": "art/units/vikings/archer/pose_02.png",
+            "rear_reference": "art/units/vikings/archer/rear_reference.png",
+            "action_reference": "art/units/vikings/archer/action_reference.png"
+          }
+        },
+        "berserker": {
+          "display_name_tr": "Berserker",
+          "display_name_en": "Berserker",
+          "role": "special",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/vikings/berserker/pose_01.png",
+            "pose_02": "art/units/vikings/berserker/pose_02.png",
+            "rear_reference": "art/units/vikings/berserker/rear_reference.png",
+            "action_reference": "art/units/vikings/berserker/action_reference.png"
+          }
+        }
+      }
+    },
+    {
+      "id": "chinese",
+      "name_tr": "Çinliler",
+      "concept_sheet": "art/concept_sheets/chinese.png",
+      "flag_reference": "art/flags/chinese_reference.png",
+      "unit_ids": [
+        "villager",
+        "swordsman",
+        "spearman",
+        "archer",
+        "chu_ko_nu"
+      ],
+      "units": {
+        "villager": {
+          "display_name_tr": "Köylü",
+          "display_name_en": "Villager",
+          "role": "villager",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/chinese/villager/pose_01.png",
+            "pose_02": "art/units/chinese/villager/pose_02.png",
+            "rear_reference": "art/units/chinese/villager/rear_reference.png",
+            "action_reference": "art/units/chinese/villager/action_reference.png"
+          }
+        },
+        "swordsman": {
+          "display_name_tr": "Kılıçlı Asker",
+          "display_name_en": "Swordsman",
+          "role": "swordsman",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/chinese/swordsman/pose_01.png",
+            "pose_02": "art/units/chinese/swordsman/pose_02.png",
+            "rear_reference": "art/units/chinese/swordsman/rear_reference.png",
+            "action_reference": "art/units/chinese/swordsman/action_reference.png"
+          }
+        },
+        "spearman": {
+          "display_name_tr": "Mızraklı Asker",
+          "display_name_en": "Spearman",
+          "role": "spearman",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/chinese/spearman/pose_01.png",
+            "pose_02": "art/units/chinese/spearman/pose_02.png",
+            "rear_reference": "art/units/chinese/spearman/rear_reference.png",
+            "action_reference": "art/units/chinese/spearman/action_reference.png"
+          }
+        },
+        "archer": {
+          "display_name_tr": "Okçu",
+          "display_name_en": "Archer",
+          "role": "archer",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/chinese/archer/pose_01.png",
+            "pose_02": "art/units/chinese/archer/pose_02.png",
+            "rear_reference": "art/units/chinese/archer/rear_reference.png",
+            "action_reference": "art/units/chinese/archer/action_reference.png"
+          }
+        },
+        "chu_ko_nu": {
+          "display_name_tr": "Çu Ko Nucu",
+          "display_name_en": "Chu Ko Nu",
+          "role": "special",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/chinese/chu_ko_nu/pose_01.png",
+            "pose_02": "art/units/chinese/chu_ko_nu/pose_02.png",
+            "rear_reference": "art/units/chinese/chu_ko_nu/rear_reference.png",
+            "action_reference": "art/units/chinese/chu_ko_nu/action_reference.png"
+          }
+        }
+      }
+    }
+  ]
+}
