@@ -469,7 +469,7 @@ func deposit_resource(team: int, type: String, amount: int) -> void:
 		if team == 0:
 			gathered_count += amount
 
-func get_closest_dropoff(from_pos: Vector2, team: int) -> Building:
+func get_closest_dropoff(from_pos: Vector2, team: int, _res_type: String = "") -> Building:
 	var best_b = null
 	var min_dist = 999999.0
 	for b in buildings:

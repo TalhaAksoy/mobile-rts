@@ -1,0 +1,11 @@
+=== POCKET EMPIRES 3D — 10x 300s BOT SIMULATION LOG ===
+Sim #1 [Bizanslılar]: Pop=20 (V:15, M:5) | Food=795, Wood=10, Gold=16, Stone=75 | Camps=2
+Sim #2 [Osmanlılar]: Pop=21 (V:14, M:7) | Food=210, Wood=20, Gold=652, Stone=75 | Camps=2
+Sim #3 [Britanyalılar]: Pop=21 (V:15, M:6) | Food=2400, Wood=3, Gold=16, Stone=75 | Camps=2
+Sim #4 [Franklar]: Pop=15 (V:15, M:0) | Food=3600, Wood=0, Gold=116, Stone=100 | Camps=2
+Sim #5 [Moğollar]: Pop=25 (V:15, M:10) | Food=2050, Wood=125, Gold=16, Stone=100 | Camps=2
+Sim #6 [Tötonlar]: Pop=29 (V:15, M:14) | Food=15, Wood=290, Gold=386, Stone=75 | Camps=2
+Sim #7 [Japonlar]: Pop=21 (V:15, M:6) | Food=225, Wood=20, Gold=100, Stone=100 | Camps=2
+Sim #8 [Sarazenler]: Pop=31 (V:15, M:16) | Food=25, Wood=190, Gold=5, Stone=75 | Camps=2
+Sim #9 [Vikingler]: Pop=20 (V:15, M:5) | Food=695, Wood=3, Gold=16, Stone=100 | Camps=2
+Sim #10 [Çinliler]: Pop=31 (V:15, M:16) | Food=20, Wood=298, Gold=377, Stone=75 | Camps=2

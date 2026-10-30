@@ -17,7 +17,10 @@ enum BuildingType {
 	CASTLE,
 	TOWER,
 	FARM,
-	BLACKSMITH
+	BLACKSMITH,
+	LUMBER_CAMP,
+	MINING_CAMP,
+	MILL
 }
 
 @export var building_type: BuildingType = BuildingType.TOWN_CENTER
@@ -55,6 +58,8 @@ var main_game: Node = null
 
 var model_root: Node3D
 var scaffold_node: Node3D
+var building_sprite: Sprite3D
+var collision_shape: CollisionShape3D
 var selection_mesh: MeshInstance3D
 var hp_bar_holder: Node3D
 var hp_fill_mesh: MeshInstance3D
@@ -62,7 +67,7 @@ var flag_sprites: Array[Sprite3D] = []
 var anim_time: float = 0.0
 
 func _ready() -> void:
-	rally_point = global_position + Vector3(0, 0, grid_size.y * MapGenerator3D.TILE_SIZE * 0.5 + 2.0)
+	rally_point = (global_position if is_inside_tree() else position) + Vector3(0, 0, grid_size.y * MapGenerator3D.TILE_SIZE * 0.5 + 2.0)
 
 func setup_building(b_type: BuildingType, t: int, civ: CivData.CivType, cell: Vector2i, map: MapGenerator3D, game: Node, start_under_construction: bool = false) -> void:
 	building_type = b_type
@@ -83,7 +88,7 @@ func setup_building(b_type: BuildingType, t: int, civ: CivData.CivType, cell: Ve
 		construction_progress = 100.0
 		hp = max_hp
 
-	rally_point = global_position + Vector3(0, 0, grid_size.y * MapGenerator3D.TILE_SIZE * 0.5 + 2.0)
+	rally_point = (global_position if is_inside_tree() else position) + Vector3(0, 0, grid_size.y * MapGenerator3D.TILE_SIZE * 0.5 + 2.0)
 	_build_3d_structure()
 
 func _init_building_stats() -> void:
@@ -134,6 +139,18 @@ func _init_building_stats() -> void:
 			grid_size = Vector2i(2, 2)
 			max_hp = 1100.0
 			armor = 4.0
+		BuildingType.LUMBER_CAMP:
+			grid_size = Vector2i(2, 2)
+			max_hp = 700.0
+			armor = 3.0
+		BuildingType.MINING_CAMP:
+			grid_size = Vector2i(2, 2)
+			max_hp = 700.0
+			armor = 3.0
+		BuildingType.MILL:
+			grid_size = Vector2i(2, 2)
+			max_hp = 700.0
+			armor = 2.0
 
 	if civ_cfg.has("building_hp_mult"):
 		max_hp *= civ_cfg["building_hp_mult"]
@@ -215,7 +232,15 @@ func _build_3d_structure() -> void:
 	var w = grid_size.x * MapGenerator3D.TILE_SIZE * 0.9
 	var l = grid_size.y * MapGenerator3D.TILE_SIZE * 0.9
 
-	# 3D Scaffolding frame (shown when under construction)
+	# 1. Physics Collision Shape (Ensures accurate raycasting and physical footprint)
+	collision_shape = CollisionShape3D.new()
+	var c_box = BoxShape3D.new()
+	c_box.size = Vector3(w, 2.5, l)
+	collision_shape.shape = c_box
+	collision_shape.position = Vector3(0, 1.25, 0)
+	add_child(collision_shape)
+
+	# 2. 3D Scaffolding frame (shown when under construction)
 	scaffold_node = Node3D.new()
 	var scaf_mesh = BoxMesh.new()
 	scaf_mesh.size = Vector3(w, 2.0, l)
@@ -230,7 +255,105 @@ func _build_3d_structure() -> void:
 	add_child(scaffold_node)
 	scaffold_node.visible = not is_completed
 
-	# Completed Architecture
+	# Visual scale & height parameters based on building architecture (HD-2D Atlas-Exact v2)
+	var p_size: float = 0.022
+	var v_height: float = 3.2
+	match building_type:
+		BuildingType.TOWN_CENTER:
+			p_size = 0.026
+			v_height = 4.8
+		BuildingType.HOUSE:
+			p_size = 0.022
+			v_height = 2.8
+		BuildingType.BARRACKS:
+			p_size = 0.024
+			v_height = 3.8
+		BuildingType.ARCHERY_RANGE:
+			p_size = 0.024
+			v_height = 3.5
+		BuildingType.STABLE:
+			p_size = 0.024
+			v_height = 3.5
+		BuildingType.CASTLE:
+			p_size = 0.034
+			v_height = 6.4
+		BuildingType.TOWER:
+			p_size = 0.026
+			v_height = 4.7
+		BuildingType.FARM:
+			p_size = 0.0115
+			v_height = 1.4
+		BuildingType.BLACKSMITH:
+			p_size = 0.022
+			v_height = 3.2
+		BuildingType.LUMBER_CAMP:
+			p_size = 0.022
+			v_height = 3.1
+		BuildingType.MINING_CAMP:
+			p_size = 0.022
+			v_height = 3.1
+		BuildingType.MILL:
+			p_size = 0.023
+			v_height = 3.7
+
+	# 3. Check for Authentic HD-2D Kingdom Building Art
+	var b_tex = FactionArtManager.get_building_texture(civ_type, building_type)
+	if b_tex != null:
+		# Ground stone foundation plinth
+		var found_inst = MeshInstance3D.new()
+		var f_mesh = BoxMesh.new()
+		f_mesh.size = Vector3(w, 0.12, l)
+		found_inst.mesh = f_mesh
+		found_inst.position = Vector3(0, 0.06, 0)
+		found_inst.material_override = stone_mat
+		model_root.add_child(found_inst)
+
+		# Authentic Faction Building Billboard Sprite (Shaded HD-2D)
+		building_sprite = Sprite3D.new()
+		building_sprite.texture = b_tex
+		building_sprite.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
+		building_sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+		building_sprite.shaded = true
+		building_sprite.alpha_cut = Sprite3D.ALPHA_CUT_DISCARD
+		building_sprite.pixel_size = p_size
+		# In v2 atlas-exact cropped sprites, pivot is bottom-center (0.5, 1.0).
+		# Centered Sprite3D sits at Y = half-height * pixel_size, placing bottom edge at ground level Y=0.0
+		building_sprite.position = Vector3(0, float(b_tex.get_height()) * 0.5 * p_size, 0)
+		if not is_completed:
+			building_sprite.modulate = Color(0.65, 0.65, 0.65, 0.45)
+		elif team != 0:
+			building_sprite.modulate = Color(1.08, 0.88, 0.88)
+		model_root.add_child(building_sprite)
+
+		# Fluttering Royal Faction Flag at Pinnacle
+		_create_flag_sprite(Vector3(0.4, v_height, 0), 0.045)
+	else:
+		_build_procedural_fallback(w, l, stone_mat, dark_stone_mat, roof_mat, wood_mat, timber_mat, straw_mat, window_mat)
+
+	# 3D Ground Selection Ring (Low-profile diorama ground indicator)
+	selection_mesh = MeshInstance3D.new()
+	var ring_mesh = TorusMesh.new()
+	var b_radius = max(w, l) * 0.58
+	ring_mesh.inner_radius = max(0.5, b_radius - 0.14)
+	ring_mesh.outer_radius = b_radius
+	selection_mesh.mesh = ring_mesh
+	selection_mesh.position = Vector3(0, 0.04, 0)
+	var sm_mat = StandardMaterial3D.new()
+	var sel_col = Color(0.2, 0.95, 0.35, 0.85) if team == 0 else Color(0.95, 0.22, 0.22, 0.85)
+	sm_mat.albedo_color = sel_col
+	sm_mat.emission_enabled = true
+	sm_mat.emission = sel_col
+	sm_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	sm_mat.no_depth_test = true
+	sm_mat.render_priority = 4
+	selection_mesh.material_override = sm_mat
+	selection_mesh.visible = false
+	add_child(selection_mesh)
+
+	# 3D Health Bar
+	_build_3d_hp_bar(v_height + 0.4)
+
+func _build_procedural_fallback(w: float, l: float, stone_mat: Material, dark_stone_mat: Material, roof_mat: Material, wood_mat: Material, timber_mat: Material, straw_mat: Material, window_mat: Material) -> void:
 	match building_type:
 		BuildingType.TOWN_CENTER:
 			# Main Keep
@@ -533,40 +656,100 @@ func _build_3d_structure() -> void:
 			anvil.material_override = an_mat
 			model_root.add_child(anvil)
 
-	# Representative Heraldic Building Signboard (Visual icon in 3D world)
-	var signboard = Sprite3D.new()
-	signboard.texture = PixelArtTextures.get_building_icon_texture(building_type)
-	signboard.pixel_size = 0.040
-	signboard.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	signboard.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
-	signboard.no_depth_test = true
-	signboard.render_priority = 25
-	var sign_y = 3.6 if building_type in [BuildingType.TOWN_CENTER, BuildingType.CASTLE] else 2.5
-	if building_type == BuildingType.TOWER:
-		sign_y = 4.4
-	elif building_type == BuildingType.FARM:
-		sign_y = 1.8
-	var sign_z = 0.0 if building_type in [BuildingType.TOWER, BuildingType.FARM] else l * 0.44
-	signboard.position = Vector3(0, sign_y, sign_z)
-	model_root.add_child(signboard)
+		BuildingType.LUMBER_CAMP:
+			# Open Timber Shed with Stacked Logs
+			var shed = MeshInstance3D.new()
+			var sh_mesh = BoxMesh.new()
+			sh_mesh.size = Vector3(w * 0.75, 1.4, l * 0.75)
+			shed.mesh = sh_mesh
+			shed.position = Vector3(0, 0.7, 0)
+			shed.material_override = timber_mat
+			model_root.add_child(shed)
 
-	# 3D Selection Box
-	selection_mesh = MeshInstance3D.new()
-	var sb_mesh = BoxMesh.new()
-	sb_mesh.size = Vector3(w * 1.05, 0.1, l * 1.05)
-	selection_mesh.mesh = sb_mesh
-	selection_mesh.position = Vector3(0, 0.05, 0)
-	var sm_mat = StandardMaterial3D.new()
-	sm_mat.albedo_color = Color(0.2, 0.95, 0.3, 0.7)
-	sm_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	sm_mat.emission_enabled = true
-	sm_mat.emission = Color(0.2, 0.95, 0.3)
-	selection_mesh.material_override = sm_mat
-	selection_mesh.visible = false
-	add_child(selection_mesh)
+			var r_mesh = PrismMesh.new()
+			r_mesh.size = Vector3(w * 0.85, 0.7, l * 0.85)
+			var r_inst = MeshInstance3D.new()
+			r_inst.mesh = r_mesh
+			r_inst.position = Vector3(0, 1.75, 0)
+			r_inst.material_override = wood_mat
+			model_root.add_child(r_inst)
 
-	# 3D Health Bar
-	_build_3d_hp_bar(4.6 if building_type in [BuildingType.CASTLE, BuildingType.TOWER, BuildingType.TOWN_CENTER] else 2.6)
+			# Stacked timber logs on side
+			for i in range(3):
+				var log = MeshInstance3D.new()
+				var l_mesh = CylinderMesh.new()
+				l_mesh.top_radius = 0.22
+				l_mesh.bottom_radius = 0.22
+				l_mesh.height = 1.6
+				log.mesh = l_mesh
+				log.rotation_degrees = Vector3(0, 0, 90)
+				log.position = Vector3(-w * 0.38, 0.22 + i * 0.25, 0)
+				log.material_override = wood_mat
+				model_root.add_child(log)
+
+		BuildingType.MINING_CAMP:
+			# Stone Masonry Depot with Ore Piles
+			var depot = MeshInstance3D.new()
+			var d_mesh = BoxMesh.new()
+			d_mesh.size = Vector3(w * 0.8, 1.3, l * 0.8)
+			depot.mesh = d_mesh
+			depot.position = Vector3(0, 0.65, 0)
+			depot.material_override = dark_stone_mat
+			model_root.add_child(depot)
+
+			var d_roof = MeshInstance3D.new()
+			var dr_mesh = BoxMesh.new()
+			dr_mesh.size = Vector3(w * 0.9, 0.3, l * 0.9)
+			d_roof.mesh = dr_mesh
+			d_roof.position = Vector3(0, 1.4, 0)
+			d_roof.material_override = stone_mat
+			model_root.add_child(d_roof)
+
+			# Gold & Stone Ore Carts / Piles
+			var ore = MeshInstance3D.new()
+			var o_mesh = BoxMesh.new()
+			o_mesh.size = Vector3(0.7, 0.45, 0.7)
+			ore.mesh = o_mesh
+			ore.position = Vector3(w * 0.32, 0.25, l * 0.25)
+			var o_mat = StandardMaterial3D.new()
+			o_mat.albedo_color = Color(0.92, 0.75, 0.18) # Golden ore luster
+			o_mat.metallic = 0.6
+			ore.material_override = o_mat
+			model_root.add_child(ore)
+
+		BuildingType.MILL:
+			# Granary Base & Windmill Structure
+			var base = MeshInstance3D.new()
+			var b_mesh = BoxMesh.new()
+			b_mesh.size = Vector3(w * 0.75, 1.8, l * 0.75)
+			base.mesh = b_mesh
+			base.position = Vector3(0, 0.9, 0)
+			base.material_override = wood_mat
+			model_root.add_child(base)
+
+			var cap = MeshInstance3D.new()
+			var c_mesh = PrismMesh.new()
+			c_mesh.size = Vector3(w * 0.85, 0.9, l * 0.85)
+			cap.mesh = c_mesh
+			cap.position = Vector3(0, 2.25, 0)
+			cap.material_override = straw_mat
+			model_root.add_child(cap)
+
+			# Mill Rotating Blades on front face
+			var blades = MeshInstance3D.new()
+			var bl_mesh = BoxMesh.new()
+			bl_mesh.size = Vector3(1.8, 0.15, 0.05)
+			blades.mesh = bl_mesh
+			blades.position = Vector3(0, 1.4, l * 0.42)
+			blades.rotation_degrees = Vector3(0, 0, 45)
+			var bl_mat = StandardMaterial3D.new()
+			bl_mat.albedo_color = Color(0.95, 0.95, 0.95)
+			blades.material_override = bl_mat
+			model_root.add_child(blades)
+
+			var blades2 = blades.duplicate() as MeshInstance3D
+			blades2.rotation_degrees = Vector3(0, 0, -45)
+			model_root.add_child(blades2)
 
 func _build_3d_hp_bar(height_y: float) -> void:
 	hp_bar_holder = Node3D.new()
@@ -653,14 +836,35 @@ func _check_and_shoot_enemies() -> void:
 		SoundManager.play_sound("shoot")
 		main_game.spawn_projectile(global_position + Vector3(0, 2.5, 0), target, shoot_damage, team, false)
 
-func queue_unit_production(u_type: Unit3D.UnitType, duration: float) -> bool:
+func queue_unit_production(u_type: Unit3D.UnitType, duration: float, costs: Dictionary = {}) -> bool:
 	var civ_cfg = CivData.get_civ(civ_type)
 	var final_duration = duration * civ_cfg.get("train_speed_mult", 1.0)
-	train_queue.append({"type": u_type, "duration": final_duration})
+	var item = {
+		"type": u_type,
+		"duration": final_duration,
+		"food": costs.get("food", 0),
+		"wood": costs.get("wood", 0),
+		"gold": costs.get("gold", 0),
+		"stone": costs.get("stone", 0)
+	}
+	train_queue.append(item)
 	if train_queue.size() == 1:
 		current_train_timer = 0.0
 		current_train_duration = final_duration
 	return true
+
+func cancel_train_queue_item(index: int) -> Dictionary:
+	if index < 0 or index >= train_queue.size():
+		return {}
+	var removed = train_queue[index]
+	train_queue.remove_at(index)
+	if index == 0:
+		current_train_timer = 0.0
+		if train_queue.size() > 0:
+			current_train_duration = train_queue[0]["duration"]
+		else:
+			current_train_duration = 1.0
+	return removed
 
 func _spawn_unit(item: Dictionary) -> void:
 	var u_type = item["type"]
@@ -680,6 +884,8 @@ func contribute_construction(amt: float) -> void:
 		hp = max_hp
 		if is_instance_valid(scaffold_node):
 			scaffold_node.visible = false
+		if is_instance_valid(building_sprite):
+			building_sprite.modulate = Color(1.08, 0.88, 0.88) if team != 0 else Color(1.0, 1.0, 1.0)
 		completed.emit(self)
 		SoundManager.play_sound("build")
 

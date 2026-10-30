@@ -478,10 +478,12 @@ static func get_stepped_cliff_texture() -> Texture2D:
 	var w = 32
 	var h = 32
 	var img = Image.create(w, h, false, Image.FORMAT_RGBA8)
-	var stone_base = Color(0.44, 0.40, 0.36)
-	var stone_dark = Color(0.28, 0.24, 0.22)
-	var stone_light = Color(0.60, 0.56, 0.50)
-	var earth_strata = Color(0.38, 0.28, 0.20)
+	var stone_base = Color(0.58, 0.54, 0.48)
+	var stone_dark = Color(0.44, 0.40, 0.35)
+	var stone_light = Color(0.72, 0.68, 0.62)
+	var earth_strata = Color(0.52, 0.42, 0.32)
+	var grass_edge = Color(0.38, 0.72, 0.32)
+	var grass_shadow = Color(0.20, 0.46, 0.18)
 
 	for y in range(h):
 		var is_strata_line = (y % 8 == 0 or y % 8 == 1)
@@ -493,9 +495,11 @@ static func get_stepped_cliff_texture() -> Texture2D:
 				col = stone_light
 			elif (x * 3 + y) % 9 == 0:
 				col = stone_dark
-			# Top grass overhang fringe
-			if y <= 2:
-				col = Color(0.24, 0.52, 0.20) if (x + y) % 2 == 0 else COL_BLACK
+			# Top grass overhang fringe (vibrant grass rim connecting to terrain)
+			if y == 0 or y == 1:
+				col = grass_edge
+			elif y == 2:
+				col = grass_shadow if (x % 3 != 0) else stone_base
 			img.set_pixel(x, y, col)
 
 	var tex = create_image_texture(img)
@@ -993,6 +997,72 @@ static func get_building_icon_texture(b_type: int) -> Texture2D:
 			for x in range(11, 25):
 				for y in range(27, 30):
 					img.set_pixel(x, y, iron)
+
+		9: # LUMBER_CAMP: Woodcutter's Axe over Logs
+			var wood = Color(0.55, 0.35, 0.18)
+			var bark = Color(0.38, 0.22, 0.10)
+			var steel = Color(0.85, 0.88, 0.94)
+			# Stacked Logs at base
+			for x in range(6, 30):
+				for y in range(22, 28):
+					var col = wood if (x % 6 != 0) else bark
+					img.set_pixel(x, y, col)
+			# Axe Handle (diagonal)
+			for i in range(-8, 9):
+				var hx = 18 + i
+				var hy = 18 - i
+				if hx >= 2 and hx < size - 2 and hy >= 2 and hy < size - 2:
+					img.set_pixel(hx, hy, wood)
+					img.set_pixel(hx + 1, hy, bark)
+			# Axe Head
+			for x in range(22, 29):
+				for y in range(6, 14):
+					if x - 22 <= y - 6:
+						img.set_pixel(x, y, steel)
+
+		10: # MINING_CAMP: Crossed Pickaxes over Gold/Stone Rocks
+			var iron = Color(0.70, 0.72, 0.78)
+			var gold = Color(0.95, 0.78, 0.18)
+			var stone = Color(0.48, 0.48, 0.52)
+			var handle = Color(0.55, 0.35, 0.18)
+			# Ores at bottom
+			for x in range(8, 18):
+				for y in range(22, 29):
+					img.set_pixel(x, y, gold if (x + y) % 2 == 0 else Color(0.8, 0.65, 0.12))
+			for x in range(18, 28):
+				for y in range(22, 29):
+					img.set_pixel(x, y, stone if (x + y) % 2 == 0 else Color(0.35, 0.35, 0.38))
+			# Pickaxe handle
+			for i in range(-9, 10):
+				var px = 18 + i
+				var py = 16 - i
+				if px >= 2 and px < size - 2 and py >= 2 and py < size - 2:
+					img.set_pixel(px, py, handle)
+			# Pickaxe curved head
+			for i in range(-6, 7):
+				var hx = 24 + i
+				var hy = 8 + int(abs(i) * 0.6)
+				if hx >= 2 and hx < size - 2 and hy >= 2 and hy < size - 2:
+					img.set_pixel(hx, hy, iron)
+
+		11: # MILL: Windmill Blades & Grain Sack
+			var sails = Color(0.95, 0.95, 0.96)
+			var wood = Color(0.50, 0.32, 0.18)
+			var grain = Color(0.90, 0.80, 0.30)
+			# Mill Center hub
+			for x in range(16, 21):
+				for y in range(16, 21):
+					img.set_pixel(x, y, wood)
+			# 4 Windmill Blades
+			for i in range(4, 16):
+				img.set_pixel(18, i, sails); img.set_pixel(19, i, sails) # Top
+				img.set_pixel(18, 36 - i, sails); img.set_pixel(19, 36 - i, sails) # Bottom
+				img.set_pixel(i, 18, sails); img.set_pixel(i, 19, sails) # Left
+				img.set_pixel(36 - i, 18, sails); img.set_pixel(36 - i, 19, sails) # Right
+			# Grain sack
+			for x in range(8, 14):
+				for y in range(23, 29):
+					img.set_pixel(x, y, grain)
 
 	var tex = create_image_texture(img)
 	_texture_cache[cache_key] = tex

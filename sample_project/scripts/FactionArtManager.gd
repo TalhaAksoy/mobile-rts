@@ -141,3 +141,49 @@ static func get_manifest_unit_data(faction_id: String, role_id: String) -> Dicti
 			if units_dict.has(role_id):
 				return units_dict[role_id]
 	return {}
+
+static func get_building_id_from_type(b_type: Building3D.BuildingType) -> String:
+	match b_type:
+		Building3D.BuildingType.TOWN_CENTER: return "town_center"
+		Building3D.BuildingType.HOUSE: return "house"
+		Building3D.BuildingType.BARRACKS: return "barracks"
+		Building3D.BuildingType.ARCHERY_RANGE: return "archery_range"
+		Building3D.BuildingType.STABLE: return "stable"
+		Building3D.BuildingType.CASTLE: return "castle"
+		Building3D.BuildingType.TOWER: return "watch_tower"
+		Building3D.BuildingType.FARM: return "farm"
+		Building3D.BuildingType.BLACKSMITH: return "blacksmith"
+		Building3D.BuildingType.LUMBER_CAMP: return "lumber_camp"
+		Building3D.BuildingType.MINING_CAMP: return "mining_camp"
+		Building3D.BuildingType.MILL: return "mill"
+	return "town_center"
+
+static func get_building_texture(civ_type: CivData.CivType, b_type: Building3D.BuildingType) -> Texture2D:
+	_ensure_initialized()
+	var faction_id = get_faction_id_from_civ(civ_type)
+	var b_id = get_building_id_from_type(b_type)
+	var cache_key = "building_tex_%s_%s" % [faction_id, b_id]
+
+	if _texture_cache.has(cache_key):
+		return _texture_cache[cache_key]
+
+	var res_path = "res://art/buildings/%s/%s.png" % [faction_id, b_id]
+	if ResourceLoader.exists(res_path):
+		var tex = load(res_path) as Texture2D
+		if tex != null:
+			_texture_cache[cache_key] = tex
+			return tex
+	return null
+
+static func get_building_texture_by_id(faction_id: String, building_id: String) -> Texture2D:
+	var cache_key = "building_tex_%s_%s" % [faction_id, building_id]
+	if _texture_cache.has(cache_key):
+		return _texture_cache[cache_key]
+
+	var res_path = "res://art/buildings/%s/%s.png" % [faction_id, building_id]
+	if ResourceLoader.exists(res_path):
+		var tex = load(res_path) as Texture2D
+		if tex != null:
+			_texture_cache[cache_key] = tex
+			return tex
+	return null

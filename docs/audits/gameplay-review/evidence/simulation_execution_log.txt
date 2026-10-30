@@ -1,0 +1,94 @@
+===============================================================
+POCKET EMPIRES 3D - COMPREHENSIVE QA AUDIT & SIMULATION REPORT
+Timestamp: 2026-10-30T17:28:04
+Engine: Godot 4.7.2.stable.official
+OS: macOS | Model: MacBookAir10,1
+===============================================================
+
+[SECTION 1: SCENARIO A - MATCH FLOW & BASE INITIALIZATION]
+1. Base Setup:
+   - Player Units: 3 | Enemy Units: 3 (Expected: >=3 each)
+   - Player Buildings: 1 | Enemy Buildings: 1 (Expected: Town Centers)
+   - Player Town Center: OK (HP: 2400/2400, Armor: 6, ShootRange: 13.0)
+2. Villager Queue:
+   - Queued: true | Food: 200 -> 150 (Cost: 50 Food)
+   - Queue Count: 1 | Train Duration: 2.8s
+   - After 6.0s simulated train: Units count = 4
+3. Defeat Condition Trigger (TC Death):
+   - GameOverModal visibility: false -> true (PASS: true)
+
+[SECTION 2: SCENARIO B - ECONOMY, HARVEST & STORAGE]
+1. Villager Gathering Dynamics:
+   - Villager Max Carry: 15 | Move Speed: 5.5 | Base HP: 50
+   - Resource [WOOD]: Target at (12, 50) | Status: 🪵 Ağaç Kesiyor (0/15)
+   - Resource [GOLD]: Target at (11, 48) | Status: 🪙 Altın Kazıyor (0/15)
+   - Resource [STONE]: Target at (10, 51) | Status: 🪨 Taş Çıkarıyor (0/15)
+   - Resource [FOOD]: Target at (21, 48) | Status: 🌾 Hasat Yapıyor (0/15)
+2. Storage & Drop-off Infrastructure Audit:
+   - Closest Drop-off Found: @StaticBody3D@4589 (Type: 0)
+   - Lumber Camp Implemented: NO (Missing in Building3D enum)
+   - Mining Camp Implemented: NO (Missing in Building3D enum)
+   - Mill Implemented: NO (Missing in Building3D enum)
+   - Impact: Villagers are forced to make 100% of drop-off trips back to Town Center.
+
+[SECTION 3: SCENARIO C - COMBAT SYSTEM & COUNTER BONUSES]
+1. Spearman vs Cavalry Counter Check:
+   - Spearman Base Attack: 8.0 | Cav Armor: 2.0
+   - Measured Damage Dealt: 18.0 (Expected: (8 * 2.5) - 2 = 18.0) -> PASS
+2. Cavalry vs Archer Counter Check:
+   - Cav Base Attack: 14.0 | Archer Armor: 0.0
+   - Measured Damage Dealt: 21.0 (Expected: (14 * 1.5) - 0 = 21.0) -> PASS
+3. Unique Unit Stat Verification:
+   - Janissary (Ottoman)       : HP= 85, Dmg=24, Arm=2, Rng=11.0, Spd=5.8, AtkSpd=0.65
+   - Cataphract (Byzantine)    : HP=220, Dmg=18, Arm=5, Rng= 2.4, Spd=8.2, AtkSpd=1.00
+   - Longbowman (Briton)       : HP= 65, Dmg=11, Arm=0, Rng=13.5, Spd=5.8, AtkSpd=1.10
+   - Paladin (Frank)           : HP=260, Dmg=20, Arm=4, Rng= 2.4, Spd=8.5, AtkSpd=0.90
+   - Mangudai (Mongol)         : HP= 95, Dmg=12, Arm=1, Rng= 9.5, Spd=9.6, AtkSpd=1.30
+   - Teutonic Knight (Teuton)  : HP=190, Dmg=25, Arm=8, Rng= 2.0, Spd=4.8, AtkSpd=0.85
+   - Samurai (Japanese)        : HP=125, Dmg=16, Arm=2, Rng= 2.0, Spd=6.8, AtkSpd=1.40
+   - Mameluke (Saracen)        : HP=165, Dmg=15, Arm=2, Rng= 4.5, Spd=8.8, AtkSpd=1.10
+   - Berserker (Viking)        : HP=140, Dmg=19, Arm=2, Rng= 2.0, Spd=7.0, AtkSpd=1.25
+   - Chu-Ko-Nu (Chinese)       : HP= 70, Dmg= 7, Arm=0, Rng= 9.0, Spd=5.8, AtkSpd=1.20
+
+[SECTION 4: SCENARIO D - LONG MATCH BOT SIMULATION (300 SECONDS)]
+Starting fast-forward headless match ticks (delta = 0.2s, 1500 steps = 5 simulated minutes)...
+   [T =   0s] Mem: 332.80 MB | Units P:3 / E:3 | Buildings P:1 / E:1 | Bot Wave: 0
+             Bot Resources: Food=200, Wood=200, Gold=100, Stone=100
+   [T =  60s] Mem: 336.45 MB | Units P:3 / E:7 | Buildings P:1 / E:5 | Bot Wave: 1
+             Bot Resources: Food=0, Wood=100, Gold=594, Stone=100
+   [T = 120s] Mem: 338.60 MB | Units P:3 / E:7 | Buildings P:1 / E:5 | Bot Wave: 3
+             Bot Resources: Food=0, Wood=100, Gold=1282, Stone=100
+   [T = 180s] Mem: 340.27 MB | Units P:3 / E:7 | Buildings P:1 / E:5 | Bot Wave: 4
+             Bot Resources: Food=0, Wood=100, Gold=1810, Stone=100
+   [T = 240s] Mem: 341.45 MB | Units P:3 / E:7 | Buildings P:1 / E:5 | Bot Wave: 6
+             Bot Resources: Food=0, Wood=100, Gold=2162, Stone=100
+Simulation Completed in 1.62 seconds real-world compute time.
+Performance & Stability Summary:
+   - Memory Start: 332.79 MB | Memory End: 343.02 MB (Net: +10.23 MB)
+   - Final Unit Count: Player=3, Bot=7
+   - Final Building Count: Player=1, Bot=5
+   - Total Bot Waves Dispatched: 8
+
+[SECTION 5: 10 CIVILIZATIONS & FACTION ART PACK AUDIT]
+   [Osmanlılar  ] UU: Yeniçeri        | Texture: OK | Bonus: • Askeri üretim hızı +%25 | • Kule menzili ve hasarı +%20 | • Kuşatma ve ateşli silah gücü
+   [Bizanslılar ] UU: Katafrakt       | Texture: OK | Bonus: • Binaların canı +%30 | • Bina odun maliyeti -%15 | • Güçlü savunma ve ağır zırh
+   [Britanyalılar] UU: Uzun Yaylı      | Texture: OK | Bonus: • Okçuların menzili +%30 | • Odun toplama hızı +%15 | • Erken okçu üstünlüğü
+   [Franklar    ] UU: Şövalye Paladin | Texture: OK | Bonus: • Süvarilerin canı +%25 | • Çiftlikler %25 daha az odun ister | • Güçlü şövalye ordusu
+   [Moğollar    ] UU: Mangudai        | Texture: OK | Bonus: • Süvariler %25 daha hızlı hareket eder | • Besin toplama hızı +%20 | • Hızlı akın ve vur-kaç taktiği
+   [Tötonlar    ] UU: Töton Şövalyesi | Texture: OK | Bonus: • Piyadeler ve kuleler +2 ekstra zırh | • Çiftlik maliyeti -%33 | • Ağır zırhlı yıkılmaz piyadeler
+   [Japonlar    ] UU: Samuray         | Texture: OK | Bonus: • Piyadeler %25 daha hızlı saldırır | • Odun ve maden toplama +%10 | • Hızlı ve ölümcül kılıç ustaları
+   [Sarazenler  ] UU: Memlük          | Texture: OK | Bonus: • Altın madenciliği hızı +%30 | • Süvarilere karşı güçlü develer | • Ticaret ve pazar zenginliği
+   [Vikingler   ] UU: Berserker       | Texture: OK | Bonus: • Piyadeler +%20 can ve otomatik can yenilenmesi | • Odun toplama hızı +%15 | • Korkusuz yakın dövüş gazabı
+   [Çinliler    ] UU: Chu-Ko-Nu       | Texture: OK | Bonus: • Oyuna +2 fazladan işçi ile başlar | • Nüfus limiti +5 fazladan başlar | • Geliştirmeler ve birimler %15 daha ucuz
+   - Faction Art Texture Coverage: 10 / 10 Complete
+
+[SECTION 6: MOBILE UI / UX TARGET & INTERACTION AUDIT]
+1. Touch Target Dimensions (Apple HIG: >= 44x44pt, Android: >= 48x48dp):
+   - Button BuildMainButton   : MinSize=(  0,  52) -> PASS
+   - Button ArmyButton        : MinSize=(  0,  52) -> PASS
+   - Button BaseButton        : MinSize=(  0,  52) -> PASS
+   - Button IdleVillagerButton: MinSize=(  0,  52) -> PASS
+   - Button DeselectButton    : MinSize=( 76,  46) -> PASS
+2. Screen Orientation & Resolution:
+   - Viewport Resolution: 540x960 (Portrait 9:16)
+   - Handheld Orientation Setting: 1

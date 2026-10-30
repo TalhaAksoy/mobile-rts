@@ -44,7 +44,13 @@ var ghost_preview: MeshInstance3D = null
 var fog_timer: float = 0.0
 
 var drag_start_pos: Vector2 = Vector2.ZERO
+var drag_last_pos: Vector2 = Vector2.ZERO
+var is_touch_active: bool = false
+var has_dragged_significantly: bool = false
 var is_drag_box_selecting: bool = false
+var is_box_select_mode: bool = false
+const DRAG_THRESHOLD: float = 14.0
+
 var last_clicked_unit: Unit3D = null
 var last_click_time_msec: int = 0
 var tutorial_mgr: TutorialManager = null
@@ -70,6 +76,7 @@ func _ready() -> void:
 	ui_manager.restart_requested.connect(_on_restart_requested)
 	ui_manager.zoom_in_requested.connect(func(): camera.zoom_in())
 	ui_manager.zoom_out_requested.connect(func(): camera.zoom_out())
+	ui_manager.box_select_toggled.connect(func(enabled: bool): is_box_select_mode = enabled)
 
 	# Ghost Preview 3D
 	ghost_preview = MeshInstance3D.new()
@@ -213,11 +220,16 @@ func _unhandled_input(event: InputEvent) -> void:
 				SaveManager.load_game(self)
 			return
 
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+	# Mouse / Touch press
+	if (event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT) or (event is InputEventScreenTouch and event.index == 0):
 		if event.pressed:
 			drag_start_pos = event.position
+			drag_last_pos = event.position
+			is_touch_active = true
+			has_dragged_significantly = false
 			is_drag_box_selecting = false
 		else:
+			is_touch_active = false
 			if is_drag_box_selecting:
 				is_drag_box_selecting = false
 				ui_manager.hide_drag_box()
@@ -228,35 +240,34 @@ func _unhandled_input(event: InputEvent) -> void:
 				var box_rect = Rect2(min_x, min_y, max_x - min_x, max_y - min_y)
 				_select_units_in_screen_rect(box_rect)
 				return
-			else:
-				var mouse_pos = event.position
-				var hit_ground = camera.raycast_ground(mouse_pos)
-				if is_placing_building:
-					_attempt_place_building(hit_ground)
-					return
-				_handle_3d_click(mouse_pos, hit_ground)
+			if has_dragged_significantly:
+				# Concluded camera pan, ignore release to prevent unintended orders
+				return
+			
+			var mouse_pos = event.position
+			var hit_ground = camera.raycast_ground(mouse_pos)
+			if is_placing_building:
+				_attempt_place_building(hit_ground)
+				return
+			_handle_3d_click(mouse_pos, hit_ground)
 
-	elif event is InputEventMouseMotion and (event.button_mask & MOUSE_BUTTON_MASK_LEFT) != 0:
-		if not is_placing_building:
-			if not is_drag_box_selecting and (event.position - drag_start_pos).length() > 22.0:
+	elif ((event is InputEventMouseMotion and (event.button_mask & MOUSE_BUTTON_MASK_LEFT) != 0) or (event is InputEventScreenDrag and event.index == 0)):
+		var cur_pos = event.position
+		if not has_dragged_significantly and (cur_pos - drag_start_pos).length() > DRAG_THRESHOLD:
+			has_dragged_significantly = true
+
+		if has_dragged_significantly:
+			if is_box_select_mode:
 				is_drag_box_selecting = true
-			if is_drag_box_selecting:
-				ui_manager.draw_drag_box(drag_start_pos, event.position)
+				ui_manager.draw_drag_box(drag_start_pos, cur_pos)
+			else:
+				var delta = cur_pos - drag_last_pos
+				camera.pan_by_screen_delta(delta)
+		drag_last_pos = cur_pos
 
 func _handle_3d_click(screen_pos: Vector2, ground_pos: Vector3) -> void:
 	var clicked_entity = _get_entity_at_position(screen_pos, ground_pos)
 	var cell = map_gen.world_to_cell(ground_pos)
-
-	var now = Time.get_ticks_msec()
-	if clicked_entity is Unit3D and clicked_entity.team == 0:
-		if last_clicked_unit == clicked_entity and (now - last_click_time_msec) < 380:
-			_select_all_matching_units_on_screen(clicked_entity.unit_type)
-			last_clicked_unit = null
-			last_click_time_msec = 0
-			return
-		else:
-			last_clicked_unit = clicked_entity
-			last_click_time_msec = now
 
 	if selected_units.size() > 0:
 		# 1. Click on ally unit -> toggle off if same single unit, or switch selection
@@ -379,7 +390,12 @@ func _handle_3d_click(screen_pos: Vector2, ground_pos: Vector3) -> void:
 		ui_manager.set_selected_entity(clicked_entity)
 		SoundManager.play_sound("click")
 	else:
-		ui_manager.set_selected_entity(null)
+		var res_info = _find_resource_at_click(screen_pos, ground_pos)
+		if res_info.has("type") and res_info.has("cell") and res_info.get("amount", 0) > 0:
+			ui_manager.set_selected_resource(res_info)
+			SoundManager.play_sound("click")
+		else:
+			ui_manager.set_selected_entity(null)
 
 func _clear_selection() -> void:
 	for u in selected_units:
@@ -398,112 +414,131 @@ func _spawn_click_marker(pos: Vector3, type: String) -> void:
 	add_child(marker)
 	marker.setup(pos, type)
 
-func _find_unit_near_screen(screen_pos: Vector2, max_screen_dist: float = 56.0) -> Unit3D:
+static func _dist_to_segment_2d(p: Vector2, a: Vector2, b: Vector2) -> float:
+	var ab = b - a
+	var l2 = ab.length_squared()
+	if l2 < 0.0001:
+		return p.distance_to(a)
+	var t = clampf((p - a).dot(ab) / l2, 0.0, 1.0)
+	var projection = a + t * ab
+	return p.distance_to(projection)
+
+func _find_unit_near_screen(screen_pos: Vector2, max_screen_dist: float = 48.0) -> Unit3D:
 	var best_unit: Unit3D = null
 	var best_dist: float = max_screen_dist
 	for u in units:
 		if not is_instance_valid(u) or u.hp <= 0:
 			continue
-		var u_screen = camera.unproject_position(u.global_position + Vector3(0, 1.76, 0))
-		var d = screen_pos.distance_to(u_screen)
+		var s_feet = camera.unproject_position(u.global_position)
+		var s_head = camera.unproject_position(u.global_position + Vector3(0, 2.2, 0))
+		var d = _dist_to_segment_2d(screen_pos, s_feet, s_head)
 		if d < best_dist:
 			best_dist = d
 			best_unit = u
 	return best_unit
 
 func _find_resource_at_click(screen_pos: Vector2, ground_pos: Vector3) -> Dictionary:
-	# 1. Screen-space billboard click on Trees (generous 44px radius)
-	var best_tree = Vector2i(-1, -1)
-	var best_tree_dist = 44.0
+	# 1. 3D Physics Raycast on Layer 4 (Resource Area3D colliders)
+	var space_state = get_world_3d().direct_space_state
+	if space_state != null and camera != null:
+		var from = camera.project_ray_origin(screen_pos)
+		var to = from + camera.project_ray_normal(screen_pos) * 1000.0
+		var query = PhysicsRayQueryParameters3D.create(from, to, 8)
+		query.collide_with_areas = true
+		query.collide_with_bodies = false
+		var result = space_state.intersect_ray(query)
+		if result and result.has("collider") and is_instance_valid(result.collider):
+			var area = result.collider as Area3D
+			if area != null and area.has_meta("resource_type") and area.has_meta("cell"):
+				var r_cell = area.get_meta("cell") as Vector2i
+				var r_type = area.get_meta("resource_type") as String
+				var r_cur = map_gen.get_resource_at_cell(r_cell, r_type)
+				if r_cur.get("amount", 0) > 0:
+					return r_cur
+
+	# 2. Balanced screen-space closest resource search (52px radius, no tree bias)
+	var best_res: Dictionary = {}
+	var min_screen_dist: float = 52.0
+
 	for cell in map_gen.trees.keys():
-		var w_pos = map_gen.cell_to_world(cell) + Vector3(0, 1.7, 0)
+		var w_pos = map_gen.cell_to_world(cell) + Vector3(0, 1.6, 0)
 		var s_pos = camera.unproject_position(w_pos)
 		var d = screen_pos.distance_to(s_pos)
-		if d < best_tree_dist:
-			best_tree_dist = d
-			best_tree = cell
+		if d < min_screen_dist:
+			var info = map_gen.get_resource_at_cell(cell, "wood")
+			if info.get("amount", 0) > 0:
+				min_screen_dist = d
+				best_res = info
 
-	if best_tree != Vector2i(-1, -1):
-		return {"type": "wood", "cell": best_tree}
-
-	# 2. Screen-space billboard click on Gold
-	var best_gold = Vector2i(-1, -1)
-	var best_gold_dist = 44.0
 	for cell in map_gen.gold_mines.keys():
-		var w_pos = map_gen.cell_to_world(cell) + Vector3(0, 0.95, 0)
+		var w_pos = map_gen.cell_to_world(cell) + Vector3(0, 0.9, 0)
 		var s_pos = camera.unproject_position(w_pos)
 		var d = screen_pos.distance_to(s_pos)
-		if d < best_gold_dist:
-			best_gold_dist = d
-			best_gold = cell
+		if d < min_screen_dist:
+			var info = map_gen.get_resource_at_cell(cell, "gold")
+			if info.get("amount", 0) > 0:
+				min_screen_dist = d
+				best_res = info
 
-	if best_gold != Vector2i(-1, -1):
-		return {"type": "gold", "cell": best_gold}
-
-	# 3. Screen-space billboard click on Stone
-	var best_stone = Vector2i(-1, -1)
-	var best_stone_dist = 44.0
 	for cell in map_gen.stone_mines.keys():
-		var w_pos = map_gen.cell_to_world(cell) + Vector3(0, 0.95, 0)
+		var w_pos = map_gen.cell_to_world(cell) + Vector3(0, 0.9, 0)
 		var s_pos = camera.unproject_position(w_pos)
 		var d = screen_pos.distance_to(s_pos)
-		if d < best_stone_dist:
-			best_stone_dist = d
-			best_stone = cell
+		if d < min_screen_dist:
+			var info = map_gen.get_resource_at_cell(cell, "stone")
+			if info.get("amount", 0) > 0:
+				min_screen_dist = d
+				best_res = info
 
-	if best_stone != Vector2i(-1, -1):
-		return {"type": "stone", "cell": best_stone}
-
-	# 4. Screen-space billboard click on Berry Bushes
-	var best_berry = Vector2i(-1, -1)
-	var best_berry_dist = 44.0
 	for cell in map_gen.berry_bushes.keys():
-		var w_pos = map_gen.cell_to_world(cell) + Vector3(0, 0.95, 0)
+		var w_pos = map_gen.cell_to_world(cell) + Vector3(0, 0.9, 0)
 		var s_pos = camera.unproject_position(w_pos)
 		var d = screen_pos.distance_to(s_pos)
-		if d < best_berry_dist:
-			best_berry_dist = d
-			best_berry = cell
+		if d < min_screen_dist:
+			var info = map_gen.get_resource_at_cell(cell, "food")
+			if info.get("amount", 0) > 0:
+				min_screen_dist = d
+				best_res = info
 
-	if best_berry != Vector2i(-1, -1):
-		return {"type": "food", "cell": best_berry}
+	if not best_res.is_empty():
+		return best_res
 
-	# 5. Ground cell fallback
+	# 3. Ground cell & adjacent fallback
 	var cell = map_gen.world_to_cell(ground_pos)
-	if cell in map_gen.trees:
-		return {"type": "wood", "cell": cell}
-	if cell in map_gen.gold_mines:
-		return {"type": "gold", "cell": cell}
-	if cell in map_gen.stone_mines:
-		return {"type": "stone", "cell": cell}
-	if cell in map_gen.berry_bushes:
-		return {"type": "food", "cell": cell}
+	for r_type in ["wood", "gold", "stone", "food"]:
+		var r_data = map_gen.get_resource_at_cell(cell, r_type)
+		if not r_data.is_empty() and r_data.get("amount", 0) > 0:
+			return r_data
 
-	# 6. Adjacent ground proximity fallback
 	for dx in [-1, 0, 1]:
 		for dy in [-1, 0, 1]:
 			var nc = cell + Vector2i(dx, dy)
-			if nc in map_gen.trees and ground_pos.distance_to(map_gen.cell_to_world(nc)) < 1.7:
-				return {"type": "wood", "cell": nc}
-			if nc in map_gen.gold_mines and ground_pos.distance_to(map_gen.cell_to_world(nc)) < 1.7:
-				return {"type": "gold", "cell": nc}
-			if nc in map_gen.stone_mines and ground_pos.distance_to(map_gen.cell_to_world(nc)) < 1.7:
-				return {"type": "stone", "cell": nc}
-			if nc in map_gen.berry_bushes and ground_pos.distance_to(map_gen.cell_to_world(nc)) < 1.7:
-				return {"type": "food", "cell": nc}
+			for r_type in ["wood", "gold", "stone", "food"]:
+				var r_data = map_gen.get_resource_at_cell(nc, r_type)
+				if not r_data.is_empty() and r_data.get("amount", 0) > 0:
+					if ground_pos.distance_to(map_gen.cell_to_world(nc)) < 1.8:
+						return r_data
+
+	return {}
 
 	return {}
 
 func _get_entity_at_position(screen_pos: Vector2, ground_pos: Vector3) -> Node3D:
 	# 1. Units ALWAYS have absolute priority over buildings!
-	var unit_by_screen = _find_unit_near_screen(screen_pos, 46.0)
+	var unit_by_screen = _find_unit_near_screen(screen_pos, 48.0)
 	if unit_by_screen != null:
 		return unit_by_screen
 
+	var best_ground_unit: Unit3D = null
+	var min_g_dist: float = 1.6
 	for u in units:
 		if is_instance_valid(u) and u.hp > 0:
-			if u.global_position.distance_to(ground_pos) < 1.6:
-				return u
+			var gd = u.global_position.distance_to(ground_pos)
+			if gd < min_g_dist:
+				min_g_dist = gd
+				best_ground_unit = u
+	if best_ground_unit != null:
+		return best_ground_unit
 
 	# 2. Check buildings in screen-space (handles 3D roofs, towers, and facades)
 	for b in buildings:
@@ -611,6 +646,9 @@ func _get_building_size(b_type: Building3D.BuildingType) -> Vector2i:
 		Building3D.BuildingType.TOWER: return Vector2i(2, 2)
 		Building3D.BuildingType.FARM: return Vector2i(2, 2)
 		Building3D.BuildingType.BLACKSMITH: return Vector2i(2, 2)
+		Building3D.BuildingType.LUMBER_CAMP: return Vector2i(2, 2)
+		Building3D.BuildingType.MINING_CAMP: return Vector2i(2, 2)
+		Building3D.BuildingType.MILL: return Vector2i(2, 2)
 		_: return Vector2i(2, 2)
 
 func _get_building_cost(b_type: Building3D.BuildingType) -> Dictionary:
@@ -628,6 +666,9 @@ func _get_building_cost(b_type: Building3D.BuildingType) -> Dictionary:
 		Building3D.BuildingType.TOWER: cost = {"wood": 75, "gold": 0, "stone": 125}
 		Building3D.BuildingType.FARM: cost = {"wood": 60, "gold": 0, "stone": 0}
 		Building3D.BuildingType.BLACKSMITH: cost = {"wood": 150, "gold": 0, "stone": 25}
+		Building3D.BuildingType.LUMBER_CAMP: cost = {"wood": 100, "gold": 0, "stone": 0}
+		Building3D.BuildingType.MINING_CAMP: cost = {"wood": 100, "gold": 0, "stone": 0}
+		Building3D.BuildingType.MILL: cost = {"wood": 100, "gold": 0, "stone": 0}
 
 	cost["wood"] = int(cost["wood"] * cost_mult)
 	cost["stone"] = int(cost["stone"] * cost_mult)
@@ -674,10 +715,10 @@ func _attempt_place_building(ground_pos: Vector3) -> void:
 	is_placing_building = false
 	ghost_preview.visible = false
 
+	# All selected villagers immediately construct the new building
 	for u in selected_units:
-		if u.unit_type == Unit3D.UnitType.VILLAGER:
+		if is_instance_valid(u) and u.unit_type == Unit3D.UnitType.VILLAGER:
 			u.command_build(new_b)
-			break
 
 	SoundManager.play_sound("build")
 
@@ -737,7 +778,28 @@ func try_train_unit(b: Building3D, u_type: Unit3D.UnitType, team: int) -> bool:
 	res["wood"] -= wood_cost
 	res["gold"] -= gold_cost
 
-	b.queue_unit_production(u_type, duration)
+	var cost_dict = {"food": food_cost, "wood": wood_cost, "gold": gold_cost, "stone": 0}
+	b.queue_unit_production(u_type, duration, cost_dict)
+	return true
+
+func cancel_unit_production(b: Building3D, index: int) -> bool:
+	if not is_instance_valid(b) or b.hp <= 0:
+		return false
+	var item = b.cancel_train_queue_item(index)
+	if item.is_empty():
+		return false
+
+	var team = b.team
+	if team_resources.has(team):
+		team_resources[team]["food"] += item.get("food", 0)
+		team_resources[team]["wood"] += item.get("wood", 0)
+		team_resources[team]["gold"] += item.get("gold", 0)
+		team_resources[team]["stone"] += item.get("stone", 0)
+
+	SoundManager.play_sound("click")
+	_update_hud()
+	if selected_building == b:
+		ui_manager.set_selected_entity(b)
 	return true
 
 func _on_building_unit_trained(u_type: Unit3D.UnitType, team: int, spawn_pos: Vector3) -> void:
@@ -839,11 +901,34 @@ func deposit_resource(team: int, type: String, amount: int) -> void:
 		if team == 0:
 			gathered_count += amount
 
-func get_closest_dropoff(from_pos: Vector3, team: int) -> Building3D:
+func get_closest_dropoff_for_resource(from_pos: Vector3, team: int, res_type: String) -> Building3D:
+	var allowed_types = [Building3D.BuildingType.TOWN_CENTER, Building3D.BuildingType.CASTLE]
+	match res_type:
+		"wood":
+			allowed_types.append(Building3D.BuildingType.LUMBER_CAMP)
+		"gold", "stone":
+			allowed_types.append(Building3D.BuildingType.MINING_CAMP)
+		"food":
+			allowed_types.append(Building3D.BuildingType.MILL)
+
+	var best_b: Building3D = null
+	var min_dist = 999999.0
+	for b in buildings:
+		if is_instance_valid(b) and b.team == team and b.is_completed and b.hp > 0:
+			if b.building_type in allowed_types:
+				var d = from_pos.distance_squared_to(b.global_position)
+				if d < min_dist:
+					min_dist = d
+					best_b = b
+	return best_b
+
+func get_closest_dropoff(from_pos: Vector3, team: int, res_type: String = "") -> Building3D:
+	if res_type != "":
+		return get_closest_dropoff_for_resource(from_pos, team, res_type)
 	var best_b = null
 	var min_dist = 999999.0
 	for b in buildings:
-		if is_instance_valid(b) and b.team == team and b.is_completed and (b.building_type in [Building3D.BuildingType.TOWN_CENTER, Building3D.BuildingType.CASTLE]):
+		if is_instance_valid(b) and b.team == team and b.is_completed and b.hp > 0 and (b.building_type in [Building3D.BuildingType.TOWN_CENTER, Building3D.BuildingType.CASTLE, Building3D.BuildingType.LUMBER_CAMP, Building3D.BuildingType.MINING_CAMP, Building3D.BuildingType.MILL]):
 			var d = from_pos.distance_squared_to(b.global_position)
 			if d < min_dist:
 				min_dist = d

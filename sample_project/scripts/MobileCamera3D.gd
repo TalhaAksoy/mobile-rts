@@ -31,32 +31,28 @@ func setup_bounds(width: float, height: float) -> void:
 	map_bounds_max = Vector2(width - 4, height - 4)
 	_clamp_camera()
 
+func pan_by_screen_delta(delta_pixels: Vector2) -> void:
+	var factor = (position.y / 800.0) * 1.6
+	position.x += delta_pixels.x * factor
+	position.z += delta_pixels.y * factor * 1.4
+	_clamp_camera()
+
+func pan_to_drag(drag_start_screen: Vector2, current_screen: Vector2, drag_start_cam: Vector3) -> void:
+	var delta_pixels = drag_start_screen - current_screen
+	var factor = (position.y / 800.0) * 1.6
+	position.x = drag_start_cam.x + delta_pixels.x * factor
+	position.z = drag_start_cam.z + delta_pixels.y * factor * 1.4
+	_clamp_camera()
+
 func _unhandled_input(event: InputEvent) -> void:
-	# Mouse / Single Touch Drag
+	# Mouse Wheel Zoom
 	if event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_LEFT:
-			if event.pressed:
-				is_dragging = true
-				drag_start_mouse_pos = event.position
-				drag_start_cam_pos = position
-			else:
-				is_dragging = false
-		elif event.button_index == MOUSE_BUTTON_WHEEL_UP:
+		if event.button_index == MOUSE_BUTTON_WHEEL_UP:
 			_set_target_height(target_height - 2.5)
 		elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
 			_set_target_height(target_height + 2.5)
 
-	elif event is InputEventMouseMotion and is_dragging:
-		var delta_pixels = drag_start_mouse_pos - event.position
-		# Convert screen delta to 3D ground displacement based on camera height
-		var factor = (position.y / 800.0) * 1.6
-		var new_x = drag_start_cam_pos.x + delta_pixels.x * factor
-		var new_z = drag_start_cam_pos.z + delta_pixels.y * factor * 1.4
-		position.x = new_x
-		position.z = new_z
-		_clamp_camera()
-
-	# Mobile Multi-touch pinch zoom
+	# Mobile Multi-touch pinch zoom (2+ fingers)
 	if event is InputEventScreenTouch:
 		if event.pressed:
 			touch_points[event.index] = event.position

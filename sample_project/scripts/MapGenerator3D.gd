@@ -51,6 +51,7 @@ var detail_noise: FastNoiseLite = FastNoiseLite.new()
 @onready var props_container: Node3D = $PropsContainer
 
 var water_mesh_instances: Array[MeshInstance3D] = []
+var bridge_mesh_instances: Array[Node3D] = []
 var gold_crystal_materials: Array[StandardMaterial3D] = []
 var anim_time: float = 0.0
 
@@ -93,6 +94,7 @@ func generate(chosen_map_type: CivData.MapType, custom_seed: int = -1) -> void:
 		child.queue_free()
 
 	water_mesh_instances.clear()
+	bridge_mesh_instances.clear()
 	gold_crystal_materials.clear()
 	tiles.clear()
 	height_map.clear()
@@ -129,6 +131,8 @@ func generate(chosen_map_type: CivData.MapType, custom_seed: int = -1) -> void:
 
 	# 4. Initialize HD-2D Diorama Fog of War
 	_init_fog_of_war()
+	_reveal_circle(world_to_cell(player_start_pos), 12)
+	update_fog_of_war([], [], [], [])
 
 	map_generated.emit()
 
@@ -141,21 +145,33 @@ func _init_fog_of_war() -> void:
 		fog_grid.append(col)
 
 	fog_image = Image.create(MAP_WIDTH, MAP_HEIGHT, false, Image.FORMAT_RGBA8)
-	fog_image.fill(Color(0.04, 0.04, 0.06, 0.96))
+	fog_image.fill(Color(0.04, 0.04, 0.06, 0.98))
 	fog_texture = ImageTexture.create_from_image(fog_image)
 
 	if is_instance_valid(fog_mesh_inst):
 		fog_mesh_inst.queue_free()
 
+	# Find highest elevation on current map
+	var max_h = 0.0
+	for x in range(MAP_WIDTH):
+		for y in range(MAP_HEIGHT):
+			if height_map[x][y] > max_h:
+				max_h = height_map[x][y]
+
 	fog_mesh_inst = MeshInstance3D.new()
+	fog_mesh_inst.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+
 	var pm = PlaneMesh.new()
-	pm.size = Vector2(MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE)
+	pm.size = Vector2(MAP_WIDTH * TILE_SIZE + 6.0, MAP_HEIGHT * TILE_SIZE + 6.0)
 	fog_mesh_inst.mesh = pm
-	fog_mesh_inst.position = Vector3((MAP_WIDTH * TILE_SIZE) * 0.5, 2.3, (MAP_HEIGHT * TILE_SIZE) * 0.5)
+	# Position slightly above the highest ground level, uniformly covering all terrain, cliffs, and water
+	fog_mesh_inst.position = Vector3((MAP_WIDTH * TILE_SIZE) * 0.5, max_h + 0.15, (MAP_HEIGHT * TILE_SIZE) * 0.5)
 
 	var f_mat = StandardMaterial3D.new()
 	f_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	f_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	f_mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+	f_mat.render_priority = 5
 	f_mat.albedo_texture = fog_texture
 	f_mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR
 	fog_mesh_inst.material_override = f_mat
@@ -213,6 +229,68 @@ func update_fog_of_war(player_units: Array, player_buildings: Array, enemy_units
 		if is_instance_valid(eb):
 			var c = eb.origin_cell
 			eb.visible = (get_fog_state(c) >= FogState.EXPLORED)
+
+	# 6. Hide resources in UNEXPLORED fog, shroud in EXPLORED fog
+	for cell in trees:
+		var t_data = trees[cell]
+		var t_raw = t_data.get("node")
+		if is_instance_valid(t_raw) and t_raw is Node3D:
+			var t_node = t_raw as Node3D
+			var st = get_fog_state(cell)
+			t_node.visible = (st >= FogState.EXPLORED)
+			if t_node.visible and t_node.get_child_count() > 0:
+				var spr = t_node.get_child(0)
+				if is_instance_valid(spr) and spr is Sprite3D:
+					spr.modulate = Color(1.0, 1.0, 1.0, 1.0) if st == FogState.VISIBLE else Color(0.68, 0.68, 0.74, 1.0)
+
+	for cell in gold_mines:
+		var g_data = gold_mines[cell]
+		var g_raw = g_data.get("node")
+		if is_instance_valid(g_raw) and g_raw is Node3D:
+			var g_node = g_raw as Node3D
+			var st = get_fog_state(cell)
+			g_node.visible = (st >= FogState.EXPLORED)
+			if g_node.visible and g_node.get_child_count() > 0:
+				var spr = g_node.get_child(0)
+				if is_instance_valid(spr) and spr is Sprite3D:
+					spr.modulate = Color(1.0, 1.0, 1.0, 1.0) if st == FogState.VISIBLE else Color(0.68, 0.68, 0.74, 1.0)
+
+	for cell in stone_mines:
+		var s_data = stone_mines[cell]
+		var s_raw = s_data.get("node")
+		if is_instance_valid(s_raw) and s_raw is Node3D:
+			var s_node = s_raw as Node3D
+			var st = get_fog_state(cell)
+			s_node.visible = (st >= FogState.EXPLORED)
+			if s_node.visible and s_node.get_child_count() > 0:
+				var spr = s_node.get_child(0)
+				if is_instance_valid(spr) and spr is Sprite3D:
+					spr.modulate = Color(1.0, 1.0, 1.0, 1.0) if st == FogState.VISIBLE else Color(0.68, 0.68, 0.74, 1.0)
+
+	for cell in berry_bushes:
+		var b_data = berry_bushes[cell]
+		var b_raw = b_data.get("node")
+		if is_instance_valid(b_raw) and b_raw is Node3D:
+			var b_node = b_raw as Node3D
+			var st = get_fog_state(cell)
+			b_node.visible = (st >= FogState.EXPLORED)
+			if b_node.visible and b_node.get_child_count() > 0:
+				var spr = b_node.get_child(0)
+				if is_instance_valid(spr) and spr is Sprite3D:
+					spr.modulate = Color(1.0, 1.0, 1.0, 1.0) if st == FogState.VISIBLE else Color(0.68, 0.68, 0.74, 1.0)
+
+	# 7. Hide water and bridges in UNEXPLORED fog
+	for wi in water_mesh_instances:
+		if is_instance_valid(wi):
+			var cell = wi.get_meta("cell", Vector2i(-1, -1))
+			if cell != Vector2i(-1, -1):
+				wi.visible = (get_fog_state(cell) >= FogState.EXPLORED)
+
+	for bi in bridge_mesh_instances:
+		if is_instance_valid(bi):
+			var cell = bi.get_meta("cell", Vector2i(-1, -1))
+			if cell != Vector2i(-1, -1):
+				bi.visible = (get_fog_state(cell) >= FogState.EXPLORED)
 
 func _reveal_circle(center: Vector2i, radius: int) -> void:
 	var r2 = radius * radius
@@ -317,7 +395,8 @@ func _create_natural_organic_terrain() -> void:
 	var cliff_mat = StandardMaterial3D.new()
 	cliff_mat.albedo_texture = PixelArtTextures.get_stepped_cliff_texture()
 	cliff_mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
-	cliff_mat.roughness = 0.90
+	cliff_mat.cull_mode = BaseMaterial3D.CULL_DISABLED
+	cliff_mat.roughness = 0.70
 
 	var wood_base_mat = StandardMaterial3D.new()
 	wood_base_mat.albedo_texture = PixelArtTextures.get_diorama_wood_base_texture()
@@ -519,6 +598,7 @@ func _create_natural_organic_terrain() -> void:
 				wi.mesh = w_mesh
 				wi.position = Vector3(x * TILE_SIZE + TILE_SIZE * 0.5, -0.35, y * TILE_SIZE + TILE_SIZE * 0.5)
 				wi.material_override = water_mat
+				wi.set_meta("cell", Vector2i(x, y))
 				ground_container.add_child(wi)
 				water_mesh_instances.append(wi)
 			elif tiles[x][y] == TileType.SHALLOW_WATER:
@@ -527,6 +607,7 @@ func _create_natural_organic_terrain() -> void:
 func _spawn_wooden_bridge(cell: Vector2i) -> void:
 	var bridge = Node3D.new()
 	bridge.position = cell_to_world(cell) + Vector3(0, -0.1, 0)
+	bridge.set_meta("cell", cell)
 	var plank_mat = StandardMaterial3D.new()
 	plank_mat.albedo_color = Color(0.42, 0.28, 0.16)
 	plank_mat.roughness = 0.85
@@ -541,6 +622,7 @@ func _spawn_wooden_bridge(cell: Vector2i) -> void:
 		bridge.add_child(plank)
 
 	ground_container.add_child(bridge)
+	bridge_mesh_instances.append(bridge)
 
 func _generate_3d_resources() -> void:
 	var cfg = CivData.get_map_config(map_type)
@@ -647,6 +729,24 @@ func _get_nature_model(rel_path: String) -> Node3D:
 			return scene.duplicate()
 	return null
 
+func _create_resource_area(node: Node3D, cell: Vector2i, type: String, radius: float, height: float, y_offset: float) -> Area3D:
+	var area = Area3D.new()
+	area.name = "SelectionArea"
+	area.collision_layer = 4 # Layer 3 (bitmask 4) - dedicated Resource layer
+	area.collision_mask = 0
+	area.set_meta("res_type", type)
+	area.set_meta("res_cell", cell)
+
+	var shape = CollisionShape3D.new()
+	var cyl = CylinderShape3D.new()
+	cyl.radius = radius
+	cyl.height = height
+	shape.shape = cyl
+	shape.position = Vector3(0, y_offset, 0)
+	area.add_child(shape)
+	node.add_child(area)
+	return area
+
 func _spawn_3d_tree(cell: Vector2i) -> void:
 	var tree_node = Node3D.new()
 	var ground_y = height_map[cell.x][cell.y]
@@ -663,8 +763,16 @@ func _spawn_3d_tree(cell: Vector2i) -> void:
 	spr.position = Vector3(0, 1.7, 0)
 	tree_node.add_child(spr)
 
+	_create_resource_area(tree_node, cell, "wood", 0.95, 3.6, 1.8)
+
 	props_container.add_child(tree_node)
-	trees[cell] = {"node": tree_node, "hp": 100}
+	trees[cell] = {
+		"node": tree_node,
+		"hp": 100,
+		"max_amount": 100,
+		"name": "Çam Ağacı" if is_pine else "Meşe Ağacı",
+		"type": "wood"
+	}
 
 func _spawn_3d_gold(cell: Vector2i) -> void:
 	var gold_node = Node3D.new()
@@ -681,8 +789,16 @@ func _spawn_3d_gold(cell: Vector2i) -> void:
 	spr.position = Vector3(0, 0.95, 0)
 	gold_node.add_child(spr)
 
+	_create_resource_area(gold_node, cell, "gold", 0.90, 1.8, 0.9)
+
 	props_container.add_child(gold_node)
-	gold_mines[cell] = {"node": gold_node, "gold": 800}
+	gold_mines[cell] = {
+		"node": gold_node,
+		"gold": 800,
+		"max_amount": 800,
+		"name": "Altın Madeni",
+		"type": "gold"
+	}
 
 func _spawn_3d_stone(cell: Vector2i) -> void:
 	var stone_node = Node3D.new()
@@ -699,8 +815,16 @@ func _spawn_3d_stone(cell: Vector2i) -> void:
 	spr.position = Vector3(0, 0.95, 0)
 	stone_node.add_child(spr)
 
+	_create_resource_area(stone_node, cell, "stone", 0.90, 1.8, 0.9)
+
 	props_container.add_child(stone_node)
-	stone_mines[cell] = {"node": stone_node, "stone": 750}
+	stone_mines[cell] = {
+		"node": stone_node,
+		"stone": 750,
+		"max_amount": 750,
+		"name": "Taş Ocağı",
+		"type": "stone"
+	}
 
 func _spawn_3d_berry(cell: Vector2i) -> void:
 	var berry_node = Node3D.new()
@@ -717,8 +841,16 @@ func _spawn_3d_berry(cell: Vector2i) -> void:
 	spr.position = Vector3(0, 0.95, 0)
 	berry_node.add_child(spr)
 
+	_create_resource_area(berry_node, cell, "food", 0.85, 1.6, 0.8)
+
 	props_container.add_child(berry_node)
-	berry_bushes[cell] = {"node": berry_node, "food": 500}
+	berry_bushes[cell] = {
+		"node": berry_node,
+		"food": 500,
+		"max_amount": 500,
+		"name": "Böğürtlen Çalısı",
+		"type": "food"
+	}
 
 func _find_random_empty_spot(min_b: Vector2i, max_b: Vector2i) -> Vector2i:
 	for attempt in range(40):
@@ -849,10 +981,13 @@ func harvest_tree(cell: Vector2i, amount: int) -> int:
 	if not cell in trees:
 		return 0
 	var t = trees[cell]
-	var harvested = min(amount, t["hp"])
-	t["hp"] -= harvested
-	if t["hp"] <= 0:
-		if is_instance_valid(t["node"]):
+	var cur = t.get("hp", t.get("amount", 100))
+	var harvested = min(amount, cur)
+	cur -= harvested
+	t["hp"] = cur
+	t["amount"] = cur
+	if cur <= 0:
+		if is_instance_valid(t.get("node", null)):
 			t["node"].queue_free()
 		trees.erase(cell)
 		update_cell_walkability(cell)
@@ -862,10 +997,13 @@ func harvest_gold(cell: Vector2i, amount: int) -> int:
 	if not cell in gold_mines:
 		return 0
 	var g = gold_mines[cell]
-	var harvested = min(amount, g["gold"])
-	g["gold"] -= harvested
-	if g["gold"] <= 0:
-		if is_instance_valid(g["node"]):
+	var cur = g.get("gold", g.get("amount", 800))
+	var harvested = min(amount, cur)
+	cur -= harvested
+	g["gold"] = cur
+	g["amount"] = cur
+	if cur <= 0:
+		if is_instance_valid(g.get("node", null)):
 			g["node"].queue_free()
 		gold_mines.erase(cell)
 		update_cell_walkability(cell)
@@ -875,10 +1013,13 @@ func harvest_stone(cell: Vector2i, amount: int) -> int:
 	if not cell in stone_mines:
 		return 0
 	var s = stone_mines[cell]
-	var harvested = min(amount, s["stone"])
-	s["stone"] -= harvested
-	if s["stone"] <= 0:
-		if is_instance_valid(s["node"]):
+	var cur = s.get("stone", s.get("amount", 800))
+	var harvested = min(amount, cur)
+	cur -= harvested
+	s["stone"] = cur
+	s["amount"] = cur
+	if cur <= 0:
+		if is_instance_valid(s.get("node", null)):
 			s["node"].queue_free()
 		stone_mines.erase(cell)
 		update_cell_walkability(cell)
@@ -888,10 +1029,13 @@ func harvest_food(cell: Vector2i, amount: int) -> int:
 	if not cell in berry_bushes:
 		return 0
 	var b = berry_bushes[cell]
-	var harvested = min(amount, b["food"])
-	b["food"] -= harvested
-	if b["food"] <= 0:
-		if is_instance_valid(b["node"]):
+	var cur = b.get("food", b.get("amount", 100))
+	var harvested = min(amount, cur)
+	cur -= harvested
+	b["food"] = cur
+	b["amount"] = cur
+	if cur <= 0:
+		if is_instance_valid(b.get("node", null)):
 			b["node"].queue_free()
 		berry_bushes.erase(cell)
 	return harvested
@@ -909,3 +1053,68 @@ func unregister_building_cells(origin_cell: Vector2i, size: Vector2i) -> void:
 			var c = origin_cell + Vector2i(dx, dy)
 			occupied_cells.erase(c)
 			update_cell_walkability(c)
+
+func get_resource_at_cell(cell: Vector2i, type: String = "") -> Dictionary:
+	if (type == "wood" or type == "") and cell in trees:
+		var t = trees[cell]
+		return {
+			"cell": cell,
+			"type": "wood",
+			"name": t.get("name", "Meşe Ağacı"),
+			"amount": t.get("hp", 0),
+			"max_amount": t.get("max_amount", 100),
+			"node": t.get("node", null)
+		}
+	elif (type == "gold" or type == "") and cell in gold_mines:
+		var g = gold_mines[cell]
+		return {
+			"cell": cell,
+			"type": "gold",
+			"name": g.get("name", "Altın Madeni"),
+			"amount": g.get("gold", 0),
+			"max_amount": g.get("max_amount", 800),
+			"node": g.get("node", null)
+		}
+	elif (type == "stone" or type == "") and cell in stone_mines:
+		var s = stone_mines[cell]
+		return {
+			"cell": cell,
+			"type": "stone",
+			"name": s.get("name", "Taş Ocağı"),
+			"amount": s.get("stone", 0),
+			"max_amount": s.get("max_amount", 750),
+			"node": s.get("node", null)
+		}
+	elif (type == "food" or type == "") and cell in berry_bushes:
+		var b = berry_bushes[cell]
+		return {
+			"cell": cell,
+			"type": "food",
+			"name": b.get("name", "Böğürtlen Çalısı"),
+			"amount": b.get("food", 0),
+			"max_amount": b.get("max_amount", 500),
+			"node": b.get("node", null)
+		}
+	return {}
+
+func find_nearest_resource_node(from_pos: Vector3, type: String, max_world_distance: float) -> Vector2i:
+	var dict: Dictionary = {}
+	match type:
+		"wood": dict = trees
+		"gold": dict = gold_mines
+		"stone": dict = stone_mines
+		"food": dict = berry_bushes
+
+	var best_cell = Vector2i(-1, -1)
+	var min_dist_sq = max_world_distance * max_world_distance
+	for cell in dict.keys():
+		var node_info = dict[cell]
+		var amt = node_info.get("hp", node_info.get("gold", node_info.get("stone", node_info.get("food", 0))))
+		if amt <= 0:
+			continue
+		var w_pos = cell_to_world(cell)
+		var d_sq = from_pos.distance_squared_to(w_pos)
+		if d_sq < min_dist_sq:
+			min_dist_sq = d_sq
+			best_cell = cell
+	return best_cell

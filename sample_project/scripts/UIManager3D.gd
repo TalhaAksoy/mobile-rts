@@ -56,8 +56,13 @@ var action_buttons_grid: Control:
 # Zoom Controls
 @onready var zoom_in_btn: Button = $HUDRoot/ZoomBox/ZoomInButton
 @onready var zoom_out_btn: Button = $HUDRoot/ZoomBox/ZoomOutButton
+@onready var box_select_btn: Button = $HUDRoot/ZoomBox.get_node_or_null("BoxSelectButton")
 signal zoom_in_requested
 signal zoom_out_requested
+signal box_select_toggled(enabled: bool)
+var is_box_mode_active: bool = false
+var selected_resource_info: Dictionary = {}
+var player_civ_type: CivData.CivType = CivData.CivType.OTTOMANS
 
 # Build Tray Panel
 @onready var build_panel: PanelContainer = $HUDRoot/BuildPanel
@@ -70,7 +75,7 @@ signal zoom_out_requested
 var selected_entity: Node3D = null
 
 const BOTTOM_BAR_COMPACT_TOP: float = -105.0
-const BOTTOM_BAR_EXPANDED_TOP: float = -235.0
+const BOTTOM_BAR_EXPANDED_TOP: float = -245.0
 
 func _ready() -> void:
 	# Apply Medieval Parchment Theme
@@ -102,6 +107,18 @@ func _ready() -> void:
 	if is_instance_valid(zoom_out_btn):
 		ParchmentTheme.apply_parchment_button(zoom_out_btn, 18)
 		zoom_out_btn.pressed.connect(func(): zoom_out_requested.emit())
+	if is_instance_valid(box_select_btn):
+		ParchmentTheme.apply_parchment_button(box_select_btn, 18)
+		box_select_btn.pressed.connect(func():
+			is_box_mode_active = not is_box_mode_active
+			box_select_toggled.emit(is_box_mode_active)
+			if is_box_mode_active:
+				box_select_btn.modulate = Color(0.3, 1.0, 0.4)
+				notify_banner("KUTU SEÇİMİ: AKTİF", Color(0.3, 1.0, 0.4))
+			else:
+				box_select_btn.modulate = Color(1.0, 1.0, 1.0)
+				notify_banner("KUTU SEÇİMİ: KAPALI", Color(0.9, 0.9, 0.9))
+		)
 
 	build_main_btn.text = "İNŞAAT"
 	army_btn.text = "ORDU"
@@ -135,6 +152,9 @@ func _setup_build_grid() -> void:
 
 	var buildings_list = [
 		{"type": Building3D.BuildingType.HOUSE, "label": "EV\n30 Odun", "desc": "+5 Nüfus Limiti"},
+		{"type": Building3D.BuildingType.LUMBER_CAMP, "label": "ODUNCU KAMPI\n100 Odun", "desc": "Odun Teslim Noktası"},
+		{"type": Building3D.BuildingType.MINING_CAMP, "label": "MADEN KAMPI\n100 Odun", "desc": "Altın & Taş Teslim Noktası"},
+		{"type": Building3D.BuildingType.MILL, "label": "DEĞİRMEN\n100 Odun", "desc": "Besin Teslim Noktası"},
 		{"type": Building3D.BuildingType.BARRACKS, "label": "KIŞLA\n150 Odun", "desc": "Piyade ve Mızrakçı"},
 		{"type": Building3D.BuildingType.ARCHERY_RANGE, "label": "OKÇU ALANI\n150 Odun", "desc": "Menzilli Birlikler"},
 		{"type": Building3D.BuildingType.STABLE, "label": "AHIR\n175 Odun", "desc": "Hızlı Süvariler"},
@@ -147,7 +167,10 @@ func _setup_build_grid() -> void:
 	for item in buildings_list:
 		var btn = Button.new()
 		btn.text = " %s\n(%s)" % [item["label"], item["desc"]]
-		btn.icon = PixelArtTextures.get_building_icon_texture(item["type"])
+		var b_icon = FactionArtManager.get_building_texture(player_civ_type, item["type"])
+		if b_icon == null:
+			b_icon = PixelArtTextures.get_building_icon_texture(item["type"])
+		btn.icon = b_icon
 		btn.expand_icon = true
 		btn.custom_minimum_size = Vector2(236, 56)
 		ParchmentTheme.apply_parchment_button(btn, 12)
@@ -158,11 +181,13 @@ func _setup_build_grid() -> void:
 		build_grid.add_child(btn)
 
 func set_player_civ(c_type: CivData.CivType) -> void:
+	player_civ_type = c_type
 	var cfg = CivData.get_civ(c_type)
 	if civ_label:
 		civ_label.text = cfg.get("name", "Osmanlılar")
 	if civ_flag_rect:
 		civ_flag_rect.texture = PixelArtTextures.get_civ_flag_texture(c_type)
+	_setup_build_grid()
 
 func update_resources(food: int, wood: int, gold: int, stone: int, pop: int, max_pop: int) -> void:
 	if food_label: food_label.text = "🌾 %d" % food
@@ -177,6 +202,7 @@ func update_idle_villager_count(count: int) -> void:
 
 func set_selected_entity(entity: Node3D) -> void:
 	selected_entity = entity
+	selected_resource_info.clear()
 	build_panel.visible = false
 
 	for child in action_flow.get_children():
@@ -199,7 +225,53 @@ func set_selected_entity(entity: Node3D) -> void:
 	elif entity is Building3D:
 		_display_building_ui(entity)
 
+func set_selected_resource(res_info: Dictionary) -> void:
+	selected_entity = null
+	selected_resource_info = res_info
+	build_panel.visible = false
+
+	for child in action_flow.get_children():
+		child.queue_free()
+
+	if res_info.is_empty():
+		_reset_context_deck()
+		return
+
+	if default_bar != null: default_bar.visible = false
+	if default_hint != null: default_hint.visible = false
+	if selection_deck != null: selection_deck.visible = true
+	_update_bottom_bar_height(true)
+
+	var r_type = res_info.get("type", "wood")
+	var r_name = res_info.get("name", "Doğal Kaynak")
+	var r_amt = res_info.get("amount", 0)
+	var r_max = res_info.get("max_amount", 100)
+
+	if entity_portrait_rect != null:
+		match r_type:
+			"wood": entity_portrait_rect.texture = PixelArtTextures.get_oak_tree_texture()
+			"gold": entity_portrait_rect.texture = PixelArtTextures.get_gold_node_texture()
+			"stone": entity_portrait_rect.texture = PixelArtTextures.get_stone_node_texture()
+			"food": entity_portrait_rect.texture = PixelArtTextures.get_berry_bush_texture()
+		entity_portrait_rect.visible = true
+
+	var type_title = "Odun (Ağaç)"
+	match r_type:
+		"wood": type_title = "Odun (Ağaç)"
+		"gold": type_title = "Altın Madeni"
+		"stone": type_title = "Taş Ocağı"
+		"food": type_title = "Besin (Çalı)"
+
+	entity_name_label.text = "%s: %s" % [type_title, r_name]
+	entity_hp_bar.visible = true
+	entity_hp_bar.max_value = r_max
+	entity_hp_bar.value = r_amt
+	entity_hp_label.visible = true
+	entity_hp_label.text = "Kalan: %d / %d" % [r_amt, r_max]
+	entity_stats_label.text = "Doğal Kaynak • Bir köylü seçip dokunarak toplatabilirsiniz."
+
 func _reset_context_deck() -> void:
+	selected_resource_info.clear()
 	if selection_deck != null: selection_deck.visible = false
 	if default_bar != null: default_bar.visible = true
 	if default_hint != null: default_hint.visible = true
@@ -251,6 +323,21 @@ func _process(_delta: float) -> void:
 				int(selected_entity.armor),
 				"Aktif" if selected_entity.is_completed else "İnşaat Sürüyor (%%%d)..." % int(selected_entity.construction_progress)
 			]
+	elif not selected_resource_info.is_empty():
+		if game_controller != null and is_instance_valid(game_controller.map_gen):
+			var r_cell = selected_resource_info.get("cell", Vector2i(-1, -1)) as Vector2i
+			var r_type = selected_resource_info.get("type", "wood") as String
+			var r_max = selected_resource_info.get("max_amount", 100)
+			var cur = game_controller.map_gen.get_resource_at_cell(r_cell, r_type)
+			var amt = cur.get("amount", 0) if not cur.is_empty() else 0
+			entity_hp_bar.max_value = r_max
+			entity_hp_bar.value = amt
+			if amt <= 0:
+				entity_hp_label.text = "TÜKENDİ (0 / %d)" % r_max
+				entity_stats_label.text = "Bu kaynak tamamen tükendi."
+			else:
+				entity_hp_label.text = "Kalan: %d / %d" % [amt, r_max]
+				entity_stats_label.text = "Doğal Kaynak • Bir köylü seçip dokunarak toplatabilirsiniz."
 
 func _display_unit_ui(unit: Unit3D) -> void:
 	if entity_portrait_rect != null:
@@ -301,7 +388,10 @@ func _display_unit_ui(unit: Unit3D) -> void:
 
 func _display_building_ui(b: Building3D) -> void:
 	if entity_portrait_rect != null:
-		entity_portrait_rect.texture = PixelArtTextures.get_building_icon_texture(b.building_type)
+		var tex = FactionArtManager.get_building_texture(b.civ_type, b.building_type)
+		if tex == null:
+			tex = PixelArtTextures.get_building_icon_texture(b.building_type)
+		entity_portrait_rect.texture = tex
 		entity_portrait_rect.visible = true
 
 	var name_str = "Bina"
@@ -314,6 +404,9 @@ func _display_building_ui(b: Building3D) -> void:
 		Building3D.BuildingType.CASTLE: name_str = "Büyük Kale"
 		Building3D.BuildingType.TOWER: name_str = "Kule"
 		Building3D.BuildingType.FARM: name_str = "Çiftlik"
+		Building3D.BuildingType.LUMBER_CAMP: name_str = "Oduncu Kampı"
+		Building3D.BuildingType.MINING_CAMP: name_str = "Maden Kampı"
+		Building3D.BuildingType.MILL: name_str = "Değirmen"
 
 	entity_name_label.text = "%s [%s]" % [name_str, "Dost" if b.team == 0 else "Düşman"]
 	entity_hp_bar.max_value = b.max_hp
@@ -394,6 +487,44 @@ func _display_building_ui(b: Building3D) -> void:
 					"BERSERKER": u_enum = Unit3D.UnitType.BERSERKER
 					"CHUKONU": u_enum = Unit3D.UnitType.CHUKONU
 				_add_train_button("%s\n(80 Besin, 60 Altın)" % u_name, u_enum)
+
+		# Production Queue with Cancel & Refund
+		if b.train_queue.size() > 0:
+			var sep = HSeparator.new()
+			action_flow.add_child(sep)
+			var q_lbl = Label.new()
+			q_lbl.text = "ÜRETİM SIRASI (İptal ve İade İçin Dokunun):"
+			q_lbl.add_theme_font_size_override("font_size", 12)
+			q_lbl.add_theme_color_override("font_color", Color(0.35, 0.22, 0.12))
+			action_flow.add_child(q_lbl)
+
+			for i in range(b.train_queue.size()):
+				var item = b.train_queue[i]
+				var q_btn = Button.new()
+				var u_title = "Birim"
+				match item["type"]:
+					Unit3D.UnitType.VILLAGER: u_title = "İşçi"
+					Unit3D.UnitType.SWORDSMAN: u_title = "Kılıçlı"
+					Unit3D.UnitType.SPEARMAN: u_title = "Mızrakçı"
+					Unit3D.UnitType.ARCHER: u_title = "Okçu"
+					Unit3D.UnitType.CAVALRY: u_title = "Süvari"
+					Unit3D.UnitType.PALADIN: u_title = "Şövalye"
+					_: u_title = "Özel Birlik"
+
+				if i == 0:
+					var pct = int(clamp(b.current_train_timer / max(0.1, b.current_train_duration), 0.0, 1.0) * 100.0)
+					q_btn.text = "✖ %s (%%%d)" % [u_title, pct]
+				else:
+					q_btn.text = "✖ %d. %s (Bekliyor)" % [i + 1, u_title]
+				q_btn.custom_minimum_size = Vector2(145, 44)
+				ParchmentTheme.apply_parchment_button(q_btn, 12)
+				var q_idx = i
+				q_btn.pressed.connect(func():
+					if game_controller != null and is_instance_valid(b):
+						game_controller.cancel_unit_production(b, q_idx)
+						set_selected_entity(b)
+				)
+				action_flow.add_child(q_btn)
 
 func _add_train_button(label: String, u_type: Unit3D.UnitType) -> void:
 	var btn = Button.new()

@@ -63,6 +63,8 @@ var target_cell: Vector2i = Vector2i(-1, -1)
 var resource_type: String = ""
 var carried_resource: int = 0
 var max_carry: int = 15
+const AUTO_GATHER_SEARCH_RADIUS: float = 16.0
+var last_resource_pos: Vector3 = Vector3.ZERO
 
 var attack_timer: float = 0.0
 var swing_progress: float = 0.0
@@ -268,8 +270,8 @@ func _build_3d_model() -> void:
 	unit_sprite.alpha_cut = Sprite3D.ALPHA_CUT_DISCARD
 	unit_sprite.pixel_size = SPRITE_PIXEL_SIZE
 	unit_sprite.position = Vector3(0, SPRITE_BASE_Y, 0)
-	unit_sprite.no_depth_test = true
-	unit_sprite.render_priority = 6
+	unit_sprite.no_depth_test = false
+	unit_sprite.render_priority = 0
 	if team != 0:
 		unit_sprite.modulate = Color(1.08, 0.88, 0.88)
 	model_root.add_child(unit_sprite)
@@ -694,7 +696,10 @@ func _process_gathering(delta: float) -> void:
 	# Verify target resource still exists in map
 	var dict = map_gen.trees if resource_type == "wood" else (map_gen.gold_mines if resource_type == "gold" else (map_gen.stone_mines if resource_type == "stone" else map_gen.berry_bushes))
 	if not (target_cell in dict):
-		_find_next_resource(resource_type)
+		if carried_resource > 0:
+			command_return_resources()
+		else:
+			_find_next_resource(resource_type)
 		return
 
 	var my_cell = map_gen.world_to_cell(global_position)
@@ -727,34 +732,29 @@ func _process_gathering(delta: float) -> void:
 
 		var civ_cfg = CivData.get_civ(civ_type)
 		var harvest_amt = 5
+		var got = 0
 		if resource_type == "wood":
 			harvest_amt = int(5 * civ_cfg.get("wood_gather_mult", 1.0))
-			var got = map_gen.harvest_tree(target_cell, harvest_amt)
-			if got > 0:
-				carried_resource += got
-			else:
-				_find_next_resource("wood")
+			got = map_gen.harvest_tree(target_cell, harvest_amt)
 		elif resource_type == "gold":
 			harvest_amt = int(4 * civ_cfg.get("gold_gather_mult", 1.0))
-			var got = map_gen.harvest_gold(target_cell, harvest_amt)
-			if got > 0:
-				carried_resource += got
-			else:
-				_find_next_resource("gold")
+			got = map_gen.harvest_gold(target_cell, harvest_amt)
 		elif resource_type == "stone":
 			harvest_amt = int(4 * civ_cfg.get("stone_gather_mult", 1.0))
-			var got = map_gen.harvest_stone(target_cell, harvest_amt)
-			if got > 0:
-				carried_resource += got
-			else:
-				_find_next_resource("stone")
+			got = map_gen.harvest_stone(target_cell, harvest_amt)
 		elif resource_type == "food":
 			harvest_amt = int(5 * civ_cfg.get("food_gather_mult", 1.0))
-			var got = map_gen.harvest_food(target_cell, harvest_amt)
-			if got > 0:
-				carried_resource += got
+			got = map_gen.harvest_food(target_cell, harvest_amt)
+
+		if got > 0:
+			carried_resource += got
+		else:
+			# Resource was depleted!
+			if carried_resource > 0:
+				command_return_resources()
 			else:
-				_find_next_resource("food")
+				_find_next_resource(resource_type)
+			return
 
 		if is_instance_valid(resource_sack):
 			resource_sack.visible = carried_resource > 0
@@ -762,14 +762,44 @@ func _process_gathering(delta: float) -> void:
 		if carried_resource >= max_carry:
 			command_return_resources()
 
+func _find_valid_dropoff() -> Building3D:
+	if main_game == null:
+		return null
+	if main_game.has_method("get_closest_dropoff_for_resource"):
+		var res = main_game.call("get_closest_dropoff_for_resource", global_position, team, resource_type)
+		if is_instance_valid(res) and res is Building3D:
+			return res as Building3D
+	if main_game.has_method("get_closest_dropoff"):
+		# Supports 3-argument signature and safely falls back to 2-argument legacy signature
+		var res3 = main_game.call("get_closest_dropoff", global_position, team, resource_type)
+		if is_instance_valid(res3) and res3 is Building3D:
+			return res3 as Building3D
+		var res2 = main_game.call("get_closest_dropoff", global_position, team)
+		if is_instance_valid(res2) and res2 is Building3D:
+			return res2 as Building3D
+	return null
+
 func _process_return_resources(delta: float) -> void:
 	if main_game == null or map_gen == null:
 		state = State.IDLE
+		target_entity = null
 		return
-	var dropoff = main_game.get_closest_dropoff(global_position, team)
-	if not is_instance_valid(dropoff):
-		state = State.IDLE
-		return
+
+	# Verify currently targeted dropoff building is valid, completed, and alive
+	var dropoff: Building3D = target_entity as Building3D
+	if not is_instance_valid(dropoff) or dropoff.hp <= 0 or not dropoff.is_completed:
+		# Target dropoff was destroyed, uncompleted, or invalid -> seek alternative dropoff
+		dropoff = _find_valid_dropoff()
+		if not is_instance_valid(dropoff):
+			# No alternative dropoffs available on map -> halt and idle safely (prevents per-frame error spam)
+			state = State.IDLE
+			target_entity = null
+			current_path.clear()
+			velocity = Vector3.ZERO
+			return
+		target_entity = dropoff
+		current_path.clear()
+		_calculate_path(dropoff.global_position)
 
 	var my_cell = map_gen.world_to_cell(global_position)
 	var o_cell = dropoff.origin_cell
@@ -786,19 +816,20 @@ func _process_return_resources(delta: float) -> void:
 			_calculate_path(dropoff.global_position)
 		_process_path_movement(delta)
 	else:
-		# Arrived at Town Center / Depot! Deposit cargo
+		# Arrived at Depot / Town Center! Deposit cargo
 		if carried_resource > 0:
 			main_game.deposit_resource(team, resource_type, carried_resource)
 			carried_resource = 0
 		if is_instance_valid(resource_sack):
 			resource_sack.visible = false
 		SoundManager.play_sound("click")
+		target_entity = null
 
 		# Return back to gathering!
-		state = State.GATHERING
 		current_path.clear()
 		var dict = map_gen.trees if resource_type == "wood" else (map_gen.gold_mines if resource_type == "gold" else (map_gen.stone_mines if resource_type == "stone" else map_gen.berry_bushes))
 		if target_cell in dict:
+			state = State.GATHERING
 			_calculate_path(map_gen.cell_to_world(target_cell))
 		else:
 			_find_next_resource(resource_type)
@@ -842,29 +873,31 @@ func _process_building(delta: float) -> void:
 				state = State.IDLE
 				target_entity = null
 
-func _find_next_resource(type: String) -> void:
+func _find_next_resource(type: String = "") -> void:
+	if type == "":
+		type = resource_type
 	if map_gen == null:
 		state = State.IDLE
 		return
-	var nearest_cell = Vector2i(-1, -1)
-	var min_dist = 999999.0
-	var my_cell = map_gen.world_to_cell(global_position)
 
-	var dict = map_gen.trees if type == "wood" else (map_gen.gold_mines if type == "gold" else (map_gen.stone_mines if type == "stone" else map_gen.berry_bushes))
-	for cell in dict.keys():
-		var d = my_cell.distance_squared_to(cell)
-		if d < min_dist:
-			min_dist = d
-			nearest_cell = cell
+	var search_origin = last_resource_pos if last_resource_pos != Vector3.ZERO else global_position
+	var nearest_cell = map_gen.find_nearest_resource_node(search_origin, type, AUTO_GATHER_SEARCH_RADIUS)
 
 	if nearest_cell != Vector2i(-1, -1):
 		target_cell = nearest_cell
 		resource_type = type
 		state = State.GATHERING
 		current_path.clear()
-		_calculate_path(map_gen.cell_to_world(nearest_cell))
+		last_resource_pos = map_gen.cell_to_world(nearest_cell)
+		_calculate_path(last_resource_pos)
 	else:
-		state = State.IDLE
+		if carried_resource > 0:
+			command_return_resources()
+		else:
+			state = State.IDLE
+			target_cell = Vector2i(-1, -1)
+			current_path.clear()
+			velocity = Vector3.ZERO
 
 func _calculate_path(target_pos: Vector3) -> void:
 	if map_gen != null:
@@ -898,7 +931,8 @@ func command_gather(cell: Vector2i, type: String) -> void:
 	resource_type = type
 	target_entity = null
 	if map_gen != null:
-		_calculate_path(map_gen.cell_to_world(cell))
+		last_resource_pos = map_gen.cell_to_world(cell)
+		_calculate_path(last_resource_pos)
 
 func command_build(building: Node3D) -> void:
 	state = State.BUILDING
@@ -909,11 +943,17 @@ func command_return_resources(dropoff: Node3D = null) -> void:
 	state = State.RETURNING_RESOURCES
 	current_path.clear()
 	if is_instance_valid(dropoff):
+		target_entity = dropoff
 		_calculate_path(dropoff.global_position)
-	elif main_game != null:
-		var d = main_game.get_closest_dropoff(global_position, team)
+	else:
+		var d = _find_valid_dropoff()
 		if is_instance_valid(d):
+			target_entity = d
 			_calculate_path(d.global_position)
+		else:
+			target_entity = null
+			state = State.IDLE
+			velocity = Vector3.ZERO
 
 func command_stop() -> void:
 	state = State.IDLE

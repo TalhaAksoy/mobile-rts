@@ -169,3 +169,33 @@ static func apply_parchment_button(btn: Button, font_size: int = 20) -> void:
 	btn.add_theme_stylebox_override("hover", get_button_style("hover"))
 	btn.add_theme_stylebox_override("pressed", get_button_style("pressed"))
 	btn.add_theme_stylebox_override("focus", get_button_style("hover"))
+
+static func apply_parchment_popup(popup: PopupMenu, font_size: int = 15) -> void:
+	if popup == null:
+		return
+	var sb = StyleBoxFlat.new()
+	sb.bg_color = Color(0.16, 0.12, 0.08, 0.98) # Dark antique leather
+	sb.border_color = BRONZE_GOLD
+	sb.set_border_width_all(2)
+	sb.set_corner_radius_all(6)
+	sb.content_margin_left = 12
+	sb.content_margin_right = 12
+	sb.content_margin_top = 8
+	sb.content_margin_bottom = 8
+	popup.add_theme_stylebox_override("panel", sb)
+
+	var sb_hover = StyleBoxFlat.new()
+	sb_hover.bg_color = Color(0.32, 0.24, 0.16, 0.95)
+	sb_hover.border_color = BRONZE_GOLD
+	sb_hover.set_border_width_all(1)
+	sb_hover.set_corner_radius_all(4)
+	popup.add_theme_stylebox_override("hover", sb_hover)
+
+	popup.add_theme_font_override("font", get_medieval_font())
+	popup.add_theme_font_size_override("font_size", font_size)
+	popup.add_theme_color_override("font_color", Color(0.95, 0.88, 0.72))
+	popup.add_theme_color_override("font_hover_color", Color(1.0, 0.95, 0.40))
+	popup.add_theme_constant_override("icon_max_width", 38)
+	popup.add_theme_constant_override("h_separation", 12)
+	popup.add_theme_constant_override("v_separation", 8)
+
