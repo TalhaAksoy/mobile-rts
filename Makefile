@@ -1,5 +1,18 @@
-GODOT_BIN ?= /Users/talhaaksoy/Downloads/Godot.app/Contents/MacOS/Godot
-PROJECT_PATH ?= /Users/talhaaksoy/Project/denemelik/godot/sample_project
+# ==============================================================================
+# NOT: Repoyu klonlayan kişi kendi bilgisayarındaki Godot 4 çalıştırılabilir (binary)
+# dosyasının yolunu aşağıdaki GODOT_BIN değişkenine yazmalıdır veya komut satırından
+# parametre olarak geçmelidir.
+#
+# Varsayılan Örnek Yollar:
+#   macOS (Standart):  /Applications/Godot.app/Contents/MacOS/Godot
+#   Linux / PATH:      godot
+#   Windows:           C:/Godot/Godot_v4.x.exe
+#
+# Parametre ile çalıştırma örneği:
+#   make run GODOT_BIN="/Applications/Godot.app/Contents/MacOS/Godot"
+# ==============================================================================
+GODOT_BIN ?= godot
+PROJECT_PATH ?= sample_project
 
 .PHONY: run test test-commands test-phase1 test-art help
 
@@ -23,7 +36,7 @@ test-art:
 
 help:
 	@echo "Pocket Empires 3D Makefile"
-	@echo "  make run           - Oyunu masaüstü penceresinde başlatır"
+	@echo "  make run           - Oyunu başlatır (Örn: make run GODOT_BIN=...)"
 	@echo "  make test          - Tüm otomatik testleri headless olarak çalıştırır"
 	@echo "  make test-commands - Birim seçimi ve komut testlerini çalıştırır"
 	@echo "  make test-phase1   - Phase 1 doğrulama testlerini çalıştırır"
