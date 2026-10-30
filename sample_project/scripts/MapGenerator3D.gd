@@ -164,14 +164,15 @@ func _init_fog_of_war() -> void:
 	var pm = PlaneMesh.new()
 	pm.size = Vector2(MAP_WIDTH * TILE_SIZE + 6.0, MAP_HEIGHT * TILE_SIZE + 6.0)
 	fog_mesh_inst.mesh = pm
-	# Position slightly above the highest ground level, uniformly covering all terrain, cliffs, and water
-	fog_mesh_inst.position = Vector3((MAP_WIDTH * TILE_SIZE) * 0.5, max_h + 0.15, (MAP_HEIGHT * TILE_SIZE) * 0.5)
+	# Position at base elevation with no-depth-test overlay so no tree crowns punch through
+	fog_mesh_inst.position = Vector3((MAP_WIDTH * TILE_SIZE) * 0.5, 0.45, (MAP_HEIGHT * TILE_SIZE) * 0.5)
 
 	var f_mat = StandardMaterial3D.new()
 	f_mat.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 	f_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 	f_mat.cull_mode = BaseMaterial3D.CULL_DISABLED
-	f_mat.render_priority = 5
+	f_mat.no_depth_test = true
+	f_mat.render_priority = 25
 	f_mat.albedo_texture = fog_texture
 	f_mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_LINEAR
 	fog_mesh_inst.material_override = f_mat
@@ -735,7 +736,9 @@ func _create_resource_area(node: Node3D, cell: Vector2i, type: String, radius: f
 	area.collision_layer = 4 # Layer 3 (bitmask 4) - dedicated Resource layer
 	area.collision_mask = 0
 	area.set_meta("res_type", type)
+	area.set_meta("resource_type", type)
 	area.set_meta("res_cell", cell)
+	area.set_meta("cell", cell)
 
 	var shape = CollisionShape3D.new()
 	var cyl = CylinderShape3D.new()
@@ -764,6 +767,7 @@ func _spawn_3d_tree(cell: Vector2i) -> void:
 	tree_node.add_child(spr)
 
 	_create_resource_area(tree_node, cell, "wood", 0.95, 3.6, 1.8)
+	tree_node.visible = false
 
 	props_container.add_child(tree_node)
 	trees[cell] = {
@@ -790,6 +794,7 @@ func _spawn_3d_gold(cell: Vector2i) -> void:
 	gold_node.add_child(spr)
 
 	_create_resource_area(gold_node, cell, "gold", 0.90, 1.8, 0.9)
+	gold_node.visible = false
 
 	props_container.add_child(gold_node)
 	gold_mines[cell] = {
@@ -816,6 +821,7 @@ func _spawn_3d_stone(cell: Vector2i) -> void:
 	stone_node.add_child(spr)
 
 	_create_resource_area(stone_node, cell, "stone", 0.90, 1.8, 0.9)
+	stone_node.visible = false
 
 	props_container.add_child(stone_node)
 	stone_mines[cell] = {
@@ -842,6 +848,7 @@ func _spawn_3d_berry(cell: Vector2i) -> void:
 	berry_node.add_child(spr)
 
 	_create_resource_area(berry_node, cell, "food", 0.85, 1.6, 0.8)
+	berry_node.visible = false
 
 	props_container.add_child(berry_node)
 	berry_bushes[cell] = {

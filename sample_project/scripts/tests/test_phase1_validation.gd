@@ -207,6 +207,10 @@ func _test_auto_gather_tree_switch(game: GameController3D) -> void:
 
 	var tree1_cell = Vector2i(15, 15)
 	var tree2_cell = Vector2i(16, 15)
+	# Clear any ambient generated trees around test area
+	for dx in range(-3, 4):
+		for dy in range(-3, 4):
+			game.map_gen.trees.erase(tree1_cell + Vector2i(dx, dy))
 	game.map_gen.trees[tree1_cell] = {"hp": 2, "amount": 2, "max_amount": 100, "type": "wood", "name": "Test Tree 1"}
 	game.map_gen.trees[tree2_cell] = {"hp": 100, "amount": 100, "max_amount": 100, "type": "wood", "name": "Test Tree 2"}
 

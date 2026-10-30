@@ -45,11 +45,12 @@ var fog_timer: float = 0.0
 
 var drag_start_pos: Vector2 = Vector2.ZERO
 var drag_last_pos: Vector2 = Vector2.ZERO
+var drag_start_time_msec: int = 0
 var is_touch_active: bool = false
 var has_dragged_significantly: bool = false
 var is_drag_box_selecting: bool = false
 var is_box_select_mode: bool = false
-const DRAG_THRESHOLD: float = 14.0
+const DRAG_THRESHOLD: float = 26.0
 
 var last_clicked_unit: Unit3D = null
 var last_click_time_msec: int = 0
@@ -225,11 +226,18 @@ func _unhandled_input(event: InputEvent) -> void:
 		if event.pressed:
 			drag_start_pos = event.position
 			drag_last_pos = event.position
+			drag_start_time_msec = Time.get_ticks_msec()
 			is_touch_active = true
 			has_dragged_significantly = false
 			is_drag_box_selecting = false
 		else:
 			is_touch_active = false
+			var elapsed_ms = Time.get_ticks_msec() - drag_start_time_msec
+			var total_move = event.position.distance_to(drag_start_pos)
+			# Fast taps (< 350ms and < 28px movement) are ALWAYS treated as taps/clicks
+			if elapsed_ms < 350 and total_move < 28.0:
+				has_dragged_significantly = false
+
 			if is_drag_box_selecting:
 				is_drag_box_selecting = false
 				ui_manager.hide_drag_box()
@@ -270,25 +278,39 @@ func _handle_3d_click(screen_pos: Vector2, ground_pos: Vector3) -> void:
 	var cell = map_gen.world_to_cell(ground_pos)
 
 	if selected_units.size() > 0:
-		# 1. Click on ally unit -> toggle off if same single unit, or switch selection
-		if clicked_entity is Unit3D and clicked_entity.team == 0:
-			if clicked_entity in selected_units and selected_units.size() == 1:
-				# Tapping the already selected single unit -> DESELECT!
-				_clear_selection()
-				ui_manager.set_selected_entity(null)
+		# 1. Attack enemy entity (Unit or Building)
+		if clicked_entity != null and clicked_entity.team != 0:
+			_spawn_click_marker(clicked_entity.global_position, "attack")
+			for u in selected_units:
+				u.command_attack(clicked_entity)
+			SoundManager.play_sound("attack")
+			return
+
+		# 2. Resource Gathering / Interaction (Wood, Gold, Stone, Food)
+		var res_info = _find_resource_at_click(screen_pos, ground_pos)
+		if res_info.has("type") and res_info.has("cell") and res_info.get("amount", 0) > 0:
+			var r_cell = res_info["cell"] as Vector2i
+			var r_type = res_info["type"] as String
+			var has_vill = false
+			for u in selected_units:
+				if u.unit_type == Unit3D.UnitType.VILLAGER:
+					has_vill = true
+					u.command_gather(r_cell, r_type)
+			if has_vill:
+				_spawn_click_marker(map_gen.cell_to_world(r_cell), "gather")
 				SoundManager.play_sound("click")
 				return
 			else:
-				# Switch selection immediately to clicked unit
-				_clear_selection()
-				selected_units.append(clicked_entity)
-				clicked_entity.set_selected(true)
-				ui_manager.set_selected_entity(clicked_entity)
+				# Selected military units move to resource location
+				_spawn_click_marker(map_gen.cell_to_world(r_cell), "move")
+				for u in selected_units:
+					u.command_move(map_gen.cell_to_world(r_cell))
 				SoundManager.play_sound("click")
 				return
 
-		# 2. Click on ally building -> SELECT THAT BUILDING! (Town Center, Barracks, etc.)
+		# 3. Ally Building Interactions (Construct, Return Resources, or Inspect)
 		if clicked_entity is Building3D and clicked_entity.team == 0:
+			# 3a. Construct uncompleted building
 			if not clicked_entity.is_completed:
 				var has_vill = false
 				for u in selected_units:
@@ -299,53 +321,73 @@ func _handle_3d_click(screen_pos: Vector2, ground_pos: Vector3) -> void:
 					_spawn_click_marker(clicked_entity.global_position, "build")
 					SoundManager.play_sound("build")
 					return
-			# Switch selection to ally building so user can train units or upgrade
-			_clear_selection()
-			selected_building = clicked_entity
-			clicked_entity.set_selected(true)
-			ui_manager.set_selected_entity(clicked_entity)
-			SoundManager.play_sound("click")
-			return
 
-		# 3. Attack enemy entity
-		if clicked_entity != null and clicked_entity.team != 0:
-			_spawn_click_marker(clicked_entity.global_position, "attack")
+			# 3b. Drop off resources if villager is carrying cargo
+			var has_carrying_vill = false
 			for u in selected_units:
-				u.command_attack(clicked_entity)
-			SoundManager.play_sound("attack")
-			return
-
-		# 4. Villager resource gathering
-		var has_villager = false
-		for u in selected_units:
-			if u.unit_type == Unit3D.UnitType.VILLAGER:
-				has_villager = true
-				break
-
-		if has_villager:
-			var res_info = _find_resource_at_click(screen_pos, ground_pos)
-			if res_info.has("type") and res_info.has("cell"):
-				var r_cell = res_info["cell"] as Vector2i
-				var r_type = res_info["type"] as String
-				_spawn_click_marker(map_gen.cell_to_world(r_cell), "gather")
-				for u in selected_units:
-					if u.unit_type == Unit3D.UnitType.VILLAGER:
-						u.command_gather(r_cell, r_type)
+				if u.unit_type == Unit3D.UnitType.VILLAGER and u.carried_resource > 0:
+					has_carrying_vill = true
+					u.command_return_resources(clicked_entity)
+			if has_carrying_vill:
+				_spawn_click_marker(clicked_entity.global_position, "gather")
 				SoundManager.play_sound("click")
 				return
 
-		# 5. Ground move command
-		if clicked_entity == null:
-			_spawn_click_marker(ground_pos, "move")
-			for i in range(selected_units.size()):
-				var u = selected_units[i]
-				var offset = Vector3.ZERO
-				if selected_units.size() > 1:
-					var angle = i * (TAU / selected_units.size())
-					offset = Vector3(cos(angle), 0, sin(angle)) * 1.5
-				u.command_move(ground_pos + offset)
-			SoundManager.play_sound("click")
-			return
+			# 3c. Direct center click on completed building -> switch selection to building
+			var b_center = clicked_entity.global_position + Vector3(0, 1.8, 0)
+			var s_center = camera.unproject_position(b_center)
+			if screen_pos.distance_to(s_center) <= 24.0:
+				_clear_selection()
+				selected_building = clicked_entity
+				clicked_entity.set_selected(true)
+				ui_manager.set_selected_entity(clicked_entity)
+				SoundManager.play_sound("click")
+				return
+			else:
+				# Click on outer footprint or ground near building -> move units there!
+				_spawn_click_marker(ground_pos, "move")
+				for u in selected_units:
+					u.command_move(ground_pos)
+				SoundManager.play_sound("click")
+				return
+
+		# 4. Friendly Unit Click (Switch selection, toggle deselect, or move nearby)
+		if clicked_entity is Unit3D and clicked_entity.team == 0:
+			if clicked_entity in selected_units and selected_units.size() == 1:
+				# Tapping the single selected unit directly:
+				var s_pos = camera.unproject_position(clicked_entity.global_position + Vector3(0, 1.0, 0))
+				if screen_pos.distance_to(s_pos) <= 24.0 and ground_pos.distance_to(clicked_entity.global_position) <= 0.8:
+					# Precise tap on unit center -> toggle deselect
+					_clear_selection()
+					ui_manager.set_selected_entity(null)
+					SoundManager.play_sound("click")
+					return
+				else:
+					# Tapping ground near selected unit -> move to ground
+					_spawn_click_marker(ground_pos, "move")
+					clicked_entity.command_move(ground_pos)
+					SoundManager.play_sound("click")
+					return
+			else:
+				# Switch selection immediately to other friendly unit
+				_clear_selection()
+				selected_units.append(clicked_entity)
+				clicked_entity.set_selected(true)
+				ui_manager.set_selected_entity(clicked_entity)
+				SoundManager.play_sound("click")
+				return
+
+		# 5. Ground move command (Default fallback for all selected units)
+		_spawn_click_marker(ground_pos, "move")
+		for i in range(selected_units.size()):
+			var u = selected_units[i]
+			var offset = Vector3.ZERO
+			if selected_units.size() > 1:
+				var angle = i * (TAU / selected_units.size())
+				offset = Vector3(cos(angle), 0, sin(angle)) * 1.5
+			u.command_move(ground_pos + offset)
+		SoundManager.play_sound("click")
+		return
 
 	elif selected_building != null:
 		# If tapping the already selected building again -> DESELECT!
@@ -423,14 +465,14 @@ static func _dist_to_segment_2d(p: Vector2, a: Vector2, b: Vector2) -> float:
 	var projection = a + t * ab
 	return p.distance_to(projection)
 
-func _find_unit_near_screen(screen_pos: Vector2, max_screen_dist: float = 48.0) -> Unit3D:
+func _find_unit_near_screen(screen_pos: Vector2, max_screen_dist: float = 36.0) -> Unit3D:
 	var best_unit: Unit3D = null
 	var best_dist: float = max_screen_dist
 	for u in units:
 		if not is_instance_valid(u) or u.hp <= 0:
 			continue
 		var s_feet = camera.unproject_position(u.global_position)
-		var s_head = camera.unproject_position(u.global_position + Vector3(0, 2.2, 0))
+		var s_head = camera.unproject_position(u.global_position + Vector3(0, 1.8, 0))
 		var d = _dist_to_segment_2d(screen_pos, s_feet, s_head)
 		if d < best_dist:
 			best_dist = d
@@ -438,64 +480,76 @@ func _find_unit_near_screen(screen_pos: Vector2, max_screen_dist: float = 48.0) 
 	return best_unit
 
 func _find_resource_at_click(screen_pos: Vector2, ground_pos: Vector3) -> Dictionary:
-	# 1. 3D Physics Raycast on Layer 4 (Resource Area3D colliders)
+	# 1. Exact ground cell match (Highest precision when user taps on a cell)
+	var cell = map_gen.world_to_cell(ground_pos)
+	for r_type in ["gold", "stone", "food", "wood"]:
+		var r_data = map_gen.get_resource_at_cell(cell, r_type)
+		if not r_data.is_empty() and r_data.get("amount", 0) > 0:
+			return r_data
+
+	# 2. 3D Physics Raycast on dedicated Resource layer (mask 4 | 8)
 	var space_state = get_world_3d().direct_space_state
 	if space_state != null and camera != null:
 		var from = camera.project_ray_origin(screen_pos)
 		var to = from + camera.project_ray_normal(screen_pos) * 1000.0
-		var query = PhysicsRayQueryParameters3D.create(from, to, 8)
+		var query = PhysicsRayQueryParameters3D.create(from, to, 12) # 4 | 8
 		query.collide_with_areas = true
 		query.collide_with_bodies = false
 		var result = space_state.intersect_ray(query)
 		if result and result.has("collider") and is_instance_valid(result.collider):
 			var area = result.collider as Area3D
-			if area != null and area.has_meta("resource_type") and area.has_meta("cell"):
-				var r_cell = area.get_meta("cell") as Vector2i
-				var r_type = area.get_meta("resource_type") as String
-				var r_cur = map_gen.get_resource_at_cell(r_cell, r_type)
-				if r_cur.get("amount", 0) > 0:
-					return r_cur
+			if area != null:
+				var r_cell = area.get_meta("cell", area.get_meta("res_cell", Vector2i(-1, -1)))
+				var r_type = area.get_meta("resource_type", area.get_meta("res_type", ""))
+				if r_cell != Vector2i(-1, -1) and r_type != "":
+					var r_cur = map_gen.get_resource_at_cell(r_cell, r_type)
+					if r_cur.get("amount", 0) > 0:
+						return r_cur
 
-	# 2. Balanced screen-space closest resource search (52px radius, no tree bias)
+	# 3. Balanced screen-space closest resource search (accounts for terrain height)
 	var best_res: Dictionary = {}
-	var min_screen_dist: float = 52.0
+	var min_screen_dist: float = 48.0
 
-	for cell in map_gen.trees.keys():
-		var w_pos = map_gen.cell_to_world(cell) + Vector3(0, 1.6, 0)
+	for c in map_gen.gold_mines.keys():
+		var gh = map_gen.height_map[c.x][c.y] if map_gen.is_valid_cell(c.x, c.y) else 0.0
+		var w_pos = map_gen.cell_to_world(c) + Vector3(0, gh + 0.9, 0)
 		var s_pos = camera.unproject_position(w_pos)
 		var d = screen_pos.distance_to(s_pos)
 		if d < min_screen_dist:
-			var info = map_gen.get_resource_at_cell(cell, "wood")
+			var info = map_gen.get_resource_at_cell(c, "gold")
 			if info.get("amount", 0) > 0:
 				min_screen_dist = d
 				best_res = info
 
-	for cell in map_gen.gold_mines.keys():
-		var w_pos = map_gen.cell_to_world(cell) + Vector3(0, 0.9, 0)
+	for c in map_gen.stone_mines.keys():
+		var gh = map_gen.height_map[c.x][c.y] if map_gen.is_valid_cell(c.x, c.y) else 0.0
+		var w_pos = map_gen.cell_to_world(c) + Vector3(0, gh + 0.9, 0)
 		var s_pos = camera.unproject_position(w_pos)
 		var d = screen_pos.distance_to(s_pos)
 		if d < min_screen_dist:
-			var info = map_gen.get_resource_at_cell(cell, "gold")
+			var info = map_gen.get_resource_at_cell(c, "stone")
 			if info.get("amount", 0) > 0:
 				min_screen_dist = d
 				best_res = info
 
-	for cell in map_gen.stone_mines.keys():
-		var w_pos = map_gen.cell_to_world(cell) + Vector3(0, 0.9, 0)
+	for c in map_gen.berry_bushes.keys():
+		var gh = map_gen.height_map[c.x][c.y] if map_gen.is_valid_cell(c.x, c.y) else 0.0
+		var w_pos = map_gen.cell_to_world(c) + Vector3(0, gh + 0.9, 0)
 		var s_pos = camera.unproject_position(w_pos)
 		var d = screen_pos.distance_to(s_pos)
 		if d < min_screen_dist:
-			var info = map_gen.get_resource_at_cell(cell, "stone")
+			var info = map_gen.get_resource_at_cell(c, "food")
 			if info.get("amount", 0) > 0:
 				min_screen_dist = d
 				best_res = info
 
-	for cell in map_gen.berry_bushes.keys():
-		var w_pos = map_gen.cell_to_world(cell) + Vector3(0, 0.9, 0)
+	for c in map_gen.trees.keys():
+		var gh = map_gen.height_map[c.x][c.y] if map_gen.is_valid_cell(c.x, c.y) else 0.0
+		var w_pos = map_gen.cell_to_world(c) + Vector3(0, gh + 1.6, 0)
 		var s_pos = camera.unproject_position(w_pos)
 		var d = screen_pos.distance_to(s_pos)
 		if d < min_screen_dist:
-			var info = map_gen.get_resource_at_cell(cell, "food")
+			var info = map_gen.get_resource_at_cell(c, "wood")
 			if info.get("amount", 0) > 0:
 				min_screen_dist = d
 				best_res = info
@@ -503,34 +557,26 @@ func _find_resource_at_click(screen_pos: Vector2, ground_pos: Vector3) -> Dictio
 	if not best_res.is_empty():
 		return best_res
 
-	# 3. Ground cell & adjacent fallback
-	var cell = map_gen.world_to_cell(ground_pos)
-	for r_type in ["wood", "gold", "stone", "food"]:
-		var r_data = map_gen.get_resource_at_cell(cell, r_type)
-		if not r_data.is_empty() and r_data.get("amount", 0) > 0:
-			return r_data
-
+	# 4. Adjacent ground cell fallback
 	for dx in [-1, 0, 1]:
 		for dy in [-1, 0, 1]:
 			var nc = cell + Vector2i(dx, dy)
-			for r_type in ["wood", "gold", "stone", "food"]:
+			for r_type in ["gold", "stone", "food", "wood"]:
 				var r_data = map_gen.get_resource_at_cell(nc, r_type)
 				if not r_data.is_empty() and r_data.get("amount", 0) > 0:
-					if ground_pos.distance_to(map_gen.cell_to_world(nc)) < 1.8:
+					if ground_pos.distance_to(map_gen.cell_to_world(nc)) < 2.0:
 						return r_data
-
-	return {}
 
 	return {}
 
 func _get_entity_at_position(screen_pos: Vector2, ground_pos: Vector3) -> Node3D:
 	# 1. Units ALWAYS have absolute priority over buildings!
-	var unit_by_screen = _find_unit_near_screen(screen_pos, 48.0)
+	var unit_by_screen = _find_unit_near_screen(screen_pos, 36.0)
 	if unit_by_screen != null:
 		return unit_by_screen
 
 	var best_ground_unit: Unit3D = null
-	var min_g_dist: float = 1.6
+	var min_g_dist: float = 1.3
 	for u in units:
 		if is_instance_valid(u) and u.hp > 0:
 			var gd = u.global_position.distance_to(ground_pos)
@@ -549,16 +595,16 @@ func _get_entity_at_position(screen_pos: Vector2, ground_pos: Vector3) -> Node3D
 			var half_l = (b.grid_size.y * MapGenerator3D.TILE_SIZE * 0.5)
 			var s_right = camera.unproject_position(b_center + Vector3(half_w, 0, 0))
 			var s_top = camera.unproject_position(b_center + Vector3(0, 2.2, -half_l))
-			var rx = max(42.0, abs(s_right.x - s_center.x) + 14.0)
-			var ry = max(42.0, abs(s_top.y - s_center.y) + 16.0)
+			var rx = max(36.0, abs(s_right.x - s_center.x) + 4.0)
+			var ry = max(36.0, abs(s_top.y - s_center.y) + 6.0)
 			if abs(screen_pos.x - s_center.x) <= rx and abs(screen_pos.y - s_center.y) <= ry:
 				return b
 
 	# 3. Ground footprint proximity fallback
 	for b in buildings:
 		if is_instance_valid(b) and b.hp > 0:
-			var w = b.grid_size.x * MapGenerator3D.TILE_SIZE * 0.5 + 0.8
-			var l = b.grid_size.y * MapGenerator3D.TILE_SIZE * 0.5 + 0.8
+			var w = b.grid_size.x * MapGenerator3D.TILE_SIZE * 0.5 + 0.3
+			var l = b.grid_size.y * MapGenerator3D.TILE_SIZE * 0.5 + 0.3
 			var bp = b.global_position
 			if abs(ground_pos.x - bp.x) <= w and abs(ground_pos.z - bp.z) <= l:
 				return b
