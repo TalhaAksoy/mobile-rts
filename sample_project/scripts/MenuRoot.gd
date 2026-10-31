@@ -38,6 +38,16 @@ var roster_preview_box: VBoxContainer = null
 @onready var volume_slider: HSlider = get_node_or_null("SettingsView/Panel/VBox/VolumeSlider")
 @onready var cam_speed_slider: HSlider = get_node_or_null("SettingsView/Panel/VBox/CamSpeedSlider")
 
+# Graphics settings (built in code, see _build_graphics_settings)
+var gfx_preset_buttons: Array = []          # index = GraphicsSettings.Preset
+var gfx_scale_slider: HSlider = null
+var gfx_scale_label: Label = null
+var gfx_msaa_buttons: Array = []
+var gfx_shadow_buttons: Array = []
+var gfx_fps_buttons: Array = []
+var gfx_summary_label: Label = null
+var _gfx_syncing := false
+
 var selected_player_civ: CivData.CivType = CivData.CivType.OTTOMANS
 var selected_enemy_civ: CivData.CivType = CivData.CivType.BYZANTINES
 var selected_map_type: CivData.MapType = CivData.MapType.FOREST_VALLEY
@@ -49,10 +59,10 @@ func _ready() -> void:
 		return
 	if has_node("BattleBg"):
 		var bg = get_node("BattleBg") as TextureRect
-		var img_path = "res://assets/battle_bg.png"
-		var img = Image.load_from_file(ProjectSettings.globalize_path(img_path))
-		if img and not img.is_empty():
-			bg.texture = ImageTexture.create_from_image(img)
+		# load the IMPORTED texture: the raw .png is not packed into exported builds (Android showed no background)
+		var tex = load("res://assets/battle_bg.png") as Texture2D
+		if tex != null:
+			bg.texture = tex
 
 	# 1. Main Menu Titles Typography
 	if is_instance_valid(title_label):
@@ -165,6 +175,10 @@ func _ready() -> void:
 		close_settings_btn.pressed.connect(_show_main_menu)
 	if is_instance_valid(volume_slider) and not volume_slider.value_changed.is_connected(_on_volume_changed):
 		volume_slider.value_changed.connect(_on_volume_changed)
+	if is_instance_valid(close_settings_btn) and not close_settings_btn.pressed.is_connected(_save_settings):
+		close_settings_btn.pressed.connect(_save_settings)
+	_load_audio_settings()
+	_build_graphics_settings()
 
 	_populate_maps()
 	_populate_enemy_civs()
@@ -356,3 +370,141 @@ func _on_enemy_selected(idx: int) -> void:
 func _on_start_pressed() -> void:
 	SoundManager.play_sound("victory")
 	start_game.emit(selected_player_civ, selected_enemy_civ, selected_map_type)
+
+
+# ------------------------------------------------------------------------------------------------
+# Settings persistence (user://settings.cfg) and the graphics section
+# ------------------------------------------------------------------------------------------------
+func _save_settings() -> void:
+	GraphicsSettings.save_settings()
+	var cfg := ConfigFile.new()
+	cfg.load(GraphicsSettings.PATH)
+	if is_instance_valid(volume_slider):
+		cfg.set_value("audio", "volume", volume_slider.value)
+	if is_instance_valid(cam_speed_slider):
+		cfg.set_value("controls", "camera_speed", cam_speed_slider.value)
+	cfg.save(GraphicsSettings.PATH)
+
+func _load_audio_settings() -> void:
+	var cfg := ConfigFile.new()
+	if cfg.load(GraphicsSettings.PATH) != OK:
+		return
+	if is_instance_valid(volume_slider) and cfg.has_section_key("audio", "volume"):
+		volume_slider.value = cfg.get_value("audio", "volume")
+		_on_volume_changed(volume_slider.value)
+	if is_instance_valid(cam_speed_slider) and cfg.has_section_key("controls", "camera_speed"):
+		cam_speed_slider.value = cfg.get_value("controls", "camera_speed")
+
+func _gfx_label(text: String, size: int = 15) -> Label:
+	var l := Label.new()
+	l.text = text
+	l.add_theme_font_override("font", ParchmentTheme.get_medieval_font())
+	l.add_theme_font_size_override("font_size", size)
+	l.add_theme_color_override("font_color", Color(0.28, 0.18, 0.08))
+	return l
+
+## A row of toggle buttons (one active); `on_pick(index)` is called when the user taps one.
+func _gfx_button_row(names: Array, on_pick: Callable) -> Array:
+	var row := HBoxContainer.new()
+	row.add_theme_constant_override("separation", 6)
+	var buttons: Array = []
+	for i in names.size():
+		var b := Button.new()
+		b.text = names[i]
+		b.toggle_mode = true
+		b.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		b.custom_minimum_size = Vector2(0, 42)
+		ParchmentTheme.apply_parchment_button(b, 14)
+		b.pressed.connect(func(): on_pick.call(i))
+		row.add_child(b)
+		buttons.append(b)
+	_gfx_rows.append(row)
+	return buttons
+
+var _gfx_rows: Array = []
+
+func _build_graphics_settings() -> void:
+	if not is_instance_valid(close_settings_btn) or gfx_scale_slider != null:
+		return
+	GraphicsSettings.ensure_loaded()
+	var vbox := close_settings_btn.get_parent()
+	var items: Array = []
+	items.append(_gfx_label("GRAFİK KALİTESİ", 18))
+	gfx_preset_buttons = _gfx_button_row(GraphicsSettings.PRESET_NAMES, _on_gfx_preset_picked)
+	items.append(_gfx_rows[-1])
+	gfx_scale_label = _gfx_label("")
+	items.append(gfx_scale_label)
+	gfx_scale_slider = HSlider.new()
+	gfx_scale_slider.min_value = GraphicsSettings.SCALE_MIN
+	gfx_scale_slider.max_value = GraphicsSettings.SCALE_MAX
+	gfx_scale_slider.step = GraphicsSettings.SCALE_STEP
+	gfx_scale_slider.custom_minimum_size = Vector2(0, 28)
+	gfx_scale_slider.value_changed.connect(_on_gfx_scale_changed)
+	items.append(gfx_scale_slider)
+	items.append(_gfx_label("Kenar Yumuşatma (MSAA):"))
+	gfx_msaa_buttons = _gfx_button_row(GraphicsSettings.MSAA_NAMES, func(i): _on_gfx_option("msaa", GraphicsSettings.MSAA_OPTIONS[i]))
+	items.append(_gfx_rows[-1])
+	items.append(_gfx_label("Gölgeler:"))
+	gfx_shadow_buttons = _gfx_button_row(GraphicsSettings.SHADOW_NAMES, func(i): _on_gfx_option("shadows", i))
+	items.append(_gfx_rows[-1])
+	items.append(_gfx_label("Kare Sınırı:"))
+	gfx_fps_buttons = _gfx_button_row(GraphicsSettings.FPS_OPTIONS.map(func(f): return "%d FPS" % f), func(i): _on_gfx_option("fps", GraphicsSettings.FPS_OPTIONS[i]))
+	items.append(_gfx_rows[-1])
+	gfx_summary_label = _gfx_label("", 12)
+	gfx_summary_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	items.append(gfx_summary_label)
+	var at := close_settings_btn.get_index()
+	for it in items:
+		vbox.add_child(it)
+		vbox.move_child(it, at)
+		at += 1
+	vbox.add_theme_constant_override("separation", 8)
+	_sync_gfx_controls()
+	_apply_graphics()
+
+func _on_gfx_preset_picked(i: int) -> void:
+	if i == GraphicsSettings.Preset.CUSTOM:
+		_sync_gfx_controls()          # "Özel" is an indicator: it is selected by changing an option
+		return
+	SoundManager.play_sound("click")
+	GraphicsSettings.set_preset(i)
+	_sync_gfx_controls()
+	_apply_graphics()
+
+func _on_gfx_option(key: String, v) -> void:
+	SoundManager.play_sound("click")
+	GraphicsSettings.set_value(key, v)
+	_sync_gfx_controls()
+	_apply_graphics()
+
+func _on_gfx_scale_changed(v: float) -> void:
+	if _gfx_syncing:
+		return
+	if int(v) == int(GraphicsSettings.values["scale"]):
+		return
+	GraphicsSettings.set_value("scale", v)
+	_sync_gfx_controls()
+	_apply_graphics()
+
+func _sync_gfx_controls() -> void:
+	_gfx_syncing = true
+	var vals: Dictionary = GraphicsSettings.values
+	for i in gfx_preset_buttons.size():
+		gfx_preset_buttons[i].set_pressed_no_signal(i == GraphicsSettings.preset)
+	gfx_scale_slider.value = vals["scale"]
+	gfx_scale_label.text = "3D Çözünürlük: %%%d" % vals["scale"]
+	for i in gfx_msaa_buttons.size():
+		gfx_msaa_buttons[i].set_pressed_no_signal(GraphicsSettings.MSAA_OPTIONS[i] == vals["msaa"])
+	for i in gfx_shadow_buttons.size():
+		gfx_shadow_buttons[i].set_pressed_no_signal(i == vals["shadows"])
+	for i in gfx_fps_buttons.size():
+		gfx_fps_buttons[i].set_pressed_no_signal(GraphicsSettings.FPS_OPTIONS[i] == vals["fps"])
+	gfx_summary_label.text = GraphicsSettings.describe()
+	_gfx_syncing = false
+
+func _apply_graphics() -> void:
+	var light: DirectionalLight3D = null
+	var scene := get_tree().current_scene if is_inside_tree() else null
+	if scene != null:
+		light = scene.get_node_or_null("DirectionalLight3D") as DirectionalLight3D
+	GraphicsSettings.apply(get_viewport(), light)

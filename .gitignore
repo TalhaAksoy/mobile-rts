@@ -16,3 +16,6 @@ Thumbs.db
 # Blender
 *.blend1
 __pycache__/
+
+# local build outputs (APK, benchmark logs)
+build/

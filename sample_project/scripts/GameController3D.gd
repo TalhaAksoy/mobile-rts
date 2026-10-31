@@ -57,6 +57,7 @@ var last_click_time_msec: int = 0
 var tutorial_mgr: TutorialManager = null
 
 func _ready() -> void:
+	GraphicsSettings.apply(get_viewport(), get_node_or_null("DirectionalLight3D") as DirectionalLight3D)
 	if SoundManager.instance == null:
 		var sm = SoundManager.new()
 		add_child(sm)
