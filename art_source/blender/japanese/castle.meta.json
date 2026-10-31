@@ -1,0 +1,37 @@
+{
+  "tris": 1409,
+  "verts": 2711,
+  "materials": [
+    "PE_Dirt",
+    "PE_PlasterWhite",
+    "PE_StoneGrey",
+    "PE_RoofDark",
+    "PE_WoodDark",
+    "PE_Lattice",
+    "TEAM_Trim",
+    "PE_Banner_japanese",
+    "PE_Gold"
+  ],
+  "bounds_min": [
+    -3.499,
+    -3.553,
+    0.0
+  ],
+  "bounds_max": [
+    3.581,
+    3.527,
+    5.16
+  ],
+  "asset_id": "castle",
+  "civ": "japanese",
+  "kind": "buildings",
+  "blend": "art_source/blender/japanese/castle.blend",
+  "glb": "res://assets/3d/buildings/japanese/castle.glb",
+  "glb_bytes": 106244,
+  "grid": [
+    4,
+    4
+  ],
+  "footprint_m": 7.2,
+  "reference": "res://art/buildings/japanese/castle.png"
+}

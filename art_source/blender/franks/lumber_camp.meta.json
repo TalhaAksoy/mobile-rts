@@ -1,0 +1,37 @@
+{
+  "tris": 509,
+  "verts": 655,
+  "materials": [
+    "PE_Dirt",
+    "PE_WoodDark",
+    "TEAM_Trim",
+    "PE_RoofSlate",
+    "PE_Beam",
+    "PE_WoodLight",
+    "PE_Iron",
+    "PE_Banner_franks",
+    "PE_Gold"
+  ],
+  "bounds_min": [
+    -1.78,
+    -1.77,
+    0.0
+  ],
+  "bounds_max": [
+    1.743,
+    1.799,
+    1.83
+  ],
+  "asset_id": "lumber_camp",
+  "civ": "franks",
+  "kind": "buildings",
+  "blend": "art_source/blender/franks/lumber_camp.blend",
+  "glb": "res://assets/3d/buildings/franks/lumber_camp.glb",
+  "glb_bytes": 42284,
+  "grid": [
+    2,
+    2
+  ],
+  "footprint_m": 3.6,
+  "reference": "res://art/buildings/franks/lumber_camp.png"
+}

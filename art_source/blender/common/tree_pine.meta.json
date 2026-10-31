@@ -1,0 +1,26 @@
+{
+  "tris": 120,
+  "verts": 192,
+  "materials": [
+    "PE_NatureAtlas"
+  ],
+  "bounds_min": [
+    -0.908,
+    -0.933,
+    0.0
+  ],
+  "bounds_max": [
+    0.934,
+    0.938,
+    2.45
+  ],
+  "asset_id": "tree_pine",
+  "civ": "common",
+  "kind": "environment",
+  "blend": "art_source/blender/common/tree_pine.blend",
+  "glb": "res://assets/3d/environment/common/tree_pine.glb",
+  "glb_bytes": 10772,
+  "resource": "wood",
+  "biome": "temperate",
+  "build_script": "art_source/blender/environment/common_tree_pine.py"
+}

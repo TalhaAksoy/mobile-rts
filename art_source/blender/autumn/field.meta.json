@@ -1,0 +1,30 @@
+{
+  "tris": 370,
+  "verts": 682,
+  "materials": [
+    "PE_Soil",
+    "PE_CropWheat",
+    "PE_Pumpkin",
+    "PE_WoodDark",
+    "TEAM_Trim"
+  ],
+  "bounds_min": [
+    -1.9,
+    -1.9,
+    0.0
+  ],
+  "bounds_max": [
+    1.9,
+    1.9,
+    0.9
+  ],
+  "asset_id": "field",
+  "civ": "autumn",
+  "kind": "environment",
+  "blend": "art_source/blender/autumn/field.blend",
+  "glb": "res://assets/3d/environment/autumn/field.glb",
+  "glb_bytes": 31744,
+  "resource": "field",
+  "biome": "autumn",
+  "build_script": "art_source/blender/environment/field.py"
+}

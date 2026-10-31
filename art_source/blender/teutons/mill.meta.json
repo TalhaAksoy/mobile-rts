@@ -1,0 +1,44 @@
+{
+  "tris": 625,
+  "verts": 691,
+  "materials": [
+    "PE_Banner_teutons",
+    "PE_Beam",
+    "PE_Dirt",
+    "PE_Felt",
+    "PE_Gold",
+    "PE_PlasterWhite",
+    "PE_SailCloth",
+    "PE_SlateDark",
+    "PE_StoneGrey",
+    "PE_Window",
+    "PE_WoodDark",
+    "PE_WoodLight",
+    "TEAM_Trim"
+  ],
+  "bounds_min": [
+    -1.759,
+    -1.757,
+    0.0
+  ],
+  "bounds_max": [
+    1.754,
+    1.781,
+    3.41
+  ],
+  "parts": [
+    "Sails"
+  ],
+  "asset_id": "mill",
+  "civ": "teutons",
+  "kind": "buildings",
+  "blend": "art_source/blender/teutons/mill.blend",
+  "glb": "res://assets/3d/buildings/teutons/mill.glb",
+  "glb_bytes": 55184,
+  "grid": [
+    2,
+    2
+  ],
+  "footprint_m": 3.6,
+  "reference": "res://art/buildings/teutons/mill.png"
+}

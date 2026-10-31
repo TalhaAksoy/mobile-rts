@@ -1,0 +1,41 @@
+{
+  "tris": 1078,
+  "verts": 1604,
+  "materials": [
+    "PE_Dirt",
+    "PE_StoneGrey",
+    "PE_LacquerRed",
+    "PE_Lattice",
+    "PE_WoodDark",
+    "TEAM_Trim",
+    "PE_RoofTeal",
+    "PE_Gold",
+    "PE_Banner_chinese",
+    "PE_WoodLight",
+    "PE_Thatch",
+    "PE_ClothRed",
+    "PE_Iron"
+  ],
+  "bounds_min": [
+    -2.585,
+    -2.602,
+    0.0
+  ],
+  "bounds_max": [
+    2.84,
+    2.63,
+    2.46
+  ],
+  "asset_id": "archery_range",
+  "civ": "chinese",
+  "kind": "buildings",
+  "blend": "art_source/blender/chinese/archery_range.blend",
+  "glb": "res://assets/3d/buildings/chinese/archery_range.glb",
+  "glb_bytes": 80888,
+  "grid": [
+    3,
+    3
+  ],
+  "footprint_m": 5.4,
+  "reference": "res://art/buildings/chinese/archery_range.png"
+}

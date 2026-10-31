@@ -1,0 +1,37 @@
+{
+  "tris": 580,
+  "verts": 968,
+  "materials": [
+    "PE_Dirt",
+    "PE_StoneWarm",
+    "PE_StoneBrick",
+    "PE_Window",
+    "PE_RoofRed",
+    "PE_WoodDark",
+    "PE_PlasterWhite",
+    "TEAM_Trim",
+    "PE_Foliage"
+  ],
+  "bounds_min": [
+    -1.716,
+    -1.737,
+    0.0
+  ],
+  "bounds_max": [
+    1.751,
+    1.729,
+    2.83
+  ],
+  "asset_id": "house",
+  "civ": "byzantines",
+  "kind": "buildings",
+  "blend": "art_source/blender/byzantines/house.blend",
+  "glb": "res://assets/3d/buildings/byzantines/house.glb",
+  "glb_bytes": 47396,
+  "grid": [
+    2,
+    2
+  ],
+  "footprint_m": 3.6,
+  "reference": "res://art/buildings/byzantines/house.png"
+}

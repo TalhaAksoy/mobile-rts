@@ -1,0 +1,38 @@
+{
+  "tris": 725,
+  "verts": 1333,
+  "materials": [
+    "PE_Dirt",
+    "PE_WoodDark",
+    "PE_Felt",
+    "TEAM_Trim",
+    "PE_FeltBlue",
+    "PE_StoneGrey",
+    "PE_Gold",
+    "PE_Iron",
+    "PE_WoodLight",
+    "PE_Banner_mongols"
+  ],
+  "bounds_min": [
+    -1.76,
+    -1.789,
+    0.0
+  ],
+  "bounds_max": [
+    1.73,
+    1.734,
+    1.58
+  ],
+  "asset_id": "mining_camp",
+  "civ": "mongols",
+  "kind": "buildings",
+  "blend": "art_source/blender/mongols/mining_camp.blend",
+  "glb": "res://assets/3d/buildings/mongols/mining_camp.glb",
+  "glb_bytes": 60344,
+  "grid": [
+    2,
+    2
+  ],
+  "footprint_m": 3.6,
+  "reference": "res://art/buildings/mongols/mining_camp.png"
+}

@@ -12,3 +12,7 @@ yarn-error.log*
 .DS_Store
 *.tmp
 Thumbs.db
+
+# Blender
+*.blend1
+__pycache__/

@@ -1,0 +1,30 @@
+{
+  "tris": 159,
+  "verts": 257,
+  "materials": [
+    "PE_Soil",
+    "PE_CropRye",
+    "PE_StoneGrey",
+    "PE_WoodDark",
+    "TEAM_Trim"
+  ],
+  "bounds_min": [
+    -1.9,
+    -1.9,
+    0.0
+  ],
+  "bounds_max": [
+    1.9,
+    1.9,
+    0.9
+  ],
+  "asset_id": "field",
+  "civ": "steppe",
+  "kind": "environment",
+  "blend": "art_source/blender/steppe/field.blend",
+  "glb": "res://assets/3d/environment/steppe/field.glb",
+  "glb_bytes": 15696,
+  "resource": "field",
+  "biome": "steppe",
+  "build_script": "art_source/blender/environment/field.py"
+}

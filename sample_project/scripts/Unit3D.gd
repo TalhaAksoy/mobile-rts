@@ -64,6 +64,9 @@ var resource_type: String = ""
 var carried_resource: int = 0
 var max_carry: int = 15
 const AUTO_GATHER_SEARCH_RADIUS: float = 16.0
+## Food per harvest swing on a farm field (berries give 5): fields never run out but are slower.
+const FIELD_HARVEST: float = 4.0
+var harvest_remainder: float = 0.0
 var last_resource_pos: Vector3 = Vector3.ZERO
 
 var attack_timer: float = 0.0
@@ -77,6 +80,9 @@ var main_game: Node = null
 # 3D Node references for animation
 var model_root: Node3D
 var unit_sprite: Sprite3D
+## Occlusion silhouette: team-coloured copy drawn without depth test BEFORE the real sprite
+## (transparent pass ordering), so units hidden behind 3D trees/buildings stay visible/selectable.
+var occlusion_silhouette: Sprite3D
 var weapon_node: Node3D
 var selection_ring: MeshInstance3D
 var hp_bar_mesh: MeshInstance3D
@@ -274,7 +280,25 @@ func _build_3d_model() -> void:
 	unit_sprite.render_priority = 0
 	if team != 0:
 		unit_sprite.modulate = Color(1.08, 0.88, 0.88)
+	# Real sprite renders in the transparent pass (with a depth prepass so it still sorts/occludes
+	# correctly) AFTER the silhouette below; where the unit is visible it fully covers the silhouette.
+	unit_sprite.alpha_cut = Sprite3D.ALPHA_CUT_OPAQUE_PREPASS
+	unit_sprite.render_priority = 2
 	model_root.add_child(unit_sprite)
+
+	occlusion_silhouette = Sprite3D.new()
+	occlusion_silhouette.name = "OcclusionSilhouette"
+	occlusion_silhouette.texture = unit_sprite.texture
+	occlusion_silhouette.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	occlusion_silhouette.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+	occlusion_silhouette.pixel_size = SPRITE_PIXEL_SIZE
+	occlusion_silhouette.shaded = false
+	occlusion_silhouette.no_depth_test = true
+	occlusion_silhouette.render_priority = 1
+	occlusion_silhouette.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	var sil_col = Color(0.35, 0.65, 1.0, 0.5) if team == 0 else Color(1.0, 0.35, 0.35, 0.5)
+	occlusion_silhouette.modulate = sil_col
+	unit_sprite.add_child(occlusion_silhouette)   # inherits bob / sway transforms
 
 	# 2. Diorama Ground Selection Ring
 	selection_ring = MeshInstance3D.new()
@@ -642,7 +666,7 @@ func _process_attack_target(delta: float) -> void:
 		state = State.IDLE
 		return
 
-	var dist = global_position.distance_to(target_entity.global_position)
+	var dist = _distance_to_attack_target(target_entity)
 	if dist > attack_range:
 		if current_path.is_empty() or path_idx >= current_path.size():
 			_calculate_path(target_entity.global_position)
@@ -656,6 +680,18 @@ func _process_attack_target(delta: float) -> void:
 
 		if attack_timer <= 0.0:
 			_execute_attack()
+
+## Distance used for attack-range checks. Buildings block their whole grid footprint,
+## so measuring to their center made melee units (range ~2 m) unable to ever reach a
+## 2x2+ building (edge >= 1.8 m from center plus unit radius). Measure to the footprint edge.
+func _distance_to_attack_target(entity: Node3D) -> float:
+	if entity is Building3D:
+		var b := entity as Building3D
+		var half := Vector2(b.grid_size.x, b.grid_size.y) * MapGenerator3D.TILE_SIZE * 0.5
+		var d := Vector2(global_position.x - b.global_position.x, global_position.z - b.global_position.z)
+		var outside := Vector2(maxf(absf(d.x) - half.x, 0.0), maxf(absf(d.y) - half.y, 0.0))
+		return outside.length()
+	return global_position.distance_to(entity.global_position)
 
 func _execute_attack() -> void:
 	if not is_instance_valid(target_entity):
@@ -695,7 +731,12 @@ func _process_gathering(delta: float) -> void:
 
 	# Verify target resource still exists in map
 	var dict = map_gen.trees if resource_type == "wood" else (map_gen.gold_mines if resource_type == "gold" else (map_gen.stone_mines if resource_type == "stone" else map_gen.berry_bushes))
-	if not (target_cell in dict):
+	var on_field: bool = resource_type == "food" and map_gen.farm_fields.has(target_cell)
+	if on_field and not map_gen.claim_field(target_cell, self):
+		# someone else farms this field (1 farmer per field) -> another free field / berries
+		_find_next_resource("food")
+		return
+	if not (target_cell in dict) and not on_field:
 		if carried_resource > 0:
 			command_return_resources()
 		else:
@@ -705,12 +746,30 @@ func _process_gathering(delta: float) -> void:
 	var my_cell = map_gen.world_to_cell(global_position)
 	var cell_dist = max(abs(my_cell.x - target_cell.x), abs(my_cell.y - target_cell.y))
 	var res_pos = map_gen.cell_to_world(target_cell)
+	if on_field:
+		# fields are walkable 2x2 plots: work standing inside them, around the plot centre
+		res_pos = _field_work_pos(target_cell)
 	var world_dist = global_position.distance_to(res_pos)
+	var far: bool = (map_gen.field_origin_at(my_cell) != target_cell and world_dist > 1.6) if on_field else (cell_dist > 1 and world_dist > 2.8)
 
 	# If further than adjacent tile and further than 2.8 meters -> pathfind to adjacent cell
-	if cell_dist > 1 and world_dist > 2.8:
+	if far:
 		if current_path.is_empty() or path_idx >= current_path.size():
 			_calculate_path(res_pos)
+			if current_path.is_empty():
+				# No route at all: the unit and the node are in disconnected regions (it may be the
+				# UNIT that is trapped), so do not poison the shared unreachable marks - just drop it.
+				state = State.IDLE
+				target_cell = Vector2i(-1, -1)
+				velocity = Vector3.ZERO
+				return
+			if path_idx >= current_path.size():
+				# A* found a route but it is already exhausted and we are still out of range: the
+				# node is boxed in (A* fell back to the nearest free cell 2+ cells away). Previously the
+				# villager recalculated the same finished path forever -> bot food starvation deadlock.
+				map_gen.mark_resource_unreachable(target_cell)
+				_find_next_resource(resource_type)
+				return
 		_process_path_movement(delta)
 		return
 
@@ -731,19 +790,23 @@ func _process_gathering(delta: float) -> void:
 		SoundManager.play_sound("gather")
 
 		var civ_cfg = CivData.get_civ(civ_type)
-		var harvest_amt = 5
+		var kind: String = "field" if on_field else resource_type
+		var base_amt: float = {"wood": 5.0, "gold": 4.0, "stone": 4.0, "food": 5.0}.get(resource_type, 5.0)
+		if on_field:
+			base_amt = FIELD_HARVEST
+		var team_mult: float = main_game.get_gather_mult(team, kind) if main_game != null and main_game.has_method("get_gather_mult") else 1.0
+		# fractional bonuses (+15% of 5 = 0.75) accumulate instead of being truncated away
+		harvest_remainder += base_amt * civ_cfg.get(resource_type + "_gather_mult", 1.0) * team_mult
+		var harvest_amt := int(harvest_remainder)
+		harvest_remainder -= harvest_amt
 		var got = 0
 		if resource_type == "wood":
-			harvest_amt = int(5 * civ_cfg.get("wood_gather_mult", 1.0))
 			got = map_gen.harvest_tree(target_cell, harvest_amt)
 		elif resource_type == "gold":
-			harvest_amt = int(4 * civ_cfg.get("gold_gather_mult", 1.0))
 			got = map_gen.harvest_gold(target_cell, harvest_amt)
 		elif resource_type == "stone":
-			harvest_amt = int(4 * civ_cfg.get("stone_gather_mult", 1.0))
 			got = map_gen.harvest_stone(target_cell, harvest_amt)
 		elif resource_type == "food":
-			harvest_amt = int(5 * civ_cfg.get("food_gather_mult", 1.0))
 			got = map_gen.harvest_food(target_cell, harvest_amt)
 
 		if got > 0:
@@ -828,7 +891,7 @@ func _process_return_resources(delta: float) -> void:
 		# Return back to gathering!
 		current_path.clear()
 		var dict = map_gen.trees if resource_type == "wood" else (map_gen.gold_mines if resource_type == "gold" else (map_gen.stone_mines if resource_type == "stone" else map_gen.berry_bushes))
-		if target_cell in dict:
+		if target_cell in dict or (resource_type == "food" and map_gen.farm_fields.has(target_cell)):
 			state = State.GATHERING
 			_calculate_path(map_gen.cell_to_world(target_cell))
 		else:
@@ -853,6 +916,13 @@ func _process_building(delta: float) -> void:
 	if not is_adjacent and dist > (b_radius + 2.8):
 		if current_path.is_empty() or path_idx >= current_path.size():
 			_calculate_path(target_entity.global_position)
+			if current_path.is_empty() or path_idx >= current_path.size():
+				# Cannot get any closer to the site (unreachable from here). Previously the builder
+				# stood still forever and the site stayed at 0%; give up so the owner can re-task.
+				state = State.IDLE
+				target_entity = null
+				velocity = Vector3.ZERO
+				return
 		_process_path_movement(delta)
 	else:
 		current_path.clear()
@@ -868,10 +938,15 @@ func _process_building(delta: float) -> void:
 			attack_timer = 0.5
 			swing_progress = 1.0
 			SoundManager.play_sound("build")
-			target_entity.contribute_construction(8.0)
+			target_entity.contribute_construction(target_entity.build_swing_progress(8.0) if target_entity.has_method("build_swing_progress") else 8.0)
 			if target_entity.is_completed:
+				var done = target_entity
 				state = State.IDLE
 				target_entity = null
+				# the builder of a field starts farming it right away (unless someone already is)
+				if done is Building3D and done.building_type == Building3D.BuildingType.FARM and map_gen != null \
+						and map_gen.is_field_free_for(done.origin_cell, self):
+					command_gather(done.origin_cell, "food")
 
 func _find_next_resource(type: String = "") -> void:
 	if type == "":
@@ -881,7 +956,16 @@ func _find_next_resource(type: String = "") -> void:
 		return
 
 	var search_origin = last_resource_pos if last_resource_pos != Vector3.ZERO else global_position
-	var nearest_cell = map_gen.find_nearest_resource_node(search_origin, type, AUTO_GATHER_SEARCH_RADIUS)
+	var nearest_cell := Vector2i(-1, -1)
+	var was_farming: bool = type == "food" and map_gen.farm_fields.has(target_cell)
+	if was_farming:
+		# a farmer keeps farming: next free field of our team first
+		nearest_cell = map_gen.find_free_field(search_origin, team, self, AUTO_GATHER_SEARCH_RADIUS)
+	if nearest_cell == Vector2i(-1, -1):
+		nearest_cell = map_gen.find_nearest_resource_node(search_origin, type, AUTO_GATHER_SEARCH_RADIUS)
+	if nearest_cell == Vector2i(-1, -1) and type == "food" and not was_farming:
+		# berries ran out nearby -> a free field of our team
+		nearest_cell = map_gen.find_free_field(search_origin, team, self, AUTO_GATHER_SEARCH_RADIUS)
 
 	if nearest_cell != Vector2i(-1, -1):
 		target_cell = nearest_cell
@@ -931,8 +1015,12 @@ func command_gather(cell: Vector2i, type: String) -> void:
 	resource_type = type
 	target_entity = null
 	if map_gen != null:
-		last_resource_pos = map_gen.cell_to_world(cell)
+		last_resource_pos = _field_work_pos(cell) if (type == "food" and map_gen.farm_fields.has(cell)) else map_gen.cell_to_world(cell)
 		_calculate_path(last_resource_pos)
+
+## Where a farmer stands on a 2x2 field (origin = top-left cell): the plot centre.
+func _field_work_pos(origin: Vector2i) -> Vector3:
+	return Vector3((origin.x + 1.0) * MapGenerator3D.TILE_SIZE, global_position.y, (origin.y + 1.0) * MapGenerator3D.TILE_SIZE)
 
 func command_build(building: Node3D) -> void:
 	state = State.BUILDING
@@ -1000,6 +1088,8 @@ func _update_hd2d_sprite_animation(_delta: float) -> void:
 			unit_sprite.flip_h = true
 		elif velocity.x > 0.15:
 			unit_sprite.flip_h = false
+		if is_instance_valid(occlusion_silhouette):
+			occlusion_silhouette.flip_h = unit_sprite.flip_h
 	elif swing_progress > 0.0:
 		unit_sprite.position.y = SPRITE_BASE_Y + sin(swing_progress * PI) * 0.18
 		unit_sprite.rotation.z = (-0.22 if not unit_sprite.flip_h else 0.22) * sin(swing_progress * PI)

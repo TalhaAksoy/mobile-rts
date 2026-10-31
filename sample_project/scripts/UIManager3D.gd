@@ -7,6 +7,7 @@ signal start_game_requested(player_civ, enemy_civ, map_type)
 signal build_selected(building_type)
 signal train_unit_requested(unit_type)
 signal research_requested(tech_id)
+signal field_requested
 signal select_all_military_requested
 signal jump_to_base_requested
 signal find_idle_villager_requested
@@ -154,13 +155,12 @@ func _setup_build_grid() -> void:
 		{"type": Building3D.BuildingType.HOUSE, "label": "EV\n30 Odun", "desc": "+5 Nüfus Limiti"},
 		{"type": Building3D.BuildingType.LUMBER_CAMP, "label": "ODUNCU KAMPI\n100 Odun", "desc": "Odun Teslim Noktası"},
 		{"type": Building3D.BuildingType.MINING_CAMP, "label": "MADEN KAMPI\n100 Odun", "desc": "Altın & Taş Teslim Noktası"},
-		{"type": Building3D.BuildingType.MILL, "label": "DEĞİRMEN\n100 Odun", "desc": "Besin Teslim Noktası"},
+		{"type": Building3D.BuildingType.MILL, "label": "DEĞİRMEN\n100 Odun", "desc": "Çiftlik Merkezi: Tarla Açar"},
 		{"type": Building3D.BuildingType.BARRACKS, "label": "KIŞLA\n150 Odun", "desc": "Piyade ve Mızrakçı"},
 		{"type": Building3D.BuildingType.ARCHERY_RANGE, "label": "OKÇU ALANI\n150 Odun", "desc": "Menzilli Birlikler"},
 		{"type": Building3D.BuildingType.STABLE, "label": "AHIR\n175 Odun", "desc": "Hızlı Süvariler"},
 		{"type": Building3D.BuildingType.BLACKSMITH, "label": "DEMİRCİ\n150 Odun", "desc": "Zırh ve Silah Geliştirmesi"},
 		{"type": Building3D.BuildingType.TOWER, "label": "KULE\n75 Odun | 125 Taş", "desc": "Savunma Kulesi"},
-		{"type": Building3D.BuildingType.FARM, "label": "ÇİFTLİK\n60 Odun", "desc": "Sürekli Besin Üretimi"},
 		{"type": Building3D.BuildingType.CASTLE, "label": "BÜYÜK KALE\n200 Odun | 350 Taş | 150 Altın", "desc": "Çağ II & Krallık Elit Birimi"}
 	]
 
@@ -403,11 +403,14 @@ func _display_building_ui(b: Building3D) -> void:
 		Building3D.BuildingType.STABLE: name_str = "Ahır"
 		Building3D.BuildingType.CASTLE: name_str = "Büyük Kale"
 		Building3D.BuildingType.TOWER: name_str = "Kule"
-		Building3D.BuildingType.FARM: name_str = "Çiftlik"
+		Building3D.BuildingType.BLACKSMITH: name_str = "Demirci"
+		Building3D.BuildingType.FARM: name_str = "Tarla"
 		Building3D.BuildingType.LUMBER_CAMP: name_str = "Oduncu Kampı"
 		Building3D.BuildingType.MINING_CAMP: name_str = "Maden Kampı"
-		Building3D.BuildingType.MILL: name_str = "Değirmen"
+		Building3D.BuildingType.MILL: name_str = "Değirmen (Çiftlik Merkezi)"
 
+	if b.upgrade_level >= 2:
+		name_str += " ★"
 	entity_name_label.text = "%s [%s]" % [name_str, "Dost" if b.team == 0 else "Düşman"]
 	entity_hp_bar.max_value = b.max_hp
 	entity_hp_bar.value = b.hp
@@ -418,14 +421,23 @@ func _display_building_ui(b: Building3D) -> void:
 		match b.building_type:
 			Building3D.BuildingType.TOWN_CENTER:
 				_add_train_button("İşçi Eğit\n(50 Besin)", Unit3D.UnitType.VILLAGER)
-				var player_age = game_controller.team_age[0] if game_controller != null and game_controller.team_age.has(0) else 1
-				if player_age == 1:
-					if b.is_researching and b.current_research_tech == "AGE_2":
-						_add_disabled_button("Hisar Çağı\nAraştırılıyor (%%%d)" % int(b.get_research_progress()))
+
+			Building3D.BuildingType.MILL:
+				if game_controller != null and game_controller.has_method("field_block_reason"):
+					var n_fields: int = game_controller.get_mill_fields(b).size()
+					var reason: String = game_controller.field_block_reason(b, 0)
+					var cost: int = game_controller._get_building_cost(Building3D.BuildingType.FARM, 0)["wood"]
+					if reason == "" or reason == "Yetersiz odun":
+						_add_field_button("Tarla Aç (%d Odun)\nTarlalar %d/%d" % [cost, n_fields, game_controller.MAX_FIELDS_PER_MILL])
 					else:
-						_add_research_button("Çağ II: Hisar Çağı\n(500 Besin, 200 Altın)", "AGE_2")
-				else:
-					_add_disabled_button("Hisar Çağı ✓\n(Maksimum)")
+						_add_disabled_button("Tarla Aç\n%s (%d/%d)" % [reason, n_fields, game_controller.MAX_FIELDS_PER_MILL])
+
+			Building3D.BuildingType.FARM:
+				var farmer_txt := "Boş"
+				if game_controller != null and game_controller.map_gen.farm_fields.has(b.origin_cell) \
+						and not game_controller.map_gen.is_field_free_for(b.origin_cell, null):
+					farmer_txt = "Çiftçi çalışıyor"
+				_add_disabled_button("Tükenmez Besin\n%s" % farmer_txt)
 
 			Building3D.BuildingType.BARRACKS:
 				_add_train_button("Kılıçlı Asker\n(60 Besin, 20 Altın)", Unit3D.UnitType.SWORDSMAN)
@@ -439,36 +451,6 @@ func _display_building_ui(b: Building3D) -> void:
 				var player_age = game_controller.team_age[0] if game_controller != null and game_controller.team_age.has(0) else 1
 				if player_age >= 2:
 					_add_train_button("Şövalye\n(90 Besin, 75 Altın)", Unit3D.UnitType.PALADIN)
-
-			Building3D.BuildingType.BLACKSMITH:
-				var techs = game_controller.team_techs[0] if game_controller != null and game_controller.team_techs.has(0) else {}
-				if techs.get("iron_weapons", false):
-					_add_disabled_button("Demir Silahlar ✓\n(+3 Piyade)")
-				elif b.is_researching and b.current_research_tech == "iron_weapons":
-					_add_disabled_button("Demir Silahlar\n(%%%d)" % int(b.get_research_progress()))
-				else:
-					_add_research_button("Demir Silahlar\n(100 Besin, 40 Altın)", "iron_weapons")
-
-				if techs.get("scale_armor", false):
-					_add_disabled_button("Takviyeli Zırh ✓\n(+2 Zırh)")
-				elif b.is_researching and b.current_research_tech == "scale_armor":
-					_add_disabled_button("Takviyeli Zırh\n(%%%d)" % int(b.get_research_progress()))
-				else:
-					_add_research_button("Takviyeli Zırh\n(100 Besin, 40 Altın)", "scale_armor")
-
-				if techs.get("bodkin_arrows", false):
-					_add_disabled_button("Demir Oklar ✓\n(+3 Okçu)")
-				elif b.is_researching and b.current_research_tech == "bodkin_arrows":
-					_add_disabled_button("Demir Oklar\n(%%%d)" % int(b.get_research_progress()))
-				else:
-					_add_research_button("Demir Oklar\n(100 Odun, 50 Altın)", "bodkin_arrows")
-
-				if techs.get("wheelbarrow", false):
-					_add_disabled_button("El Arabası ✓\n(20 Yük +%15 Hız)")
-				elif b.is_researching and b.current_research_tech == "wheelbarrow":
-					_add_disabled_button("El Arabası\n(%%%d)" % int(b.get_research_progress()))
-				else:
-					_add_research_button("El Arabası\n(100 Odun, 50 Besin)", "wheelbarrow")
 
 			Building3D.BuildingType.CASTLE:
 				var civ_cfg = CivData.get_civ(b.civ_type)
@@ -487,6 +469,9 @@ func _display_building_ui(b: Building3D) -> void:
 					"BERSERKER": u_enum = Unit3D.UnitType.BERSERKER
 					"CHUKONU": u_enum = Unit3D.UnitType.CHUKONU
 				_add_train_button("%s\n(80 Besin, 60 Altın)" % u_name, u_enum)
+
+		# This building's own technologies / upgrades (TechData)
+		_add_tech_buttons(b)
 
 		# Production Queue with Cancel & Refund
 		if b.train_queue.size() > 0:
@@ -547,6 +532,35 @@ func _add_research_button(label: String, tech_id: String) -> void:
 		if is_instance_valid(selected_entity) and selected_entity is Building3D:
 			set_selected_entity(selected_entity)
 	)
+	action_flow.add_child(btn)
+
+func _add_tech_buttons(b: Building3D) -> void:
+	if game_controller == null or not game_controller.has_method("research_block_reason"):
+		return
+	for id in TechData.techs_for_building(b.building_type):
+		var t: Dictionary = TechData.get_tech(id)
+		var reason: String = game_controller.research_block_reason(b, id, 0)
+		if reason == "Zaten geçildi":
+			continue                                  # e.g. Age II once in Age III
+		if reason == "Zaten geliştirildi":
+			if not id.begins_with("AGE_"):
+				_add_disabled_button("%s ✓\n%s" % [t["name"], t["desc"]])
+			elif int(game_controller.team_age.get(0, 1)) >= 3:
+				_add_disabled_button("%s ✓" % TechData.age_name(3))
+			continue
+		if b.is_researching and b.current_research_tech == id:
+			_add_disabled_button("%s\nAraştırılıyor %%%d" % [t["name"], int(b.get_research_progress())])
+		elif reason == "" or reason == "Yetersiz kaynak":
+			_add_research_button("%s\n%s (%s)" % [t["name"], t["desc"], TechData.cost_text(id)], id)
+		else:
+			_add_disabled_button("%s\n%s" % [t["name"], reason])
+
+func _add_field_button(label: String) -> void:
+	var btn = Button.new()
+	btn.text = label
+	btn.custom_minimum_size = Vector2(215, 48)
+	ParchmentTheme.apply_parchment_button(btn, 12)
+	btn.pressed.connect(func(): field_requested.emit())
 	action_flow.add_child(btn)
 
 func _add_disabled_button(label: String) -> void:

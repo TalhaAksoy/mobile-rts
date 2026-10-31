@@ -138,21 +138,24 @@ func test_all_10_factions_12_building_instances() -> void:
 			dummy_parent.add_child(b)
 			b.setup_building(b_type, 0, civ, Vector2i(10, 10), null, null, false)
 
-			var has_sprite = (is_instance_valid(b.building_sprite) and b.building_sprite.texture != null) or (b.building_type == Building3D.BuildingType.FARM and b.model_root != null and b.model_root.get_child_count() > 0)
+			# Either the HD-2D sprite path or a manifest-driven 3D model (Blender GLB) is valid art.
+			var has_model = is_instance_valid(b.building_model) and not b.building_model.find_children("*", "MeshInstance3D", true, false).is_empty()
+			var has_sprite = has_model or (is_instance_valid(b.building_sprite) and b.building_sprite.texture != null) or (b.building_type == Building3D.BuildingType.FARM and b.model_root != null and b.model_root.get_child_count() > 0)
 			var has_col = is_instance_valid(b.collision_shape) and b.collision_shape.shape != null
 			var has_sel = is_instance_valid(b.selection_mesh)
 			var has_hp = is_instance_valid(b.hp_bar_holder)
-			var correct_billboard = (b.building_type == Building3D.BuildingType.FARM) or (is_instance_valid(b.building_sprite) and b.building_sprite.billboard == BaseMaterial3D.BILLBOARD_FIXED_Y)
+			var correct_billboard = has_model or (b.building_type == Building3D.BuildingType.FARM) or (is_instance_valid(b.building_sprite) and b.building_sprite.billboard == BaseMaterial3D.BILLBOARD_FIXED_Y)
 
 			if has_sprite and has_col and has_sel and has_hp and correct_billboard:
 				success_count += 1
 			b.queue_free()
 
-	assert_true(success_count == 120, "120/120 Building instances built with valid Sprite3D, collision and UI (got %d)" % success_count)
+	assert_true(success_count == 120, "120/120 Building instances built with valid art (sprite or 3D model), collision and UI (got %d)" % success_count)
 	dummy_parent.queue_free()
 
 func test_construction_progression_visuals() -> void:
 	print("\n--- TEST: Construction Progression & Opacity Transition ---")
+	FactionArtManager.use_3d_building_models = false  # this test covers the sprite fallback path
 	var b = Building3D.new()
 	root.add_child(b)
 	b.setup_building(Building3D.BuildingType.BARRACKS, 0, CivData.CivType.OTTOMANS, Vector2i(5, 5), null, null, true)
@@ -166,9 +169,11 @@ func test_construction_progression_visuals() -> void:
 	assert_true(not b.scaffold_node.visible, "Scaffold hidden after completion")
 	assert_true(b.building_sprite.modulate.a >= 0.99, "Sprite restores to full opacity on completion")
 	b.queue_free()
+	FactionArtManager.use_3d_building_models = true
 
 func test_enemy_civ_tint() -> void:
 	print("\n--- TEST: Enemy Faction Red Tint Visual ---")
+	FactionArtManager.use_3d_building_models = false  # sprite tint path
 	var b_ally = Building3D.new()
 	root.add_child(b_ally)
 	b_ally.setup_building(Building3D.BuildingType.TOWN_CENTER, 0, CivData.CivType.FRANKS, Vector2i(2, 2), null, null, false)
@@ -182,6 +187,7 @@ func test_enemy_civ_tint() -> void:
 
 	b_ally.queue_free()
 	b_enemy.queue_free()
+	FactionArtManager.use_3d_building_models = true
 
 func test_art_preview_gallery_integration() -> void:
 	print("\n--- TEST: Art Preview Gallery Building Catalog Integration ---")

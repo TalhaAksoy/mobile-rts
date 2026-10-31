@@ -1,0 +1,40 @@
+{
+  "tris": 1582,
+  "verts": 2596,
+  "materials": [
+    "PE_Dirt",
+    "PE_Sandstone",
+    "PE_TileTeal",
+    "PE_Window",
+    "TEAM_Trim",
+    "PE_Banner_saracens",
+    "PE_Gold",
+    "PE_PlasterWhite",
+    "PE_ClothRed",
+    "PE_WoodLight",
+    "PE_Foliage",
+    "PE_WoodDark"
+  ],
+  "bounds_min": [
+    -2.729,
+    -2.615,
+    0.0
+  ],
+  "bounds_max": [
+    3.023,
+    2.676,
+    4.758
+  ],
+  "asset_id": "town_center",
+  "civ": "saracens",
+  "kind": "buildings",
+  "blend": "art_source/blender/saracens/town_center.blend",
+  "glb": "res://assets/3d/buildings/saracens/town_center.glb",
+  "glb_bytes": 113312,
+  "grid": [
+    3,
+    3
+  ],
+  "footprint_m": 5.4,
+  "reference": "res://art/buildings/saracens/town_center.png"
+}

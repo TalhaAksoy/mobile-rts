@@ -1,0 +1,29 @@
+{
+  "tris": 270,
+  "verts": 514,
+  "materials": [
+    "PE_StoneBrick",
+    "PE_RoofRed",
+    "PE_WoodDark",
+    "PE_Gold",
+    "PE_Banner_byzantines",
+    "TEAM_Trim"
+  ],
+  "bounds_min": [
+    -1.86,
+    -1.881,
+    0.0
+  ],
+  "bounds_max": [
+    1.86,
+    1.86,
+    1.96
+  ],
+  "asset_id": "upgrade_kit",
+  "civ": "byzantines",
+  "kind": "upgrade_kits",
+  "blend": "art_source/blender/byzantines/upgrade_kit.blend",
+  "glb": "res://assets/3d/upgrade_kits/byzantines/upgrade_kit.glb",
+  "glb_bytes": 24332,
+  "build_script": "art_source/blender/environment/upgrade_kit.py"
+}

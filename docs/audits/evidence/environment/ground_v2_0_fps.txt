@@ -1,0 +1,1 @@
+avg_fps=133.7 frames=402 engine_fps=135 draw_calls=482 primitives=77928

@@ -1,0 +1,26 @@
+{
+  "tris": 343,
+  "verts": 555,
+  "materials": [
+    "PE_NatureAtlas_Desert"
+  ],
+  "bounds_min": [
+    -1.066,
+    -1.308,
+    -0.006
+  ],
+  "bounds_max": [
+    1.642,
+    1.27,
+    2.974
+  ],
+  "asset_id": "tree_palm",
+  "civ": "desert",
+  "kind": "environment",
+  "blend": "art_source/blender/desert/tree_palm.blend",
+  "glb": "res://assets/3d/environment/desert/tree_palm.glb",
+  "glb_bytes": 25108,
+  "resource": "wood",
+  "biome": "desert",
+  "build_script": "art_source/blender/environment/desert_date_palm.py"
+}

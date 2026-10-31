@@ -1,0 +1,38 @@
+{
+  "tris": 563,
+  "verts": 759,
+  "materials": [
+    "PE_Dirt",
+    "PE_WoodDark",
+    "TEAM_Trim",
+    "PE_RoofDark",
+    "PE_PlasterWhite",
+    "PE_Beam",
+    "PE_WoodLight",
+    "PE_Iron",
+    "PE_Banner_japanese",
+    "PE_Gold"
+  ],
+  "bounds_min": [
+    -1.78,
+    -1.77,
+    0.0
+  ],
+  "bounds_max": [
+    1.743,
+    1.799,
+    1.881
+  ],
+  "asset_id": "lumber_camp",
+  "civ": "japanese",
+  "kind": "buildings",
+  "blend": "art_source/blender/japanese/lumber_camp.blend",
+  "glb": "res://assets/3d/buildings/japanese/lumber_camp.glb",
+  "glb_bytes": 46948,
+  "grid": [
+    2,
+    2
+  ],
+  "footprint_m": 3.6,
+  "reference": "res://art/buildings/japanese/lumber_camp.png"
+}

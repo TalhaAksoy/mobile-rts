@@ -1,0 +1,39 @@
+{
+  "tris": 1005,
+  "verts": 1789,
+  "materials": [
+    "PE_Dirt",
+    "PE_StoneGrey",
+    "PE_Window",
+    "PE_SlateDark",
+    "PE_WoodDark",
+    "PE_WoodLight",
+    "TEAM_Trim",
+    "PE_Banner_teutons",
+    "PE_Gold",
+    "PE_Beam",
+    "PE_Thatch"
+  ],
+  "bounds_min": [
+    -2.623,
+    -2.67,
+    0.0
+  ],
+  "bounds_max": [
+    2.89,
+    2.615,
+    2.443
+  ],
+  "asset_id": "stable",
+  "civ": "teutons",
+  "kind": "buildings",
+  "blend": "art_source/blender/teutons/stable.blend",
+  "glb": "res://assets/3d/buildings/teutons/stable.glb",
+  "glb_bytes": 78356,
+  "grid": [
+    3,
+    3
+  ],
+  "footprint_m": 5.4,
+  "reference": "res://art/buildings/teutons/stable.png"
+}

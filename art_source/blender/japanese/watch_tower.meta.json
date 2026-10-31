@@ -1,0 +1,38 @@
+{
+  "tris": 321,
+  "verts": 561,
+  "materials": [
+    "PE_Dirt",
+    "PE_StoneGrey",
+    "PE_PlasterWhite",
+    "PE_WoodDark",
+    "PE_Lattice",
+    "TEAM_Trim",
+    "PE_RoofDark",
+    "PE_Gold",
+    "PE_Banner_japanese",
+    "PE_WoodLight"
+  ],
+  "bounds_min": [
+    -1.797,
+    -1.741,
+    0.0
+  ],
+  "bounds_max": [
+    1.772,
+    1.755,
+    4.18
+  ],
+  "asset_id": "watch_tower",
+  "civ": "japanese",
+  "kind": "buildings",
+  "blend": "art_source/blender/japanese/watch_tower.blend",
+  "glb": "res://assets/3d/buildings/japanese/watch_tower.glb",
+  "glb_bytes": 30764,
+  "grid": [
+    2,
+    2
+  ],
+  "footprint_m": 3.6,
+  "reference": "res://art/buildings/japanese/watch_tower.png"
+}

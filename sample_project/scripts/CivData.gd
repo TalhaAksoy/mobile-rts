@@ -226,6 +226,7 @@ const CIVS: Dictionary = {
 
 const MAP_CONFIGS: Dictionary = {
 	MapType.FOREST_VALLEY: {
+		"biome": "temperate",
 		"name": "Yeşil Vadi",
 		"subtitle": "Forest Valley",
 		"desc": "Gür ağaçlıklar, dar geçitler ve zengin odun kaynakları.",
@@ -238,6 +239,7 @@ const MAP_CONFIGS: Dictionary = {
 		"water_color": Color(0.18, 0.42, 0.65)
 	},
 	MapType.DESERT_OASIS: {
+		"biome": "desert",
 		"name": "Çöl Vahası",
 		"subtitle": "Desert Oasis",
 		"desc": "Merkezde hayat veren vaha ve altın madenleri, açık kum tepeleri.",
@@ -250,6 +252,7 @@ const MAP_CONFIGS: Dictionary = {
 		"water_color": Color(0.12, 0.62, 0.75)
 	},
 	MapType.RIVER_CROSSING: {
+		"biome": "temperate",
 		"name": "Nehir Geçidi",
 		"subtitle": "River Crossing",
 		"desc": "İki tarafı ayıran nehir ve stratejik sığ geçit köprüleri.",
@@ -262,6 +265,7 @@ const MAP_CONFIGS: Dictionary = {
 		"water_color": Color(0.15, 0.48, 0.72)
 	},
 	MapType.HIGHLAND_PLAINS: {
+		"biome": "steppe",
 		"name": "Yayla Bozkırı",
 		"subtitle": "Highland Plains",
 		"desc": "Kayalık tepeler, açık süvari alanları ve dağınık zenginlikler.",
@@ -274,6 +278,7 @@ const MAP_CONFIGS: Dictionary = {
 		"water_color": Color(0.22, 0.5, 0.68)
 	},
 	MapType.GOLD_RUSH: {
+		"biome": "autumn",
 		"name": "Hazine Vadisi",
 		"subtitle": "Gold Rush",
 		"desc": "Tarafsız orta bölgede devasa altın ve taş madenleri. Kanlı savaş!",
@@ -289,6 +294,43 @@ const MAP_CONFIGS: Dictionary = {
 
 static func get_civ(civ_type: CivType) -> Dictionary:
 	return CIVS.get(civ_type, CIVS[CivType.OTTOMANS])
+
+## Environment props per biome. Ids are keys of the "environment" section of
+## data/art/building_model_manifest.json (temperate = the original bare ids). Each tree entry is
+## [asset_id, display name, weight]; MapGenerator3D falls back to the temperate id when a biome
+## model is missing/disabled, and to the old sprite when that is missing too.
+const BIOME_PROPS: Dictionary = {
+	"temperate": {
+		"trees": [["tree_pine", "Çam Ağacı", 0.45], ["tree_oak", "Meşe Ağacı", 0.55]],
+		"gold": ["gold_mine", "Altın Madeni"],
+		"stone": ["stone_mine", "Taş Ocağı"],
+		"food": ["berry_bush", "Böğürtlen Çalısı"],
+	},
+	"desert": {
+		"trees": [["desert/tree_palm", "Hurma Ağacı", 0.65], ["desert/tree_acacia", "Akasya", 0.35]],
+		"gold": ["desert/gold_mine", "Altın Madeni"],
+		"stone": ["desert/stone_mine", "Kumtaşı Ocağı"],
+		"food": ["desert/prickly_pear", "Frenk İnciri"],
+	},
+	"steppe": {
+		"trees": [["steppe/tree_scots_pine", "Sarıçam", 0.5], ["steppe/tree_juniper", "Ardıç", 0.5]],
+		"gold": ["steppe/gold_mine", "Altın Madeni"],
+		"stone": ["steppe/stone_mine", "Granit Ocağı"],
+		"food": ["steppe/rosehip_bush", "Kuşburnu Çalısı"],
+	},
+	"autumn": {
+		"trees": [["autumn/tree_pine", "Melez Ağacı", 0.35], ["autumn/tree_oak", "Kızıl Meşe", 0.65]],
+		"gold": ["gold_mine", "Altın Madeni"],
+		"stone": ["stone_mine", "Taş Ocağı"],
+		"food": ["autumn/berry_bush", "Çakal Eriği"],
+	},
+}
+
+static func get_biome(map_type: MapType) -> String:
+	return get_map_config(map_type).get("biome", "temperate")
+
+static func get_biome_props(map_type: MapType) -> Dictionary:
+	return BIOME_PROPS.get(get_biome(map_type), BIOME_PROPS["temperate"])
 
 static func get_map_config(map_type: MapType) -> Dictionary:
 	return MAP_CONFIGS.get(map_type, MAP_CONFIGS[MapType.FOREST_VALLEY])

@@ -1,0 +1,38 @@
+{
+  "tris": 448,
+  "verts": 784,
+  "materials": [
+    "PE_Dirt",
+    "PE_StoneGrey",
+    "PE_StoneBrick",
+    "PE_LacquerRed",
+    "PE_Lattice",
+    "PE_WoodDark",
+    "PE_RoofTeal",
+    "PE_Gold",
+    "TEAM_Trim",
+    "PE_Window"
+  ],
+  "bounds_min": [
+    -1.76,
+    -1.789,
+    0.0
+  ],
+  "bounds_max": [
+    1.73,
+    1.734,
+    2.37
+  ],
+  "asset_id": "house",
+  "civ": "chinese",
+  "kind": "buildings",
+  "blend": "art_source/blender/chinese/house.blend",
+  "glb": "res://assets/3d/buildings/chinese/house.glb",
+  "glb_bytes": 39664,
+  "grid": [
+    2,
+    2
+  ],
+  "footprint_m": 3.6,
+  "reference": "res://art/buildings/chinese/house.png"
+}

@@ -1,0 +1,38 @@
+{
+  "tris": 384,
+  "verts": 648,
+  "materials": [
+    "PE_Dirt",
+    "PE_StoneBrick",
+    "PE_StoneWarm",
+    "PE_Window",
+    "TEAM_Trim",
+    "PE_RoofRed",
+    "PE_Gold",
+    "PE_WoodDark",
+    "PE_Banner_byzantines",
+    "PE_WoodLight"
+  ],
+  "bounds_min": [
+    -1.773,
+    -1.794,
+    0.0
+  ],
+  "bounds_max": [
+    1.748,
+    1.768,
+    4.4
+  ],
+  "asset_id": "watch_tower",
+  "civ": "byzantines",
+  "kind": "buildings",
+  "blend": "art_source/blender/byzantines/watch_tower.blend",
+  "glb": "res://assets/3d/buildings/byzantines/watch_tower.glb",
+  "glb_bytes": 34832,
+  "grid": [
+    2,
+    2
+  ],
+  "footprint_m": 3.6,
+  "reference": "res://art/buildings/byzantines/watch_tower.png"
+}

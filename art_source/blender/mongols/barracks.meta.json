@@ -1,0 +1,37 @@
+{
+  "tris": 1025,
+  "verts": 1531,
+  "materials": [
+    "PE_Dirt",
+    "PE_FeltBlue",
+    "PE_Felt",
+    "TEAM_Trim",
+    "PE_WoodDark",
+    "PE_LacquerRed",
+    "PE_Banner_mongols",
+    "PE_Gold",
+    "PE_Iron"
+  ],
+  "bounds_min": [
+    -2.649,
+    -2.64,
+    0.0
+  ],
+  "bounds_max": [
+    2.648,
+    2.621,
+    3.27
+  ],
+  "asset_id": "barracks",
+  "civ": "mongols",
+  "kind": "buildings",
+  "blend": "art_source/blender/mongols/barracks.blend",
+  "glb": "res://assets/3d/buildings/mongols/barracks.glb",
+  "glb_bytes": 77928,
+  "grid": [
+    3,
+    3
+  ],
+  "footprint_m": 5.4,
+  "reference": "res://art/buildings/mongols/barracks.png"
+}

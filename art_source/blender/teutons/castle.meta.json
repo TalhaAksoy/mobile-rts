@@ -1,0 +1,36 @@
+{
+  "tris": 2626,
+  "verts": 5074,
+  "materials": [
+    "PE_Dirt",
+    "PE_StoneGrey",
+    "PE_Window",
+    "TEAM_Trim",
+    "PE_SlateDark",
+    "PE_WoodDark",
+    "PE_Gold",
+    "PE_Banner_teutons"
+  ],
+  "bounds_min": [
+    -3.463,
+    -3.577,
+    0.0
+  ],
+  "bounds_max": [
+    3.416,
+    3.456,
+    5.8
+  ],
+  "asset_id": "castle",
+  "civ": "teutons",
+  "kind": "buildings",
+  "blend": "art_source/blender/teutons/castle.blend",
+  "glb": "res://assets/3d/buildings/teutons/castle.glb",
+  "glb_bytes": 188252,
+  "grid": [
+    4,
+    4
+  ],
+  "footprint_m": 7.2,
+  "reference": "res://art/buildings/teutons/castle.png"
+}

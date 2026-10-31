@@ -1,0 +1,40 @@
+{
+  "tris": 705,
+  "verts": 1051,
+  "materials": [
+    "PE_Dirt",
+    "PE_StoneGrey",
+    "PE_WoodDark",
+    "PE_Beam",
+    "PE_Shingle",
+    "PE_Window",
+    "TEAM_Trim",
+    "PE_Iron",
+    "PE_Banner_vikings",
+    "PE_Gold",
+    "PE_WoodLight",
+    "PE_Foliage"
+  ],
+  "bounds_min": [
+    -2.69,
+    -2.57,
+    0.0
+  ],
+  "bounds_max": [
+    2.64,
+    2.683,
+    4.23
+  ],
+  "asset_id": "town_center",
+  "civ": "vikings",
+  "kind": "buildings",
+  "blend": "art_source/blender/vikings/town_center.blend",
+  "glb": "res://assets/3d/buildings/vikings/town_center.glb",
+  "glb_bytes": 54592,
+  "grid": [
+    3,
+    3
+  ],
+  "footprint_m": 5.4,
+  "reference": "res://art/buildings/vikings/town_center.png"
+}

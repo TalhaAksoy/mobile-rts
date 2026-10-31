@@ -1,0 +1,39 @@
+{
+  "tris": 1042,
+  "verts": 1924,
+  "materials": [
+    "PE_Dirt",
+    "PE_StoneWarm",
+    "PE_PlasterCream",
+    "PE_Window",
+    "PE_RoofRed",
+    "PE_WoodDark",
+    "PE_DomeLead",
+    "TEAM_Trim",
+    "PE_Banner_ottomans",
+    "PE_Gold",
+    "PE_ClothRed"
+  ],
+  "bounds_min": [
+    -2.685,
+    -2.699,
+    0.0
+  ],
+  "bounds_max": [
+    2.65,
+    2.556,
+    3.76
+  ],
+  "asset_id": "barracks",
+  "civ": "ottomans",
+  "kind": "buildings",
+  "blend": "art_source/blender/ottomans/barracks.blend",
+  "glb": "res://assets/3d/buildings/ottomans/barracks.glb",
+  "glb_bytes": 80712,
+  "grid": [
+    3,
+    3
+  ],
+  "footprint_m": 5.4,
+  "reference": "res://art/buildings/ottomans/barracks.png"
+}

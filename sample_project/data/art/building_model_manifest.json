@@ -1,0 +1,2783 @@
+{
+  "schema_version": 1,
+  "description": "3D building models (Blender -> GLB). Lookup key: civ id + building id. Entries with enabled=false (or missing entries) fall back to the HD-2D sprite path in Building3D. Status values: NOT STARTED, WIP, IMPORTED, TESTED, APPROVED, BLOCKED.",
+  "material_library": "res://assets/3d/materials/",
+  "buildings": {
+    "ottomans": {
+      "town_center": {
+        "model": "res://assets/3d/buildings/ottomans/town_center.glb",
+        "source": "art_source/blender/ottomans/town_center.blend",
+        "build_script": "art_source/blender/buildings/ottomans_town_center.py",
+        "reference": "res://art/buildings/ottomans/town_center.png",
+        "tris": 3869,
+        "materials": 13,
+        "bounds_min": [
+          -2.63,
+          -2.643,
+          0.0
+        ],
+        "bounds_max": [
+          2.67,
+          2.633,
+          5.26
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "barracks": {
+        "model": "res://assets/3d/buildings/ottomans/barracks.glb",
+        "source": "art_source/blender/ottomans/barracks.blend",
+        "build_script": "art_source/blender/buildings/ottomans_barracks.py",
+        "reference": "res://art/buildings/ottomans/barracks.png",
+        "tris": 1042,
+        "materials": 11,
+        "bounds_min": [
+          -2.685,
+          -2.699,
+          0.0
+        ],
+        "bounds_max": [
+          2.65,
+          2.556,
+          3.76
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "house": {
+        "model": "res://assets/3d/buildings/ottomans/house.glb",
+        "source": "art_source/blender/ottomans/house.blend",
+        "build_script": "art_source/blender/buildings/ottomans_house.py",
+        "reference": "res://art/buildings/ottomans/house.png",
+        "tris": 723,
+        "materials": 10,
+        "bounds_min": [
+          -1.698,
+          -1.742,
+          0.0
+        ],
+        "bounds_max": [
+          1.736,
+          1.778,
+          3.56
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "lumber_camp": {
+        "model": "res://assets/3d/buildings/ottomans/lumber_camp.glb",
+        "source": "art_source/blender/ottomans/lumber_camp.blend",
+        "build_script": "art_source/blender/buildings/ottomans_lumber_camp.py",
+        "reference": "res://art/buildings/ottomans/lumber_camp.png",
+        "tris": 589,
+        "materials": 10,
+        "bounds_min": [
+          -1.776,
+          -1.735,
+          0.0
+        ],
+        "bounds_max": [
+          1.74,
+          1.767,
+          1.917
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "mill": {
+        "model": "res://assets/3d/buildings/ottomans/mill.glb",
+        "source": "art_source/blender/ottomans/mill.blend",
+        "build_script": "art_source/blender/buildings/ottomans_mill.py",
+        "reference": "res://art/buildings/ottomans/mill.png",
+        "tris": 587,
+        "materials": 13,
+        "bounds_min": [
+          -1.752,
+          -1.79,
+          0.0
+        ],
+        "bounds_max": [
+          1.743,
+          1.732,
+          3.41
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "archery_range": {
+        "model": "res://assets/3d/buildings/ottomans/archery_range.glb",
+        "source": "art_source/blender/ottomans/archery_range.blend",
+        "build_script": "art_source/blender/buildings/ottomans_archery_range.py",
+        "reference": "res://art/buildings/ottomans/archery_range.png",
+        "tris": 1152,
+        "materials": 14,
+        "bounds_min": [
+          -2.624,
+          -2.613,
+          0.0
+        ],
+        "bounds_max": [
+          2.84,
+          2.623,
+          2.46
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "blacksmith": {
+        "model": "res://assets/3d/buildings/ottomans/blacksmith.glb",
+        "source": "art_source/blender/ottomans/blacksmith.blend",
+        "build_script": "art_source/blender/buildings/ottomans_blacksmith.py",
+        "reference": "res://art/buildings/ottomans/blacksmith.png",
+        "tris": 507,
+        "materials": 11,
+        "bounds_min": [
+          -1.752,
+          -1.763,
+          0.0
+        ],
+        "bounds_max": [
+          1.791,
+          1.73,
+          2.4
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "castle": {
+        "model": "res://assets/3d/buildings/ottomans/castle.glb",
+        "source": "art_source/blender/ottomans/castle.blend",
+        "build_script": "art_source/blender/buildings/ottomans_castle.py",
+        "reference": "res://art/buildings/ottomans/castle.png",
+        "tris": 1890,
+        "materials": 10,
+        "bounds_min": [
+          -3.5,
+          -3.584,
+          0.0
+        ],
+        "bounds_max": [
+          3.44,
+          3.511,
+          5.57
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "mining_camp": {
+        "model": "res://assets/3d/buildings/ottomans/mining_camp.glb",
+        "source": "art_source/blender/ottomans/mining_camp.blend",
+        "build_script": "art_source/blender/buildings/ottomans_mining_camp.py",
+        "reference": "res://art/buildings/ottomans/mining_camp.png",
+        "tris": 709,
+        "materials": 9,
+        "bounds_min": [
+          -1.79,
+          -1.755,
+          0.0
+        ],
+        "bounds_max": [
+          1.783,
+          1.741,
+          1.58
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "stable": {
+        "model": "res://assets/3d/buildings/ottomans/stable.glb",
+        "source": "art_source/blender/ottomans/stable.blend",
+        "build_script": "art_source/blender/buildings/ottomans_stable.py",
+        "reference": "res://art/buildings/ottomans/stable.png",
+        "tris": 967,
+        "materials": 13,
+        "bounds_min": [
+          -2.636,
+          -2.66,
+          0.0
+        ],
+        "bounds_max": [
+          2.89,
+          2.675,
+          2.36
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "watch_tower": {
+        "model": "res://assets/3d/buildings/ottomans/watch_tower.glb",
+        "source": "art_source/blender/ottomans/watch_tower.blend",
+        "build_script": "art_source/blender/buildings/ottomans_watch_tower.py",
+        "reference": "res://art/buildings/ottomans/watch_tower.png",
+        "tris": 354,
+        "materials": 10,
+        "bounds_min": [
+          -1.755,
+          -1.799,
+          0.0
+        ],
+        "bounds_max": [
+          1.795,
+          1.771,
+          6.07
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      }
+    },
+    "japanese": {
+      "town_center": {
+        "model": "res://assets/3d/buildings/japanese/town_center.glb",
+        "source": "art_source/blender/japanese/town_center.blend",
+        "build_script": "art_source/blender/buildings/japanese_town_center.py",
+        "reference": "res://art/buildings/japanese/town_center.png",
+        "tris": 1131,
+        "materials": 12,
+        "bounds_min": [
+          -2.635,
+          -2.593,
+          0.0
+        ],
+        "bounds_max": [
+          2.618,
+          2.65,
+          5.47
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "mill": {
+        "model": "res://assets/3d/buildings/japanese/mill.glb",
+        "source": "art_source/blender/japanese/mill.blend",
+        "build_script": "art_source/blender/buildings/japanese_mill.py",
+        "reference": "res://art/buildings/japanese/mill.png",
+        "tris": 651,
+        "materials": 14,
+        "bounds_min": [
+          -1.783,
+          -1.75,
+          0.0
+        ],
+        "bounds_max": [
+          1.755,
+          1.773,
+          3.26
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "house": {
+        "model": "res://assets/3d/buildings/japanese/house.glb",
+        "source": "art_source/blender/japanese/house.blend",
+        "build_script": "art_source/blender/buildings/japanese_house.py",
+        "reference": "res://art/buildings/japanese/house.png",
+        "tris": 628,
+        "materials": 9,
+        "bounds_min": [
+          -1.748,
+          -1.748,
+          0.0
+        ],
+        "bounds_max": [
+          1.732,
+          1.778,
+          2.63
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "barracks": {
+        "model": "res://assets/3d/buildings/japanese/barracks.glb",
+        "source": "art_source/blender/japanese/barracks.blend",
+        "build_script": "art_source/blender/buildings/japanese_barracks.py",
+        "reference": "res://art/buildings/japanese/barracks.png",
+        "tris": 946,
+        "materials": 12,
+        "bounds_min": [
+          -2.645,
+          -2.689,
+          0.0
+        ],
+        "bounds_max": [
+          2.694,
+          2.698,
+          2.874
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "archery_range": {
+        "model": "res://assets/3d/buildings/japanese/archery_range.glb",
+        "source": "art_source/blender/japanese/archery_range.blend",
+        "build_script": "art_source/blender/buildings/japanese_archery_range.py",
+        "reference": "res://art/buildings/japanese/archery_range.png",
+        "tris": 1216,
+        "materials": 13,
+        "bounds_min": [
+          -2.668,
+          -2.614,
+          0.0
+        ],
+        "bounds_max": [
+          2.84,
+          2.611,
+          2.475
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "blacksmith": {
+        "model": "res://assets/3d/buildings/japanese/blacksmith.glb",
+        "source": "art_source/blender/japanese/blacksmith.blend",
+        "build_script": "art_source/blender/buildings/japanese_blacksmith.py",
+        "reference": "res://art/buildings/japanese/blacksmith.png",
+        "tris": 724,
+        "materials": 10,
+        "bounds_min": [
+          -1.798,
+          -1.776,
+          0.0
+        ],
+        "bounds_max": [
+          1.792,
+          1.789,
+          2.4
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "castle": {
+        "model": "res://assets/3d/buildings/japanese/castle.glb",
+        "source": "art_source/blender/japanese/castle.blend",
+        "build_script": "art_source/blender/buildings/japanese_castle.py",
+        "reference": "res://art/buildings/japanese/castle.png",
+        "tris": 1409,
+        "materials": 9,
+        "bounds_min": [
+          -3.499,
+          -3.553,
+          0.0
+        ],
+        "bounds_max": [
+          3.581,
+          3.527,
+          5.16
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "lumber_camp": {
+        "model": "res://assets/3d/buildings/japanese/lumber_camp.glb",
+        "source": "art_source/blender/japanese/lumber_camp.blend",
+        "build_script": "art_source/blender/buildings/japanese_lumber_camp.py",
+        "reference": "res://art/buildings/japanese/lumber_camp.png",
+        "tris": 563,
+        "materials": 10,
+        "bounds_min": [
+          -1.78,
+          -1.77,
+          0.0
+        ],
+        "bounds_max": [
+          1.743,
+          1.799,
+          1.881
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "mining_camp": {
+        "model": "res://assets/3d/buildings/japanese/mining_camp.glb",
+        "source": "art_source/blender/japanese/mining_camp.blend",
+        "build_script": "art_source/blender/buildings/japanese_mining_camp.py",
+        "reference": "res://art/buildings/japanese/mining_camp.png",
+        "tris": 763,
+        "materials": 10,
+        "bounds_min": [
+          -1.743,
+          -1.735,
+          0.0
+        ],
+        "bounds_max": [
+          1.714,
+          1.785,
+          1.834
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "stable": {
+        "model": "res://assets/3d/buildings/japanese/stable.glb",
+        "source": "art_source/blender/japanese/stable.blend",
+        "build_script": "art_source/blender/buildings/japanese_stable.py",
+        "reference": "res://art/buildings/japanese/stable.png",
+        "tris": 1138,
+        "materials": 13,
+        "bounds_min": [
+          -2.593,
+          -2.666,
+          0.0
+        ],
+        "bounds_max": [
+          2.89,
+          2.63,
+          2.36
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "watch_tower": {
+        "model": "res://assets/3d/buildings/japanese/watch_tower.glb",
+        "source": "art_source/blender/japanese/watch_tower.blend",
+        "build_script": "art_source/blender/buildings/japanese_watch_tower.py",
+        "reference": "res://art/buildings/japanese/watch_tower.png",
+        "tris": 321,
+        "materials": 10,
+        "bounds_min": [
+          -1.797,
+          -1.741,
+          0.0
+        ],
+        "bounds_max": [
+          1.772,
+          1.755,
+          4.18
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      }
+    },
+    "mongols": {
+      "town_center": {
+        "model": "res://assets/3d/buildings/mongols/town_center.glb",
+        "source": "art_source/blender/mongols/town_center.blend",
+        "build_script": "art_source/blender/buildings/mongols_town_center.py",
+        "reference": "res://art/buildings/mongols/town_center.png",
+        "tris": 1557,
+        "materials": 13,
+        "bounds_min": [
+          -2.597,
+          -2.608,
+          0.0
+        ],
+        "bounds_max": [
+          2.59,
+          2.7,
+          3.63
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "mill": {
+        "model": "res://assets/3d/buildings/mongols/mill.glb",
+        "source": "art_source/blender/mongols/mill.blend",
+        "build_script": "art_source/blender/buildings/mongols_mill.py",
+        "reference": "res://art/buildings/mongols/mill.png",
+        "tris": 674,
+        "materials": 11,
+        "bounds_min": [
+          -1.763,
+          -1.729,
+          0.0
+        ],
+        "bounds_max": [
+          1.735,
+          1.767,
+          3.13
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "house": {
+        "model": "res://assets/3d/buildings/mongols/house.glb",
+        "source": "art_source/blender/mongols/house.blend",
+        "build_script": "art_source/blender/buildings/mongols_house.py",
+        "reference": "res://art/buildings/mongols/house.png",
+        "tris": 584,
+        "materials": 9,
+        "bounds_min": [
+          -1.776,
+          -1.735,
+          0.0
+        ],
+        "bounds_max": [
+          1.733,
+          1.767,
+          1.98
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "barracks": {
+        "model": "res://assets/3d/buildings/mongols/barracks.glb",
+        "source": "art_source/blender/mongols/barracks.blend",
+        "build_script": "art_source/blender/buildings/mongols_barracks.py",
+        "reference": "res://art/buildings/mongols/barracks.png",
+        "tris": 1025,
+        "materials": 9,
+        "bounds_min": [
+          -2.649,
+          -2.64,
+          0.0
+        ],
+        "bounds_max": [
+          2.648,
+          2.621,
+          3.27
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "archery_range": {
+        "model": "res://assets/3d/buildings/mongols/archery_range.glb",
+        "source": "art_source/blender/mongols/archery_range.blend",
+        "build_script": "art_source/blender/buildings/mongols_archery_range.py",
+        "reference": "res://art/buildings/mongols/archery_range.png",
+        "tris": 1089,
+        "materials": 12,
+        "bounds_min": [
+          -2.628,
+          -2.607,
+          0.0
+        ],
+        "bounds_max": [
+          2.84,
+          2.643,
+          2.46
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "blacksmith": {
+        "model": "res://assets/3d/buildings/mongols/blacksmith.glb",
+        "source": "art_source/blender/mongols/blacksmith.blend",
+        "build_script": "art_source/blender/buildings/mongols_blacksmith.py",
+        "reference": "res://art/buildings/mongols/blacksmith.png",
+        "tris": 648,
+        "materials": 10,
+        "bounds_min": [
+          -1.748,
+          -1.748,
+          0.0
+        ],
+        "bounds_max": [
+          1.732,
+          1.778,
+          2.4
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "castle": {
+        "model": "res://assets/3d/buildings/mongols/castle.glb",
+        "source": "art_source/blender/mongols/castle.blend",
+        "build_script": "art_source/blender/buildings/mongols_castle.py",
+        "reference": "res://art/buildings/mongols/castle.png",
+        "tris": 2594,
+        "materials": 9,
+        "bounds_min": [
+          -3.502,
+          -3.528,
+          0.0
+        ],
+        "bounds_max": [
+          3.437,
+          3.513,
+          3.553
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "lumber_camp": {
+        "model": "res://assets/3d/buildings/mongols/lumber_camp.glb",
+        "source": "art_source/blender/mongols/lumber_camp.blend",
+        "build_script": "art_source/blender/buildings/mongols_lumber_camp.py",
+        "reference": "res://art/buildings/mongols/lumber_camp.png",
+        "tris": 525,
+        "materials": 10,
+        "bounds_min": [
+          -1.737,
+          -1.748,
+          0.0
+        ],
+        "bounds_max": [
+          1.721,
+          1.693,
+          1.58
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "mining_camp": {
+        "model": "res://assets/3d/buildings/mongols/mining_camp.glb",
+        "source": "art_source/blender/mongols/mining_camp.blend",
+        "build_script": "art_source/blender/buildings/mongols_mining_camp.py",
+        "reference": "res://art/buildings/mongols/mining_camp.png",
+        "tris": 725,
+        "materials": 10,
+        "bounds_min": [
+          -1.76,
+          -1.789,
+          0.0
+        ],
+        "bounds_max": [
+          1.73,
+          1.734,
+          1.58
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "stable": {
+        "model": "res://assets/3d/buildings/mongols/stable.glb",
+        "source": "art_source/blender/mongols/stable.blend",
+        "build_script": "art_source/blender/buildings/mongols_stable.py",
+        "reference": "res://art/buildings/mongols/stable.png",
+        "tris": 1053,
+        "materials": 11,
+        "bounds_min": [
+          -2.665,
+          -2.602,
+          0.0
+        ],
+        "bounds_max": [
+          2.89,
+          2.65,
+          2.36
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "watch_tower": {
+        "model": "res://assets/3d/buildings/mongols/watch_tower.glb",
+        "source": "art_source/blender/mongols/watch_tower.blend",
+        "build_script": "art_source/blender/buildings/mongols_watch_tower.py",
+        "reference": "res://art/buildings/mongols/watch_tower.png",
+        "tris": 247,
+        "materials": 7,
+        "bounds_min": [
+          -1.76,
+          -1.735,
+          0.0
+        ],
+        "bounds_max": [
+          1.74,
+          1.712,
+          4.4
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      }
+    },
+    "britons": {
+      "town_center": {
+        "model": "res://assets/3d/buildings/britons/town_center.glb",
+        "source": "art_source/blender/britons/town_center.blend",
+        "build_script": "art_source/blender/buildings/britons_town_center.py",
+        "reference": "res://art/buildings/britons/town_center.png",
+        "tris": 1152,
+        "materials": 11,
+        "bounds_min": [
+          -2.68,
+          -2.66,
+          0.0
+        ],
+        "bounds_max": [
+          2.59,
+          2.675,
+          4.66
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "mill": {
+        "model": "res://assets/3d/buildings/britons/mill.glb",
+        "source": "art_source/blender/britons/mill.blend",
+        "build_script": "art_source/blender/buildings/britons_mill.py",
+        "reference": "res://art/buildings/britons/mill.png",
+        "tris": 681,
+        "materials": 14,
+        "bounds_min": [
+          -1.721,
+          -1.795,
+          0.0
+        ],
+        "bounds_max": [
+          1.714,
+          1.73,
+          3.41
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "house": {
+        "model": "res://assets/3d/buildings/britons/house.glb",
+        "source": "art_source/blender/britons/house.blend",
+        "build_script": "art_source/blender/buildings/britons_house.py",
+        "reference": "res://art/buildings/britons/house.png",
+        "tris": 571,
+        "materials": 10,
+        "bounds_min": [
+          -1.742,
+          -1.762,
+          0.0
+        ],
+        "bounds_max": [
+          1.741,
+          1.755,
+          3.12
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "barracks": {
+        "model": "res://assets/3d/buildings/britons/barracks.glb",
+        "source": "art_source/blender/britons/barracks.blend",
+        "build_script": "art_source/blender/buildings/britons_barracks.py",
+        "reference": "res://art/buildings/britons/barracks.png",
+        "tris": 981,
+        "materials": 12,
+        "bounds_min": [
+          -2.627,
+          -2.646,
+          0.0
+        ],
+        "bounds_max": [
+          2.577,
+          2.634,
+          3.73
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "archery_range": {
+        "model": "res://assets/3d/buildings/britons/archery_range.glb",
+        "source": "art_source/blender/britons/archery_range.blend",
+        "build_script": "art_source/blender/buildings/britons_archery_range.py",
+        "reference": "res://art/buildings/britons/archery_range.png",
+        "tris": 1248,
+        "materials": 13,
+        "bounds_min": [
+          -2.646,
+          -2.605,
+          0.0
+        ],
+        "bounds_max": [
+          2.84,
+          2.636,
+          2.46
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "blacksmith": {
+        "model": "res://assets/3d/buildings/britons/blacksmith.glb",
+        "source": "art_source/blender/britons/blacksmith.blend",
+        "build_script": "art_source/blender/buildings/britons_blacksmith.py",
+        "reference": "res://art/buildings/britons/blacksmith.png",
+        "tris": 663,
+        "materials": 11,
+        "bounds_min": [
+          -1.771,
+          -1.763,
+          0.0
+        ],
+        "bounds_max": [
+          1.744,
+          1.762,
+          2.4
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "castle": {
+        "model": "res://assets/3d/buildings/britons/castle.glb",
+        "source": "art_source/blender/britons/castle.blend",
+        "build_script": "art_source/blender/buildings/britons_castle.py",
+        "reference": "res://art/buildings/britons/castle.png",
+        "tris": 1801,
+        "materials": 11,
+        "bounds_min": [
+          -3.505,
+          -3.428,
+          0.0
+        ],
+        "bounds_max": [
+          3.491,
+          3.503,
+          5.17
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "lumber_camp": {
+        "model": "res://assets/3d/buildings/britons/lumber_camp.glb",
+        "source": "art_source/blender/britons/lumber_camp.blend",
+        "build_script": "art_source/blender/buildings/britons_lumber_camp.py",
+        "reference": "res://art/buildings/britons/lumber_camp.png",
+        "tris": 517,
+        "materials": 9,
+        "bounds_min": [
+          -1.779,
+          -1.764,
+          0.0
+        ],
+        "bounds_max": [
+          1.757,
+          1.769,
+          1.819
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "mining_camp": {
+        "model": "res://assets/3d/buildings/britons/mining_camp.glb",
+        "source": "art_source/blender/britons/mining_camp.blend",
+        "build_script": "art_source/blender/buildings/britons_mining_camp.py",
+        "reference": "res://art/buildings/britons/mining_camp.png",
+        "tris": 717,
+        "materials": 9,
+        "bounds_min": [
+          -1.725,
+          -1.728,
+          0.0
+        ],
+        "bounds_max": [
+          1.745,
+          1.767,
+          1.777
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "stable": {
+        "model": "res://assets/3d/buildings/britons/stable.glb",
+        "source": "art_source/blender/britons/stable.blend",
+        "build_script": "art_source/blender/buildings/britons_stable.py",
+        "reference": "res://art/buildings/britons/stable.png",
+        "tris": 1085,
+        "materials": 11,
+        "bounds_min": [
+          -2.645,
+          -2.607,
+          0.0
+        ],
+        "bounds_max": [
+          2.89,
+          2.659,
+          2.36
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "watch_tower": {
+        "model": "res://assets/3d/buildings/britons/watch_tower.glb",
+        "source": "art_source/blender/britons/watch_tower.blend",
+        "build_script": "art_source/blender/buildings/britons_watch_tower.py",
+        "reference": "res://art/buildings/britons/watch_tower.png",
+        "tris": 317,
+        "materials": 10,
+        "bounds_min": [
+          -1.783,
+          -1.75,
+          0.0
+        ],
+        "bounds_max": [
+          1.755,
+          1.773,
+          5.55
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      }
+    },
+    "byzantines": {
+      "town_center": {
+        "model": "res://assets/3d/buildings/byzantines/town_center.glb",
+        "source": "art_source/blender/byzantines/town_center.blend",
+        "build_script": "art_source/blender/buildings/byzantines_town_center.py",
+        "reference": "res://art/buildings/byzantines/town_center.png",
+        "tris": 1430,
+        "materials": 10,
+        "bounds_min": [
+          -2.631,
+          -2.621,
+          0.0
+        ],
+        "bounds_max": [
+          2.645,
+          2.62,
+          4.02
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "mill": {
+        "model": "res://assets/3d/buildings/byzantines/mill.glb",
+        "source": "art_source/blender/byzantines/mill.blend",
+        "build_script": "art_source/blender/buildings/byzantines_mill.py",
+        "reference": "res://art/buildings/byzantines/mill.png",
+        "tris": 635,
+        "materials": 12,
+        "bounds_min": [
+          -1.747,
+          -1.798,
+          0.0
+        ],
+        "bounds_max": [
+          1.754,
+          1.742,
+          3.41
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "house": {
+        "model": "res://assets/3d/buildings/byzantines/house.glb",
+        "source": "art_source/blender/byzantines/house.blend",
+        "build_script": "art_source/blender/buildings/byzantines_house.py",
+        "reference": "res://art/buildings/byzantines/house.png",
+        "tris": 580,
+        "materials": 9,
+        "bounds_min": [
+          -1.716,
+          -1.737,
+          0.0
+        ],
+        "bounds_max": [
+          1.751,
+          1.729,
+          2.83
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "barracks": {
+        "model": "res://assets/3d/buildings/byzantines/barracks.glb",
+        "source": "art_source/blender/byzantines/barracks.blend",
+        "build_script": "art_source/blender/buildings/byzantines_barracks.py",
+        "reference": "res://art/buildings/byzantines/barracks.png",
+        "tris": 908,
+        "materials": 11,
+        "bounds_min": [
+          -2.684,
+          -2.631,
+          0.0
+        ],
+        "bounds_max": [
+          2.639,
+          2.687,
+          3.075
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "archery_range": {
+        "model": "res://assets/3d/buildings/byzantines/archery_range.glb",
+        "source": "art_source/blender/byzantines/archery_range.blend",
+        "build_script": "art_source/blender/buildings/byzantines_archery_range.py",
+        "reference": "res://art/buildings/byzantines/archery_range.png",
+        "tris": 1118,
+        "materials": 13,
+        "bounds_min": [
+          -2.556,
+          -2.587,
+          0.0
+        ],
+        "bounds_max": [
+          2.84,
+          2.597,
+          2.46
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "blacksmith": {
+        "model": "res://assets/3d/buildings/byzantines/blacksmith.glb",
+        "source": "art_source/blender/byzantines/blacksmith.blend",
+        "build_script": "art_source/blender/buildings/byzantines_blacksmith.py",
+        "reference": "res://art/buildings/byzantines/blacksmith.png",
+        "tris": 543,
+        "materials": 11,
+        "bounds_min": [
+          -1.742,
+          -1.762,
+          0.0
+        ],
+        "bounds_max": [
+          1.741,
+          1.755,
+          2.4
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "castle": {
+        "model": "res://assets/3d/buildings/byzantines/castle.glb",
+        "source": "art_source/blender/byzantines/castle.blend",
+        "build_script": "art_source/blender/buildings/byzantines_castle.py",
+        "reference": "res://art/buildings/byzantines/castle.png",
+        "tris": 2006,
+        "materials": 9,
+        "bounds_min": [
+          -3.455,
+          -3.507,
+          0.0
+        ],
+        "bounds_max": [
+          3.53,
+          3.599,
+          5.16
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "lumber_camp": {
+        "model": "res://assets/3d/buildings/byzantines/lumber_camp.glb",
+        "source": "art_source/blender/byzantines/lumber_camp.blend",
+        "build_script": "art_source/blender/buildings/byzantines_lumber_camp.py",
+        "reference": "res://art/buildings/byzantines/lumber_camp.png",
+        "tris": 517,
+        "materials": 9,
+        "bounds_min": [
+          -1.749,
+          -1.758,
+          0.0
+        ],
+        "bounds_max": [
+          1.75,
+          1.717,
+          1.58
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "mining_camp": {
+        "model": "res://assets/3d/buildings/byzantines/mining_camp.glb",
+        "source": "art_source/blender/byzantines/mining_camp.blend",
+        "build_script": "art_source/blender/buildings/byzantines_mining_camp.py",
+        "reference": "res://art/buildings/byzantines/mining_camp.png",
+        "tris": 717,
+        "materials": 9,
+        "bounds_min": [
+          -1.764,
+          -1.749,
+          0.0
+        ],
+        "bounds_max": [
+          1.796,
+          1.763,
+          1.58
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "stable": {
+        "model": "res://assets/3d/buildings/byzantines/stable.glb",
+        "source": "art_source/blender/byzantines/stable.blend",
+        "build_script": "art_source/blender/buildings/byzantines_stable.py",
+        "reference": "res://art/buildings/byzantines/stable.png",
+        "tris": 925,
+        "materials": 12,
+        "bounds_min": [
+          -2.585,
+          -2.602,
+          0.0
+        ],
+        "bounds_max": [
+          2.89,
+          2.63,
+          2.36
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "watch_tower": {
+        "model": "res://assets/3d/buildings/byzantines/watch_tower.glb",
+        "source": "art_source/blender/byzantines/watch_tower.blend",
+        "build_script": "art_source/blender/buildings/byzantines_watch_tower.py",
+        "reference": "res://art/buildings/byzantines/watch_tower.png",
+        "tris": 384,
+        "materials": 10,
+        "bounds_min": [
+          -1.773,
+          -1.794,
+          0.0
+        ],
+        "bounds_max": [
+          1.748,
+          1.768,
+          4.4
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      }
+    },
+    "chinese": {
+      "town_center": {
+        "model": "res://assets/3d/buildings/chinese/town_center.glb",
+        "source": "art_source/blender/chinese/town_center.blend",
+        "build_script": "art_source/blender/buildings/chinese_town_center.py",
+        "reference": "res://art/buildings/chinese/town_center.png",
+        "tris": 980,
+        "materials": 12,
+        "bounds_min": [
+          -2.63,
+          -2.617,
+          0.0
+        ],
+        "bounds_max": [
+          2.64,
+          2.598,
+          4.65
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "mill": {
+        "model": "res://assets/3d/buildings/chinese/mill.glb",
+        "source": "art_source/blender/chinese/mill.blend",
+        "build_script": "art_source/blender/buildings/chinese_mill.py",
+        "reference": "res://art/buildings/chinese/mill.png",
+        "tris": 697,
+        "materials": 13,
+        "bounds_min": [
+          -1.763,
+          -1.792,
+          0.0
+        ],
+        "bounds_max": [
+          1.796,
+          1.799,
+          3.26
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "house": {
+        "model": "res://assets/3d/buildings/chinese/house.glb",
+        "source": "art_source/blender/chinese/house.blend",
+        "build_script": "art_source/blender/buildings/chinese_house.py",
+        "reference": "res://art/buildings/chinese/house.png",
+        "tris": 448,
+        "materials": 10,
+        "bounds_min": [
+          -1.76,
+          -1.789,
+          0.0
+        ],
+        "bounds_max": [
+          1.73,
+          1.734,
+          2.37
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "barracks": {
+        "model": "res://assets/3d/buildings/chinese/barracks.glb",
+        "source": "art_source/blender/chinese/barracks.blend",
+        "build_script": "art_source/blender/buildings/chinese_barracks.py",
+        "reference": "res://art/buildings/chinese/barracks.png",
+        "tris": 778,
+        "materials": 10,
+        "bounds_min": [
+          -2.556,
+          -2.587,
+          0.0
+        ],
+        "bounds_max": [
+          2.59,
+          2.597,
+          3.112
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "archery_range": {
+        "model": "res://assets/3d/buildings/chinese/archery_range.glb",
+        "source": "art_source/blender/chinese/archery_range.blend",
+        "build_script": "art_source/blender/buildings/chinese_archery_range.py",
+        "reference": "res://art/buildings/chinese/archery_range.png",
+        "tris": 1078,
+        "materials": 13,
+        "bounds_min": [
+          -2.585,
+          -2.602,
+          0.0
+        ],
+        "bounds_max": [
+          2.84,
+          2.63,
+          2.46
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "blacksmith": {
+        "model": "res://assets/3d/buildings/chinese/blacksmith.glb",
+        "source": "art_source/blender/chinese/blacksmith.blend",
+        "build_script": "art_source/blender/buildings/chinese_blacksmith.py",
+        "reference": "res://art/buildings/chinese/blacksmith.png",
+        "tris": 596,
+        "materials": 10,
+        "bounds_min": [
+          -1.749,
+          -1.758,
+          0.0
+        ],
+        "bounds_max": [
+          1.75,
+          1.717,
+          2.4
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "castle": {
+        "model": "res://assets/3d/buildings/chinese/castle.glb",
+        "source": "art_source/blender/chinese/castle.blend",
+        "build_script": "art_source/blender/buildings/chinese_castle.py",
+        "reference": "res://art/buildings/chinese/castle.png",
+        "tris": 1196,
+        "materials": 9,
+        "bounds_min": [
+          -3.545,
+          -3.545,
+          0.0
+        ],
+        "bounds_max": [
+          3.545,
+          3.555,
+          5.16
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "lumber_camp": {
+        "model": "res://assets/3d/buildings/chinese/lumber_camp.glb",
+        "source": "art_source/blender/chinese/lumber_camp.blend",
+        "build_script": "art_source/blender/buildings/chinese_lumber_camp.py",
+        "reference": "res://art/buildings/chinese/lumber_camp.png",
+        "tris": 549,
+        "materials": 10,
+        "bounds_min": [
+          -1.764,
+          -1.749,
+          0.0
+        ],
+        "bounds_max": [
+          1.796,
+          1.763,
+          1.883
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "mining_camp": {
+        "model": "res://assets/3d/buildings/chinese/mining_camp.glb",
+        "source": "art_source/blender/chinese/mining_camp.blend",
+        "build_script": "art_source/blender/buildings/chinese_mining_camp.py",
+        "reference": "res://art/buildings/chinese/mining_camp.png",
+        "tris": 749,
+        "materials": 10,
+        "bounds_min": [
+          -1.773,
+          -1.794,
+          0.0
+        ],
+        "bounds_max": [
+          1.748,
+          1.768,
+          1.85
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "stable": {
+        "model": "res://assets/3d/buildings/chinese/stable.glb",
+        "source": "art_source/blender/chinese/stable.blend",
+        "build_script": "art_source/blender/buildings/chinese_stable.py",
+        "reference": "res://art/buildings/chinese/stable.png",
+        "tris": 935,
+        "materials": 13,
+        "bounds_min": [
+          -2.613,
+          -2.643,
+          0.0
+        ],
+        "bounds_max": [
+          2.89,
+          2.633,
+          2.36
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "watch_tower": {
+        "model": "res://assets/3d/buildings/chinese/watch_tower.glb",
+        "source": "art_source/blender/chinese/watch_tower.blend",
+        "build_script": "art_source/blender/buildings/chinese_watch_tower.py",
+        "reference": "res://art/buildings/chinese/watch_tower.png",
+        "tris": 316,
+        "materials": 10,
+        "bounds_min": [
+          -1.727,
+          -1.753,
+          0.0
+        ],
+        "bounds_max": [
+          1.765,
+          1.8,
+          4.53
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      }
+    },
+    "franks": {
+      "town_center": {
+        "model": "res://assets/3d/buildings/franks/town_center.glb",
+        "source": "art_source/blender/franks/town_center.blend",
+        "build_script": "art_source/blender/buildings/franks_town_center.py",
+        "reference": "res://art/buildings/franks/town_center.png",
+        "tris": 1174,
+        "materials": 10,
+        "bounds_min": [
+          -2.65,
+          -2.663,
+          0.0
+        ],
+        "bounds_max": [
+          2.632,
+          2.645,
+          6.81
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "mill": {
+        "model": "res://assets/3d/buildings/franks/mill.glb",
+        "source": "art_source/blender/franks/mill.blend",
+        "build_script": "art_source/blender/buildings/franks_mill.py",
+        "reference": "res://art/buildings/franks/mill.png",
+        "tris": 665,
+        "materials": 12,
+        "bounds_min": [
+          -1.783,
+          -1.75,
+          0.0
+        ],
+        "bounds_max": [
+          1.755,
+          1.773,
+          3.41
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "house": {
+        "model": "res://assets/3d/buildings/franks/house.glb",
+        "source": "art_source/blender/franks/house.blend",
+        "build_script": "art_source/blender/buildings/franks_house.py",
+        "reference": "res://art/buildings/franks/house.png",
+        "tris": 569,
+        "materials": 10,
+        "bounds_min": [
+          -1.716,
+          -1.737,
+          0.0
+        ],
+        "bounds_max": [
+          1.792,
+          1.738,
+          4.33
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "barracks": {
+        "model": "res://assets/3d/buildings/franks/barracks.glb",
+        "source": "art_source/blender/franks/barracks.blend",
+        "build_script": "art_source/blender/buildings/franks_barracks.py",
+        "reference": "res://art/buildings/franks/barracks.png",
+        "tris": 813,
+        "materials": 11,
+        "bounds_min": [
+          -2.645,
+          -2.689,
+          0.0
+        ],
+        "bounds_max": [
+          2.694,
+          2.698,
+          4.53
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "archery_range": {
+        "model": "res://assets/3d/buildings/franks/archery_range.glb",
+        "source": "art_source/blender/franks/archery_range.blend",
+        "build_script": "art_source/blender/buildings/franks_archery_range.py",
+        "reference": "res://art/buildings/franks/archery_range.png",
+        "tris": 1082,
+        "materials": 13,
+        "bounds_min": [
+          -2.668,
+          -2.614,
+          0.0
+        ],
+        "bounds_max": [
+          2.84,
+          2.611,
+          2.46
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "blacksmith": {
+        "model": "res://assets/3d/buildings/franks/blacksmith.glb",
+        "source": "art_source/blender/franks/blacksmith.blend",
+        "build_script": "art_source/blender/buildings/franks_blacksmith.py",
+        "reference": "res://art/buildings/franks/blacksmith.png",
+        "tris": 507,
+        "materials": 10,
+        "bounds_min": [
+          -1.798,
+          -1.776,
+          0.0
+        ],
+        "bounds_max": [
+          1.792,
+          1.789,
+          2.4
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "castle": {
+        "model": "res://assets/3d/buildings/franks/castle.glb",
+        "source": "art_source/blender/franks/castle.blend",
+        "build_script": "art_source/blender/buildings/franks_castle.py",
+        "reference": "res://art/buildings/franks/castle.png",
+        "tris": 1635,
+        "materials": 9,
+        "bounds_min": [
+          -3.466,
+          -3.553,
+          0.0
+        ],
+        "bounds_max": [
+          3.581,
+          3.527,
+          6.13
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "lumber_camp": {
+        "model": "res://assets/3d/buildings/franks/lumber_camp.glb",
+        "source": "art_source/blender/franks/lumber_camp.blend",
+        "build_script": "art_source/blender/buildings/franks_lumber_camp.py",
+        "reference": "res://art/buildings/franks/lumber_camp.png",
+        "tris": 509,
+        "materials": 9,
+        "bounds_min": [
+          -1.78,
+          -1.77,
+          0.0
+        ],
+        "bounds_max": [
+          1.743,
+          1.799,
+          1.83
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "mining_camp": {
+        "model": "res://assets/3d/buildings/franks/mining_camp.glb",
+        "source": "art_source/blender/franks/mining_camp.blend",
+        "build_script": "art_source/blender/buildings/franks_mining_camp.py",
+        "reference": "res://art/buildings/franks/mining_camp.png",
+        "tris": 709,
+        "materials": 9,
+        "bounds_min": [
+          -1.743,
+          -1.735,
+          0.0
+        ],
+        "bounds_max": [
+          1.714,
+          1.785,
+          1.78
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "stable": {
+        "model": "res://assets/3d/buildings/franks/stable.glb",
+        "source": "art_source/blender/franks/stable.blend",
+        "build_script": "art_source/blender/buildings/franks_stable.py",
+        "reference": "res://art/buildings/franks/stable.png",
+        "tris": 897,
+        "materials": 12,
+        "bounds_min": [
+          -2.593,
+          -2.666,
+          0.0
+        ],
+        "bounds_max": [
+          2.89,
+          2.63,
+          2.36
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "watch_tower": {
+        "model": "res://assets/3d/buildings/franks/watch_tower.glb",
+        "source": "art_source/blender/franks/watch_tower.blend",
+        "build_script": "art_source/blender/buildings/franks_watch_tower.py",
+        "reference": "res://art/buildings/franks/watch_tower.png",
+        "tris": 317,
+        "materials": 10,
+        "bounds_min": [
+          -1.797,
+          -1.741,
+          0.0
+        ],
+        "bounds_max": [
+          1.772,
+          1.755,
+          6.83
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      }
+    },
+    "saracens": {
+      "town_center": {
+        "model": "res://assets/3d/buildings/saracens/town_center.glb",
+        "source": "art_source/blender/saracens/town_center.blend",
+        "build_script": "art_source/blender/buildings/saracens_town_center.py",
+        "reference": "res://art/buildings/saracens/town_center.png",
+        "tris": 1582,
+        "materials": 12,
+        "bounds_min": [
+          -2.729,
+          -2.615,
+          0.0
+        ],
+        "bounds_max": [
+          3.023,
+          2.676,
+          4.758
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "mill": {
+        "model": "res://assets/3d/buildings/saracens/mill.glb",
+        "source": "art_source/blender/saracens/mill.blend",
+        "build_script": "art_source/blender/buildings/saracens_mill.py",
+        "reference": "res://art/buildings/saracens/mill.png",
+        "tris": 712,
+        "materials": 12,
+        "bounds_min": [
+          -1.768,
+          -1.744,
+          0.0
+        ],
+        "bounds_max": [
+          2.016,
+          1.737,
+          3.37
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "house": {
+        "model": "res://assets/3d/buildings/saracens/house.glb",
+        "source": "art_source/blender/saracens/house.blend",
+        "build_script": "art_source/blender/buildings/saracens_house.py",
+        "reference": "res://art/buildings/saracens/house.png",
+        "tris": 452,
+        "materials": 8,
+        "bounds_min": [
+          -1.766,
+          -1.76,
+          0.0
+        ],
+        "bounds_max": [
+          1.766,
+          1.748,
+          3.16
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "barracks": {
+        "model": "res://assets/3d/buildings/saracens/barracks.glb",
+        "source": "art_source/blender/saracens/barracks.blend",
+        "build_script": "art_source/blender/buildings/saracens_barracks.py",
+        "reference": "res://art/buildings/saracens/barracks.png",
+        "tris": 1186,
+        "materials": 9,
+        "bounds_min": [
+          -2.693,
+          -2.688,
+          0.0
+        ],
+        "bounds_max": [
+          2.693,
+          2.591,
+          2.925
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "archery_range": {
+        "model": "res://assets/3d/buildings/saracens/archery_range.glb",
+        "source": "art_source/blender/saracens/archery_range.blend",
+        "build_script": "art_source/blender/buildings/saracens_archery_range.py",
+        "reference": "res://art/buildings/saracens/archery_range.png",
+        "tris": 1270,
+        "materials": 12,
+        "bounds_min": [
+          -2.655,
+          -2.644,
+          0.0
+        ],
+        "bounds_max": [
+          2.84,
+          2.647,
+          2.46
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "blacksmith": {
+        "model": "res://assets/3d/buildings/saracens/blacksmith.glb",
+        "source": "art_source/blender/saracens/blacksmith.blend",
+        "build_script": "art_source/blender/buildings/saracens_blacksmith.py",
+        "reference": "res://art/buildings/saracens/blacksmith.png",
+        "tris": 655,
+        "materials": 11,
+        "bounds_min": [
+          -1.747,
+          -1.798,
+          0.0
+        ],
+        "bounds_max": [
+          1.754,
+          1.742,
+          2.4
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "castle": {
+        "model": "res://assets/3d/buildings/saracens/castle.glb",
+        "source": "art_source/blender/saracens/castle.blend",
+        "build_script": "art_source/blender/buildings/saracens_castle.py",
+        "reference": "res://art/buildings/saracens/castle.png",
+        "tris": 2604,
+        "materials": 8,
+        "bounds_min": [
+          -3.477,
+          -3.596,
+          0.0
+        ],
+        "bounds_max": [
+          3.525,
+          3.573,
+          5.16
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "lumber_camp": {
+        "model": "res://assets/3d/buildings/saracens/lumber_camp.glb",
+        "source": "art_source/blender/saracens/lumber_camp.blend",
+        "build_script": "art_source/blender/buildings/saracens_lumber_camp.py",
+        "reference": "res://art/buildings/saracens/lumber_camp.png",
+        "tris": 495,
+        "materials": 10,
+        "bounds_min": [
+          -1.799,
+          -1.783,
+          0.0
+        ],
+        "bounds_max": [
+          1.75,
+          1.72,
+          1.58
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "mining_camp": {
+        "model": "res://assets/3d/buildings/saracens/mining_camp.glb",
+        "source": "art_source/blender/saracens/mining_camp.blend",
+        "build_script": "art_source/blender/buildings/saracens_mining_camp.py",
+        "reference": "res://art/buildings/saracens/mining_camp.png",
+        "tris": 695,
+        "materials": 10,
+        "bounds_min": [
+          -1.794,
+          -1.738,
+          0.0
+        ],
+        "bounds_max": [
+          1.747,
+          1.77,
+          1.58
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "stable": {
+        "model": "res://assets/3d/buildings/saracens/stable.glb",
+        "source": "art_source/blender/saracens/stable.blend",
+        "build_script": "art_source/blender/buildings/saracens_stable.py",
+        "reference": "res://art/buildings/saracens/stable.png",
+        "tris": 1179,
+        "materials": 11,
+        "bounds_min": [
+          -2.641,
+          -2.665,
+          0.0
+        ],
+        "bounds_max": [
+          2.89,
+          2.664,
+          2.36
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "watch_tower": {
+        "model": "res://assets/3d/buildings/saracens/watch_tower.glb",
+        "source": "art_source/blender/saracens/watch_tower.blend",
+        "build_script": "art_source/blender/buildings/saracens_watch_tower.py",
+        "reference": "res://art/buildings/saracens/watch_tower.png",
+        "tris": 468,
+        "materials": 9,
+        "bounds_min": [
+          -1.747,
+          -1.773,
+          0.0
+        ],
+        "bounds_max": [
+          1.749,
+          1.759,
+          4.19
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      }
+    },
+    "teutons": {
+      "town_center": {
+        "model": "res://assets/3d/buildings/teutons/town_center.glb",
+        "source": "art_source/blender/teutons/town_center.blend",
+        "build_script": "art_source/blender/buildings/teutons_town_center.py",
+        "reference": "res://art/buildings/teutons/town_center.png",
+        "tris": 978,
+        "materials": 10,
+        "bounds_min": [
+          -2.647,
+          -2.654,
+          0.0
+        ],
+        "bounds_max": [
+          2.69,
+          2.64,
+          6.21
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "mill": {
+        "model": "res://assets/3d/buildings/teutons/mill.glb",
+        "source": "art_source/blender/teutons/mill.blend",
+        "build_script": "art_source/blender/buildings/teutons_mill.py",
+        "reference": "res://art/buildings/teutons/mill.png",
+        "tris": 625,
+        "materials": 13,
+        "bounds_min": [
+          -1.759,
+          -1.757,
+          0.0
+        ],
+        "bounds_max": [
+          1.754,
+          1.781,
+          3.41
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "house": {
+        "model": "res://assets/3d/buildings/teutons/house.glb",
+        "source": "art_source/blender/teutons/house.blend",
+        "build_script": "art_source/blender/buildings/teutons_house.py",
+        "reference": "res://art/buildings/teutons/house.png",
+        "tris": 521,
+        "materials": 9,
+        "bounds_min": [
+          -1.773,
+          -1.794,
+          0.0
+        ],
+        "bounds_max": [
+          1.748,
+          1.768,
+          4.16
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "barracks": {
+        "model": "res://assets/3d/buildings/teutons/barracks.glb",
+        "source": "art_source/blender/teutons/barracks.blend",
+        "build_script": "art_source/blender/buildings/teutons_barracks.py",
+        "reference": "res://art/buildings/teutons/barracks.png",
+        "tris": 1036,
+        "materials": 10,
+        "bounds_min": [
+          -2.664,
+          -2.623,
+          0.0
+        ],
+        "bounds_max": [
+          2.583,
+          2.617,
+          4.28
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "archery_range": {
+        "model": "res://assets/3d/buildings/teutons/archery_range.glb",
+        "source": "art_source/blender/teutons/archery_range.blend",
+        "build_script": "art_source/blender/buildings/teutons_archery_range.py",
+        "reference": "res://art/buildings/teutons/archery_range.png",
+        "tris": 1298,
+        "materials": 12,
+        "bounds_min": [
+          -2.63,
+          -2.624,
+          0.0
+        ],
+        "bounds_max": [
+          2.84,
+          2.647,
+          2.593
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "blacksmith": {
+        "model": "res://assets/3d/buildings/teutons/blacksmith.glb",
+        "source": "art_source/blender/teutons/blacksmith.blend",
+        "build_script": "art_source/blender/buildings/teutons_blacksmith.py",
+        "reference": "res://art/buildings/teutons/blacksmith.png",
+        "tris": 723,
+        "materials": 9,
+        "bounds_min": [
+          -1.725,
+          -1.745,
+          0.0
+        ],
+        "bounds_max": [
+          1.755,
+          1.732,
+          2.4
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "castle": {
+        "model": "res://assets/3d/buildings/teutons/castle.glb",
+        "source": "art_source/blender/teutons/castle.blend",
+        "build_script": "art_source/blender/buildings/teutons_castle.py",
+        "reference": "res://art/buildings/teutons/castle.png",
+        "tris": 2626,
+        "materials": 8,
+        "bounds_min": [
+          -3.463,
+          -3.577,
+          0.0
+        ],
+        "bounds_max": [
+          3.416,
+          3.456,
+          5.8
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "lumber_camp": {
+        "model": "res://assets/3d/buildings/teutons/lumber_camp.glb",
+        "source": "art_source/blender/teutons/lumber_camp.blend",
+        "build_script": "art_source/blender/buildings/teutons_lumber_camp.py",
+        "reference": "res://art/buildings/teutons/lumber_camp.png",
+        "tris": 617,
+        "materials": 10,
+        "bounds_min": [
+          -1.754,
+          -1.748,
+          0.0
+        ],
+        "bounds_max": [
+          1.764,
+          1.747,
+          1.949
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "mining_camp": {
+        "model": "res://assets/3d/buildings/teutons/mining_camp.glb",
+        "source": "art_source/blender/teutons/mining_camp.blend",
+        "build_script": "art_source/blender/buildings/teutons_mining_camp.py",
+        "reference": "res://art/buildings/teutons/mining_camp.png",
+        "tris": 817,
+        "materials": 9,
+        "bounds_min": [
+          -1.709,
+          -1.789,
+          0.0
+        ],
+        "bounds_max": [
+          1.749,
+          1.762,
+          1.897
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "stable": {
+        "model": "res://assets/3d/buildings/teutons/stable.glb",
+        "source": "art_source/blender/teutons/stable.blend",
+        "build_script": "art_source/blender/buildings/teutons_stable.py",
+        "reference": "res://art/buildings/teutons/stable.png",
+        "tris": 1005,
+        "materials": 11,
+        "bounds_min": [
+          -2.623,
+          -2.67,
+          0.0
+        ],
+        "bounds_max": [
+          2.89,
+          2.615,
+          2.443
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "watch_tower": {
+        "model": "res://assets/3d/buildings/teutons/watch_tower.glb",
+        "source": "art_source/blender/teutons/watch_tower.blend",
+        "build_script": "art_source/blender/buildings/teutons_watch_tower.py",
+        "reference": "res://art/buildings/teutons/watch_tower.png",
+        "tris": 512,
+        "materials": 9,
+        "bounds_min": [
+          -1.75,
+          -1.742,
+          0.0
+        ],
+        "bounds_max": [
+          1.74,
+          1.742,
+          6.34
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      }
+    },
+    "vikings": {
+      "town_center": {
+        "model": "res://assets/3d/buildings/vikings/town_center.glb",
+        "source": "art_source/blender/vikings/town_center.blend",
+        "build_script": "art_source/blender/buildings/vikings_town_center.py",
+        "reference": "res://art/buildings/vikings/town_center.png",
+        "tris": 705,
+        "materials": 12,
+        "bounds_min": [
+          -2.69,
+          -2.57,
+          0.0
+        ],
+        "bounds_max": [
+          2.64,
+          2.683,
+          4.23
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "mill": {
+        "model": "res://assets/3d/buildings/vikings/mill.glb",
+        "source": "art_source/blender/vikings/mill.blend",
+        "build_script": "art_source/blender/buildings/vikings_mill.py",
+        "reference": "res://art/buildings/vikings/mill.png",
+        "tris": 667,
+        "materials": 13,
+        "bounds_min": [
+          -1.758,
+          -1.788,
+          0.0
+        ],
+        "bounds_max": [
+          1.771,
+          1.763,
+          3.41
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "house": {
+        "model": "res://assets/3d/buildings/vikings/house.glb",
+        "source": "art_source/blender/vikings/house.blend",
+        "build_script": "art_source/blender/buildings/vikings_house.py",
+        "reference": "res://art/buildings/vikings/house.png",
+        "tris": 532,
+        "materials": 9,
+        "bounds_min": [
+          -1.764,
+          -1.737,
+          0.0
+        ],
+        "bounds_max": [
+          1.77,
+          1.757,
+          2.66
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "barracks": {
+        "model": "res://assets/3d/buildings/vikings/barracks.glb",
+        "source": "art_source/blender/vikings/barracks.blend",
+        "build_script": "art_source/blender/buildings/vikings_barracks.py",
+        "reference": "res://art/buildings/vikings/barracks.png",
+        "tris": 1033,
+        "materials": 12,
+        "bounds_min": [
+          -2.585,
+          -2.602,
+          0.0
+        ],
+        "bounds_max": [
+          2.634,
+          2.63,
+          3.403
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "archery_range": {
+        "model": "res://assets/3d/buildings/vikings/archery_range.glb",
+        "source": "art_source/blender/vikings/archery_range.blend",
+        "build_script": "art_source/blender/buildings/vikings_archery_range.py",
+        "reference": "res://art/buildings/vikings/archery_range.png",
+        "tris": 1332,
+        "materials": 13,
+        "bounds_min": [
+          -2.613,
+          -2.643,
+          0.0
+        ],
+        "bounds_max": [
+          2.84,
+          2.633,
+          2.972
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "blacksmith": {
+        "model": "res://assets/3d/buildings/vikings/blacksmith.glb",
+        "source": "art_source/blender/vikings/blacksmith.blend",
+        "build_script": "art_source/blender/buildings/vikings_blacksmith.py",
+        "reference": "res://art/buildings/vikings/blacksmith.png",
+        "tris": 737,
+        "materials": 10,
+        "bounds_min": [
+          -1.764,
+          -1.749,
+          0.0
+        ],
+        "bounds_max": [
+          1.796,
+          1.763,
+          2.591
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "castle": {
+        "model": "res://assets/3d/buildings/vikings/castle.glb",
+        "source": "art_source/blender/vikings/castle.blend",
+        "build_script": "art_source/blender/buildings/vikings_castle.py",
+        "reference": "res://art/buildings/vikings/castle.png",
+        "tris": 2570,
+        "materials": 11,
+        "bounds_min": [
+          -3.495,
+          -3.495,
+          0.0
+        ],
+        "bounds_max": [
+          3.584,
+          3.495,
+          3.285
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "lumber_camp": {
+        "model": "res://assets/3d/buildings/vikings/lumber_camp.glb",
+        "source": "art_source/blender/vikings/lumber_camp.blend",
+        "build_script": "art_source/blender/buildings/vikings_lumber_camp.py",
+        "reference": "res://art/buildings/vikings/lumber_camp.png",
+        "tris": 589,
+        "materials": 10,
+        "bounds_min": [
+          -1.773,
+          -1.794,
+          0.0
+        ],
+        "bounds_max": [
+          1.748,
+          1.768,
+          2.305
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "mining_camp": {
+        "model": "res://assets/3d/buildings/vikings/mining_camp.glb",
+        "source": "art_source/blender/vikings/mining_camp.blend",
+        "build_script": "art_source/blender/buildings/vikings_mining_camp.py",
+        "reference": "res://art/buildings/vikings/mining_camp.png",
+        "tris": 789,
+        "materials": 10,
+        "bounds_min": [
+          -1.727,
+          -1.753,
+          0.0
+        ],
+        "bounds_max": [
+          1.765,
+          1.8,
+          2.25
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "stable": {
+        "model": "res://assets/3d/buildings/vikings/stable.glb",
+        "source": "art_source/blender/vikings/stable.blend",
+        "build_script": "art_source/blender/buildings/vikings_stable.py",
+        "reference": "res://art/buildings/vikings/stable.png",
+        "tris": 1117,
+        "materials": 12,
+        "bounds_min": [
+          -2.624,
+          -2.637,
+          0.0
+        ],
+        "bounds_max": [
+          2.89,
+          2.575,
+          2.822
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      },
+      "watch_tower": {
+        "model": "res://assets/3d/buildings/vikings/watch_tower.glb",
+        "source": "art_source/blender/vikings/watch_tower.blend",
+        "build_script": "art_source/blender/buildings/vikings_watch_tower.py",
+        "reference": "res://art/buildings/vikings/watch_tower.png",
+        "tris": 289,
+        "materials": 8,
+        "bounds_min": [
+          -1.698,
+          -1.742,
+          0.0
+        ],
+        "bounds_max": [
+          1.74,
+          1.778,
+          4.2
+        ],
+        "enabled": true,
+        "status": "IMPORTED"
+      }
+    }
+  },
+  "environment": {
+    "gold_mine": {
+      "model": "res://assets/3d/environment/common/gold_mine.glb",
+      "source": "art_source/blender/common/gold_mine.blend",
+      "build_script": "art_source/blender/environment/common_gold_mine.py",
+      "biome": "temperate",
+      "resource": "gold",
+      "tris": 325,
+      "materials": 1,
+      "bounds_min": [
+        -0.878,
+        -0.893,
+        -0.05
+      ],
+      "bounds_max": [
+        0.93,
+        1.01,
+        1.432
+      ],
+      "enabled": true,
+      "status": "IMPORTED"
+    },
+    "stone_mine": {
+      "model": "res://assets/3d/environment/common/stone_mine.glb",
+      "source": "art_source/blender/common/stone_mine.blend",
+      "build_script": "art_source/blender/environment/common_stone_mine.py",
+      "biome": "temperate",
+      "resource": "stone",
+      "tris": 205,
+      "materials": 1,
+      "bounds_min": [
+        -0.905,
+        -0.79,
+        0.0
+      ],
+      "bounds_max": [
+        0.97,
+        0.97,
+        0.9
+      ],
+      "enabled": true,
+      "status": "IMPORTED"
+    },
+    "tree_oak": {
+      "model": "res://assets/3d/environment/common/tree_oak.glb",
+      "source": "art_source/blender/common/tree_oak.blend",
+      "build_script": "art_source/blender/environment/common_tree_oak.py",
+      "biome": "temperate",
+      "resource": "wood",
+      "tris": 272,
+      "materials": 1,
+      "bounds_min": [
+        -0.931,
+        -0.848,
+        0.0
+      ],
+      "bounds_max": [
+        0.994,
+        0.877,
+        2.35
+      ],
+      "enabled": true,
+      "status": "IMPORTED"
+    },
+    "tree_pine": {
+      "model": "res://assets/3d/environment/common/tree_pine.glb",
+      "source": "art_source/blender/common/tree_pine.blend",
+      "build_script": "art_source/blender/environment/common_tree_pine.py",
+      "biome": "temperate",
+      "resource": "wood",
+      "tris": 120,
+      "materials": 1,
+      "bounds_min": [
+        -0.908,
+        -0.933,
+        0.0
+      ],
+      "bounds_max": [
+        0.934,
+        0.938,
+        2.45
+      ],
+      "enabled": true,
+      "status": "IMPORTED"
+    },
+    "berry_bush": {
+      "model": "res://assets/3d/environment/common/berry_bush.glb",
+      "source": "art_source/blender/common/berry_bush.blend",
+      "build_script": "art_source/blender/environment/common_berry_bush.py",
+      "biome": "temperate",
+      "resource": "food",
+      "tris": 330,
+      "materials": 2,
+      "bounds_min": [
+        -0.809,
+        -0.578,
+        0.0
+      ],
+      "bounds_max": [
+        0.827,
+        0.6,
+        0.646
+      ],
+      "enabled": true,
+      "status": "IMPORTED"
+    },
+    "autumn/berry_bush": {
+      "model": "res://assets/3d/environment/autumn/berry_bush.glb",
+      "source": "art_source/blender/autumn/berry_bush.blend",
+      "build_script": "art_source/blender/environment/common_berry_bush.py",
+      "biome": "autumn",
+      "resource": "food",
+      "tris": 330,
+      "materials": 2,
+      "bounds_min": [
+        -0.809,
+        -0.578,
+        0.0
+      ],
+      "bounds_max": [
+        0.827,
+        0.6,
+        0.646
+      ],
+      "enabled": true,
+      "status": "IMPORTED"
+    },
+    "autumn/tree_oak": {
+      "model": "res://assets/3d/environment/autumn/tree_oak.glb",
+      "source": "art_source/blender/autumn/tree_oak.blend",
+      "build_script": "art_source/blender/environment/common_tree_oak.py",
+      "biome": "autumn",
+      "resource": "wood",
+      "tris": 272,
+      "materials": 1,
+      "bounds_min": [
+        -0.931,
+        -0.848,
+        0.0
+      ],
+      "bounds_max": [
+        0.994,
+        0.877,
+        2.35
+      ],
+      "enabled": true,
+      "status": "IMPORTED"
+    },
+    "autumn/tree_pine": {
+      "model": "res://assets/3d/environment/autumn/tree_pine.glb",
+      "source": "art_source/blender/autumn/tree_pine.blend",
+      "build_script": "art_source/blender/environment/common_tree_pine.py",
+      "biome": "autumn",
+      "resource": "wood",
+      "tris": 120,
+      "materials": 1,
+      "bounds_min": [
+        -0.908,
+        -0.933,
+        0.0
+      ],
+      "bounds_max": [
+        0.934,
+        0.938,
+        2.45
+      ],
+      "enabled": true,
+      "status": "IMPORTED"
+    },
+    "desert/gold_mine": {
+      "model": "res://assets/3d/environment/desert/gold_mine.glb",
+      "source": "art_source/blender/desert/gold_mine.blend",
+      "build_script": "art_source/blender/environment/desert_gold_mine.py",
+      "biome": "desert",
+      "resource": "gold",
+      "tris": 438,
+      "materials": 1,
+      "bounds_min": [
+        -0.982,
+        -0.765,
+        -0.05
+      ],
+      "bounds_max": [
+        0.881,
+        0.945,
+        1.432
+      ],
+      "enabled": true,
+      "status": "IMPORTED"
+    },
+    "desert/prickly_pear": {
+      "model": "res://assets/3d/environment/desert/prickly_pear.glb",
+      "source": "art_source/blender/desert/prickly_pear.blend",
+      "build_script": "art_source/blender/environment/desert_prickly_pear.py",
+      "biome": "desert",
+      "resource": "food",
+      "tris": 306,
+      "materials": 2,
+      "bounds_min": [
+        -0.617,
+        -0.424,
+        0.0
+      ],
+      "bounds_max": [
+        0.535,
+        0.208,
+        1.047
+      ],
+      "enabled": true,
+      "status": "IMPORTED"
+    },
+    "desert/stone_mine": {
+      "model": "res://assets/3d/environment/desert/stone_mine.glb",
+      "source": "art_source/blender/desert/stone_mine.blend",
+      "build_script": "art_source/blender/environment/desert_stone_mine.py",
+      "biome": "desert",
+      "resource": "stone",
+      "tris": 100,
+      "materials": 1,
+      "bounds_min": [
+        -0.957,
+        -0.778,
+        0.0
+      ],
+      "bounds_max": [
+        0.94,
+        0.809,
+        1.05
+      ],
+      "enabled": true,
+      "status": "IMPORTED"
+    },
+    "desert/tree_acacia": {
+      "model": "res://assets/3d/environment/desert/tree_acacia.glb",
+      "source": "art_source/blender/desert/tree_acacia.blend",
+      "build_script": "art_source/blender/environment/desert_acacia.py",
+      "biome": "desert",
+      "resource": "wood",
+      "tris": 222,
+      "materials": 1,
+      "bounds_min": [
+        -1.141,
+        -0.868,
+        -0.013
+      ],
+      "bounds_max": [
+        1.255,
+        1.042,
+        2.12
+      ],
+      "enabled": true,
+      "status": "IMPORTED"
+    },
+    "desert/tree_palm": {
+      "model": "res://assets/3d/environment/desert/tree_palm.glb",
+      "source": "art_source/blender/desert/tree_palm.blend",
+      "build_script": "art_source/blender/environment/desert_date_palm.py",
+      "biome": "desert",
+      "resource": "wood",
+      "tris": 343,
+      "materials": 1,
+      "bounds_min": [
+        -1.066,
+        -1.308,
+        -0.006
+      ],
+      "bounds_max": [
+        1.642,
+        1.27,
+        2.974
+      ],
+      "enabled": true,
+      "status": "IMPORTED"
+    },
+    "steppe/gold_mine": {
+      "model": "res://assets/3d/environment/steppe/gold_mine.glb",
+      "source": "art_source/blender/steppe/gold_mine.blend",
+      "build_script": "art_source/blender/environment/common_gold_mine.py",
+      "biome": "steppe",
+      "resource": "gold",
+      "tris": 325,
+      "materials": 1,
+      "bounds_min": [
+        -0.878,
+        -0.893,
+        -0.05
+      ],
+      "bounds_max": [
+        0.93,
+        1.01,
+        1.432
+      ],
+      "enabled": true,
+      "status": "IMPORTED"
+    },
+    "steppe/rosehip_bush": {
+      "model": "res://assets/3d/environment/steppe/rosehip_bush.glb",
+      "source": "art_source/blender/steppe/rosehip_bush.blend",
+      "build_script": "art_source/blender/environment/steppe_rosehip.py",
+      "biome": "steppe",
+      "resource": "food",
+      "tris": 401,
+      "materials": 2,
+      "bounds_min": [
+        -0.65,
+        -0.588,
+        -0.017
+      ],
+      "bounds_max": [
+        0.68,
+        0.554,
+        0.755
+      ],
+      "enabled": true,
+      "status": "IMPORTED"
+    },
+    "steppe/stone_mine": {
+      "model": "res://assets/3d/environment/steppe/stone_mine.glb",
+      "source": "art_source/blender/steppe/stone_mine.blend",
+      "build_script": "art_source/blender/environment/common_stone_mine.py",
+      "biome": "steppe",
+      "resource": "stone",
+      "tris": 205,
+      "materials": 1,
+      "bounds_min": [
+        -0.905,
+        -0.79,
+        0.0
+      ],
+      "bounds_max": [
+        0.97,
+        0.97,
+        0.9
+      ],
+      "enabled": true,
+      "status": "IMPORTED"
+    },
+    "steppe/tree_juniper": {
+      "model": "res://assets/3d/environment/steppe/tree_juniper.glb",
+      "source": "art_source/blender/steppe/tree_juniper.blend",
+      "build_script": "art_source/blender/environment/steppe_juniper.py",
+      "biome": "steppe",
+      "resource": "wood",
+      "tris": 96,
+      "materials": 1,
+      "bounds_min": [
+        -0.726,
+        -0.704,
+        0.0
+      ],
+      "bounds_max": [
+        0.743,
+        0.681,
+        1.92
+      ],
+      "enabled": true,
+      "status": "IMPORTED"
+    },
+    "steppe/tree_scots_pine": {
+      "model": "res://assets/3d/environment/steppe/tree_scots_pine.glb",
+      "source": "art_source/blender/steppe/tree_scots_pine.blend",
+      "build_script": "art_source/blender/environment/steppe_scots_pine.py",
+      "biome": "steppe",
+      "resource": "wood",
+      "tris": 204,
+      "materials": 1,
+      "bounds_min": [
+        -0.853,
+        -0.62,
+        -0.012
+      ],
+      "bounds_max": [
+        1.194,
+        0.62,
+        2.576
+      ],
+      "enabled": true,
+      "status": "IMPORTED"
+    },
+    "autumn/field": {
+      "model": "res://assets/3d/environment/autumn/field.glb",
+      "source": "art_source/blender/autumn/field.blend",
+      "build_script": "art_source/blender/environment/field.py",
+      "biome": "autumn",
+      "resource": "field",
+      "tris": 370,
+      "materials": 5,
+      "bounds_min": [
+        -1.9,
+        -1.9,
+        0.0
+      ],
+      "bounds_max": [
+        1.9,
+        1.9,
+        0.9
+      ],
+      "enabled": true,
+      "status": "IMPORTED"
+    },
+    "field": {
+      "model": "res://assets/3d/environment/common/field.glb",
+      "source": "art_source/blender/common/field.blend",
+      "build_script": "art_source/blender/environment/field.py",
+      "biome": "temperate",
+      "resource": "field",
+      "tris": 272,
+      "materials": 5,
+      "bounds_min": [
+        -1.93,
+        -1.93,
+        0.0
+      ],
+      "bounds_max": [
+        1.93,
+        1.93,
+        0.9
+      ],
+      "enabled": true,
+      "status": "IMPORTED"
+    },
+    "desert/field": {
+      "model": "res://assets/3d/environment/desert/field.glb",
+      "source": "art_source/blender/desert/field.blend",
+      "build_script": "art_source/blender/environment/field.py",
+      "biome": "desert",
+      "resource": "field",
+      "tris": 102,
+      "materials": 6,
+      "bounds_min": [
+        -1.9,
+        -1.9,
+        0.0
+      ],
+      "bounds_max": [
+        1.9,
+        1.9,
+        0.9
+      ],
+      "enabled": true,
+      "status": "IMPORTED"
+    },
+    "steppe/field": {
+      "model": "res://assets/3d/environment/steppe/field.glb",
+      "source": "art_source/blender/steppe/field.blend",
+      "build_script": "art_source/blender/environment/field.py",
+      "biome": "steppe",
+      "resource": "field",
+      "tris": 159,
+      "materials": 5,
+      "bounds_min": [
+        -1.9,
+        -1.9,
+        0.0
+      ],
+      "bounds_max": [
+        1.9,
+        1.9,
+        0.9
+      ],
+      "enabled": true,
+      "status": "IMPORTED"
+    }
+  },
+  "upgrade_kits": {
+    "britons": {
+      "model": "res://assets/3d/upgrade_kits/britons/upgrade_kit.glb",
+      "source": "art_source/blender/britons/upgrade_kit.blend",
+      "build_script": "art_source/blender/environment/upgrade_kit.py",
+      "tris": 198,
+      "materials": 6,
+      "enabled": true,
+      "status": "IMPORTED"
+    },
+    "byzantines": {
+      "model": "res://assets/3d/upgrade_kits/byzantines/upgrade_kit.glb",
+      "source": "art_source/blender/byzantines/upgrade_kit.blend",
+      "build_script": "art_source/blender/environment/upgrade_kit.py",
+      "tris": 270,
+      "materials": 6,
+      "enabled": true,
+      "status": "IMPORTED"
+    },
+    "chinese": {
+      "model": "res://assets/3d/upgrade_kits/chinese/upgrade_kit.glb",
+      "source": "art_source/blender/chinese/upgrade_kit.blend",
+      "build_script": "art_source/blender/environment/upgrade_kit.py",
+      "tris": 358,
+      "materials": 8,
+      "enabled": true,
+      "status": "IMPORTED"
+    },
+    "franks": {
+      "model": "res://assets/3d/upgrade_kits/franks/upgrade_kit.glb",
+      "source": "art_source/blender/franks/upgrade_kit.blend",
+      "build_script": "art_source/blender/environment/upgrade_kit.py",
+      "tris": 238,
+      "materials": 6,
+      "enabled": true,
+      "status": "IMPORTED"
+    },
+    "japanese": {
+      "model": "res://assets/3d/upgrade_kits/japanese/upgrade_kit.glb",
+      "source": "art_source/blender/japanese/upgrade_kit.blend",
+      "build_script": "art_source/blender/environment/upgrade_kit.py",
+      "tris": 300,
+      "materials": 6,
+      "enabled": true,
+      "status": "IMPORTED"
+    },
+    "mongols": {
+      "model": "res://assets/3d/upgrade_kits/mongols/upgrade_kit.glb",
+      "source": "art_source/blender/mongols/upgrade_kit.blend",
+      "build_script": "art_source/blender/environment/upgrade_kit.py",
+      "tris": 214,
+      "materials": 5,
+      "enabled": true,
+      "status": "IMPORTED"
+    },
+    "ottomans": {
+      "model": "res://assets/3d/upgrade_kits/ottomans/upgrade_kit.glb",
+      "source": "art_source/blender/ottomans/upgrade_kit.blend",
+      "build_script": "art_source/blender/environment/upgrade_kit.py",
+      "tris": 246,
+      "materials": 6,
+      "enabled": true,
+      "status": "IMPORTED"
+    },
+    "saracens": {
+      "model": "res://assets/3d/upgrade_kits/saracens/upgrade_kit.glb",
+      "source": "art_source/blender/saracens/upgrade_kit.blend",
+      "build_script": "art_source/blender/environment/upgrade_kit.py",
+      "tris": 310,
+      "materials": 6,
+      "enabled": true,
+      "status": "IMPORTED"
+    },
+    "teutons": {
+      "model": "res://assets/3d/upgrade_kits/teutons/upgrade_kit.glb",
+      "source": "art_source/blender/teutons/upgrade_kit.blend",
+      "build_script": "art_source/blender/environment/upgrade_kit.py",
+      "tris": 198,
+      "materials": 6,
+      "enabled": true,
+      "status": "IMPORTED"
+    },
+    "vikings": {
+      "model": "res://assets/3d/upgrade_kits/vikings/upgrade_kit.glb",
+      "source": "art_source/blender/vikings/upgrade_kit.blend",
+      "build_script": "art_source/blender/environment/upgrade_kit.py",
+      "tris": 254,
+      "materials": 6,
+      "enabled": true,
+      "status": "IMPORTED"
+    }
+  }
+}

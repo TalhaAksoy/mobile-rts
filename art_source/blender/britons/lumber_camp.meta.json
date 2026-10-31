@@ -1,0 +1,37 @@
+{
+  "tris": 517,
+  "verts": 655,
+  "materials": [
+    "PE_Dirt",
+    "PE_WoodDark",
+    "TEAM_Trim",
+    "PE_Thatch",
+    "PE_Beam",
+    "PE_WoodLight",
+    "PE_Iron",
+    "PE_Banner_britons",
+    "PE_Gold"
+  ],
+  "bounds_min": [
+    -1.779,
+    -1.764,
+    0.0
+  ],
+  "bounds_max": [
+    1.757,
+    1.769,
+    1.819
+  ],
+  "asset_id": "lumber_camp",
+  "civ": "britons",
+  "kind": "buildings",
+  "blend": "art_source/blender/britons/lumber_camp.blend",
+  "glb": "res://assets/3d/buildings/britons/lumber_camp.glb",
+  "glb_bytes": 42376,
+  "grid": [
+    2,
+    2
+  ],
+  "footprint_m": 3.6,
+  "reference": "res://art/buildings/britons/lumber_camp.png"
+}

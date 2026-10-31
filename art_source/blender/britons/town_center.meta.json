@@ -1,0 +1,39 @@
+{
+  "tris": 1152,
+  "verts": 1840,
+  "materials": [
+    "PE_Dirt",
+    "PE_StoneGrey",
+    "PE_RoofSlate",
+    "PE_WoodDark",
+    "PE_Window",
+    "PE_StoneWarm",
+    "PE_PlasterWhite",
+    "TEAM_Trim",
+    "PE_Gold",
+    "PE_Banner_britons",
+    "PE_Foliage"
+  ],
+  "bounds_min": [
+    -2.68,
+    -2.66,
+    0.0
+  ],
+  "bounds_max": [
+    2.59,
+    2.675,
+    4.66
+  ],
+  "asset_id": "town_center",
+  "civ": "britons",
+  "kind": "buildings",
+  "blend": "art_source/blender/britons/town_center.blend",
+  "glb": "res://assets/3d/buildings/britons/town_center.glb",
+  "glb_bytes": 79704,
+  "grid": [
+    3,
+    3
+  ],
+  "footprint_m": 5.4,
+  "reference": "res://art/buildings/britons/town_center.png"
+}

@@ -1,0 +1,37 @@
+{
+  "tris": 521,
+  "verts": 883,
+  "materials": [
+    "PE_Dirt",
+    "PE_StoneGrey",
+    "PE_WoodDark",
+    "PE_Window",
+    "TEAM_Trim",
+    "PE_PlasterCream",
+    "PE_SlateDark",
+    "PE_WoodLight",
+    "PE_Iron"
+  ],
+  "bounds_min": [
+    -1.773,
+    -1.794,
+    0.0
+  ],
+  "bounds_max": [
+    1.748,
+    1.768,
+    4.16
+  ],
+  "asset_id": "house",
+  "civ": "teutons",
+  "kind": "buildings",
+  "blend": "art_source/blender/teutons/house.blend",
+  "glb": "res://assets/3d/buildings/teutons/house.glb",
+  "glb_bytes": 42340,
+  "grid": [
+    2,
+    2
+  ],
+  "footprint_m": 3.6,
+  "reference": "res://art/buildings/teutons/house.png"
+}

@@ -1,0 +1,35 @@
+{
+  "tris": 247,
+  "verts": 335,
+  "materials": [
+    "PE_Dirt",
+    "PE_WoodDark",
+    "PE_Felt",
+    "TEAM_Trim",
+    "PE_Gold",
+    "PE_Banner_mongols",
+    "PE_WoodLight"
+  ],
+  "bounds_min": [
+    -1.76,
+    -1.735,
+    0.0
+  ],
+  "bounds_max": [
+    1.74,
+    1.712,
+    4.4
+  ],
+  "asset_id": "watch_tower",
+  "civ": "mongols",
+  "kind": "buildings",
+  "blend": "art_source/blender/mongols/watch_tower.blend",
+  "glb": "res://assets/3d/buildings/mongols/watch_tower.glb",
+  "glb_bytes": 23288,
+  "grid": [
+    2,
+    2
+  ],
+  "footprint_m": 3.6,
+  "reference": "res://art/buildings/mongols/watch_tower.png"
+}

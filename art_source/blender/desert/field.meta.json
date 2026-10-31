@@ -1,0 +1,31 @@
+{
+  "tris": 102,
+  "verts": 218,
+  "materials": [
+    "PE_Soil",
+    "PE_CropGreen",
+    "PE_Canal",
+    "PE_Sandstone",
+    "PE_WoodDark",
+    "TEAM_Trim"
+  ],
+  "bounds_min": [
+    -1.9,
+    -1.9,
+    0.0
+  ],
+  "bounds_max": [
+    1.9,
+    1.9,
+    0.9
+  ],
+  "asset_id": "field",
+  "civ": "desert",
+  "kind": "environment",
+  "blend": "art_source/blender/desert/field.blend",
+  "glb": "res://assets/3d/environment/desert/field.glb",
+  "glb_bytes": 12712,
+  "resource": "field",
+  "biome": "desert",
+  "build_script": "art_source/blender/environment/field.py"
+}

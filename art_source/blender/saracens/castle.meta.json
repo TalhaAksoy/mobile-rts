@@ -1,0 +1,36 @@
+{
+  "tris": 2604,
+  "verts": 4970,
+  "materials": [
+    "PE_Dirt",
+    "PE_Sandstone",
+    "PE_TileTeal",
+    "PE_Window",
+    "TEAM_Trim",
+    "PE_Gold",
+    "PE_WoodDark",
+    "PE_Banner_saracens"
+  ],
+  "bounds_min": [
+    -3.477,
+    -3.596,
+    0.0
+  ],
+  "bounds_max": [
+    3.525,
+    3.573,
+    5.16
+  ],
+  "asset_id": "castle",
+  "civ": "saracens",
+  "kind": "buildings",
+  "blend": "art_source/blender/saracens/castle.blend",
+  "glb": "res://assets/3d/buildings/saracens/castle.glb",
+  "glb_bytes": 187216,
+  "grid": [
+    4,
+    4
+  ],
+  "footprint_m": 7.2,
+  "reference": "res://art/buildings/saracens/castle.png"
+}

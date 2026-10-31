@@ -1,0 +1,38 @@
+{
+  "tris": 569,
+  "verts": 901,
+  "materials": [
+    "PE_Dirt",
+    "PE_StoneGrey",
+    "PE_StoneWarm",
+    "PE_WoodDark",
+    "PE_Window",
+    "TEAM_Trim",
+    "PE_RoofSlate",
+    "PE_Gold",
+    "PE_WoodLight",
+    "PE_Iron"
+  ],
+  "bounds_min": [
+    -1.716,
+    -1.737,
+    0.0
+  ],
+  "bounds_max": [
+    1.792,
+    1.738,
+    4.33
+  ],
+  "asset_id": "house",
+  "civ": "franks",
+  "kind": "buildings",
+  "blend": "art_source/blender/franks/house.blend",
+  "glb": "res://assets/3d/buildings/franks/house.glb",
+  "glb_bytes": 45200,
+  "grid": [
+    2,
+    2
+  ],
+  "footprint_m": 3.6,
+  "reference": "res://art/buildings/franks/house.png"
+}

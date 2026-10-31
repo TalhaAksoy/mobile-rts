@@ -1,0 +1,43 @@
+{
+  "tris": 712,
+  "verts": 860,
+  "materials": [
+    "PE_Banner_saracens",
+    "PE_Dirt",
+    "PE_Felt",
+    "PE_Foliage",
+    "PE_Gold",
+    "PE_SailCloth",
+    "PE_Sandstone",
+    "PE_TileTeal",
+    "PE_Window",
+    "PE_WoodDark",
+    "PE_WoodLight",
+    "TEAM_Trim"
+  ],
+  "bounds_min": [
+    -1.768,
+    -1.744,
+    0.0
+  ],
+  "bounds_max": [
+    2.016,
+    1.737,
+    3.37
+  ],
+  "parts": [
+    "Sails"
+  ],
+  "asset_id": "mill",
+  "civ": "saracens",
+  "kind": "buildings",
+  "blend": "art_source/blender/saracens/mill.blend",
+  "glb": "res://assets/3d/buildings/saracens/mill.glb",
+  "glb_bytes": 60916,
+  "grid": [
+    2,
+    2
+  ],
+  "footprint_m": 3.6,
+  "reference": "res://art/buildings/saracens/mill.png"
+}

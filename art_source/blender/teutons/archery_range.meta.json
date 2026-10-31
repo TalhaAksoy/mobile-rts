@@ -1,0 +1,40 @@
+{
+  "tris": 1298,
+  "verts": 1992,
+  "materials": [
+    "PE_Dirt",
+    "PE_StoneGrey",
+    "PE_Window",
+    "PE_WoodDark",
+    "TEAM_Trim",
+    "PE_SlateDark",
+    "PE_Banner_teutons",
+    "PE_Gold",
+    "PE_WoodLight",
+    "PE_Thatch",
+    "PE_ClothRed",
+    "PE_Iron"
+  ],
+  "bounds_min": [
+    -2.63,
+    -2.624,
+    0.0
+  ],
+  "bounds_max": [
+    2.84,
+    2.647,
+    2.593
+  ],
+  "asset_id": "archery_range",
+  "civ": "teutons",
+  "kind": "buildings",
+  "blend": "art_source/blender/teutons/archery_range.blend",
+  "glb": "res://assets/3d/buildings/teutons/archery_range.glb",
+  "glb_bytes": 93660,
+  "grid": [
+    3,
+    3
+  ],
+  "footprint_m": 5.4,
+  "reference": "res://art/buildings/teutons/archery_range.png"
+}

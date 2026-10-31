@@ -22,31 +22,28 @@ sky_material = SubResource("ProceduralSkyMaterial_sky")
 background_mode = 2
 sky = SubResource("Sky_env")
 ambient_light_source = 2
-ambient_light_color = Color(0.60, 0.65, 0.74, 1)
-ambient_light_energy = 0.65
+ambient_light_color = Color(0.46, 0.54, 0.72, 1)
+ambient_light_energy = 0.6
 tonemap_mode = 2
+tonemap_exposure = 0.92
+adjustment_enabled = true
+adjustment_contrast = 1.08
+adjustment_saturation = 1.08
 glow_enabled = true
 glow_bloom = 0.16
 glow_intensity = 0.75
-dof_blur_far_enabled = true
-dof_blur_far_distance = 46.0
-dof_blur_far_transition = 22.0
-dof_blur_far_amount = 0.10
-dof_blur_near_enabled = true
-dof_blur_near_distance = 16.0
-dof_blur_near_transition = 10.0
-dof_blur_near_amount = 0.08
 
 [node name="Main3D" type="Node3D"]
 script = ExtResource("1_game")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
-transform = Transform3D(-0.707107, 0.525483, -0.473147, 0, 0.669131, 0.743145, 0.707107, 0.525483, -0.473147, 0, 30, 0)
-light_color = Color(1, 0.95, 0.86, 1)
-light_energy = 1.25
+transform = Transform3D(-0.70710677, 0.4156269, -0.5720614, 0, 0.809017, 0.58778524, 0.70710677, 0.4156269, -0.5720614, 0, 30, 0)
+light_color = Color(1, 0.9, 0.76, 1)
+light_energy = 1.35
 shadow_enabled = true
 shadow_bias = 0.03
 directional_shadow_max_distance = 75.0
+shadow_opacity = 0.85
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="."]
 environment = SubResource("Environment_3d")

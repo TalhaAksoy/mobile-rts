@@ -1,0 +1,41 @@
+{
+  "tris": 1138,
+  "verts": 1820,
+  "materials": [
+    "PE_Dirt",
+    "PE_StoneGrey",
+    "PE_PlasterWhite",
+    "PE_WoodDark",
+    "PE_Lattice",
+    "PE_RoofDark",
+    "PE_WoodLight",
+    "TEAM_Trim",
+    "PE_Banner_japanese",
+    "PE_Gold",
+    "PE_Beam",
+    "PE_Window",
+    "PE_Thatch"
+  ],
+  "bounds_min": [
+    -2.593,
+    -2.666,
+    0.0
+  ],
+  "bounds_max": [
+    2.89,
+    2.63,
+    2.36
+  ],
+  "asset_id": "stable",
+  "civ": "japanese",
+  "kind": "buildings",
+  "blend": "art_source/blender/japanese/stable.blend",
+  "glb": "res://assets/3d/buildings/japanese/stable.glb",
+  "glb_bytes": 88828,
+  "grid": [
+    3,
+    3
+  ],
+  "footprint_m": 5.4,
+  "reference": "res://art/buildings/japanese/stable.png"
+}

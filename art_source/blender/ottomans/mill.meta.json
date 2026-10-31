@@ -1,0 +1,44 @@
+{
+  "tris": 587,
+  "verts": 633,
+  "materials": [
+    "PE_Banner_ottomans",
+    "PE_Dirt",
+    "PE_Felt",
+    "PE_Foliage",
+    "PE_Gold",
+    "PE_PlasterCream",
+    "PE_RoofRed",
+    "PE_SailCloth",
+    "PE_StoneWarm",
+    "PE_Window",
+    "PE_WoodDark",
+    "PE_WoodLight",
+    "TEAM_Trim"
+  ],
+  "bounds_min": [
+    -1.752,
+    -1.79,
+    0.0
+  ],
+  "bounds_max": [
+    1.743,
+    1.732,
+    3.41
+  ],
+  "parts": [
+    "Sails"
+  ],
+  "asset_id": "mill",
+  "civ": "ottomans",
+  "kind": "buildings",
+  "blend": "art_source/blender/ottomans/mill.blend",
+  "glb": "res://assets/3d/buildings/ottomans/mill.glb",
+  "glb_bytes": 51524,
+  "grid": [
+    2,
+    2
+  ],
+  "footprint_m": 3.6,
+  "reference": "res://art/buildings/ottomans/mill.png"
+}

@@ -1,0 +1,41 @@
+{
+  "tris": 1118,
+  "verts": 1632,
+  "materials": [
+    "PE_Dirt",
+    "PE_StoneBrick",
+    "PE_StoneWarm",
+    "PE_Window",
+    "PE_WoodDark",
+    "TEAM_Trim",
+    "PE_RoofRed",
+    "PE_Banner_byzantines",
+    "PE_Gold",
+    "PE_WoodLight",
+    "PE_Thatch",
+    "PE_ClothRed",
+    "PE_Iron"
+  ],
+  "bounds_min": [
+    -2.556,
+    -2.587,
+    0.0
+  ],
+  "bounds_max": [
+    2.84,
+    2.597,
+    2.46
+  ],
+  "asset_id": "archery_range",
+  "civ": "byzantines",
+  "kind": "buildings",
+  "blend": "art_source/blender/byzantines/archery_range.blend",
+  "glb": "res://assets/3d/buildings/byzantines/archery_range.glb",
+  "glb_bytes": 82012,
+  "grid": [
+    3,
+    3
+  ],
+  "footprint_m": 5.4,
+  "reference": "res://art/buildings/byzantines/archery_range.png"
+}

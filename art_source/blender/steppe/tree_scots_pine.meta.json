@@ -1,0 +1,26 @@
+{
+  "tris": 204,
+  "verts": 332,
+  "materials": [
+    "PE_NatureAtlas_Steppe"
+  ],
+  "bounds_min": [
+    -0.853,
+    -0.62,
+    -0.012
+  ],
+  "bounds_max": [
+    1.194,
+    0.62,
+    2.576
+  ],
+  "asset_id": "tree_scots_pine",
+  "civ": "steppe",
+  "kind": "environment",
+  "blend": "art_source/blender/steppe/tree_scots_pine.blend",
+  "glb": "res://assets/3d/environment/steppe/tree_scots_pine.glb",
+  "glb_bytes": 16572,
+  "resource": "wood",
+  "biome": "steppe",
+  "build_script": "art_source/blender/environment/steppe_scots_pine.py"
+}

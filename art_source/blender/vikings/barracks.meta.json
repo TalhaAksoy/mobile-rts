@@ -1,0 +1,40 @@
+{
+  "tris": 1033,
+  "verts": 1847,
+  "materials": [
+    "PE_Dirt",
+    "PE_StoneGrey",
+    "PE_WoodDark",
+    "PE_WoodLight",
+    "PE_Window",
+    "TEAM_Trim",
+    "PE_Shingle",
+    "PE_LacquerRed",
+    "PE_Banner_vikings",
+    "PE_Gold",
+    "PE_Iron",
+    "PE_Felt"
+  ],
+  "bounds_min": [
+    -2.585,
+    -2.602,
+    0.0
+  ],
+  "bounds_max": [
+    2.634,
+    2.63,
+    3.403
+  ],
+  "asset_id": "barracks",
+  "civ": "vikings",
+  "kind": "buildings",
+  "blend": "art_source/blender/vikings/barracks.blend",
+  "glb": "res://assets/3d/buildings/vikings/barracks.glb",
+  "glb_bytes": 80208,
+  "grid": [
+    3,
+    3
+  ],
+  "footprint_m": 5.4,
+  "reference": "res://art/buildings/vikings/barracks.png"
+}

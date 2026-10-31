@@ -1,0 +1,41 @@
+{
+  "tris": 1216,
+  "verts": 1864,
+  "materials": [
+    "PE_Dirt",
+    "PE_StoneGrey",
+    "PE_PlasterWhite",
+    "PE_WoodDark",
+    "PE_Lattice",
+    "TEAM_Trim",
+    "PE_RoofDark",
+    "PE_Banner_japanese",
+    "PE_Gold",
+    "PE_WoodLight",
+    "PE_Thatch",
+    "PE_ClothRed",
+    "PE_Iron"
+  ],
+  "bounds_min": [
+    -2.668,
+    -2.614,
+    0.0
+  ],
+  "bounds_max": [
+    2.84,
+    2.611,
+    2.475
+  ],
+  "asset_id": "archery_range",
+  "civ": "japanese",
+  "kind": "buildings",
+  "blend": "art_source/blender/japanese/archery_range.blend",
+  "glb": "res://assets/3d/buildings/japanese/archery_range.glb",
+  "glb_bytes": 90032,
+  "grid": [
+    3,
+    3
+  ],
+  "footprint_m": 5.4,
+  "reference": "res://art/buildings/japanese/archery_range.png"
+}

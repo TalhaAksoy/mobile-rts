@@ -1,0 +1,40 @@
+{
+  "tris": 1270,
+  "verts": 1956,
+  "materials": [
+    "PE_Dirt",
+    "PE_Sandstone",
+    "PE_TileTeal",
+    "PE_Window",
+    "PE_WoodDark",
+    "TEAM_Trim",
+    "PE_Banner_saracens",
+    "PE_Gold",
+    "PE_ClothRed",
+    "PE_WoodLight",
+    "PE_Thatch",
+    "PE_Iron"
+  ],
+  "bounds_min": [
+    -2.655,
+    -2.644,
+    0.0
+  ],
+  "bounds_max": [
+    2.84,
+    2.647,
+    2.46
+  ],
+  "asset_id": "archery_range",
+  "civ": "saracens",
+  "kind": "buildings",
+  "blend": "art_source/blender/saracens/archery_range.blend",
+  "glb": "res://assets/3d/buildings/saracens/archery_range.glb",
+  "glb_bytes": 93140,
+  "grid": [
+    3,
+    3
+  ],
+  "footprint_m": 5.4,
+  "reference": "res://art/buildings/saracens/archery_range.png"
+}

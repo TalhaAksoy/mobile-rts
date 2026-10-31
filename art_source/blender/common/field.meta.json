@@ -1,0 +1,30 @@
+{
+  "tris": 272,
+  "verts": 558,
+  "materials": [
+    "PE_Soil",
+    "PE_CropWheat",
+    "PE_WoodDark",
+    "PE_Thatch",
+    "TEAM_Trim"
+  ],
+  "bounds_min": [
+    -1.93,
+    -1.93,
+    0.0
+  ],
+  "bounds_max": [
+    1.93,
+    1.93,
+    0.9
+  ],
+  "asset_id": "field",
+  "civ": "common",
+  "kind": "environment",
+  "blend": "art_source/blender/common/field.blend",
+  "glb": "res://assets/3d/environment/common/field.glb",
+  "glb_bytes": 24068,
+  "resource": "field",
+  "biome": "temperate",
+  "build_script": "art_source/blender/environment/field.py"
+}

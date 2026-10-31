@@ -1,0 +1,38 @@
+{
+  "tris": 1036,
+  "verts": 1888,
+  "materials": [
+    "PE_Dirt",
+    "PE_StoneGrey",
+    "PE_Window",
+    "PE_WoodDark",
+    "TEAM_Trim",
+    "PE_SlateDark",
+    "PE_Banner_teutons",
+    "PE_Gold",
+    "PE_Iron",
+    "PE_Felt"
+  ],
+  "bounds_min": [
+    -2.664,
+    -2.623,
+    0.0
+  ],
+  "bounds_max": [
+    2.583,
+    2.617,
+    4.28
+  ],
+  "asset_id": "barracks",
+  "civ": "teutons",
+  "kind": "buildings",
+  "blend": "art_source/blender/teutons/barracks.blend",
+  "glb": "res://assets/3d/buildings/teutons/barracks.glb",
+  "glb_bytes": 78624,
+  "grid": [
+    3,
+    3
+  ],
+  "footprint_m": 5.4,
+  "reference": "res://art/buildings/teutons/barracks.png"
+}

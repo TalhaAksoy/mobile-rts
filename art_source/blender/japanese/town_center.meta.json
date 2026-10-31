@@ -1,0 +1,40 @@
+{
+  "tris": 1131,
+  "verts": 2189,
+  "materials": [
+    "PE_Dirt",
+    "PE_StoneGrey",
+    "PE_PlasterWhite",
+    "PE_WoodDark",
+    "PE_Lattice",
+    "PE_LacquerRed",
+    "PE_RoofDark",
+    "PE_Gold",
+    "PE_Window",
+    "TEAM_Trim",
+    "PE_Banner_japanese",
+    "PE_Foliage"
+  ],
+  "bounds_min": [
+    -2.635,
+    -2.593,
+    0.0
+  ],
+  "bounds_max": [
+    2.618,
+    2.65,
+    5.47
+  ],
+  "asset_id": "town_center",
+  "civ": "japanese",
+  "kind": "buildings",
+  "blend": "art_source/blender/japanese/town_center.blend",
+  "glb": "res://assets/3d/buildings/japanese/town_center.glb",
+  "glb_bytes": 90316,
+  "grid": [
+    3,
+    3
+  ],
+  "footprint_m": 5.4,
+  "reference": "res://art/buildings/japanese/town_center.png"
+}

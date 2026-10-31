@@ -1,0 +1,37 @@
+{
+  "tris": 584,
+  "verts": 786,
+  "materials": [
+    "PE_Dirt",
+    "PE_FeltBlue",
+    "PE_Felt",
+    "TEAM_Trim",
+    "PE_WoodDark",
+    "PE_Iron",
+    "PE_LacquerRed",
+    "PE_Gold",
+    "PE_Beam"
+  ],
+  "bounds_min": [
+    -1.776,
+    -1.735,
+    0.0
+  ],
+  "bounds_max": [
+    1.733,
+    1.767,
+    1.98
+  ],
+  "asset_id": "house",
+  "civ": "mongols",
+  "kind": "buildings",
+  "blend": "art_source/blender/mongols/house.blend",
+  "glb": "res://assets/3d/buildings/mongols/house.glb",
+  "glb_bytes": 48560,
+  "grid": [
+    2,
+    2
+  ],
+  "footprint_m": 3.6,
+  "reference": "res://art/buildings/mongols/house.png"
+}

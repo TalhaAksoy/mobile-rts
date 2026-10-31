@@ -1,0 +1,38 @@
+{
+  "tris": 495,
+  "verts": 621,
+  "materials": [
+    "PE_Dirt",
+    "PE_WoodDark",
+    "PE_Sandstone",
+    "PE_ClothRed",
+    "TEAM_Trim",
+    "PE_Beam",
+    "PE_WoodLight",
+    "PE_Iron",
+    "PE_Banner_saracens",
+    "PE_Gold"
+  ],
+  "bounds_min": [
+    -1.799,
+    -1.783,
+    0.0
+  ],
+  "bounds_max": [
+    1.75,
+    1.72,
+    1.58
+  ],
+  "asset_id": "lumber_camp",
+  "civ": "saracens",
+  "kind": "buildings",
+  "blend": "art_source/blender/saracens/lumber_camp.blend",
+  "glb": "res://assets/3d/buildings/saracens/lumber_camp.glb",
+  "glb_bytes": 41868,
+  "grid": [
+    2,
+    2
+  ],
+  "footprint_m": 3.6,
+  "reference": "res://art/buildings/saracens/lumber_camp.png"
+}

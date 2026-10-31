@@ -1,0 +1,38 @@
+{
+  "tris": 648,
+  "verts": 954,
+  "materials": [
+    "PE_Dirt",
+    "PE_FeltBlue",
+    "PE_Felt",
+    "TEAM_Trim",
+    "PE_WoodDark",
+    "PE_LacquerRed",
+    "PE_StoneGrey",
+    "PE_Gold",
+    "PE_Iron",
+    "PE_WoodLight"
+  ],
+  "bounds_min": [
+    -1.748,
+    -1.748,
+    0.0
+  ],
+  "bounds_max": [
+    1.732,
+    1.778,
+    2.4
+  ],
+  "asset_id": "blacksmith",
+  "civ": "mongols",
+  "kind": "buildings",
+  "blend": "art_source/blender/mongols/blacksmith.blend",
+  "glb": "res://assets/3d/buildings/mongols/blacksmith.glb",
+  "glb_bytes": 51716,
+  "grid": [
+    2,
+    2
+  ],
+  "footprint_m": 3.6,
+  "reference": "res://art/buildings/mongols/blacksmith.png"
+}

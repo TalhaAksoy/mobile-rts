@@ -1,0 +1,26 @@
+{
+  "tris": 96,
+  "verts": 152,
+  "materials": [
+    "PE_NatureAtlas_Steppe"
+  ],
+  "bounds_min": [
+    -0.726,
+    -0.704,
+    0.0
+  ],
+  "bounds_max": [
+    0.743,
+    0.681,
+    1.92
+  ],
+  "asset_id": "tree_juniper",
+  "civ": "steppe",
+  "kind": "environment",
+  "blend": "art_source/blender/steppe/tree_juniper.blend",
+  "glb": "res://assets/3d/environment/steppe/tree_juniper.glb",
+  "glb_bytes": 8852,
+  "resource": "wood",
+  "biome": "steppe",
+  "build_script": "art_source/blender/environment/steppe_juniper.py"
+}

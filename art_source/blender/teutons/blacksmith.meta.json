@@ -1,0 +1,37 @@
+{
+  "tris": 723,
+  "verts": 1243,
+  "materials": [
+    "PE_Dirt",
+    "PE_StoneGrey",
+    "PE_Window",
+    "PE_WoodDark",
+    "TEAM_Trim",
+    "PE_SlateDark",
+    "PE_Gold",
+    "PE_Iron",
+    "PE_WoodLight"
+  ],
+  "bounds_min": [
+    -1.725,
+    -1.745,
+    0.0
+  ],
+  "bounds_max": [
+    1.755,
+    1.732,
+    2.4
+  ],
+  "asset_id": "blacksmith",
+  "civ": "teutons",
+  "kind": "buildings",
+  "blend": "art_source/blender/teutons/blacksmith.blend",
+  "glb": "res://assets/3d/buildings/teutons/blacksmith.glb",
+  "glb_bytes": 55756,
+  "grid": [
+    2,
+    2
+  ],
+  "footprint_m": 3.6,
+  "reference": "res://art/buildings/teutons/blacksmith.png"
+}

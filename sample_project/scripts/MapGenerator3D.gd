@@ -39,7 +39,16 @@ var trees: Dictionary = {} # Vector2i -> Node3D
 var gold_mines: Dictionary = {} # Vector2i -> Node3D
 var stone_mines: Dictionary = {} # Vector2i -> Node3D
 var berry_bushes: Dictionary = {} # Vector2i -> Node3D
+## Resource cells a unit could not get within gathering range of (boxed in by terrain/trees).
+## Skipped by auto-retargeting and the bot; cleared whenever walkability changes (a tree is cut,
+## a building is placed/destroyed), so a node that becomes reachable is used again.
+var unreachable_resource_cells: Dictionary = {}
 var occupied_cells: Dictionary = {}
+## Farm fields (Building3D FARM placed from a Mill). Fields are WALKABLE but not buildable, so a
+## ring of fields never walls a Mill in. field_cells: any covered cell -> field origin cell.
+## farm_fields: origin -> {"building", "team", "farmer"} once the field is completed (infinite food).
+var field_cells: Dictionary = {}
+var farm_fields: Dictionary = {}
 
 var player_start_pos: Vector3
 var enemy_start_pos: Vector3
@@ -54,6 +63,10 @@ var water_mesh_instances: Array[MeshInstance3D] = []
 var bridge_mesh_instances: Array[Node3D] = []
 var gold_crystal_materials: Array[StandardMaterial3D] = []
 var anim_time: float = 0.0
+## HD-2D terrain material (shaders/hd2d_ground.gdshader); control texture set after A* is built.
+var ground_mat: ShaderMaterial = null
+## Ground scatter instances per cell (hidden when a building is placed on the cell).
+var scatter_cell_index: Dictionary = {}
 
 func _ready() -> void:
 	noise.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
@@ -102,6 +115,8 @@ func generate(chosen_map_type: CivData.MapType, custom_seed: int = -1) -> void:
 	gold_mines.clear()
 	berry_bushes.clear()
 	occupied_cells.clear()
+	field_cells.clear()
+	farm_fields.clear()
 	astar.clear()
 
 	for x in range(MAP_WIDTH):
@@ -128,6 +143,16 @@ func generate(chosen_map_type: CivData.MapType, custom_seed: int = -1) -> void:
 
 	# 3. Build AStar Pathfinding
 	_build_astar_grid()
+
+	# 3b. HD-2D ground control map (roads follow A* routes, so it needs the grid)
+	if ground_mat != null:
+		var control_img := HD2DGround.build_control_image(self)
+		ground_mat.set_shader_parameter("control", ImageTexture.create_from_image(control_img))
+		# 3c. Ground scatter (tufts, flowers, pebbles) driven by the same control map
+		var scatter := HD2DScatter.build(self, control_img)
+		for n in scatter["nodes"]:
+			ground_container.add_child(n)
+		scatter_cell_index = scatter["cell_index"]
 
 	# 4. Initialize HD-2D Diorama Fog of War
 	_init_fog_of_war()
@@ -390,6 +415,9 @@ func _create_natural_organic_terrain() -> void:
 	# Build Stepped HD-2D Diorama Terrain (Top faces, Stepped Cliff drops, and Diorama Base Skirting)
 	var grass_mat = StandardMaterial3D.new()
 	grass_mat.albedo_texture = PixelArtTextures.get_diorama_grass_texture()
+	# Tone the procedural grass down (it was near-neon next to the 3D diorama buildings);
+	# a warmer, darker field makes buildings, units and resources pop instead of competing.
+	grass_mat.albedo_color = Color(0.80, 0.85, 0.70)
 	grass_mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
 	grass_mat.roughness = 0.85
 
@@ -398,6 +426,7 @@ func _create_natural_organic_terrain() -> void:
 	cliff_mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
 	cliff_mat.cull_mode = BaseMaterial3D.CULL_DISABLED
 	cliff_mat.roughness = 0.70
+	cliff_mat.albedo_color = HD2DGround.cliff_tint(map_type)   # sandstone / granite / autumn earth
 
 	var wood_base_mat = StandardMaterial3D.new()
 	wood_base_mat.albedo_texture = PixelArtTextures.get_diorama_wood_base_texture()
@@ -443,7 +472,9 @@ func _create_natural_organic_terrain() -> void:
 	var top_mesh = st_top.commit()
 	var top_inst = MeshInstance3D.new()
 	top_inst.mesh = top_mesh
-	top_inst.material_override = grass_mat if map_type != CivData.MapType.DESERT_OASIS else sand_mat
+	ground_mat = HD2DGround.make_material(map_type)
+	ground_mat.set_shader_parameter("map_size_m", Vector2(MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE))
+	top_inst.material_override = ground_mat
 	ground_container.add_child(top_inst)
 
 	# 2. Vertical Stepped Cliff Quads between elevation tiers
@@ -583,11 +614,9 @@ func _create_natural_organic_terrain() -> void:
 	ground_container.add_child(table_inst)
 
 	# 4. Animated Water Surfaces for Water Cells
-	var water_mat = StandardMaterial3D.new()
-	water_mat.albedo_color = Color(0.14, 0.45, 0.72, 0.85)
-	water_mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
-	water_mat.roughness = 0.10
-	water_mat.metallic = 0.30
+	var water_mat = ShaderMaterial.new()
+	water_mat.shader = load("res://shaders/hd2d_water.gdshader")
+	HD2DGround.apply_water_palette(water_mat, map_type)
 
 	var w_mesh = PlaneMesh.new()
 	w_mesh.size = Vector2(TILE_SIZE * 1.02, TILE_SIZE * 1.02)
@@ -701,7 +730,7 @@ func _spawn_resource_cluster(origin: Vector2i, type: String, count: int) -> void
 			continue
 		visited[curr] = true
 
-		if is_cell_passable_terrain(curr.x, curr.y) and not (curr in trees or curr in gold_mines or curr in stone_mines or curr in berry_bushes):
+		if is_cell_passable_terrain(curr.x, curr.y) and not _is_in_base_keepout(curr) and not (curr in trees or curr in gold_mines or curr in stone_mines or curr in berry_bushes):
 			if type == "gold":
 				_spawn_3d_gold(curr)
 			elif type == "stone":
@@ -750,21 +779,61 @@ func _create_resource_area(node: Node3D, cell: Vector2i, type: String, radius: f
 	node.add_child(area)
 	return area
 
+## Adds the Blender-pipeline environment model as child "Visual" (random yaw/scale so forests
+## don't look stamped). Returns false when no model is available -> caller adds its sprite.
+func _add_env_model(parent: Node3D, asset_id: String, min_scale: float, max_scale: float) -> bool:
+	var m = FactionArtManager.instantiate_environment_model(asset_id)
+	if m == null and "/" in asset_id:
+		# biome variant missing/disabled -> same prop from the temperate set
+		m = FactionArtManager.instantiate_environment_model(asset_id.get_slice("/", 1))
+	if m == null:
+		return false
+	m.name = "Visual"
+	m.rotation.y = randf() * TAU
+	var s := randf_range(min_scale, max_scale)
+	m.scale = Vector3(s, s, s)
+	m.set_meta("base_scale", s)
+	parent.add_child(m)
+	return true
+
+## Mines shrink as they are depleted (100% -> 55% size) so remaining amount is readable at a glance.
+func _update_deposit_visual(entry: Dictionary, remaining: int) -> void:
+	var node = entry.get("node", null)
+	if not is_instance_valid(node):
+		return
+	var vis = node.get_node_or_null("Visual")
+	if vis == null:
+		return
+	var frac: float = clamp(float(remaining) / float(max(1, entry.get("max_amount", 1))), 0.0, 1.0)
+	var s: float = float(vis.get_meta("base_scale", 1.0)) * lerp(0.55, 1.0, frac)
+	vis.scale = Vector3(s, s, s)
+
 func _spawn_3d_tree(cell: Vector2i) -> void:
 	var tree_node = Node3D.new()
 	var ground_y = height_map[cell.x][cell.y]
 	tree_node.position = cell_to_world(cell) + Vector3(0, ground_y, 0)
 
-	var is_pine = (randf() < 0.45)
-	var spr = Sprite3D.new()
-	spr.texture = PixelArtTextures.get_pine_tree_texture() if is_pine else PixelArtTextures.get_oak_tree_texture()
-	spr.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	spr.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
-	spr.shaded = true
-	spr.alpha_cut = Sprite3D.ALPHA_CUT_DISCARD
-	spr.pixel_size = 0.055
-	spr.position = Vector3(0, 1.7, 0)
-	tree_node.add_child(spr)
+	# species from the map biome; exactly one randf() so seeded maps stay reproducible
+	var species: Array = CivData.get_biome_props(map_type)["trees"]
+	var roll := randf()
+	var pick: Array = species[species.size() - 1]
+	var acc := 0.0
+	for sp in species:
+		acc += float(sp[2])
+		if roll < acc:
+			pick = sp
+			break
+	var is_pine = (pick == species[0])
+	if not _add_env_model(tree_node, pick[0], 0.85, 1.15):
+		var spr = Sprite3D.new()
+		spr.texture = PixelArtTextures.get_pine_tree_texture() if is_pine else PixelArtTextures.get_oak_tree_texture()
+		spr.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+		spr.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+		spr.shaded = true
+		spr.alpha_cut = Sprite3D.ALPHA_CUT_DISCARD
+		spr.pixel_size = 0.055
+		spr.position = Vector3(0, 1.7, 0)
+		tree_node.add_child(spr)
 
 	_create_resource_area(tree_node, cell, "wood", 0.95, 3.6, 1.8)
 	tree_node.visible = false
@@ -774,7 +843,7 @@ func _spawn_3d_tree(cell: Vector2i) -> void:
 		"node": tree_node,
 		"hp": 100,
 		"max_amount": 100,
-		"name": "Çam Ağacı" if is_pine else "Meşe Ağacı",
+		"name": pick[1],
 		"type": "wood"
 	}
 
@@ -783,15 +852,16 @@ func _spawn_3d_gold(cell: Vector2i) -> void:
 	var ground_y = height_map[cell.x][cell.y]
 	gold_node.position = cell_to_world(cell) + Vector3(0, ground_y, 0)
 
-	var spr = Sprite3D.new()
-	spr.texture = PixelArtTextures.get_gold_node_texture()
-	spr.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	spr.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
-	spr.shaded = true
-	spr.alpha_cut = Sprite3D.ALPHA_CUT_DISCARD
-	spr.pixel_size = 0.055
-	spr.position = Vector3(0, 0.95, 0)
-	gold_node.add_child(spr)
+	if not _add_env_model(gold_node, CivData.get_biome_props(map_type)["gold"][0], 0.95, 1.05):
+		var spr = Sprite3D.new()
+		spr.texture = PixelArtTextures.get_gold_node_texture()
+		spr.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+		spr.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+		spr.shaded = true
+		spr.alpha_cut = Sprite3D.ALPHA_CUT_DISCARD
+		spr.pixel_size = 0.055
+		spr.position = Vector3(0, 0.95, 0)
+		gold_node.add_child(spr)
 
 	_create_resource_area(gold_node, cell, "gold", 0.90, 1.8, 0.9)
 	gold_node.visible = false
@@ -801,7 +871,7 @@ func _spawn_3d_gold(cell: Vector2i) -> void:
 		"node": gold_node,
 		"gold": 800,
 		"max_amount": 800,
-		"name": "Altın Madeni",
+		"name": CivData.get_biome_props(map_type)["gold"][1],
 		"type": "gold"
 	}
 
@@ -810,15 +880,16 @@ func _spawn_3d_stone(cell: Vector2i) -> void:
 	var ground_y = height_map[cell.x][cell.y]
 	stone_node.position = cell_to_world(cell) + Vector3(0, ground_y, 0)
 
-	var spr = Sprite3D.new()
-	spr.texture = PixelArtTextures.get_stone_node_texture()
-	spr.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	spr.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
-	spr.shaded = true
-	spr.alpha_cut = Sprite3D.ALPHA_CUT_DISCARD
-	spr.pixel_size = 0.055
-	spr.position = Vector3(0, 0.95, 0)
-	stone_node.add_child(spr)
+	if not _add_env_model(stone_node, CivData.get_biome_props(map_type)["stone"][0], 0.95, 1.05):
+		var spr = Sprite3D.new()
+		spr.texture = PixelArtTextures.get_stone_node_texture()
+		spr.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+		spr.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+		spr.shaded = true
+		spr.alpha_cut = Sprite3D.ALPHA_CUT_DISCARD
+		spr.pixel_size = 0.055
+		spr.position = Vector3(0, 0.95, 0)
+		stone_node.add_child(spr)
 
 	_create_resource_area(stone_node, cell, "stone", 0.90, 1.8, 0.9)
 	stone_node.visible = false
@@ -828,7 +899,7 @@ func _spawn_3d_stone(cell: Vector2i) -> void:
 		"node": stone_node,
 		"stone": 750,
 		"max_amount": 750,
-		"name": "Taş Ocağı",
+		"name": CivData.get_biome_props(map_type)["stone"][1],
 		"type": "stone"
 	}
 
@@ -837,15 +908,16 @@ func _spawn_3d_berry(cell: Vector2i) -> void:
 	var ground_y = height_map[cell.x][cell.y]
 	berry_node.position = cell_to_world(cell) + Vector3(0, ground_y, 0)
 
-	var spr = Sprite3D.new()
-	spr.texture = PixelArtTextures.get_berry_bush_texture()
-	spr.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	spr.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
-	spr.shaded = true
-	spr.alpha_cut = Sprite3D.ALPHA_CUT_DISCARD
-	spr.pixel_size = 0.055
-	spr.position = Vector3(0, 0.95, 0)
-	berry_node.add_child(spr)
+	if not _add_env_model(berry_node, CivData.get_biome_props(map_type)["food"][0], 0.9, 1.1):
+		var spr = Sprite3D.new()
+		spr.texture = PixelArtTextures.get_berry_bush_texture()
+		spr.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+		spr.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+		spr.shaded = true
+		spr.alpha_cut = Sprite3D.ALPHA_CUT_DISCARD
+		spr.pixel_size = 0.055
+		spr.position = Vector3(0, 0.95, 0)
+		berry_node.add_child(spr)
 
 	_create_resource_area(berry_node, cell, "food", 0.85, 1.6, 0.8)
 	berry_node.visible = false
@@ -855,16 +927,24 @@ func _spawn_3d_berry(cell: Vector2i) -> void:
 		"node": berry_node,
 		"food": 500,
 		"max_amount": 500,
-		"name": "Böğürtlen Çalısı",
+		"name": CivData.get_biome_props(map_type)["food"][1],
 		"type": "food"
 	}
+
+## Cells too close to a start position (Town Center footprint + its courtyard). Random resource
+## clusters (and their flood-fill growth) used to land here: in 7/12 sampled maps a gold/stone/berry
+## node sat INSIDE a Town Center footprint, hijacking taps on the TC and blocking its cells.
+const BASE_KEEPOUT_RADIUS: float = 4.0
+
+func _is_in_base_keepout(c: Vector2i) -> bool:
+	return c.distance_to(world_to_cell(player_start_pos)) < BASE_KEEPOUT_RADIUS or c.distance_to(world_to_cell(enemy_start_pos)) < BASE_KEEPOUT_RADIUS
 
 func _find_random_empty_spot(min_b: Vector2i, max_b: Vector2i) -> Vector2i:
 	for attempt in range(40):
 		var rx = randi_range(min_b.x, max_b.x)
 		var ry = randi_range(min_b.y, max_b.y)
 		var c = Vector2i(rx, ry)
-		if is_cell_passable_terrain(rx, ry) and not (c in trees or c in gold_mines or c in stone_mines or c in berry_bushes):
+		if is_cell_passable_terrain(rx, ry) and not _is_in_base_keepout(c) and not (c in trees or c in gold_mines or c in stone_mines or c in berry_bushes):
 			return c
 	return Vector2i(-1, -1)
 
@@ -910,7 +990,14 @@ func is_cell_walkable(cell: Vector2i) -> bool:
 		return false
 	return true
 
+func mark_resource_unreachable(cell: Vector2i) -> void:
+	unreachable_resource_cells[cell] = true
+
+func is_resource_marked_unreachable(cell: Vector2i) -> bool:
+	return unreachable_resource_cells.has(cell)
+
 func update_cell_walkability(cell: Vector2i) -> void:
+	unreachable_resource_cells.clear()
 	if is_valid_cell(cell.x, cell.y):
 		var id = _cell_to_id(cell.x, cell.y)
 		astar.set_point_disabled(id, not is_cell_walkable(cell))
@@ -1009,6 +1096,7 @@ func harvest_gold(cell: Vector2i, amount: int) -> int:
 	cur -= harvested
 	g["gold"] = cur
 	g["amount"] = cur
+	_update_deposit_visual(g, cur)
 	if cur <= 0:
 		if is_instance_valid(g.get("node", null)):
 			g["node"].queue_free()
@@ -1025,6 +1113,7 @@ func harvest_stone(cell: Vector2i, amount: int) -> int:
 	cur -= harvested
 	s["stone"] = cur
 	s["amount"] = cur
+	_update_deposit_visual(s, cur)
 	if cur <= 0:
 		if is_instance_valid(s.get("node", null)):
 			s["node"].queue_free()
@@ -1033,6 +1122,8 @@ func harvest_stone(cell: Vector2i, amount: int) -> int:
 	return harvested
 
 func harvest_food(cell: Vector2i, amount: int) -> int:
+	if farm_fields.has(cell):
+		return amount   # fields never deplete
 	if not cell in berry_bushes:
 		return 0
 	var b = berry_bushes[cell]
@@ -1053,6 +1144,69 @@ func register_building_cells(origin_cell: Vector2i, size: Vector2i, building_nod
 			var c = origin_cell + Vector2i(dx, dy)
 			occupied_cells[c] = building_node
 			update_cell_walkability(c)
+	HD2DScatter.hide_cells(scatter_cell_index, origin_cell, size)
+
+## Buildable = walkable and not covered by a farm field (fields can be walked over, not built on).
+func is_cell_buildable(cell: Vector2i) -> bool:
+	return is_cell_walkable(cell) and not field_cells.has(cell)
+
+func register_field_cells(origin_cell: Vector2i, size: Vector2i) -> void:
+	for dx in range(size.x):
+		for dy in range(size.y):
+			field_cells[origin_cell + Vector2i(dx, dy)] = origin_cell
+	HD2DScatter.hide_cells(scatter_cell_index, origin_cell, size)
+
+func unregister_field(origin_cell: Vector2i, size: Vector2i) -> void:
+	for dx in range(size.x):
+		for dy in range(size.y):
+			field_cells.erase(origin_cell + Vector2i(dx, dy))
+	farm_fields.erase(origin_cell)
+
+## Called when a field finishes construction (and again after a save is restored): idempotent.
+func register_field_resource(field: Node3D) -> void:
+	var origin: Vector2i = field.origin_cell
+	if farm_fields.has(origin):
+		farm_fields[origin]["building"] = field
+		return
+	farm_fields[origin] = {"building": field, "team": field.team, "farmer": null}
+
+## Origin of the field covering `cell`, or (-1,-1).
+func field_origin_at(cell: Vector2i) -> Vector2i:
+	return field_cells.get(cell, Vector2i(-1, -1))
+
+## True when `cell` still holds something a food gatherer can harvest (berry bush or active field).
+func has_food_source(cell: Vector2i) -> bool:
+	return cell in berry_bushes or farm_fields.has(cell)
+
+## A field is free for `unit` when nobody else is actively farming it (1 farmer per field).
+## Lazy check: a farmer that walked off to do something else frees the field automatically.
+func is_field_free_for(origin: Vector2i, unit: Node) -> bool:
+	if not farm_fields.has(origin):
+		return false
+	var f = farm_fields[origin]["farmer"]
+	if f == null or not is_instance_valid(f) or f == unit or f.hp <= 0:
+		return true
+	return not (f.resource_type == "food" and f.target_cell == origin and f.state in [Unit3D.State.GATHERING, Unit3D.State.RETURNING_RESOURCES])
+
+func claim_field(origin: Vector2i, unit: Node) -> bool:
+	if not is_field_free_for(origin, unit):
+		return false
+	farm_fields[origin]["farmer"] = unit
+	return true
+
+## Nearest completed field of `team` that `unit` may farm, within max_world_distance (or -1,-1).
+func find_free_field(from_pos: Vector3, team: int, unit: Node, max_world_distance: float = 9999.0) -> Vector2i:
+	var best := Vector2i(-1, -1)
+	var best_d := max_world_distance * max_world_distance
+	for origin in farm_fields.keys():
+		var e: Dictionary = farm_fields[origin]
+		if e["team"] != team or not is_field_free_for(origin, unit):
+			continue
+		var d := from_pos.distance_squared_to(cell_to_world(origin))
+		if d < best_d:
+			best_d = d
+			best = origin
+	return best
 
 func unregister_building_cells(origin_cell: Vector2i, size: Vector2i) -> void:
 	for dx in range(size.x):
@@ -1117,7 +1271,7 @@ func find_nearest_resource_node(from_pos: Vector3, type: String, max_world_dista
 	for cell in dict.keys():
 		var node_info = dict[cell]
 		var amt = node_info.get("hp", node_info.get("gold", node_info.get("stone", node_info.get("food", 0))))
-		if amt <= 0:
+		if amt <= 0 or unreachable_resource_cells.has(cell):
 			continue
 		var w_pos = cell_to_world(cell)
 		var d_sq = from_pos.distance_squared_to(w_pos)

@@ -1,0 +1,38 @@
+{
+  "tris": 978,
+  "verts": 1642,
+  "materials": [
+    "PE_Dirt",
+    "PE_StoneGrey",
+    "PE_SlateDark",
+    "PE_WoodDark",
+    "PE_Window",
+    "PE_StoneWarm",
+    "PE_Gold",
+    "TEAM_Trim",
+    "PE_Banner_teutons",
+    "PE_Foliage"
+  ],
+  "bounds_min": [
+    -2.647,
+    -2.654,
+    0.0
+  ],
+  "bounds_max": [
+    2.69,
+    2.64,
+    6.21
+  ],
+  "asset_id": "town_center",
+  "civ": "teutons",
+  "kind": "buildings",
+  "blend": "art_source/blender/teutons/town_center.blend",
+  "glb": "res://assets/3d/buildings/teutons/town_center.glb",
+  "glb_bytes": 70940,
+  "grid": [
+    3,
+    3
+  ],
+  "footprint_m": 5.4,
+  "reference": "res://art/buildings/teutons/town_center.png"
+}

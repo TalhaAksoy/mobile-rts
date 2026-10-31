@@ -1,0 +1,26 @@
+{
+  "tris": 325,
+  "verts": 575,
+  "materials": [
+    "PE_NatureAtlas"
+  ],
+  "bounds_min": [
+    -0.878,
+    -0.893,
+    -0.05
+  ],
+  "bounds_max": [
+    0.93,
+    1.01,
+    1.432
+  ],
+  "asset_id": "gold_mine",
+  "civ": "common",
+  "kind": "environment",
+  "blend": "art_source/blender/common/gold_mine.blend",
+  "glb": "res://assets/3d/environment/common/gold_mine.glb",
+  "glb_bytes": 26400,
+  "resource": "gold",
+  "biome": "temperate",
+  "build_script": "art_source/blender/environment/common_gold_mine.py"
+}

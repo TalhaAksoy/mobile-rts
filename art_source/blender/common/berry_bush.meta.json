@@ -1,0 +1,27 @@
+{
+  "tris": 330,
+  "verts": 636,
+  "materials": [
+    "PE_ClothRed",
+    "PE_NatureAtlas"
+  ],
+  "bounds_min": [
+    -0.809,
+    -0.578,
+    0.0
+  ],
+  "bounds_max": [
+    0.827,
+    0.6,
+    0.646
+  ],
+  "asset_id": "berry_bush",
+  "civ": "common",
+  "kind": "environment",
+  "blend": "art_source/blender/common/berry_bush.blend",
+  "glb": "res://assets/3d/environment/common/berry_bush.glb",
+  "glb_bytes": 26024,
+  "resource": "food",
+  "biome": "temperate",
+  "build_script": "art_source/blender/environment/common_berry_bush.py"
+}

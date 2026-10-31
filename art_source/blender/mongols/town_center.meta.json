@@ -1,0 +1,41 @@
+{
+  "tris": 1557,
+  "verts": 2095,
+  "materials": [
+    "PE_Dirt",
+    "PE_WoodLight",
+    "PE_Felt",
+    "PE_Lattice",
+    "PE_FeltBlue",
+    "TEAM_Trim",
+    "PE_LacquerRed",
+    "PE_WoodDark",
+    "PE_Window",
+    "PE_Gold",
+    "PE_Banner_mongols",
+    "PE_StoneGrey",
+    "PE_Iron"
+  ],
+  "bounds_min": [
+    -2.597,
+    -2.608,
+    0.0
+  ],
+  "bounds_max": [
+    2.59,
+    2.7,
+    3.63
+  ],
+  "asset_id": "town_center",
+  "civ": "mongols",
+  "kind": "buildings",
+  "blend": "art_source/blender/mongols/town_center.blend",
+  "glb": "res://assets/3d/buildings/mongols/town_center.glb",
+  "glb_bytes": 95324,
+  "grid": [
+    3,
+    3
+  ],
+  "footprint_m": 5.4,
+  "reference": "res://art/buildings/mongols/town_center.png"
+}

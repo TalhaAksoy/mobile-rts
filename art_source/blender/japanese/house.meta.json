@@ -1,0 +1,37 @@
+{
+  "tris": 628,
+  "verts": 1062,
+  "materials": [
+    "PE_Dirt",
+    "PE_StoneGrey",
+    "PE_PlasterWhite",
+    "PE_WoodDark",
+    "PE_Lattice",
+    "TEAM_Trim",
+    "PE_WoodLight",
+    "PE_RoofDark",
+    "PE_Iron"
+  ],
+  "bounds_min": [
+    -1.748,
+    -1.748,
+    0.0
+  ],
+  "bounds_max": [
+    1.732,
+    1.778,
+    2.63
+  ],
+  "asset_id": "house",
+  "civ": "japanese",
+  "kind": "buildings",
+  "blend": "art_source/blender/japanese/house.blend",
+  "glb": "res://assets/3d/buildings/japanese/house.glb",
+  "glb_bytes": 50156,
+  "grid": [
+    2,
+    2
+  ],
+  "footprint_m": 3.6,
+  "reference": "res://art/buildings/japanese/house.png"
+}

@@ -1,0 +1,37 @@
+{
+  "tris": 468,
+  "verts": 820,
+  "materials": [
+    "PE_Dirt",
+    "PE_Sandstone",
+    "PE_TileTeal",
+    "PE_Window",
+    "TEAM_Trim",
+    "PE_Gold",
+    "PE_WoodDark",
+    "PE_Banner_saracens",
+    "PE_WoodLight"
+  ],
+  "bounds_min": [
+    -1.747,
+    -1.773,
+    0.0
+  ],
+  "bounds_max": [
+    1.749,
+    1.759,
+    4.19
+  ],
+  "asset_id": "watch_tower",
+  "civ": "saracens",
+  "kind": "buildings",
+  "blend": "art_source/blender/saracens/watch_tower.blend",
+  "glb": "res://assets/3d/buildings/saracens/watch_tower.glb",
+  "glb_bytes": 39768,
+  "grid": [
+    2,
+    2
+  ],
+  "footprint_m": 3.6,
+  "reference": "res://art/buildings/saracens/watch_tower.png"
+}

@@ -1,0 +1,36 @@
+{
+  "tris": 452,
+  "verts": 752,
+  "materials": [
+    "PE_Dirt",
+    "PE_Sandstone",
+    "PE_Lattice",
+    "PE_WoodDark",
+    "PE_Window",
+    "PE_TileTeal",
+    "TEAM_Trim",
+    "PE_StoneBrick"
+  ],
+  "bounds_min": [
+    -1.766,
+    -1.76,
+    0.0
+  ],
+  "bounds_max": [
+    1.766,
+    1.748,
+    3.16
+  ],
+  "asset_id": "house",
+  "civ": "saracens",
+  "kind": "buildings",
+  "blend": "art_source/blender/saracens/house.blend",
+  "glb": "res://assets/3d/buildings/saracens/house.glb",
+  "glb_bytes": 38240,
+  "grid": [
+    2,
+    2
+  ],
+  "footprint_m": 3.6,
+  "reference": "res://art/buildings/saracens/house.png"
+}

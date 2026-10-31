@@ -1,0 +1,39 @@
+{
+  "tris": 655,
+  "verts": 1127,
+  "materials": [
+    "PE_Dirt",
+    "PE_Sandstone",
+    "PE_TileTeal",
+    "PE_Window",
+    "PE_WoodDark",
+    "TEAM_Trim",
+    "PE_Gold",
+    "PE_ClothRed",
+    "PE_Iron",
+    "PE_WoodLight",
+    "PE_StoneGrey"
+  ],
+  "bounds_min": [
+    -1.747,
+    -1.798,
+    0.0
+  ],
+  "bounds_max": [
+    1.754,
+    1.742,
+    2.4
+  ],
+  "asset_id": "blacksmith",
+  "civ": "saracens",
+  "kind": "buildings",
+  "blend": "art_source/blender/saracens/blacksmith.blend",
+  "glb": "res://assets/3d/buildings/saracens/blacksmith.glb",
+  "glb_bytes": 53316,
+  "grid": [
+    2,
+    2
+  ],
+  "footprint_m": 3.6,
+  "reference": "res://art/buildings/saracens/blacksmith.png"
+}

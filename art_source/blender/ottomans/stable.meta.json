@@ -1,0 +1,41 @@
+{
+  "tris": 967,
+  "verts": 1731,
+  "materials": [
+    "PE_Dirt",
+    "PE_StoneWarm",
+    "PE_PlasterCream",
+    "PE_Window",
+    "PE_RoofRed",
+    "PE_WoodDark",
+    "PE_DomeLead",
+    "PE_Gold",
+    "PE_WoodLight",
+    "TEAM_Trim",
+    "PE_Banner_ottomans",
+    "PE_Beam",
+    "PE_Thatch"
+  ],
+  "bounds_min": [
+    -2.636,
+    -2.66,
+    0.0
+  ],
+  "bounds_max": [
+    2.89,
+    2.675,
+    2.36
+  ],
+  "asset_id": "stable",
+  "civ": "ottomans",
+  "kind": "buildings",
+  "blend": "art_source/blender/ottomans/stable.blend",
+  "glb": "res://assets/3d/buildings/ottomans/stable.glb",
+  "glb_bytes": 77916,
+  "grid": [
+    3,
+    3
+  ],
+  "footprint_m": 5.4,
+  "reference": "res://art/buildings/ottomans/stable.png"
+}

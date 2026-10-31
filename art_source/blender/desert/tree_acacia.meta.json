@@ -1,0 +1,26 @@
+{
+  "tris": 222,
+  "verts": 366,
+  "materials": [
+    "PE_NatureAtlas_Desert"
+  ],
+  "bounds_min": [
+    -1.141,
+    -0.868,
+    -0.013
+  ],
+  "bounds_max": [
+    1.255,
+    1.042,
+    2.12
+  ],
+  "asset_id": "tree_acacia",
+  "civ": "desert",
+  "kind": "environment",
+  "blend": "art_source/blender/desert/tree_acacia.blend",
+  "glb": "res://assets/3d/environment/desert/tree_acacia.glb",
+  "glb_bytes": 17948,
+  "resource": "wood",
+  "biome": "desert",
+  "build_script": "art_source/blender/environment/desert_acacia.py"
+}

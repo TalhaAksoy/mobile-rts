@@ -1,0 +1,38 @@
+{
+  "tris": 617,
+  "verts": 855,
+  "materials": [
+    "PE_Dirt",
+    "PE_WoodDark",
+    "TEAM_Trim",
+    "PE_SlateDark",
+    "PE_StoneGrey",
+    "PE_Beam",
+    "PE_WoodLight",
+    "PE_Iron",
+    "PE_Banner_teutons",
+    "PE_Gold"
+  ],
+  "bounds_min": [
+    -1.754,
+    -1.748,
+    0.0
+  ],
+  "bounds_max": [
+    1.764,
+    1.747,
+    1.949
+  ],
+  "asset_id": "lumber_camp",
+  "civ": "teutons",
+  "kind": "buildings",
+  "blend": "art_source/blender/teutons/lumber_camp.blend",
+  "glb": "res://assets/3d/buildings/teutons/lumber_camp.glb",
+  "glb_bytes": 50348,
+  "grid": [
+    2,
+    2
+  ],
+  "footprint_m": 3.6,
+  "reference": "res://art/buildings/teutons/lumber_camp.png"
+}

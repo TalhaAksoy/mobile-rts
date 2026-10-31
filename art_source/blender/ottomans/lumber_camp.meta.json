@@ -1,0 +1,38 @@
+{
+  "tris": 589,
+  "verts": 817,
+  "materials": [
+    "PE_Dirt",
+    "PE_WoodDark",
+    "PE_Beam",
+    "PE_RoofRed",
+    "PE_WoodLight",
+    "PE_Iron",
+    "PE_Foliage",
+    "TEAM_Trim",
+    "PE_Banner_ottomans",
+    "PE_Gold"
+  ],
+  "bounds_min": [
+    -1.776,
+    -1.735,
+    0.0
+  ],
+  "bounds_max": [
+    1.74,
+    1.767,
+    1.917
+  ],
+  "asset_id": "lumber_camp",
+  "civ": "ottomans",
+  "kind": "buildings",
+  "blend": "art_source/blender/ottomans/lumber_camp.blend",
+  "glb": "res://assets/3d/buildings/ottomans/lumber_camp.glb",
+  "glb_bytes": 48728,
+  "grid": [
+    2,
+    2
+  ],
+  "footprint_m": 3.6,
+  "reference": "res://art/buildings/ottomans/lumber_camp.png"
+}

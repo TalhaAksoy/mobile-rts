@@ -1,0 +1,43 @@
+{
+  "tris": 665,
+  "verts": 695,
+  "materials": [
+    "PE_Banner_franks",
+    "PE_Dirt",
+    "PE_Felt",
+    "PE_Gold",
+    "PE_Iron",
+    "PE_RoofSlate",
+    "PE_SailCloth",
+    "PE_StoneWarm",
+    "PE_Window",
+    "PE_WoodDark",
+    "PE_WoodLight",
+    "TEAM_Trim"
+  ],
+  "bounds_min": [
+    -1.783,
+    -1.75,
+    0.0
+  ],
+  "bounds_max": [
+    1.755,
+    1.773,
+    3.41
+  ],
+  "parts": [
+    "Sails"
+  ],
+  "asset_id": "mill",
+  "civ": "franks",
+  "kind": "buildings",
+  "blend": "art_source/blender/franks/mill.blend",
+  "glb": "res://assets/3d/buildings/franks/mill.glb",
+  "glb_bytes": 53396,
+  "grid": [
+    2,
+    2
+  ],
+  "footprint_m": 3.6,
+  "reference": "res://art/buildings/franks/mill.png"
+}

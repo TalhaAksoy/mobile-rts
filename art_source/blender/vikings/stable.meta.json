@@ -1,0 +1,40 @@
+{
+  "tris": 1117,
+  "verts": 1981,
+  "materials": [
+    "PE_Dirt",
+    "PE_StoneGrey",
+    "PE_WoodDark",
+    "PE_WoodLight",
+    "PE_Window",
+    "PE_Shingle",
+    "PE_LacquerRed",
+    "TEAM_Trim",
+    "PE_Banner_vikings",
+    "PE_Gold",
+    "PE_Beam",
+    "PE_Thatch"
+  ],
+  "bounds_min": [
+    -2.624,
+    -2.637,
+    0.0
+  ],
+  "bounds_max": [
+    2.89,
+    2.575,
+    2.822
+  ],
+  "asset_id": "stable",
+  "civ": "vikings",
+  "kind": "buildings",
+  "blend": "art_source/blender/vikings/stable.blend",
+  "glb": "res://assets/3d/buildings/vikings/stable.glb",
+  "glb_bytes": 87128,
+  "grid": [
+    3,
+    3
+  ],
+  "footprint_m": 5.4,
+  "reference": "res://art/buildings/vikings/stable.png"
+}

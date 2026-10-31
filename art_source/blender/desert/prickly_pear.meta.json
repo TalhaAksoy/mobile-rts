@@ -1,0 +1,27 @@
+{
+  "tris": 306,
+  "verts": 556,
+  "materials": [
+    "PE_ClothRed",
+    "PE_NatureAtlas_Desert"
+  ],
+  "bounds_min": [
+    -0.617,
+    -0.424,
+    0.0
+  ],
+  "bounds_max": [
+    0.535,
+    0.208,
+    1.047
+  ],
+  "asset_id": "prickly_pear",
+  "civ": "desert",
+  "kind": "environment",
+  "blend": "art_source/blender/desert/prickly_pear.blend",
+  "glb": "res://assets/3d/environment/desert/prickly_pear.glb",
+  "glb_bytes": 21816,
+  "resource": "food",
+  "biome": "desert",
+  "build_script": "art_source/blender/environment/desert_prickly_pear.py"
+}

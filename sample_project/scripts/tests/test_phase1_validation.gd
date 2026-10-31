@@ -261,6 +261,12 @@ func _test_auto_gather_mining(game: GameController3D) -> void:
 
 	var gold1 = Vector2i(30, 30)
 	var gold2 = Vector2i(31, 30)
+	# Isolate from the random map: a real gold node equally close to gold1 made "nearest" ambiguous
+	# (seen ~1 in 5 runs). Remove nearby gold and any unreachable marks before injecting test nodes.
+	for c in game.map_gen.gold_mines.keys():
+		if c.distance_to(gold1) <= 3.0:
+			game.map_gen.gold_mines.erase(c)
+	game.map_gen.unreachable_resource_cells.clear()
 	game.map_gen.gold_mines[gold1] = {"gold": 0, "amount": 0, "max_amount": 800, "type": "gold", "name": "Gold 1"}
 	game.map_gen.gold_mines[gold2] = {"gold": 800, "amount": 800, "max_amount": 800, "type": "gold", "name": "Gold 2"}
 

@@ -1,0 +1,42 @@
+{
+  "tris": 674,
+  "verts": 758,
+  "materials": [
+    "PE_Banner_mongols",
+    "PE_Dirt",
+    "PE_Felt",
+    "PE_FeltBlue",
+    "PE_Gold",
+    "PE_LacquerRed",
+    "PE_Lattice",
+    "PE_Window",
+    "PE_WoodDark",
+    "PE_WoodLight",
+    "TEAM_Trim"
+  ],
+  "bounds_min": [
+    -1.763,
+    -1.729,
+    0.0
+  ],
+  "bounds_max": [
+    1.735,
+    1.767,
+    3.13
+  ],
+  "parts": [
+    "Sails"
+  ],
+  "asset_id": "mill",
+  "civ": "mongols",
+  "kind": "buildings",
+  "blend": "art_source/blender/mongols/mill.blend",
+  "glb": "res://assets/3d/buildings/mongols/mill.glb",
+  "glb_bytes": 55944,
+  "grid": [
+    2,
+    2
+  ],
+  "footprint_m": 3.6,
+  "reference": "res://art/buildings/mongols/mill.png"
+}

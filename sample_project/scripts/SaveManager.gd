@@ -138,6 +138,7 @@ static func load_game(game: GameController3D, file_path: String = AUTO_SAVE_FILE
 			b.hp = float(b_data.get("hp", b.max_hp))
 			b.is_completed = is_comp
 			b.construction_progress = float(b_data.get("construction_progress", 100.0))
+			b.refresh_construction_state()
 
 	# Restore Units
 	for u_data in data.get("units", []):

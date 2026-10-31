@@ -50,8 +50,8 @@ func _init() -> void:
 		var f_id = FactionArtManager.get_faction_id_from_civ(civ)
 		for u_type in standard_roles:
 			var tex = FactionArtManager.get_unit_texture(civ, u_type, "pose_01")
-			assert(tex != null, "Texture must not be null for %s - %s" % [f_id, u_type])
-			assert(tex.get_width() > 0 and tex.get_height() > 0, "Texture must have valid dimensions")
+			if not _expect(tex != null, "Texture must not be null for %s - %s" % [f_id, u_type]): return
+			if not _expect(tex.get_width() > 0 and tex.get_height() > 0, "Texture must have valid dimensions"): return
 			loaded_count += 1
 	print("-> Verified 40 standard role textures (10 civs x 4 roles).")
 
@@ -62,8 +62,8 @@ func _init() -> void:
 		var spec = special_roles[i]
 		var f_id = FactionArtManager.get_faction_id_from_civ(civ)
 		var tex = FactionArtManager.get_unit_texture(civ, spec, "pose_01")
-		assert(tex != null, "Special unit texture must not be null for %s" % f_id)
-		assert(tex.get_width() > 0, "Special unit texture must have valid width")
+		if not _expect(tex != null, "Special unit texture must not be null for %s" % f_id): return
+		if not _expect(tex.get_width() > 0, "Special unit texture must have valid width"): return
 		loaded_count += 1
 		print("  -> %s special unit loaded: %dx%d" % [f_id, tex.get_width(), tex.get_height()])
 	print("-> Verified 10 unique special unit textures.")
@@ -73,9 +73,9 @@ func _init() -> void:
 	for civ in all_civs:
 		var f_id = FactionArtManager.get_faction_id_from_civ(civ)
 		var cs = FactionArtManager.get_concept_sheet_texture(civ)
-		assert(cs != null, "Concept sheet must exist for %s" % f_id)
+		if not _expect(cs != null, "Concept sheet must exist for %s" % f_id): return
 		var fl = FactionArtManager.get_flag_reference_texture(civ)
-		assert(fl != null, "Flag reference must exist for %s" % f_id)
+		if not _expect(fl != null, "Flag reference must exist for %s" % f_id): return
 	print("-> All 10 Concept Sheets and 10 Flag References verified on disk!")
 
 	print("========================================")
@@ -83,3 +83,13 @@ func _init() -> void:
 	print("FACTION ART PACK ASSETS 100% VALIDATED!")
 	print("========================================")
 	quit(0)
+
+
+## Non-halting assertion: a failed GDScript assert() stops the function before quit(), which made
+## headless runs hang until the runner's timeout and hid every later test. Report and exit instead.
+func _expect(cond: bool, msg: String) -> bool:
+	if not cond:
+		printerr("[FAIL] " + msg)
+		print("RESULT: FAIL - " + msg)
+		quit(1)
+	return cond

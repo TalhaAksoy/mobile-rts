@@ -1,0 +1,29 @@
+{
+  "tris": 310,
+  "verts": 562,
+  "materials": [
+    "PE_Sandstone",
+    "PE_TileTeal",
+    "PE_Gold",
+    "PE_WoodDark",
+    "PE_Banner_saracens",
+    "TEAM_Trim"
+  ],
+  "bounds_min": [
+    -1.84,
+    -1.881,
+    0.0
+  ],
+  "bounds_max": [
+    1.84,
+    1.84,
+    1.96
+  ],
+  "asset_id": "upgrade_kit",
+  "civ": "saracens",
+  "kind": "upgrade_kits",
+  "blend": "art_source/blender/saracens/upgrade_kit.blend",
+  "glb": "res://assets/3d/upgrade_kits/saracens/upgrade_kit.glb",
+  "glb_bytes": 26364,
+  "build_script": "art_source/blender/environment/upgrade_kit.py"
+}

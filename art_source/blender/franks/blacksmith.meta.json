@@ -1,0 +1,38 @@
+{
+  "tris": 507,
+  "verts": 843,
+  "materials": [
+    "PE_Dirt",
+    "PE_StoneGrey",
+    "PE_StoneWarm",
+    "PE_Window",
+    "PE_WoodDark",
+    "TEAM_Trim",
+    "PE_RoofSlate",
+    "PE_Gold",
+    "PE_Iron",
+    "PE_WoodLight"
+  ],
+  "bounds_min": [
+    -1.798,
+    -1.776,
+    0.0
+  ],
+  "bounds_max": [
+    1.792,
+    1.789,
+    2.4
+  ],
+  "asset_id": "blacksmith",
+  "civ": "franks",
+  "kind": "buildings",
+  "blend": "art_source/blender/franks/blacksmith.blend",
+  "glb": "res://assets/3d/buildings/franks/blacksmith.glb",
+  "glb_bytes": 42268,
+  "grid": [
+    2,
+    2
+  ],
+  "footprint_m": 3.6,
+  "reference": "res://art/buildings/franks/blacksmith.png"
+}

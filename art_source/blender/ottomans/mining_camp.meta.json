@@ -1,0 +1,37 @@
+{
+  "tris": 709,
+  "verts": 1307,
+  "materials": [
+    "PE_Dirt",
+    "PE_WoodDark",
+    "TEAM_Trim",
+    "PE_RoofRed",
+    "PE_StoneGrey",
+    "PE_Gold",
+    "PE_Iron",
+    "PE_WoodLight",
+    "PE_Banner_ottomans"
+  ],
+  "bounds_min": [
+    -1.79,
+    -1.755,
+    0.0
+  ],
+  "bounds_max": [
+    1.783,
+    1.741,
+    1.58
+  ],
+  "asset_id": "mining_camp",
+  "civ": "ottomans",
+  "kind": "buildings",
+  "blend": "art_source/blender/ottomans/mining_camp.blend",
+  "glb": "res://assets/3d/buildings/ottomans/mining_camp.glb",
+  "glb_bytes": 58576,
+  "grid": [
+    2,
+    2
+  ],
+  "footprint_m": 3.6,
+  "reference": "res://art/buildings/ottomans/mining_camp.png"
+}

@@ -1,0 +1,39 @@
+{
+  "tris": 1179,
+  "verts": 2147,
+  "materials": [
+    "PE_Dirt",
+    "PE_Sandstone",
+    "PE_TileTeal",
+    "PE_Window",
+    "PE_WoodDark",
+    "PE_WoodLight",
+    "TEAM_Trim",
+    "PE_Banner_saracens",
+    "PE_Gold",
+    "PE_Beam",
+    "PE_Thatch"
+  ],
+  "bounds_min": [
+    -2.641,
+    -2.665,
+    0.0
+  ],
+  "bounds_max": [
+    2.89,
+    2.664,
+    2.36
+  ],
+  "asset_id": "stable",
+  "civ": "saracens",
+  "kind": "buildings",
+  "blend": "art_source/blender/saracens/stable.blend",
+  "glb": "res://assets/3d/buildings/saracens/stable.glb",
+  "glb_bytes": 90816,
+  "grid": [
+    3,
+    3
+  ],
+  "footprint_m": 5.4,
+  "reference": "res://art/buildings/saracens/stable.png"
+}

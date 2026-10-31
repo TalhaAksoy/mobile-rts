@@ -1,0 +1,38 @@
+{
+  "tris": 737,
+  "verts": 1207,
+  "materials": [
+    "PE_Dirt",
+    "PE_StoneGrey",
+    "PE_WoodDark",
+    "PE_WoodLight",
+    "PE_Window",
+    "TEAM_Trim",
+    "PE_Shingle",
+    "PE_LacquerRed",
+    "PE_Gold",
+    "PE_Iron"
+  ],
+  "bounds_min": [
+    -1.764,
+    -1.749,
+    0.0
+  ],
+  "bounds_max": [
+    1.796,
+    1.763,
+    2.591
+  ],
+  "asset_id": "blacksmith",
+  "civ": "vikings",
+  "kind": "buildings",
+  "blend": "art_source/blender/vikings/blacksmith.blend",
+  "glb": "res://assets/3d/buildings/vikings/blacksmith.glb",
+  "glb_bytes": 57692,
+  "grid": [
+    2,
+    2
+  ],
+  "footprint_m": 3.6,
+  "reference": "res://art/buildings/vikings/blacksmith.png"
+}

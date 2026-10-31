@@ -1,0 +1,17 @@
+mode,units_per_team,zoom,fps,worst_frame_ms,draw_calls,primitives,buildings,total_units
+sprites,0,default,126.9,15.8,448,47800,13,6
+sprites,0,far,114.7,25.5,575,44151,13,8
+sprites,20,default,114.3,13.4,739,58747,13,41
+sprites,20,far,105.1,12.5,791,52318,13,33
+sprites,50,default,95.0,13.7,1099,72212,13,85
+sprites,50,far,100.4,13.3,1027,62580,13,69
+sprites,80,default,80.5,23.0,1489,86440,13,150
+sprites,80,far,89.8,14.9,1372,75952,13,118
+models,0,default,111.6,15.3,562,96380,13,6
+models,0,far,113.4,15.7,707,123573,13,8
+models,20,default,107.9,13.8,850,116535,13,39
+models,20,far,106.5,19.8,927,142656,13,34
+models,50,default,85.8,22.3,1204,136886,13,87
+models,50,far,95.6,17.9,1212,169206,13,65
+models,80,default,81.0,15.9,1559,149750,13,132
+models,80,far,87.7,21.7,1440,181339,13,102

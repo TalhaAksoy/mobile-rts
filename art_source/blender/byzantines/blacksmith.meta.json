@@ -1,0 +1,39 @@
+{
+  "tris": 543,
+  "verts": 883,
+  "materials": [
+    "PE_Dirt",
+    "PE_StoneBrick",
+    "PE_StoneWarm",
+    "PE_Window",
+    "PE_WoodDark",
+    "TEAM_Trim",
+    "PE_RoofRed",
+    "PE_Gold",
+    "PE_Iron",
+    "PE_WoodLight",
+    "PE_StoneGrey"
+  ],
+  "bounds_min": [
+    -1.742,
+    -1.762,
+    0.0
+  ],
+  "bounds_max": [
+    1.741,
+    1.755,
+    2.4
+  ],
+  "asset_id": "blacksmith",
+  "civ": "byzantines",
+  "kind": "buildings",
+  "blend": "art_source/blender/byzantines/blacksmith.blend",
+  "glb": "res://assets/3d/buildings/byzantines/blacksmith.glb",
+  "glb_bytes": 44996,
+  "grid": [
+    2,
+    2
+  ],
+  "footprint_m": 3.6,
+  "reference": "res://art/buildings/byzantines/blacksmith.png"
+}

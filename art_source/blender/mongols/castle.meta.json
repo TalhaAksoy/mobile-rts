@@ -1,0 +1,37 @@
+{
+  "tris": 2594,
+  "verts": 3858,
+  "materials": [
+    "PE_Dirt",
+    "PE_WoodDark",
+    "PE_WoodLight",
+    "PE_Felt",
+    "TEAM_Trim",
+    "PE_FeltBlue",
+    "PE_LacquerRed",
+    "PE_Banner_mongols",
+    "PE_Gold"
+  ],
+  "bounds_min": [
+    -3.502,
+    -3.528,
+    0.0
+  ],
+  "bounds_max": [
+    3.437,
+    3.513,
+    3.553
+  ],
+  "asset_id": "castle",
+  "civ": "mongols",
+  "kind": "buildings",
+  "blend": "art_source/blender/mongols/castle.blend",
+  "glb": "res://assets/3d/buildings/mongols/castle.glb",
+  "glb_bytes": 202508,
+  "grid": [
+    4,
+    4
+  ],
+  "footprint_m": 7.2,
+  "reference": "res://art/buildings/mongols/castle.png"
+}

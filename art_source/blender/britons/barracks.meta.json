@@ -1,0 +1,40 @@
+{
+  "tris": 981,
+  "verts": 1699,
+  "materials": [
+    "PE_Dirt",
+    "PE_StoneGrey",
+    "PE_PlasterWhite",
+    "PE_Beam",
+    "PE_Window",
+    "PE_WoodDark",
+    "TEAM_Trim",
+    "PE_Thatch",
+    "PE_Banner_britons",
+    "PE_Gold",
+    "PE_RoofSlate",
+    "PE_Iron"
+  ],
+  "bounds_min": [
+    -2.627,
+    -2.646,
+    0.0
+  ],
+  "bounds_max": [
+    2.577,
+    2.634,
+    3.73
+  ],
+  "asset_id": "barracks",
+  "civ": "britons",
+  "kind": "buildings",
+  "blend": "art_source/blender/britons/barracks.blend",
+  "glb": "res://assets/3d/buildings/britons/barracks.glb",
+  "glb_bytes": 74364,
+  "grid": [
+    3,
+    3
+  ],
+  "footprint_m": 5.4,
+  "reference": "res://art/buildings/britons/barracks.png"
+}

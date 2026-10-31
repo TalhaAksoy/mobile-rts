@@ -1,0 +1,26 @@
+{
+  "tris": 325,
+  "verts": 575,
+  "materials": [
+    "PE_NatureAtlas_Steppe"
+  ],
+  "bounds_min": [
+    -0.878,
+    -0.893,
+    -0.05
+  ],
+  "bounds_max": [
+    0.93,
+    1.01,
+    1.432
+  ],
+  "asset_id": "gold_mine",
+  "civ": "steppe",
+  "kind": "environment",
+  "blend": "art_source/blender/steppe/gold_mine.blend",
+  "glb": "res://assets/3d/environment/steppe/gold_mine.glb",
+  "glb_bytes": 26404,
+  "resource": "gold",
+  "biome": "steppe",
+  "build_script": "art_source/blender/environment/common_gold_mine.py"
+}

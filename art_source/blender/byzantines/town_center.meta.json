@@ -1,0 +1,38 @@
+{
+  "tris": 1430,
+  "verts": 2504,
+  "materials": [
+    "PE_Dirt",
+    "PE_StoneWarm",
+    "PE_StoneBrick",
+    "PE_RoofRed",
+    "PE_WoodDark",
+    "PE_Window",
+    "TEAM_Trim",
+    "PE_Gold",
+    "PE_Banner_byzantines",
+    "PE_Foliage"
+  ],
+  "bounds_min": [
+    -2.631,
+    -2.621,
+    0.0
+  ],
+  "bounds_max": [
+    2.645,
+    2.62,
+    4.02
+  ],
+  "asset_id": "town_center",
+  "civ": "byzantines",
+  "kind": "buildings",
+  "blend": "art_source/blender/byzantines/town_center.blend",
+  "glb": "res://assets/3d/buildings/byzantines/town_center.glb",
+  "glb_bytes": 102248,
+  "grid": [
+    3,
+    3
+  ],
+  "footprint_m": 5.4,
+  "reference": "res://art/buildings/byzantines/town_center.png"
+}

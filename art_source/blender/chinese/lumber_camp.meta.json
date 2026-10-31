@@ -1,0 +1,38 @@
+{
+  "tris": 549,
+  "verts": 739,
+  "materials": [
+    "PE_Dirt",
+    "PE_LacquerRed",
+    "PE_WoodDark",
+    "TEAM_Trim",
+    "PE_RoofTeal",
+    "PE_Gold",
+    "PE_Beam",
+    "PE_WoodLight",
+    "PE_Iron",
+    "PE_Banner_chinese"
+  ],
+  "bounds_min": [
+    -1.764,
+    -1.749,
+    0.0
+  ],
+  "bounds_max": [
+    1.796,
+    1.763,
+    1.883
+  ],
+  "asset_id": "lumber_camp",
+  "civ": "chinese",
+  "kind": "buildings",
+  "blend": "art_source/blender/chinese/lumber_camp.blend",
+  "glb": "res://assets/3d/buildings/chinese/lumber_camp.glb",
+  "glb_bytes": 46232,
+  "grid": [
+    2,
+    2
+  ],
+  "footprint_m": 3.6,
+  "reference": "res://art/buildings/chinese/lumber_camp.png"
+}

@@ -1,0 +1,38 @@
+{
+  "tris": 571,
+  "verts": 963,
+  "materials": [
+    "PE_Dirt",
+    "PE_StoneGrey",
+    "PE_PlasterWhite",
+    "PE_Beam",
+    "PE_WoodDark",
+    "PE_Window",
+    "TEAM_Trim",
+    "PE_Thatch",
+    "PE_WoodLight",
+    "PE_Iron"
+  ],
+  "bounds_min": [
+    -1.742,
+    -1.762,
+    0.0
+  ],
+  "bounds_max": [
+    1.741,
+    1.755,
+    3.12
+  ],
+  "asset_id": "house",
+  "civ": "britons",
+  "kind": "buildings",
+  "blend": "art_source/blender/britons/house.blend",
+  "glb": "res://assets/3d/buildings/britons/house.glb",
+  "glb_bytes": 47364,
+  "grid": [
+    2,
+    2
+  ],
+  "footprint_m": 3.6,
+  "reference": "res://art/buildings/britons/house.png"
+}

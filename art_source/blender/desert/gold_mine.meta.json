@@ -1,0 +1,26 @@
+{
+  "tris": 438,
+  "verts": 572,
+  "materials": [
+    "PE_NatureAtlas_Desert"
+  ],
+  "bounds_min": [
+    -0.982,
+    -0.765,
+    -0.05
+  ],
+  "bounds_max": [
+    0.881,
+    0.945,
+    1.432
+  ],
+  "asset_id": "gold_mine",
+  "civ": "desert",
+  "kind": "environment",
+  "blend": "art_source/blender/desert/gold_mine.blend",
+  "glb": "res://assets/3d/environment/desert/gold_mine.glb",
+  "glb_bytes": 32428,
+  "resource": "gold",
+  "biome": "desert",
+  "build_script": "art_source/blender/environment/desert_gold_mine.py"
+}

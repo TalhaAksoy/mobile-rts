@@ -1,0 +1,26 @@
+{
+  "tris": 100,
+  "verts": 118,
+  "materials": [
+    "PE_NatureAtlas_Desert"
+  ],
+  "bounds_min": [
+    -0.957,
+    -0.778,
+    0.0
+  ],
+  "bounds_max": [
+    0.94,
+    0.809,
+    1.05
+  ],
+  "asset_id": "stone_mine",
+  "civ": "desert",
+  "kind": "environment",
+  "blend": "art_source/blender/desert/stone_mine.blend",
+  "glb": "res://assets/3d/environment/desert/stone_mine.glb",
+  "glb_bytes": 8232,
+  "resource": "stone",
+  "biome": "desert",
+  "build_script": "art_source/blender/environment/desert_stone_mine.py"
+}

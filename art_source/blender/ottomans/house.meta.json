@@ -1,0 +1,38 @@
+{
+  "tris": 723,
+  "verts": 1283,
+  "materials": [
+    "PE_Dirt",
+    "PE_StoneWarm",
+    "PE_Window",
+    "PE_WoodDark",
+    "PE_PlasterCream",
+    "PE_RoofRed",
+    "TEAM_Trim",
+    "PE_DomeLead",
+    "PE_ClothRed",
+    "PE_WoodLight"
+  ],
+  "bounds_min": [
+    -1.698,
+    -1.742,
+    0.0
+  ],
+  "bounds_max": [
+    1.736,
+    1.778,
+    3.56
+  ],
+  "asset_id": "house",
+  "civ": "ottomans",
+  "kind": "buildings",
+  "blend": "art_source/blender/ottomans/house.blend",
+  "glb": "res://assets/3d/buildings/ottomans/house.glb",
+  "glb_bytes": 56472,
+  "grid": [
+    2,
+    2
+  ],
+  "footprint_m": 3.6,
+  "reference": "res://art/buildings/ottomans/house.png"
+}

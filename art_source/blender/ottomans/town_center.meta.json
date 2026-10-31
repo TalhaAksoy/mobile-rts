@@ -1,0 +1,41 @@
+{
+  "tris": 3869,
+  "verts": 6423,
+  "materials": [
+    "PE_Dirt",
+    "PE_StoneGrey",
+    "PE_StoneWarm",
+    "PE_PlasterCream",
+    "PE_Window",
+    "TEAM_Trim",
+    "PE_Banner_ottomans",
+    "PE_Gold",
+    "PE_DomeLead",
+    "PE_RoofRed",
+    "PE_WoodDark",
+    "PE_PlasterWhite",
+    "PE_Foliage"
+  ],
+  "bounds_min": [
+    -2.63,
+    -2.643,
+    0.0
+  ],
+  "bounds_max": [
+    2.67,
+    2.633,
+    5.26
+  ],
+  "asset_id": "town_center",
+  "civ": "ottomans",
+  "kind": "buildings",
+  "blend": "art_source/blender/ottomans/town_center.blend",
+  "glb": "res://assets/3d/buildings/ottomans/town_center.glb",
+  "glb_bytes": 247968,
+  "grid": [
+    3,
+    3
+  ],
+  "footprint_m": 5.4,
+  "reference": "res://art/buildings/ottomans/town_center.png"
+}

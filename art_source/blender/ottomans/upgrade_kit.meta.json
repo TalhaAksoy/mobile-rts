@@ -1,0 +1,29 @@
+{
+  "tris": 246,
+  "verts": 434,
+  "materials": [
+    "PE_StoneWarm",
+    "PE_DomeLead",
+    "PE_Gold",
+    "PE_WoodDark",
+    "PE_Banner_ottomans",
+    "TEAM_Trim"
+  ],
+  "bounds_min": [
+    -1.88,
+    -1.881,
+    0.0
+  ],
+  "bounds_max": [
+    1.88,
+    1.88,
+    1.96
+  ],
+  "asset_id": "upgrade_kit",
+  "civ": "ottomans",
+  "kind": "upgrade_kits",
+  "blend": "art_source/blender/ottomans/upgrade_kit.blend",
+  "glb": "res://assets/3d/upgrade_kits/ottomans/upgrade_kit.glb",
+  "glb_bytes": 21896,
+  "build_script": "art_source/blender/environment/upgrade_kit.py"
+}

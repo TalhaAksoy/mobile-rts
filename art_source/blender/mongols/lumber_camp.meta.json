@@ -1,0 +1,38 @@
+{
+  "tris": 525,
+  "verts": 681,
+  "materials": [
+    "PE_Dirt",
+    "PE_WoodDark",
+    "PE_Felt",
+    "TEAM_Trim",
+    "PE_FeltBlue",
+    "PE_Beam",
+    "PE_WoodLight",
+    "PE_Iron",
+    "PE_Banner_mongols",
+    "PE_Gold"
+  ],
+  "bounds_min": [
+    -1.737,
+    -1.748,
+    0.0
+  ],
+  "bounds_max": [
+    1.721,
+    1.693,
+    1.58
+  ],
+  "asset_id": "lumber_camp",
+  "civ": "mongols",
+  "kind": "buildings",
+  "blend": "art_source/blender/mongols/lumber_camp.blend",
+  "glb": "res://assets/3d/buildings/mongols/lumber_camp.glb",
+  "glb_bytes": 44064,
+  "grid": [
+    2,
+    2
+  ],
+  "footprint_m": 3.6,
+  "reference": "res://art/buildings/mongols/lumber_camp.png"
+}

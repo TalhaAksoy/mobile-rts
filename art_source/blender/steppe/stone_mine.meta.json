@@ -1,0 +1,26 @@
+{
+  "tris": 205,
+  "verts": 375,
+  "materials": [
+    "PE_NatureAtlas_Steppe"
+  ],
+  "bounds_min": [
+    -0.905,
+    -0.79,
+    0.0
+  ],
+  "bounds_max": [
+    0.97,
+    0.97,
+    0.9
+  ],
+  "asset_id": "stone_mine",
+  "civ": "steppe",
+  "kind": "environment",
+  "blend": "art_source/blender/steppe/stone_mine.blend",
+  "glb": "res://assets/3d/environment/steppe/stone_mine.glb",
+  "glb_bytes": 16708,
+  "resource": "stone",
+  "biome": "steppe",
+  "build_script": "art_source/blender/environment/common_stone_mine.py"
+}

@@ -1,0 +1,40 @@
+{
+  "tris": 946,
+  "verts": 1608,
+  "materials": [
+    "PE_Dirt",
+    "PE_StoneGrey",
+    "PE_PlasterWhite",
+    "PE_WoodDark",
+    "PE_Lattice",
+    "TEAM_Trim",
+    "PE_RoofDark",
+    "PE_Banner_japanese",
+    "PE_Gold",
+    "PE_WoodLight",
+    "PE_Iron",
+    "PE_Thatch"
+  ],
+  "bounds_min": [
+    -2.645,
+    -2.689,
+    0.0
+  ],
+  "bounds_max": [
+    2.694,
+    2.698,
+    2.874
+  ],
+  "asset_id": "barracks",
+  "civ": "japanese",
+  "kind": "buildings",
+  "blend": "art_source/blender/japanese/barracks.blend",
+  "glb": "res://assets/3d/buildings/japanese/barracks.glb",
+  "glb_bytes": 75092,
+  "grid": [
+    3,
+    3
+  ],
+  "footprint_m": 5.4,
+  "reference": "res://art/buildings/japanese/barracks.png"
+}

@@ -69,6 +69,7 @@ func _ready() -> void:
 	ui_manager.build_selected.connect(_on_build_selected)
 	ui_manager.train_unit_requested.connect(_on_train_unit_requested)
 	ui_manager.research_requested.connect(_on_research_requested)
+	ui_manager.field_requested.connect(_on_field_requested)
 	ui_manager.select_all_military_requested.connect(_on_select_all_military)
 	ui_manager.jump_to_base_requested.connect(_on_jump_to_base)
 	ui_manager.find_idle_villager_requested.connect(_on_find_idle_villager)
@@ -92,6 +93,8 @@ func _ready() -> void:
 	ghost_preview.visible = false
 	add_child(ghost_preview)
 
+	_add_hd2d_vignette()
+
 	var minimap = ui_manager.get_node_or_null("HUDRoot/Minimap") as Minimap3D
 	if minimap != null:
 		minimap.map_gen = map_gen
@@ -102,6 +105,21 @@ func _ready() -> void:
 		get_tree().create_timer(0.2).timeout.connect(func():
 			_on_start_game_requested(player_civ, enemy_civ, selected_map_type)
 		)
+
+## HD-2D framing vignette on a CanvasLayer below the HUD (layer -1). MOUSE_FILTER_IGNORE so the
+## fullscreen rect never swallows taps/clicks meant for the 3D world.
+func _add_hd2d_vignette() -> void:
+	var layer := CanvasLayer.new()
+	layer.name = "HD2DVignette"
+	layer.layer = -1
+	var rect := ColorRect.new()
+	rect.set_anchors_preset(Control.PRESET_FULL_RECT)
+	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var sm := ShaderMaterial.new()
+	sm.shader = load("res://shaders/hd2d_vignette.gdshader")
+	rect.material = sm
+	layer.add_child(rect)
+	add_child(layer)
 
 func _on_start_game_requested(p_civ: CivData.CivType, e_civ: CivData.CivType, m_type: CivData.MapType) -> void:
 	player_civ = p_civ
@@ -126,10 +144,7 @@ func start_match() -> void:
 		1: {"food": 200, "wood": 200, "gold": 100, "stone": 100}
 	}
 	team_age = {0: 1, 1: 1}
-	team_techs = {
-		0: {"iron_weapons": false, "scale_armor": false, "bodkin_arrows": false, "wheelbarrow": false},
-		1: {"iron_weapons": false, "scale_armor": false, "bodkin_arrows": false, "wheelbarrow": false}
-	}
+	team_techs = {0: {}, 1: {}}   # tech id -> true once researched (see TechData)
 	kills_count = 0
 	trained_count = 0
 	gathered_count = 0
@@ -286,8 +301,35 @@ func _handle_3d_click(screen_pos: Vector2, ground_pos: Vector3) -> void:
 			SoundManager.play_sound("attack")
 			return
 
-		# 2. Resource Gathering / Interaction (Wood, Gold, Stone, Food)
-		var res_info = _find_resource_at_click(screen_pos, ground_pos)
+		# 2. Friendly unit tap. Runs BEFORE resource interaction because _get_entity_at_position()
+		# gives units absolute priority: tapping a villager that happens to stand near a tree/mine
+		# must select it, not turn into a gather order (map-dependent bug seen on Linux test runs).
+		if clicked_entity is Unit3D and clicked_entity.team == 0:
+			if clicked_entity in selected_units and selected_units.size() == 1:
+				var s_pos = camera.unproject_position(clicked_entity.global_position + Vector3(0, 1.0, 0))
+				if screen_pos.distance_to(s_pos) <= 24.0 and ground_pos.distance_to(clicked_entity.global_position) <= 0.8:
+					# Precise tap on the single selected unit -> toggle deselect
+					_clear_selection()
+					ui_manager.set_selected_entity(null)
+					SoundManager.play_sound("click")
+					return
+				# Imprecise tap next to the single selected unit: fall through, so a nearby
+				# resource is gathered or the ground receives a move order (branch 5).
+			else:
+				# Switch selection to this unit (also isolates one unit out of a group)
+				_clear_selection()
+				selected_units.append(clicked_entity)
+				clicked_entity.set_selected(true)
+				ui_manager.set_selected_entity(clicked_entity)
+				SoundManager.play_sound("click")
+				return
+
+		# 3. Resource Gathering / Interaction (Wood, Gold, Stone, Food)
+		# When the tap already resolved to one of our own buildings (e.g. a cargo villager tapping the
+		# Town Center), only a PRECISE resource hit (exact cell / collider ray) may override it; the fuzzy
+		# 48 px screen search would otherwise grab a base-cluster bush/mine next to the TC.
+		var ally_building_tapped = clicked_entity is Building3D and clicked_entity.team == 0
+		var res_info = _find_resource_at_click(screen_pos, ground_pos, ally_building_tapped)
 		if res_info.has("type") and res_info.has("cell") and res_info.get("amount", 0) > 0:
 			var r_cell = res_info["cell"] as Vector2i
 			var r_type = res_info["type"] as String
@@ -308,7 +350,7 @@ func _handle_3d_click(screen_pos: Vector2, ground_pos: Vector3) -> void:
 				SoundManager.play_sound("click")
 				return
 
-		# 3. Ally Building Interactions (Construct, Return Resources, or Inspect)
+		# 4. Ally Building Interactions (Construct, Return Resources, or Inspect)
 		if clicked_entity is Building3D and clicked_entity.team == 0:
 			# 3a. Construct uncompleted building
 			if not clicked_entity.is_completed:
@@ -320,6 +362,31 @@ func _handle_3d_click(screen_pos: Vector2, ground_pos: Vector3) -> void:
 				if has_vill:
 					_spawn_click_marker(clicked_entity.global_position, "build")
 					SoundManager.play_sound("build")
+					return
+
+			# 3a2. Farm fields: villagers farm the tapped field (1 per field, the rest spread to free
+			# fields); anyone else just walks there (fields are walkable ground).
+			if clicked_entity.building_type == Building3D.BuildingType.FARM and clicked_entity.is_completed:
+				var vills: Array = selected_units.filter(func(u): return u.unit_type == Unit3D.UnitType.VILLAGER)
+				var others: Array = selected_units.filter(func(u): return u.unit_type != Unit3D.UnitType.VILLAGER)
+				if not vills.is_empty():
+					var first = vills[0]
+					if map_gen.claim_field(clicked_entity.origin_cell, first):
+						first.command_gather(clicked_entity.origin_cell, "food")
+						vills.remove_at(0)
+					send_villagers_to_fields(vills, 0, clicked_entity.global_position)
+					_spawn_click_marker(clicked_entity.global_position, "gather")
+				for u in others:
+					u.command_move(ground_pos)
+				SoundManager.play_sound("click")
+				return
+
+			# 3a3. Empty-handed villagers tapping a finished Mill go to its free fields
+			if clicked_entity.building_type == Building3D.BuildingType.MILL and clicked_entity.is_completed:
+				var idle_hands: Array = selected_units.filter(func(u): return u.unit_type == Unit3D.UnitType.VILLAGER and u.carried_resource == 0)
+				if not idle_hands.is_empty() and send_villagers_to_fields(idle_hands, 0, clicked_entity.global_position) > 0:
+					_spawn_click_marker(clicked_entity.global_position, "gather")
+					SoundManager.play_sound("click")
 					return
 
 			# 3b. Drop off resources if villager is carrying cargo
@@ -348,32 +415,6 @@ func _handle_3d_click(screen_pos: Vector2, ground_pos: Vector3) -> void:
 				_spawn_click_marker(ground_pos, "move")
 				for u in selected_units:
 					u.command_move(ground_pos)
-				SoundManager.play_sound("click")
-				return
-
-		# 4. Friendly Unit Click (Switch selection, toggle deselect, or move nearby)
-		if clicked_entity is Unit3D and clicked_entity.team == 0:
-			if clicked_entity in selected_units and selected_units.size() == 1:
-				# Tapping the single selected unit directly:
-				var s_pos = camera.unproject_position(clicked_entity.global_position + Vector3(0, 1.0, 0))
-				if screen_pos.distance_to(s_pos) <= 24.0 and ground_pos.distance_to(clicked_entity.global_position) <= 0.8:
-					# Precise tap on unit center -> toggle deselect
-					_clear_selection()
-					ui_manager.set_selected_entity(null)
-					SoundManager.play_sound("click")
-					return
-				else:
-					# Tapping ground near selected unit -> move to ground
-					_spawn_click_marker(ground_pos, "move")
-					clicked_entity.command_move(ground_pos)
-					SoundManager.play_sound("click")
-					return
-			else:
-				# Switch selection immediately to other friendly unit
-				_clear_selection()
-				selected_units.append(clicked_entity)
-				clicked_entity.set_selected(true)
-				ui_manager.set_selected_entity(clicked_entity)
 				SoundManager.play_sound("click")
 				return
 
@@ -479,7 +520,7 @@ func _find_unit_near_screen(screen_pos: Vector2, max_screen_dist: float = 36.0) 
 			best_unit = u
 	return best_unit
 
-func _find_resource_at_click(screen_pos: Vector2, ground_pos: Vector3) -> Dictionary:
+func _find_resource_at_click(screen_pos: Vector2, ground_pos: Vector3, precise_only: bool = false) -> Dictionary:
 	# 1. Exact ground cell match (Highest precision when user taps on a cell)
 	var cell = map_gen.world_to_cell(ground_pos)
 	for r_type in ["gold", "stone", "food", "wood"]:
@@ -505,6 +546,9 @@ func _find_resource_at_click(screen_pos: Vector2, ground_pos: Vector3) -> Dictio
 					var r_cur = map_gen.get_resource_at_cell(r_cell, r_type)
 					if r_cur.get("amount", 0) > 0:
 						return r_cur
+
+	if precise_only:
+		return {}
 
 	# 3. Balanced screen-space closest resource search (accounts for terrain height)
 	var best_res: Dictionary = {}
@@ -650,18 +694,7 @@ func spawn_unit(u_type: Unit3D.UnitType, team: int, pos: Vector3) -> Unit3D:
 	if team == 0:
 		trained_count += 1
 
-	# Apply active researched techs
-	if team_techs.has(team):
-		var techs = team_techs[team]
-		if techs.get("iron_weapons", false) and unit.is_infantry():
-			unit.attack_dmg += 3.0
-		if techs.get("scale_armor", false):
-			unit.armor += 2.0
-		if techs.get("bodkin_arrows", false) and unit.is_ranged():
-			unit.attack_dmg += 3.0
-		if techs.get("wheelbarrow", false) and unit.unit_type == Unit3D.UnitType.VILLAGER:
-			unit.max_carry = 20
-			unit.move_speed *= 1.15
+	apply_unit_techs(unit)
 	return unit
 
 func place_building(b_type: Building3D.BuildingType, team: int, cell: Vector2i, under_construction: bool = false) -> Building3D:
@@ -673,13 +706,161 @@ func place_building(b_type: Building3D.BuildingType, team: int, cell: Vector2i, 
 	add_child(b)
 	b.global_position = world_center
 	b.setup_building(b_type, team, civ, cell, map_gen, self, under_construction)
+	apply_building_techs(b)
 	b.destroyed.connect(_on_building_destroyed)
 	b.unit_trained.connect(_on_building_unit_trained)
 	b.research_completed.connect(_on_building_research_completed)
 
-	map_gen.register_building_cells(cell, b_size, b)
+	if b_type == Building3D.BuildingType.FARM:
+		map_gen.register_field_cells(cell, b_size)   # walkable plot: nobody needs ejecting
+		if not under_construction:
+			b.refresh_construction_state()
+	else:
+		map_gen.register_building_cells(cell, b_size, b)
+		_eject_units_from_footprint(cell, b_size)
 	buildings.append(b)
 	return b
+
+# ---- Farm fields (placed from a Mill; the Mill is the farm centre and food drop-off) ----------
+const MAX_FIELDS_PER_MILL: int = 6
+## 2x2 slots around a 2x2 mill: sides first, then corners
+const FIELD_SLOTS: Array = [Vector2i(-2, 0), Vector2i(2, 0), Vector2i(0, 2), Vector2i(0, -2),
+	Vector2i(-2, 2), Vector2i(2, 2), Vector2i(-2, -2), Vector2i(2, -2)]
+
+## Fields belonging to this mill: same team, within FIELD_REACH cells of it (works for restored
+## saves too, no stored link needed).
+const FIELD_REACH: int = 5
+func get_mill_fields(mill: Building3D) -> Array:
+	var out: Array = []
+	for b in buildings:
+		if is_instance_valid(b) and b.building_type == Building3D.BuildingType.FARM and b.team == mill.team:
+			var d: Vector2i = (b.origin_cell - mill.origin_cell).abs()
+			if max(d.x, d.y) <= FIELD_REACH:
+				out.append(b)
+	return out
+
+func _field_fits(origin: Vector2i) -> bool:
+	for dx in 2:
+		for dy in 2:
+			var c := origin + Vector2i(dx, dy)
+			if not map_gen.is_valid_cell(c.x, c.y) or not map_gen.is_cell_buildable(c) \
+					or not map_gen.get_resource_at_cell(c).is_empty():
+				return false
+	return true
+
+## Free spot for a field: the 8 tidy slots around the mill first; when trees/buildings block them
+## (dense forest maps), the nearest free 2x2 plot within 4 cells of the mill.
+func find_field_slot(mill: Building3D) -> Vector2i:
+	for off in FIELD_SLOTS:
+		if _field_fits(mill.origin_cell + off):
+			return mill.origin_cell + off
+	var best := Vector2i(-1, -1)
+	var best_d := INF
+	for dx in range(-4, 5):
+		for dy in range(-4, 5):
+			var origin: Vector2i = mill.origin_cell + Vector2i(dx, dy)
+			if dx > -2 and dx < 2 and dy > -2 and dy < 2:
+				continue                          # would overlap the mill itself
+			if _field_fits(origin):
+				var d := Vector2(dx, dy).length()
+				if d < best_d:
+					best_d = d
+					best = origin
+	return best
+
+## Why a field can't be added right now ("" = it can).
+func field_block_reason(mill: Building3D, team: int) -> String:
+	if not is_instance_valid(mill) or mill.building_type != Building3D.BuildingType.MILL or not mill.is_completed:
+		return "Değirmen hazır değil"
+	if get_mill_fields(mill).size() >= MAX_FIELDS_PER_MILL:
+		return "Tarla sınırı dolu"
+	if find_field_slot(mill) == Vector2i(-1, -1):
+		return "Çevrede boş yer yok"
+	if team_resources[team]["wood"] < _get_building_cost(Building3D.BuildingType.FARM, team)["wood"]:
+		return "Yetersiz odun"
+	return ""
+
+## Adds a field next to the mill (pays wood, places it under construction) and sends the nearest
+## idle villager - or, for the player, the selected villagers - to prepare it; the builder then farms it.
+func try_add_field(mill: Building3D, team: int, builders: Array = []) -> Building3D:
+	if field_block_reason(mill, team) != "":
+		return null
+	var origin := find_field_slot(mill)
+	var cost := _get_building_cost(Building3D.BuildingType.FARM, team)
+	team_resources[team]["wood"] -= cost["wood"]
+	var field := place_building(Building3D.BuildingType.FARM, team, origin, true)
+	var crew: Array = builders.filter(func(u): return is_instance_valid(u) and u.unit_type == Unit3D.UnitType.VILLAGER)
+	if crew.is_empty():
+		var best: Unit3D = null
+		var best_d := INF
+		for u in units:
+			if is_instance_valid(u) and u.team == team and u.hp > 0 and u.unit_type == Unit3D.UnitType.VILLAGER and u.state == Unit3D.State.IDLE:
+				var d := u.global_position.distance_squared_to(field.global_position)
+				if d < best_d:
+					best_d = d
+					best = u
+		if best != null:
+			crew = [best]
+	for u in crew:
+		u.command_build(field)
+	return field
+
+func _on_field_requested() -> void:
+	if selected_building == null or selected_building.team != 0:
+		return
+	var reason := field_block_reason(selected_building, 0)
+	if reason != "":
+		ui_manager.notify_banner(reason.to_upper(), Color(1.0, 0.45, 0.35))
+		SoundManager.play_sound("hit")
+		return
+	try_add_field(selected_building, 0)
+	SoundManager.play_sound("build")
+	ui_manager.set_selected_entity(selected_building)
+
+## Sends villagers to free fields of `team` near `near_pos`; returns how many were assigned.
+func send_villagers_to_fields(vills: Array, team: int, near_pos: Vector3) -> int:
+	var n := 0
+	for u in vills:
+		if not is_instance_valid(u) or u.unit_type != Unit3D.UnitType.VILLAGER:
+			continue
+		var origin: Vector2i = map_gen.find_free_field(near_pos, team, u, 30.0)
+		if origin == Vector2i(-1, -1):
+			break
+		map_gen.claim_field(origin, u)
+		u.command_gather(origin, "food")
+		n += 1
+	return n
+
+## Team-wide gather-rate multiplier from researched technologies ("field" = farm fields).
+func get_gather_mult(team: int, kind: String) -> float:
+	return _team_effect_product(team, "gather", "kind", kind)
+
+## Units standing on cells a new building just occupied were trapped inside its blocked footprint
+## (A* then returned empty paths for them: stuck builders/gatherers seen in bot simulations).
+## Move each one to the nearest walkable cell just outside the footprint.
+func _eject_units_from_footprint(origin: Vector2i, size: Vector2i) -> void:
+	for u in units:
+		if not is_instance_valid(u) or u.hp <= 0:
+			continue
+		var uc: Vector2i = map_gen.world_to_cell(u.global_position)
+		if uc.x < origin.x or uc.x >= origin.x + size.x or uc.y < origin.y or uc.y >= origin.y + size.y:
+			continue
+		var best := Vector2i(-1, -1)
+		var best_d := INF
+		for x in range(origin.x - 1, origin.x + size.x + 1):
+			for y in range(origin.y - 1, origin.y + size.y + 1):
+				var c := Vector2i(x, y)
+				if x >= origin.x and x < origin.x + size.x and y >= origin.y and y < origin.y + size.y:
+					continue
+				if map_gen.is_valid_cell(x, y) and map_gen.is_cell_walkable(c):
+					var d: float = Vector2(c).distance_squared_to(Vector2(uc))
+					if d < best_d:
+						best_d = d
+						best = c
+		if best != Vector2i(-1, -1):
+			var p := map_gen.cell_to_world(best)
+			u.global_position = Vector3(p.x, u.global_position.y, p.z)
+			u.current_path.clear()
 
 func _get_building_size(b_type: Building3D.BuildingType) -> Vector2i:
 	match b_type:
@@ -697,8 +878,8 @@ func _get_building_size(b_type: Building3D.BuildingType) -> Vector2i:
 		Building3D.BuildingType.MILL: return Vector2i(2, 2)
 		_: return Vector2i(2, 2)
 
-func _get_building_cost(b_type: Building3D.BuildingType) -> Dictionary:
-	var civ_cfg = CivData.get_civ(player_civ)
+func _get_building_cost(b_type: Building3D.BuildingType, team: int = 0) -> Dictionary:
+	var civ_cfg = CivData.get_civ(player_civ if team == 0 else enemy_civ)
 	var cost_mult = civ_cfg.get("building_cost_mult", 1.0)
 
 	var cost = {"wood": 0, "gold": 0, "stone": 0}
@@ -710,7 +891,7 @@ func _get_building_cost(b_type: Building3D.BuildingType) -> Dictionary:
 		Building3D.BuildingType.STABLE: cost = {"wood": 175, "gold": 0, "stone": 0}
 		Building3D.BuildingType.CASTLE: cost = {"wood": 200, "gold": 150, "stone": 350}
 		Building3D.BuildingType.TOWER: cost = {"wood": 75, "gold": 0, "stone": 125}
-		Building3D.BuildingType.FARM: cost = {"wood": 60, "gold": 0, "stone": 0}
+		Building3D.BuildingType.FARM: cost = {"wood": 50, "gold": 0, "stone": 0}   # one field (added from a Mill)
 		Building3D.BuildingType.BLACKSMITH: cost = {"wood": 150, "gold": 0, "stone": 25}
 		Building3D.BuildingType.LUMBER_CAMP: cost = {"wood": 100, "gold": 0, "stone": 0}
 		Building3D.BuildingType.MINING_CAMP: cost = {"wood": 100, "gold": 0, "stone": 0}
@@ -744,7 +925,7 @@ func _attempt_place_building(ground_pos: Vector3) -> void:
 	var clear = true
 	for x in range(cell.x, cell.x + size.x):
 		for y in range(cell.y, cell.y + size.y):
-			if not map_gen.is_valid_cell(x, y) or not map_gen.is_cell_walkable(Vector2i(x, y)):
+			if not map_gen.is_valid_cell(x, y) or not map_gen.is_cell_buildable(Vector2i(x, y)):
 				clear = false
 				break
 
@@ -774,6 +955,8 @@ func _on_train_unit_requested(u_type: Unit3D.UnitType) -> void:
 	try_train_unit(selected_building, u_type, 0)
 
 func try_train_unit(b: Building3D, u_type: Unit3D.UnitType, team: int) -> bool:
+	if not is_instance_valid(b) or not b.is_completed:
+		return false
 	var res = team_resources[team]
 	var pop = get_team_population(team)
 	var max_pop = get_team_max_population(team)
@@ -825,7 +1008,7 @@ func try_train_unit(b: Building3D, u_type: Unit3D.UnitType, team: int) -> bool:
 	res["gold"] -= gold_cost
 
 	var cost_dict = {"food": food_cost, "wood": wood_cost, "gold": gold_cost, "stone": 0}
-	b.queue_unit_production(u_type, duration, cost_dict)
+	b.queue_unit_production(u_type, duration * get_train_speed_mult(team, b.building_type), cost_dict)
 	return true
 
 func cancel_unit_production(b: Building3D, index: int) -> bool:
@@ -856,85 +1039,147 @@ func _on_research_requested(tech_id: String) -> void:
 		return
 	try_start_research(selected_building, tech_id, 0)
 
-func try_start_research(b: Building3D, tech_id: String, team: int) -> bool:
-	if b.is_researching or not b.is_completed:
-		return false
-
+## Why `team` cannot start `tech_id` at building `b` right now ("" = it can).
+func research_block_reason(b: Building3D, tech_id: String, team: int) -> String:
+	var t: Dictionary = TechData.get_tech(tech_id)
+	if t.is_empty() or not is_instance_valid(b) or b.building_type != t["building"]:
+		return "Bilinmeyen geliştirme"
+	if not b.is_completed:
+		return "Bina tamamlanmadı"
+	if has_tech(team, tech_id):
+		return "Zaten geliştirildi"
+	var age: int = team_age.get(team, 1)
+	if age < int(t.get("age", 1)):
+		return "%s gerekli" % TechData.age_name(int(t["age"]))
+	if t.has("max_age") and age > int(t["max_age"]):
+		return "Zaten geçildi"
+	for req in t.get("requires", []):
+		if not has_tech(team, req):
+			return "Önce: %s" % TechData.get_tech(req).get("name", req)
+	for other in buildings:
+		if is_instance_valid(other) and other.team == team and other.is_researching and other.current_research_tech == tech_id:
+			return "Araştırılıyor"
+	if b.is_researching:
+		return "Bina meşgul"
 	var res = team_resources[team]
-	var food_cost = 0
-	var wood_cost = 0
-	var gold_cost = 0
-	var stone_cost = 0
-	var duration = 15.0
+	for k in t["cost"].keys():
+		if res.get(k, 0) < int(t["cost"][k]):
+			return "Yetersiz kaynak"
+	return ""
 
-	match tech_id:
-		"AGE_2":
-			food_cost = 500
-			gold_cost = 200
-			duration = 20.0
-		"iron_weapons":
-			food_cost = 100
-			gold_cost = 40
-			duration = 12.0
-		"scale_armor":
-			food_cost = 100
-			gold_cost = 40
-			duration = 12.0
-		"bodkin_arrows":
-			wood_cost = 100
-			gold_cost = 50
-			duration = 12.0
-		"wheelbarrow":
-			wood_cost = 100
-			food_cost = 50
-			duration = 12.0
-
-	if res["food"] < food_cost or res["wood"] < wood_cost or res["gold"] < gold_cost or res["stone"] < stone_cost:
+func try_start_research(b: Building3D, tech_id: String, team: int) -> bool:
+	if research_block_reason(b, tech_id, team) != "":
 		if team == 0:
 			SoundManager.play_sound("hit")
 		return false
-
-	res["food"] -= food_cost
-	res["wood"] -= wood_cost
-	res["gold"] -= gold_cost
-	res["stone"] -= stone_cost
-
-	b.start_research(tech_id, duration)
+	var t: Dictionary = TechData.get_tech(tech_id)
+	var res = team_resources[team]
+	for k in t["cost"].keys():
+		res[k] -= int(t["cost"][k])
+	b.start_research(tech_id, float(t["time"]))
 	if team == 0:
 		SoundManager.play_sound("build")
 	return true
 
-func _on_building_research_completed(tech_id: String, team: int) -> void:
-	if tech_id == "AGE_2":
-		team_age[team] = 2
-		if team == 0:
-			SoundManager.play_sound("horn")
-			ui_manager.notify_banner("HİSAR ÇAĞINA ULAŞILDI!", Color(0.2, 0.95, 0.4))
-	elif tech_id in ["iron_weapons", "scale_armor", "bodkin_arrows", "wheelbarrow"]:
-		if not team_techs.has(team):
-			team_techs[team] = {}
-		team_techs[team][tech_id] = true
-		_apply_tech_bonus(tech_id, team)
-		if team == 0:
-			SoundManager.play_sound("horn")
-			var t_name = "Demir Silahlar" if tech_id == "iron_weapons" else ("Takviyeli Zırh" if tech_id == "scale_armor" else ("Demir Oklar" if tech_id == "bodkin_arrows" else "El Arabası"))
-			ui_manager.notify_banner("%s GELİŞTİRİLDİ!" % t_name.to_upper(), Color(0.95, 0.85, 0.3))
+func has_tech(team: int, tech_id: String) -> bool:
+	return bool(team_techs.get(team, {}).get(tech_id, false))
 
+func _on_building_research_completed(tech_id: String, team: int) -> void:
+	var t: Dictionary = TechData.get_tech(tech_id)
+	if t.is_empty():
+		return
+	if not team_techs.has(team):
+		team_techs[team] = {}
+	team_techs[team][tech_id] = true
+	for e in t["effects"]:
+		match e["type"]:
+			"age":
+				team_age[team] = int(e["to"])
+			"unit":
+				for u in units:
+					if is_instance_valid(u) and u.team == team:
+						_apply_unit_effect(u, e)
+			"carry":
+				for u in units:
+					if is_instance_valid(u) and u.team == team and u.unit_type == Unit3D.UnitType.VILLAGER:
+						u.max_carry += int(e["add"])
+			"building", "level":
+				for b in buildings:
+					if is_instance_valid(b) and b.team == team:
+						_apply_building_effect(b, e)
+	if team == 0:
+		SoundManager.play_sound("horn")
+		if tech_id.begins_with("AGE_"):
+			ui_manager.notify_banner("%s ULAŞILDI!" % TechData.age_name(team_age[team]).to_upper(), Color(0.2, 0.95, 0.4))
+		else:
+			ui_manager.notify_banner("%s GELİŞTİRİLDİ!" % String(t["name"]).to_upper(), Color(0.95, 0.85, 0.3))
 	if selected_building != null and is_instance_valid(selected_building):
 		ui_manager.set_selected_entity(selected_building)
 
-func _apply_tech_bonus(tech_id: String, team: int) -> void:
-	for u in units:
-		if is_instance_valid(u) and u.team == team:
-			if tech_id == "iron_weapons" and u.is_infantry():
-				u.attack_dmg += 3.0
-			elif tech_id == "scale_armor":
-				u.armor += 2.0
-			elif tech_id == "bodkin_arrows" and u.is_ranged():
-				u.attack_dmg += 3.0
-			elif tech_id == "wheelbarrow" and u.unit_type == Unit3D.UnitType.VILLAGER:
-				u.max_carry = 20
-				u.move_speed *= 1.15
+func _apply_unit_effect(u: Unit3D, e: Dictionary) -> void:
+	if not TechData.unit_matches(u, e["filter"]):
+		return
+	var stat: String = e["stat"]
+	var before: float = float(u.get(stat))
+	var after: float = before + float(e["add"]) if e.has("add") else before * float(e["mult"])
+	u.set(stat, after)
+	if stat == "max_hp":
+		u.hp += after - before
+
+func _apply_building_effect(b: Building3D, e: Dictionary) -> void:
+	if b.building_type != e["building"]:
+		return
+	if e["type"] == "level":
+		b.set_upgrade_level(2)
+		return
+	var stat: String = e["stat"]
+	var before: float = float(b.get(stat))
+	var after: float = before + float(e["add"]) if e.has("add") else before * float(e["mult"])
+	b.set(stat, after)
+	if stat == "max_hp":
+		b.hp += after - before
+
+## Every researched unit effect (+ carry bonus) on a freshly spawned unit.
+func apply_unit_techs(u: Unit3D) -> void:
+	for id in team_techs.get(u.team, {}).keys():
+		if not has_tech(u.team, id):
+			continue
+		for e in TechData.get_tech(id).get("effects", []):
+			if e["type"] == "unit":
+				_apply_unit_effect(u, e)
+			elif e["type"] == "carry" and u.unit_type == Unit3D.UnitType.VILLAGER:
+				u.max_carry += int(e["add"])
+
+## Every researched building effect / upgraded look on a freshly placed (or restored) building.
+func apply_building_techs(b: Building3D) -> void:
+	for id in team_techs.get(b.team, {}).keys():
+		if not has_tech(b.team, id):
+			continue
+		for e in TechData.get_tech(id).get("effects", []):
+			if e["type"] in ["building", "level"]:
+				_apply_building_effect(b, e)
+
+func _team_effect_product(team: int, effect_type: String, match_key: String, match_val) -> float:
+	var m := 1.0
+	for id in team_techs.get(team, {}).keys():
+		if not has_tech(team, id):
+			continue
+		for e in TechData.get_tech(id).get("effects", []):
+			if e["type"] == effect_type and e.get(match_key) == match_val:
+				m *= float(e["mult"])
+	return m
+
+func get_train_speed_mult(team: int, b_type: int) -> float:
+	return _team_effect_product(team, "train_speed", "building", b_type)
+
+func get_house_pop(team: int) -> int:
+	var pop := 5
+	for id in team_techs.get(team, {}).keys():
+		if has_tech(team, id):
+			for e in TechData.get_tech(id).get("effects", []):
+				if e["type"] == "house_pop":
+					pop += int(e["add"])
+	return pop
 
 func spawn_projectile(start: Vector3, target: Node3D, dmg: float, team: int, bullet: bool = false) -> void:
 	var proj = Projectile3D.new()
@@ -1030,7 +1275,7 @@ func get_team_max_population(team: int) -> int:
 	for b in buildings:
 		if is_instance_valid(b) and b.team == team and b.is_completed:
 			if b.building_type == Building3D.BuildingType.HOUSE:
-				max_pop += 5
+				max_pop += get_house_pop(team)
 			elif b.building_type == Building3D.BuildingType.TOWN_CENTER:
 				max_pop += 5
 	return min(max_pop, 70)

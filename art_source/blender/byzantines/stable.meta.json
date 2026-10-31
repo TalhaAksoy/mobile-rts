@@ -1,0 +1,40 @@
+{
+  "tris": 925,
+  "verts": 1629,
+  "materials": [
+    "PE_Dirt",
+    "PE_StoneBrick",
+    "PE_StoneWarm",
+    "PE_Window",
+    "PE_RoofRed",
+    "PE_WoodDark",
+    "PE_WoodLight",
+    "TEAM_Trim",
+    "PE_Banner_byzantines",
+    "PE_Gold",
+    "PE_Beam",
+    "PE_Thatch"
+  ],
+  "bounds_min": [
+    -2.585,
+    -2.602,
+    0.0
+  ],
+  "bounds_max": [
+    2.89,
+    2.63,
+    2.36
+  ],
+  "asset_id": "stable",
+  "civ": "byzantines",
+  "kind": "buildings",
+  "blend": "art_source/blender/byzantines/stable.blend",
+  "glb": "res://assets/3d/buildings/byzantines/stable.glb",
+  "glb_bytes": 73704,
+  "grid": [
+    3,
+    3
+  ],
+  "footprint_m": 5.4,
+  "reference": "res://art/buildings/byzantines/stable.png"
+}

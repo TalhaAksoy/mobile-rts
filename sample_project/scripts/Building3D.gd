@@ -33,6 +33,17 @@ var armor: float = 5.0
 var grid_size: Vector2i = Vector2i(3, 3)
 var origin_cell: Vector2i = Vector2i.ZERO
 
+## Seconds one villager needs to finish each building (more builders add up). Before this every
+## building took the same ~6 s, so a Castle went up as fast as a House.
+const BUILD_TIME := {
+	BuildingType.TOWN_CENTER: 60.0, BuildingType.HOUSE: 12.0, BuildingType.BARRACKS: 25.0,
+	BuildingType.ARCHERY_RANGE: 25.0, BuildingType.STABLE: 25.0, BuildingType.CASTLE: 60.0,
+	BuildingType.TOWER: 30.0, BuildingType.FARM: 6.0, BuildingType.BLACKSMITH: 25.0,
+	BuildingType.LUMBER_CAMP: 15.0, BuildingType.MINING_CAMP: 15.0, BuildingType.MILL: 15.0,
+}
+## A builder swing contributes `amt` (Unit3D: 8 every 0.5 s); 8 per 0.5 s for this many seconds = 100%.
+const SWING_BASE_TIME := 6.25
+
 var is_completed: bool = true
 var construction_progress: float = 100.0
 
@@ -59,12 +70,23 @@ var main_game: Node = null
 var model_root: Node3D
 var scaffold_node: Node3D
 var building_sprite: Sprite3D
+## 3D model instance (Blender GLB) when the art manifest provides one; null -> sprite/procedural path.
+var building_model: Node3D = null
+var model_height: float = 0.0
 var collision_shape: CollisionShape3D
 var selection_mesh: MeshInstance3D
 var hp_bar_holder: Node3D
 var hp_fill_mesh: MeshInstance3D
 var flag_sprites: Array[Sprite3D] = []
 var anim_time: float = 0.0
+## FARM only: crop meshes hidden/shrunk while the field is being prepared.
+var field_crops: Array = []
+## Windmill sails sub-node of a Mill model (spins while the mill is finished).
+var sails_node: Node3D = null
+## 1 = base, 2 = upgraded by this building's own technology (TechData "level" effect): adds the
+## civilisation's upgrade dressing (banners, plinth, ornaments) around the building.
+var upgrade_level: int = 1
+var upgrade_node: Node3D = null
 
 func _ready() -> void:
 	rally_point = (global_position if is_inside_tree() else position) + Vector3(0, 0, grid_size.y * MapGenerator3D.TILE_SIZE * 0.5 + 2.0)
@@ -239,6 +261,11 @@ func _build_3d_structure() -> void:
 	collision_shape.shape = c_box
 	collision_shape.position = Vector3(0, 1.25, 0)
 	add_child(collision_shape)
+	if building_type == BuildingType.FARM:
+		# fields are walked over (picking is screen-space, so no physics body is needed)
+		collision_layer = 0
+		collision_mask = 0
+		collision_shape.disabled = true
 
 	# 2. 3D Scaffolding frame (shown when under construction)
 	scaffold_node = Node3D.new()
@@ -296,9 +323,26 @@ func _build_3d_structure() -> void:
 			p_size = 0.023
 			v_height = 3.7
 
-	# 3. Check for Authentic HD-2D Kingdom Building Art
-	var b_tex = FactionArtManager.get_building_texture(civ_type, building_type)
-	if b_tex != null:
+	# 3a. Preferred: civilization-specific 3D model from the Blender pipeline (manifest-driven).
+	if building_type == BuildingType.FARM:
+		# fields are farmland: the crop follows the map biome, not the civilisation
+		building_model = FactionArtManager.instantiate_field_model(map_gen.map_type, team) if map_gen != null else null
+	else:
+		building_model = FactionArtManager.instantiate_building_model(civ_type, building_type, team)
+	# 3b. Fallback: authentic HD-2D kingdom building sprite art
+	var b_tex = null if building_model != null else FactionArtManager.get_building_texture(civ_type, building_type)
+	if building_model != null:
+		model_root.add_child(building_model)
+		sails_node = _find_named(building_model, "Sails")
+		var aabb := FactionArtManager.compute_visual_aabb(building_model)
+		model_height = aabb.end.y
+		v_height = clamp(aabb.end.y * 0.82, 1.6, 7.0)
+		scaffold_node.queue_free()
+		scaffold_node = _build_scaffold_frame(w, l, max(1.4, model_height * 0.55))
+		add_child(scaffold_node)
+		scaffold_node.visible = not is_completed
+		_update_construction_visual()
+	elif b_tex != null:
 		# Ground stone foundation plinth
 		var found_inst = MeshInstance3D.new()
 		var f_mesh = BoxMesh.new()
@@ -349,6 +393,8 @@ func _build_3d_structure() -> void:
 	selection_mesh.material_override = sm_mat
 	selection_mesh.visible = false
 	add_child(selection_mesh)
+
+	_update_field_visual()
 
 	# 3D Health Bar
 	_build_3d_hp_bar(v_height + 0.4)
@@ -579,27 +625,29 @@ func _build_procedural_fallback(w: float, l: float, stone_mat: Material, dark_st
 			_create_flag_sprite(Vector3(0.5, 5.2, 0), 0.045)
 
 		BuildingType.FARM:
+			# Placeholder field (Phase 2 replaces it with Blender models): flat ploughed plot,
+			# crop rows only appear once the field is finished (see _update_field_visual).
 			var soil = MeshInstance3D.new()
 			var sl_mesh = BoxMesh.new()
-			sl_mesh.size = Vector3(w * 0.95, 0.2, l * 0.95)
+			sl_mesh.size = Vector3(w * 0.97, 0.06, l * 0.97)
 			soil.mesh = sl_mesh
-			soil.position = Vector3(0, 0.1, 0)
+			soil.position = Vector3(0, 0.03, 0)
 			var sl_mat = StandardMaterial3D.new()
-			sl_mat.albedo_color = Color(0.38, 0.25, 0.15)
+			sl_mat.albedo_color = Color(0.36, 0.25, 0.16)
+			sl_mat.roughness = 1.0
 			soil.material_override = sl_mat
 			model_root.add_child(soil)
-
-			# Wheat Crop Rows
-			for i in range(-2, 3):
+			var cp_mat = StandardMaterial3D.new()
+			cp_mat.albedo_color = Color(0.86, 0.74, 0.28)
+			for i in range(-3, 4):
 				var crop = MeshInstance3D.new()
 				var cp_mesh = BoxMesh.new()
-				cp_mesh.size = Vector3(w * 0.85, 0.45, 0.3)
+				cp_mesh.size = Vector3(w * 0.88, 0.32, 0.22)
 				crop.mesh = cp_mesh
-				crop.position = Vector3(0, 0.35, i * (l * 0.18))
-				var cp_mat = StandardMaterial3D.new()
-				cp_mat.albedo_color = Color(0.85, 0.75, 0.2)
+				crop.position = Vector3(0, 0.19, i * (l * 0.13))
 				crop.material_override = cp_mat
 				model_root.add_child(crop)
+				field_crops.append(crop)
 
 		BuildingType.BLACKSMITH:
 			# Workshop Base
@@ -779,6 +827,8 @@ func _build_3d_hp_bar(height_y: float) -> void:
 
 func _process(delta: float) -> void:
 	anim_time += delta
+	if sails_node != null and is_completed:
+		sails_node.rotate_object_local(Vector3(0, 0, 1), delta * 0.9)   # Blender Y (towards camera) = Godot local Z
 	for f in flag_sprites:
 		if is_instance_valid(f):
 			f.rotation.z = sin(anim_time * 3.4 + global_position.x) * 0.08
@@ -871,12 +921,17 @@ func _spawn_unit(item: Dictionary) -> void:
 	unit_trained.emit(u_type, team, rally_point)
 	SoundManager.play_sound("train")
 
+## Progress (percent) one builder swing adds to this building: big buildings take longer.
+func build_swing_progress(base_amt: float = 8.0) -> float:
+	return base_amt * SWING_BASE_TIME / float(BUILD_TIME.get(building_type, SWING_BASE_TIME))
+
 func contribute_construction(amt: float) -> void:
 	if is_completed:
 		return
 	construction_progress += amt
 	hp = max_hp * clamp(construction_progress / 100.0, 0.1, 1.0)
 	_update_hp_bar()
+	_update_construction_visual()
 
 	if construction_progress >= 100.0:
 		construction_progress = 100.0
@@ -886,6 +941,7 @@ func contribute_construction(amt: float) -> void:
 			scaffold_node.visible = false
 		if is_instance_valid(building_sprite):
 			building_sprite.modulate = Color(1.08, 0.88, 0.88) if team != 0 else Color(1.0, 1.0, 1.0)
+		_on_field_state_changed()
 		completed.emit(self)
 		SoundManager.play_sound("build")
 
@@ -900,7 +956,10 @@ func take_damage(amount: float, _attacker_team: int) -> void:
 func die() -> void:
 	destroyed.emit(self)
 	if map_gen != null:
-		map_gen.unregister_building_cells(origin_cell, grid_size)
+		if building_type == BuildingType.FARM:
+			map_gen.unregister_field(origin_cell, grid_size)
+		else:
+			map_gen.unregister_building_cells(origin_cell, grid_size)
 	SoundManager.play_sound("hit")
 	queue_free()
 
@@ -920,3 +979,131 @@ func _update_hp_bar() -> void:
 		var pct = clamp(hp / max_hp, 0.0, 1.0)
 		hp_fill_mesh.scale.x = pct
 		hp_fill_mesh.position.x = -(1.54 * (1.0 - pct)) * 0.5
+
+
+## Re-applies every visual that depends on is_completed / construction_progress.
+## Call after setting those fields directly (e.g. SaveManager.load_game).
+func refresh_construction_state() -> void:
+	if is_instance_valid(scaffold_node):
+		scaffold_node.visible = not is_completed and building_type != BuildingType.FARM
+	_on_field_state_changed()
+	if is_instance_valid(building_sprite):
+		if not is_completed:
+			building_sprite.modulate = Color(0.65, 0.65, 0.65, 0.45)
+		else:
+			building_sprite.modulate = Color(1.08, 0.88, 0.88) if team != 0 else Color(1.0, 1.0, 1.0)
+	_update_construction_visual()
+	_update_hp_bar()
+
+## Construction look for 3D models: the model "rises" out of its foundation as progress grows
+## (scale Y 0.15 -> 1.0) inside a timber scaffold. Purely visual: collision/footprint unchanged.
+func _update_construction_visual() -> void:
+	_update_field_visual()
+	if not is_instance_valid(building_model):
+		return
+	if is_completed:
+		building_model.scale = Vector3.ONE
+		if is_instance_valid(scaffold_node):
+			scaffold_node.visible = false
+	else:
+		var t: float = clamp(construction_progress / 100.0, 0.0, 1.0)
+		building_model.scale = Vector3(1.0, lerp(0.15, 1.0, t), 1.0)
+
+func _build_scaffold_frame(w: float, l: float, h: float) -> Node3D:
+	var root_n := Node3D.new()
+	root_n.name = "Scaffold"
+	var mat := FactionArtManager.get_library_material("PE_Beam")
+	var hw := w * 0.5
+	var hl := l * 0.5
+	var post := BoxMesh.new()
+	post.size = Vector3(0.12, h, 0.12)
+	for sx in [-1.0, 1.0]:
+		for sz in [-1.0, 1.0]:
+			var p := MeshInstance3D.new()
+			p.mesh = post
+			p.material_override = mat
+			p.position = Vector3(sx * hw, h * 0.5, sz * hl)
+			root_n.add_child(p)
+	for level in [0.45, 0.95]:
+		var y: float = h * level
+		for along_x in [true, false]:
+			var beam := BoxMesh.new()
+			beam.size = Vector3(w, 0.08, 0.08) if along_x else Vector3(0.08, 0.08, l)
+			for side in [-1.0, 1.0]:
+				var bm := MeshInstance3D.new()
+				bm.mesh = beam
+				bm.material_override = mat
+				bm.position = Vector3(0, y, side * hl) if along_x else Vector3(side * hw, y, 0)
+				root_n.add_child(bm)
+	return root_n
+
+## FARM: a finished field becomes an infinite food source for its team (idempotent, so it is also
+## safe to call after SaveManager restores is_completed directly).
+func _on_field_state_changed() -> void:
+	if building_type == BuildingType.FARM and is_completed and map_gen != null:
+		map_gen.register_field_resource(self)
+	_update_field_visual()
+
+func _update_field_visual() -> void:
+	if building_type != BuildingType.FARM:
+		return
+	if is_instance_valid(scaffold_node):
+		scaffold_node.visible = false
+	var t: float = 1.0 if is_completed else clamp(construction_progress / 100.0, 0.0, 1.0)
+	for c in field_crops:
+		if is_instance_valid(c):
+			c.visible = t > 0.05
+			c.scale = Vector3(1.0, max(t, 0.05), 1.0)
+
+static func _find_named(n: Node, prefix: String) -> Node3D:
+	for c in n.get_children():
+		if c is Node3D and String(c.name).begins_with(prefix):
+			return c
+		var deep = _find_named(c, prefix)
+		if deep != null:
+			return deep
+	return null
+
+func set_upgrade_level(level: int) -> void:
+	if level == upgrade_level and is_instance_valid(upgrade_node):
+		return
+	upgrade_level = level
+	if is_instance_valid(upgrade_node):
+		upgrade_node.queue_free()
+		upgrade_node = null
+	if level < 2 or model_root == null:
+		return
+	var w: float = grid_size.x * MapGenerator3D.TILE_SIZE * 0.9
+	upgrade_node = FactionArtManager.instantiate_upgrade_kit(civ_type, team)
+	if upgrade_node != null:
+		# kits are modelled for a 3.6 m (2x2) footprint, corners at +-1.8 m
+		var k: float = w / 3.6
+		upgrade_node.scale = Vector3(k, clampf(k, 1.0, 1.35), k)
+	else:
+		upgrade_node = _procedural_upgrade_dressing(w)
+	upgrade_node.name = "UpgradeDressing"
+	model_root.add_child(upgrade_node)
+
+## Fallback when a civ has no Blender upgrade kit: stone kerb + four civ flags on poles.
+func _procedural_upgrade_dressing(w: float) -> Node3D:
+	var root := Node3D.new()
+	var kerb := MeshInstance3D.new()
+	var km := BoxMesh.new()
+	km.size = Vector3(w + 0.3, 0.14, w + 0.3)
+	kerb.mesh = km
+	kerb.position = Vector3(0, 0.07, 0)
+	var mat := StandardMaterial3D.new()
+	mat.albedo_texture = PixelArtTextures.get_stone_brick_texture()
+	mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+	kerb.material_override = mat
+	root.add_child(kerb)
+	for sx in [-1, 1]:
+		for sz in [-1, 1]:
+			var f := Sprite3D.new()
+			f.texture = PixelArtTextures.get_civ_flag_texture(civ_type)
+			f.pixel_size = 0.03
+			f.billboard = BaseMaterial3D.BILLBOARD_FIXED_Y
+			f.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+			f.position = Vector3(sx * w * 0.5, 2.2, sz * w * 0.5)
+			root.add_child(f)
+	return root

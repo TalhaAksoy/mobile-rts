@@ -1,0 +1,26 @@
+{
+  "tris": 272,
+  "verts": 464,
+  "materials": [
+    "PE_NatureAtlas_Autumn"
+  ],
+  "bounds_min": [
+    -0.931,
+    -0.848,
+    0.0
+  ],
+  "bounds_max": [
+    0.994,
+    0.877,
+    2.35
+  ],
+  "asset_id": "tree_oak",
+  "civ": "autumn",
+  "kind": "environment",
+  "blend": "art_source/blender/autumn/tree_oak.blend",
+  "glb": "res://assets/3d/environment/autumn/tree_oak.glb",
+  "glb_bytes": 21808,
+  "resource": "wood",
+  "biome": "autumn",
+  "build_script": "art_source/blender/environment/common_tree_oak.py"
+}
