@@ -70,6 +70,10 @@ var main_game: Node = null
 var model_root: Node3D
 var scaffold_node: Node3D
 var building_sprite: Sprite3D
+## 2D sprite mode: the Blender-rendered sprite set (FactionArtManager.make_sprite_node); building_sprite
+## then points at its Sprite3D. The old hand-drawn sprites stay as the last fallback.
+var sprite_visual: Node3D = null
+var sprite_is_rendered := false
 ## 3D model instance (Blender GLB) when the art manifest provides one; null -> sprite/procedural path.
 var building_model: Node3D = null
 var model_height: float = 0.0
@@ -329,9 +333,28 @@ func _build_3d_structure() -> void:
 		building_model = FactionArtManager.instantiate_field_model(map_gen.map_type, team) if map_gen != null else null
 	else:
 		building_model = FactionArtManager.instantiate_building_model(civ_type, building_type, team)
-	# 3b. Fallback: authentic HD-2D kingdom building sprite art
-	var b_tex = null if building_model != null else FactionArtManager.get_building_texture(civ_type, building_type)
-	if building_model != null:
+	# 3b. 2D sprite mode: sprite rendered in Blender from the same model (same look, flat)
+	if building_model == null:
+		if building_type == BuildingType.FARM:
+			sprite_visual = FactionArtManager.instantiate_field_sprite(map_gen.map_type, team) if map_gen != null else null
+		else:
+			sprite_visual = FactionArtManager.instantiate_building_sprite(civ_type, building_type, team)
+	# 3c. Last fallback: the original hand-drawn HD-2D building art
+	var b_tex = null if (building_model != null or sprite_visual != null) else FactionArtManager.get_building_texture(civ_type, building_type)
+	if sprite_visual != null:
+		model_root.add_child(sprite_visual)
+		building_sprite = sprite_visual.get_node("SpritePlane/Sprite") as Sprite3D
+		sprite_is_rendered = true
+		var top: float = building_sprite.position.y + building_sprite.texture.get_height() * 0.5 * building_sprite.pixel_size
+		model_height = top / cos(deg_to_rad(45.0))
+		v_height = clamp(model_height * 0.82, 1.4, 7.0)
+		if building_type != BuildingType.FARM:
+			scaffold_node.queue_free()
+			scaffold_node = _build_scaffold_frame(w, l, max(1.4, model_height * 0.55))
+			add_child(scaffold_node)
+			scaffold_node.visible = not is_completed
+		_update_construction_visual()
+	elif building_model != null:
 		model_root.add_child(building_model)
 		sails_node = _find_named(building_model, "Sails")
 		var aabb := FactionArtManager.compute_visual_aabb(building_model)
@@ -939,9 +962,10 @@ func contribute_construction(amt: float) -> void:
 		hp = max_hp
 		if is_instance_valid(scaffold_node):
 			scaffold_node.visible = false
-		if is_instance_valid(building_sprite):
+		if is_instance_valid(building_sprite) and not sprite_is_rendered:
 			building_sprite.modulate = Color(1.08, 0.88, 0.88) if team != 0 else Color(1.0, 1.0, 1.0)
 		_on_field_state_changed()
+		_update_construction_visual()
 		completed.emit(self)
 		SoundManager.play_sound("build")
 
@@ -987,7 +1011,7 @@ func refresh_construction_state() -> void:
 	if is_instance_valid(scaffold_node):
 		scaffold_node.visible = not is_completed and building_type != BuildingType.FARM
 	_on_field_state_changed()
-	if is_instance_valid(building_sprite):
+	if is_instance_valid(building_sprite) and not sprite_is_rendered:
 		if not is_completed:
 			building_sprite.modulate = Color(0.65, 0.65, 0.65, 0.45)
 		else:
@@ -999,6 +1023,9 @@ func refresh_construction_state() -> void:
 ## (scale Y 0.15 -> 1.0) inside a timber scaffold. Purely visual: collision/footprint unchanged.
 func _update_construction_visual() -> void:
 	_update_field_visual()
+	if sprite_is_rendered and is_instance_valid(building_sprite):
+		_update_sprite_construction()
+		return
 	if not is_instance_valid(building_model):
 		return
 	if is_completed:
@@ -1008,6 +1035,25 @@ func _update_construction_visual() -> void:
 	else:
 		var t: float = clamp(construction_progress / 100.0, 0.0, 1.0)
 		building_model.scale = Vector3(1.0, lerp(0.15, 1.0, t), 1.0)
+
+## 2D sprite mode construction: the sprite is revealed from the ground up (15% -> 100% of its height)
+## and slightly darkened inside the scaffold. Fields simply show their crop growing in full.
+func _update_sprite_construction() -> void:
+	var tex := building_sprite.texture
+	var full_h: float = tex.get_height()
+	var t: float = 1.0 if is_completed or building_type == BuildingType.FARM else clamp(construction_progress / 100.0, 0.0, 1.0)
+	var shown: float = full_h if is_completed or building_type == BuildingType.FARM else max(1.0, round(full_h * lerp(0.15, 1.0, t)))
+	var p: float = building_sprite.pixel_size
+	if not building_sprite.has_meta("full_y"):
+		building_sprite.set_meta("full_y", building_sprite.position.y)
+	var full_y: float = building_sprite.get_meta("full_y")
+	building_sprite.region_enabled = shown < full_h
+	building_sprite.region_rect = Rect2(0, full_h - shown, tex.get_width(), shown)
+	# keep the bottom edge where it was: centre moves down by half the hidden height
+	building_sprite.position.y = full_y - (full_h - shown) * 0.5 * p
+	building_sprite.modulate = Color.WHITE if is_completed else Color(0.82, 0.8, 0.78)
+	if is_completed and is_instance_valid(scaffold_node):
+		scaffold_node.visible = false
 
 func _build_scaffold_frame(w: float, l: float, h: float) -> Node3D:
 	var root_n := Node3D.new()
@@ -1075,6 +1121,14 @@ func set_upgrade_level(level: int) -> void:
 		return
 	var w: float = grid_size.x * MapGenerator3D.TILE_SIZE * 0.9
 	upgrade_node = FactionArtManager.instantiate_upgrade_kit(civ_type, team)
+	if upgrade_node == null and sprite_is_rendered:
+		upgrade_node = FactionArtManager.instantiate_upgrade_kit_sprite(civ_type, team)
+		if upgrade_node != null:
+			var ks: float = w / 3.6                     # kit sprites are drawn for a 3.6 m footprint
+			upgrade_node.scale = Vector3(ks, ks, ks)
+			upgrade_node.name = "UpgradeDressing"
+			model_root.add_child(upgrade_node)
+			return
 	if upgrade_node != null:
 		# kits are modelled for a 3.6 m (2x2) footprint, corners at +-1.8 m
 		var k: float = w / 3.6

@@ -103,11 +103,29 @@ litter, desert cactus/dune grass/bleached stones, steppe feather grass/thistle/l
 | `field`, `<biome>/field` | 4 (temperate, desert, steppe, autumn) | `environment/field.py` | 102–370 | 5–6 surfaces (soil, crop, border, wood, team pennant) | TESTED (test_farm_fields, in-game captures `docs/audits/evidence/farms/`) |
 | `upgrade_kits/<civ>` | 10 | `environment/upgrade_kit.py` | 198–358 | dressing around any building with its own upgrade researched | TESTED (test_techs: loads + team surface; captures `docs/audits/evidence/upgrades/`) |
 
+## 2c. 2D sprite set (rendered from the 3D models)
+
+286 PNGs, 8 MB, in `sample_project/assets/sprites/`:
+* 110 buildings × 2 teams;
+* 4 biome fields × 2 teams;
+* 10 upgrade kits × back/front × 2 teams;
+* 18 environment props.
+
+Placement data: `data/art/sprite_manifest.json`. Pipeline: BLENDER_PIPELINE §3.2.
+
+Verification:
+* `test_visual_style.gd`, 1141 checks:
+  * 3D mode on all five maps: every prop and every civ × type × team is 3D;
+  * 2D mode: every object uses its rendered sprite, with the right team, construction reveal and kit halves.
+* In-game: `docs/audits/evidence/sprites/` (2D vs 3D, same seed) and the Android emulator capture.
+* Status: TESTED.
+
+
 ## 3. Still on the previous (sprite / procedural) art
 
 | Group | Count | Current art | Notes |
 |---|---|---|---|
-| Buildings | 0 | every building type has a 3D model for all 10 civs (sections 1, 1b, 2b) | sprites stay as the fallback when `use_3d_building_models` is off |
+| Buildings | 0 | every building type has a 3D model for all 10 civs (sections 1, 1b, 2b) | 2D mode uses sprites rendered from those models (section 2c); the old hand-drawn sprites are only the last fallback |
 | Farm (all civs) | – | replaced by biome **fields** placed from the Mill (section 2b) | done |
 | Units (villager, swordsman, spearman, archer, cavalry + 10 unique) | 50 roles | HD-2D sprites + new occlusion silhouette | **3D characters + rigs + 6 animations not started.** Spec allows sprites until 3D replacements are validated. A rigged character pipeline is a separate milestone. |
 | Cliffs / bridges / map skirt | — | procedural `PixelArtTextures` (cliffs tinted per biome) | ground, water and scatter were redone in the environment pass. Real biome cliff geometry is next |

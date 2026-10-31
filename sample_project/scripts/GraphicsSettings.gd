@@ -18,15 +18,16 @@ const MSAA_OPTIONS := [0, 2, 4]                       # 0 = off, 2x, 4x
 const MSAA_NAMES := ["Kapalı", "2x", "4x"]
 const SHADOW_NAMES := ["Kapalı", "Düşük", "Yüksek"]
 const FPS_OPTIONS := [30, 60]
+const STYLE_NAMES := ["3D Model", "2D Sprite"]      # 2D = sprites rendered in Blender from the same models
 const SCALE_MIN := 50
 const SCALE_MAX := 100
 const SCALE_STEP := 5
 
-## preset -> values (render scale in %, msaa sample count, shadow level, fps cap)
+## preset -> values (render scale in %, msaa sample count, shadow level, fps cap, style 0 = 3D / 1 = 2D)
 const PRESETS := {
-	Preset.LOW: {"scale": 60, "msaa": 0, "shadows": Shadows.OFF, "fps": 30},
-	Preset.MEDIUM: {"scale": 75, "msaa": 0, "shadows": Shadows.LOW, "fps": 60},
-	Preset.HIGH: {"scale": 100, "msaa": 2, "shadows": Shadows.HIGH, "fps": 60},
+	Preset.LOW: {"scale": 60, "msaa": 0, "shadows": Shadows.OFF, "fps": 30, "style": 1},
+	Preset.MEDIUM: {"scale": 75, "msaa": 0, "shadows": Shadows.LOW, "fps": 60, "style": 0},
+	Preset.HIGH: {"scale": 100, "msaa": 2, "shadows": Shadows.HIGH, "fps": 60, "style": 0},
 }
 ## directional shadow atlas size and max distance per shadow level
 const SHADOW_ATLAS := {Shadows.LOW: 1024, Shadows.HIGH: 4096}
@@ -35,6 +36,9 @@ const SHADOW_DISTANCE := {Shadows.LOW: 50.0, Shadows.HIGH: 75.0}
 static var preset: int = Preset.HIGH
 static var values: Dictionary = PRESETS[Preset.HIGH].duplicate()
 static var _loaded := false
+## Headless runs (tests, CI) use the defaults instead of the player's saved file, so a player who picked
+## 2D sprites does not change what the 3D tests see. test_graphics_settings turns this on.
+static var read_saved_when_headless := false
 
 
 static func default_preset() -> int:
@@ -65,12 +69,17 @@ static func _sanitize(key: String, v):
 			return clampi(int(v), Shadows.OFF, Shadows.HIGH)
 		"fps":
 			return int(v) if int(v) in FPS_OPTIONS else 60
+		"style":
+			return clampi(int(v), 0, 1)
 	return v
 
 
 static func load_settings() -> void:
 	_loaded = true
 	var cfg := ConfigFile.new()
+	if DisplayServer.get_name() == "headless" and not read_saved_when_headless:
+		set_preset(default_preset())
+		return
 	if cfg.load(PATH) != OK or not cfg.has_section(SECTION):
 		set_preset(default_preset())
 		return
@@ -79,7 +88,7 @@ static func load_settings() -> void:
 		set_preset(p)
 	else:
 		set_preset(default_preset())
-		for k in ["scale", "msaa", "shadows", "fps"]:
+		for k in ["scale", "msaa", "shadows", "fps", "style"]:
 			values[k] = _sanitize(k, cfg.get_value(SECTION, k, values[k]))
 		preset = Preset.CUSTOM
 
@@ -116,8 +125,10 @@ static func apply(viewport: Viewport, light: DirectionalLight3D = null) -> void:
 	if sh != Shadows.OFF:
 		RenderingServer.directional_shadow_atlas_set_size(SHADOW_ATLAS[sh], true)
 	Engine.max_fps = values["fps"]
+	# 3D models or Blender-rendered sprites: read when buildings / map props are created (next match)
+	FactionArtManager.use_3d_building_models = int(values.get("style", 0)) == 0
 
 
 static func describe() -> String:
-	return "%s: çözünürlük %%%d, MSAA %s, gölge %s, %d FPS" % [PRESET_NAMES[preset], values["scale"],
-		MSAA_NAMES[MSAA_OPTIONS.find(values["msaa"])], SHADOW_NAMES[values["shadows"]], values["fps"]]
+	return "%s: %s, çözünürlük %%%d, MSAA %s, gölge %s, %d FPS" % [PRESET_NAMES[preset], STYLE_NAMES[values["style"]],
+		values["scale"], MSAA_NAMES[MSAA_OPTIONS.find(values["msaa"])], SHADOW_NAMES[values["shadows"]], values["fps"]]

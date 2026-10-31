@@ -45,6 +45,7 @@ var gfx_scale_label: Label = null
 var gfx_msaa_buttons: Array = []
 var gfx_shadow_buttons: Array = []
 var gfx_fps_buttons: Array = []
+var gfx_style_buttons: Array = []
 var gfx_summary_label: Label = null
 var _gfx_syncing := false
 
@@ -432,6 +433,9 @@ func _build_graphics_settings() -> void:
 	items.append(_gfx_label("GRAFİK KALİTESİ", 18))
 	gfx_preset_buttons = _gfx_button_row(GraphicsSettings.PRESET_NAMES, _on_gfx_preset_picked)
 	items.append(_gfx_rows[-1])
+	items.append(_gfx_label("Görünüm (yeni maçta geçerli):"))
+	gfx_style_buttons = _gfx_button_row(GraphicsSettings.STYLE_NAMES, func(i): _on_gfx_option("style", i))
+	items.append(_gfx_rows[-1])
 	gfx_scale_label = _gfx_label("")
 	items.append(gfx_scale_label)
 	gfx_scale_slider = HSlider.new()
@@ -499,6 +503,8 @@ func _sync_gfx_controls() -> void:
 		gfx_shadow_buttons[i].set_pressed_no_signal(i == vals["shadows"])
 	for i in gfx_fps_buttons.size():
 		gfx_fps_buttons[i].set_pressed_no_signal(GraphicsSettings.FPS_OPTIONS[i] == vals["fps"])
+	for i in gfx_style_buttons.size():
+		gfx_style_buttons[i].set_pressed_no_signal(i == vals["style"])
 	gfx_summary_label.text = GraphicsSettings.describe()
 	_gfx_syncing = false
 

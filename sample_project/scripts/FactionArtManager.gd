@@ -372,3 +372,110 @@ static func instantiate_field_model(map_type: int, team: int) -> Node3D:
 	if m == null and biome != "temperate":
 		m = instantiate_environment_model("field", team)
 	return m
+
+
+# =====================================================================================
+# 2D sprite mode: sprites rendered in Blender from the SAME models (art_source/blender/render_sprites.py)
+# Used when use_3d_building_models is false (Ayarlar > Görünüm: 2D Sprite).
+# =====================================================================================
+const SPRITE_MANIFEST_PATH: String = "res://data/art/sprite_manifest.json"
+static var _sprite_manifest: Dictionary = {}
+static var _sprite_manifest_loaded: bool = false
+static var _sprite_tex_cache: Dictionary = {}
+
+static func _load_sprite_manifest() -> void:
+	if _sprite_manifest_loaded:
+		return
+	_sprite_manifest_loaded = true
+	if not FileAccess.file_exists(SPRITE_MANIFEST_PATH):
+		push_warning("FactionArtManager: sprite manifest missing at " + SPRITE_MANIFEST_PATH)
+		return
+	var parsed = JSON.parse_string(FileAccess.get_file_as_string(SPRITE_MANIFEST_PATH))
+	if typeof(parsed) == TYPE_DICTIONARY:
+		_sprite_manifest = parsed
+
+static func get_sprite_entry(section: String, key: String) -> Dictionary:
+	_load_sprite_manifest()
+	var sec: Dictionary = _sprite_manifest.get(section, {})
+	if section == "buildings":
+		var parts := key.split("/")
+		return sec.get(parts[0], {}).get(parts[1], {}) if parts.size() == 2 else {}
+	return sec.get(key, {})
+
+static func _sprite_texture(path: String) -> Texture2D:
+	if path == "":
+		return null
+	if not _sprite_tex_cache.has(path):
+		_sprite_tex_cache[path] = load(path) as Texture2D if ResourceLoader.exists(path) else null
+		if _sprite_tex_cache[path] == null:
+			_log_once(path, "FactionArtManager: sprite missing: %s" % path)
+	return _sprite_tex_cache[path]
+
+## Builds the camera-facing sprite for a manifest entry. Returned node: origin = the model's origin on the
+## ground; child "SpritePlane" stands at the model's front-most depth (plane_z) and is stretched by
+## 1/cos(pitch) vertically, so the 45 deg game camera sees the render undistorted. `flip` mirrors it.
+static func make_sprite_node(entry: Dictionary, team: int = -1, flip: bool = false) -> Node3D:
+	if entry.is_empty():
+		return null
+	var path: String = entry.get("t%d" % clampi(team, 0, 1), "") if entry.has("t0") else entry.get("img", "")
+	var tex := _sprite_texture(path)
+	if tex == null:
+		return null
+	var p: float = 1.0 / float(entry.get("px_per_m", 32))
+	var w: float = float(entry["w"])
+	var h: float = float(entry["h"])
+	var ax: float = float(entry["anchor"][0])
+	var ay: float = float(entry["anchor"][1])
+	if flip:
+		ax = w - ax
+	var root := Node3D.new()
+	root.name = "SpriteVisual"
+	var plane := Node3D.new()
+	plane.name = "SpritePlane"
+	plane.position = Vector3(0, 0, float(entry.get("plane_z", 0.0)))
+	plane.scale = Vector3(1, 1.0 / cos(deg_to_rad(float(entry.get("pitch_deg", 45.0)))), 1)
+	root.add_child(plane)
+	var s := Sprite3D.new()
+	s.name = "Sprite"
+	s.texture = tex
+	s.pixel_size = p
+	s.flip_h = flip
+	s.centered = true
+	s.billboard = BaseMaterial3D.BILLBOARD_DISABLED
+	s.shaded = false
+	s.double_sided = false
+	s.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+	s.alpha_cut = SpriteBase3D.ALPHA_CUT_DISCARD
+	s.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	s.position = Vector3((w * 0.5 - ax) * p, (ay - h * 0.5) * p, 0)
+	plane.add_child(s)
+	return root
+
+static func instantiate_building_sprite(civ_type: CivData.CivType, b_type: Building3D.BuildingType, team: int) -> Node3D:
+	return make_sprite_node(get_sprite_entry("buildings", "%s/%s" % [get_faction_id_from_civ(civ_type), get_building_id_from_type(b_type)]), team)
+
+static func instantiate_environment_sprite(asset_id: String, flip: bool = false) -> Node3D:
+	var e := get_sprite_entry("environment", asset_id)
+	if e.is_empty() and "/" in asset_id:
+		e = get_sprite_entry("environment", asset_id.get_slice("/", 1))
+	return make_sprite_node(e, -1, flip)
+
+static func instantiate_field_sprite(map_type: int, team: int) -> Node3D:
+	var biome := CivData.get_biome(map_type)
+	var e := get_sprite_entry("fields", "field" if biome == "temperate" else biome + "/field")
+	if e.is_empty():
+		e = get_sprite_entry("fields", "field")
+	return make_sprite_node(e, team)
+
+## Upgrade kit as two sprites: the back half stands behind the building sprite, the front half in front.
+static func instantiate_upgrade_kit_sprite(civ: int, team: int) -> Node3D:
+	var halves: Dictionary = get_sprite_entry("upgrade_kits", CivData.get_civ(civ).get("id", ""))
+	if halves.is_empty():
+		return null
+	var root := Node3D.new()
+	for half in ["back", "front"]:
+		var n := make_sprite_node(halves.get(half, {}), team)
+		if n != null:
+			n.name = "Kit_" + half
+			root.add_child(n)
+	return root if root.get_child_count() > 0 else null

@@ -70,19 +70,32 @@ shadows. This is only for comparison.
 * **Default with no saved file:** Orta on phones (`OS.has_feature("mobile")`), Yüksek on desktop. Yüksek equals the look
   before the menu existed.
 
-| Preset | 3D resolution | MSAA | Shadows | FPS cap |
-|---|---|---|---|---|
-| Düşük | 60% | off | off | 30 |
-| Orta | 75% | off | low | 60 |
-| Yüksek | 100% | 2x | high | 60 |
+| Preset | Look | 3D resolution | MSAA | Shadows | FPS cap |
+|---|---|---|---|---|---|
+| Düşük | 2D sprites | 60% | off | off | 30 |
+| Orta | 3D models | 75% | off | low | 60 |
+| Yüksek | 3D models | 100% | 2x | high | 60 |
 
-Emulator run 3 (the frame cap is lifted while measuring):
+**Görünüm (look):**
+* **3D Model:** the Blender models.
+* **2D Sprite:** sprites rendered in Blender from the same models (BLENDER_PIPELINE §3.2).
 
-| Preset | FPS | p50 / p99 ms | Draw calls | Video memory |
-|---|---|---|---|---|
-| Düşük | 47.6 | 20.8 / 27.5 | 386 | 72 MB |
-| Orta | 44.9 | 22.2 / 26.9 | 661 | 77 MB |
-| Yüksek | 30.6 | 33.3 / 46.9 | 709 | 126 MB |
+It is read when a match is created. Changing it by hand makes the preset Custom, like every other option.
+
+Emulator run 5 (the frame cap is lifted while measuring; Düşük now uses 2D sprites):
+
+| Preset / phase | FPS | p50 / p99 ms | Draw calls | Primitives | Video memory |
+|---|---|---|---|---|---|
+| Düşük (2D) | 52.3 | 19.2 / 21.3 | 270 | 19k | 73 MB |
+| Orta | 50.8 | 19.4 / 27.4 | 661 | 96k | 78 MB |
+| Yüksek | 29.6 | 33.3 / 45.2 | 709 | 105k | 127 MB |
+| High settings, 2D sprites | 36.5 | 27.3 / 37.5 | 283 | 29k | 127 MB |
+| High settings, 3D models | 30.1 | 33.3 / 41.2 | 709 | 105k | 126 MB |
+
+With equal settings, 2D sprites cut draw calls by 60% and primitives by 70% (about +20% FPS in the emulator).
+
+Earlier runs measured "base_sprites" with the old hand-drawn sprites. Before the fix in run 5, the settings were
+applied after the match had started, so the look option did not take effect in that phase.
 
 Test: `scripts/tests/test_graphics_settings.gd`. It covers the presets, Custom on a manual change, applying the settings,
 the menu controls, and save/load. It backs up and restores the user's settings file.
@@ -91,6 +104,19 @@ the menu controls, and save/load. It backs up and restores the user's settings f
 
 * **Main menu background was empty in exported builds.** `MenuRoot.gd` read the raw `battle_bg.png` from disk, which
   is not packed into exports. It now loads the imported texture.
+* **Buildings (and often units) could not be selected by tap or click.** This was pre-existing.
+  * Cause: `project.godot` enables both touch→mouse and mouse→touch emulation, so every tap reached
+    `GameController3D._unhandled_input` twice: the real event and an emulated copy. The first copy selected the
+    building; the second, a "tap on the already selected building", deselected it again.
+  * Fix: the handler now ignores emulated pointer events (`InputEvent.DEVICE_ID_EMULATION`).
+  * Earlier tests called the click handler directly and missed this. `test_real_input_taps.gd` taps through
+    `Input.parse_input_event` with emulation active:
+    * every building type in 3D and 2D, with mouse and finger;
+    * a second tap deselects;
+    * the train button, villager select/move, and drag-to-pan.
+
+    Without the fix it reports 0/11 buildings selectable.
+  * Also confirmed on the emulator: tapping the Town Center opens its panel, and "İşçi Eğit" trains exactly one villager.
 * **Zoom buttons showed missing-glyph boxes (FF0B / FF0D) on Android.** The full-width "＋/－" characters are not
   in the Android fonts. They are now ASCII `+` / `-`. The gallery's emoji (⚔ 🏛 📜) render fine on Android.
 

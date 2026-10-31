@@ -780,16 +780,22 @@ func _create_resource_area(node: Node3D, cell: Vector2i, type: String, radius: f
 	return area
 
 ## Adds the Blender-pipeline environment model as child "Visual" (random yaw/scale so forests
-## don't look stamped). Returns false when no model is available -> caller adds its sprite.
+## don't look stamped); in 2D sprite mode the Blender-rendered sprite of the same prop. Returns false
+## only when neither exists -> caller adds the old hand-drawn sprite.
 func _add_env_model(parent: Node3D, asset_id: String, min_scale: float, max_scale: float) -> bool:
 	var m = FactionArtManager.instantiate_environment_model(asset_id)
 	if m == null and "/" in asset_id:
 		# biome variant missing/disabled -> same prop from the temperate set
 		m = FactionArtManager.instantiate_environment_model(asset_id.get_slice("/", 1))
+	var yaw := randf() * TAU            # drawn even in 2D mode so seeded maps stay identical
+	if m == null:
+		# 2D sprite mode: the same prop rendered in Blender; mirrored at random instead of rotated
+		m = FactionArtManager.instantiate_environment_sprite(asset_id, yaw > PI)
 	if m == null:
 		return false
 	m.name = "Visual"
-	m.rotation.y = randf() * TAU
+	if not m.has_node("SpritePlane"):
+		m.rotation.y = yaw
 	var s := randf_range(min_scale, max_scale)
 	m.scale = Vector3(s, s, s)
 	m.set_meta("base_scale", s)

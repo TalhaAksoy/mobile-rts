@@ -226,6 +226,13 @@ func _update_hud() -> void:
 func _unhandled_input(event: InputEvent) -> void:
 	if not is_game_active:
 		return
+	# The project emulates touch from mouse AND mouse from touch (project.godot, input_devices/pointing),
+	# so every real tap/click arrives twice: the real event plus an emulated copy. Handling both ran
+	# _handle_3d_click twice per tap, and the second run toggled the just-selected building (or unit)
+	# off again -> buildings could not be selected. Only the real device's events are handled here.
+	if (event is InputEventMouseButton or event is InputEventMouseMotion or event is InputEventScreenTouch \
+			or event is InputEventScreenDrag) and event.device == InputEvent.DEVICE_ID_EMULATION:
+		return
 
 	if event is InputEventKey and event.pressed:
 		if event.keycode == KEY_F5:

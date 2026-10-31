@@ -155,25 +155,29 @@ func test_all_10_factions_12_building_instances() -> void:
 
 func test_construction_progression_visuals() -> void:
 	print("\n--- TEST: Construction Progression & Opacity Transition ---")
-	FactionArtManager.use_3d_building_models = false  # this test covers the sprite fallback path
+	FactionArtManager.use_3d_building_models = false  # 2D sprite mode (sprites rendered in Blender)
 	var b = Building3D.new()
 	root.add_child(b)
 	b.setup_building(Building3D.BuildingType.BARRACKS, 0, CivData.CivType.OTTOMANS, Vector2i(5, 5), null, null, true)
 
 	assert_true(not b.is_completed, "Building starts uncompleted")
 	assert_true(b.scaffold_node.visible, "Scaffold is visible during construction")
-	assert_true(b.building_sprite.modulate.a < 0.6, "Sprite is semi-transparent during construction (alpha=%.2f)" % b.building_sprite.modulate.a)
+	# rendered sprites are revealed from the ground up (and dimmed) instead of the old 45% alpha
+	var full_h: int = b.building_sprite.texture.get_height()
+	assert_true(b.sprite_is_rendered and b.building_sprite.region_enabled and b.building_sprite.region_rect.size.y < full_h * 0.5,
+		"Sprite shows only its lower part at the start of construction")
+	assert_true(b.building_sprite.modulate.r < 0.9, "Sprite is dimmed during construction")
 
 	b.contribute_construction(100.0)
 	assert_true(b.is_completed, "Building completes after 100 progress")
 	assert_true(not b.scaffold_node.visible, "Scaffold hidden after completion")
-	assert_true(b.building_sprite.modulate.a >= 0.99, "Sprite restores to full opacity on completion")
+	assert_true(not b.building_sprite.region_enabled and b.building_sprite.modulate == Color.WHITE, "Whole sprite at full brightness on completion")
 	b.queue_free()
 	FactionArtManager.use_3d_building_models = true
 
 func test_enemy_civ_tint() -> void:
-	print("\n--- TEST: Enemy Faction Red Tint Visual ---")
-	FactionArtManager.use_3d_building_models = false  # sprite tint path
+	print("\n--- TEST: Team Colours on 2D Sprites ---")
+	FactionArtManager.use_3d_building_models = false  # 2D sprite mode
 	var b_ally = Building3D.new()
 	root.add_child(b_ally)
 	b_ally.setup_building(Building3D.BuildingType.TOWN_CENTER, 0, CivData.CivType.FRANKS, Vector2i(2, 2), null, null, false)
@@ -182,8 +186,10 @@ func test_enemy_civ_tint() -> void:
 	root.add_child(b_enemy)
 	b_enemy.setup_building(Building3D.BuildingType.TOWN_CENTER, 1, CivData.CivType.BYZANTINES, Vector2i(8, 8), null, null, false)
 
+	# team colour is rendered into the sprite (blue / red TEAM surfaces), so no whole-sprite tint is needed
 	assert_true(b_ally.building_sprite.modulate == Color(1.0, 1.0, 1.0), "Ally building has clean un-tinted modulate")
-	assert_true(b_enemy.building_sprite.modulate.r > 1.0, "Enemy building has red military tint modulate")
+	assert_true(b_ally.building_sprite.texture.resource_path.ends_with("town_center_t0.png"), "Ally building uses the blue-team sprite")
+	assert_true(b_enemy.building_sprite.texture.resource_path.ends_with("town_center_t1.png"), "Enemy building uses the red-team sprite")
 
 	b_ally.queue_free()
 	b_enemy.queue_free()

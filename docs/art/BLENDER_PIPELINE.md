@@ -80,6 +80,38 @@ instead of one hand-written script per civ (Ottoman Barracks and Lumber Camp sta
 
 To change how a civ looks everywhere, edit its `STYLES` entry and rebuild with `ONLY` = that civ's scripts.
 
+### 3.2 2D sprite set (Ayarlar > Görünüm: 2D Sprite)
+
+The 2D look is rendered from the same models, so 2D and 3D always show the same design.
+
+1. In Blender: `runpy.run_path("<repo>/art_source/blender/render_sprites.py")`. Optional globals:
+   * `ONLY = ["britons_house", "env:common_tree_pine", "fields:field", ...]` restricts the set.
+   * `EXPOSURE = -1.5` (stops) is the default. It was calibrated against in-game 3D captures (roofs and walls),
+     because the sprites are unshaded in Godot but still tonemapped there.
+
+   The script builds each model with its own build script and renders it:
+   * with an orthographic camera at the game camera's 45° pitch,
+   * at 4× supersampling, on a transparent background,
+   * once per team colour when the model has `TEAM_*` surfaces.
+
+   Upgrade kits are cut at the origin into a back half and a front half, so the back pieces stand behind the
+   building sprite. Output: `build/sprites_raw/` (not committed) and `sample_project/data/art/sprite_manifest.json`.
+2. Outside Blender, `python3 art_source/blender/finish_sprites.py`:
+   * box-downsamples to 32 px/m, the same density as the 3D textures;
+   * gives the alpha a hard edge;
+   * writes `sample_project/assets/sprites/<section>/<key>[_t0|_t1].png`;
+   * pins each `.import` as lossless, with no mipmaps and no VRAM compression from 3D detection, which would blur
+     the pixels.
+3. `godot --headless --path sample_project --import`, then `test_visual_style.gd`.
+
+Placement (`FactionArtManager.make_sprite_node`):
+* The sprite is a plane facing the camera (no billboard; the camera yaw is fixed).
+* It stands at the model's front-most depth (`plane_z`) and is stretched vertically by 1/cos(45°), so the 45° camera
+  sees it undistorted.
+* `anchor` is the pixel of the ground point under the model origin.
+* In 2D mode, buildings under construction show the sprite revealed from the ground up.
+* Environment props are mirrored at random instead of rotated.
+
 ## 4. Godot side
 
 * `FactionArtManager.instantiate_building_model(civ, type, team)` loads the GLB listed in the manifest and replaces every

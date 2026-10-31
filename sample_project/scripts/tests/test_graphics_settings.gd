@@ -19,6 +19,7 @@ func _run() -> void:
 	if FileAccess.file_exists(GraphicsSettings.PATH):
 		backup = FileAccess.get_file_as_string(GraphicsSettings.PATH)
 	DirAccess.remove_absolute(path)
+	GraphicsSettings.read_saved_when_headless = true
 
 	# --- defaults and presets
 	GraphicsSettings.load_settings()
@@ -29,6 +30,7 @@ func _run() -> void:
 	var low: Dictionary = GraphicsSettings.PRESETS[GraphicsSettings.Preset.LOW]
 	var high: Dictionary = GraphicsSettings.PRESETS[GraphicsSettings.Preset.HIGH]
 	_check(low["scale"] < high["scale"] and low["msaa"] <= high["msaa"] and low["shadows"] < high["shadows"] and low["fps"] <= high["fps"], "Low is cheaper than High in every option")
+	_check(low["style"] == 1 and high["style"] == 0 and GraphicsSettings.PRESETS[GraphicsSettings.Preset.MEDIUM]["style"] == 0, "Low uses 2D sprites, Medium/High 3D models")
 
 	# --- manual change -> CUSTOM, values sanitised
 	GraphicsSettings.set_preset(GraphicsSettings.Preset.HIGH)
@@ -54,6 +56,7 @@ func _run() -> void:
 	var menu = scene.get_node("UIManager3D/MenuRoot")
 	menu._on_settings_pressed()
 	await process_frame
+	_check(menu.gfx_style_buttons.size() == 2 and menu.gfx_style_buttons[1].button_pressed and not FactionArtManager.use_3d_building_models, "Low: style row shows 2D Sprite, 3D models off")
 	_check(menu.gfx_preset_buttons.size() == 4 and menu.gfx_msaa_buttons.size() == 3 and menu.gfx_shadow_buttons.size() == 3 and menu.gfx_fps_buttons.size() == 2 and menu.gfx_scale_slider != null,
 		"settings menu shows preset row, resolution slider, MSAA, shadows, fps cap")
 	_check(menu.gfx_preset_buttons[GraphicsSettings.Preset.LOW].button_pressed, "menu shows the active preset (Low)")
@@ -62,6 +65,7 @@ func _run() -> void:
 	await process_frame
 	_check(GraphicsSettings.preset == GraphicsSettings.Preset.HIGH and is_equal_approx(vp.scaling_3d_scale, 1.0) and vp.msaa_3d == Viewport.MSAA_2X and light.shadow_enabled and Engine.max_fps == 60,
 		"tapping High applies it at once")
+	_check(FactionArtManager.use_3d_building_models and menu.gfx_style_buttons[0].button_pressed, "High: 3D models on")
 	_check(menu.gfx_preset_buttons[GraphicsSettings.Preset.HIGH].button_pressed and not menu.gfx_preset_buttons[GraphicsSettings.Preset.LOW].button_pressed, "only the High button is selected")
 	_check(menu.gfx_scale_slider.value == 100 and menu.gfx_msaa_buttons[1].button_pressed and menu.gfx_shadow_buttons[2].button_pressed, "controls follow the preset")
 
@@ -77,6 +81,10 @@ func _run() -> void:
 	menu.gfx_preset_buttons[GraphicsSettings.Preset.CUSTOM].emit_signal("pressed")
 	await process_frame
 	_check(GraphicsSettings.preset == GraphicsSettings.Preset.CUSTOM and menu.gfx_preset_buttons[GraphicsSettings.Preset.CUSTOM].button_pressed, "tapping Custom keeps the custom values")
+
+	menu.gfx_style_buttons[1].emit_signal("pressed")
+	await process_frame
+	_check(GraphicsSettings.preset == GraphicsSettings.Preset.CUSTOM and GraphicsSettings.values["style"] == 1 and not FactionArtManager.use_3d_building_models, "picking 2D Sprite by hand -> Custom, 3D models off")
 
 	# --- save -> load
 	var saved: Dictionary = GraphicsSettings.values.duplicate()
@@ -102,5 +110,6 @@ func _run() -> void:
 		f.store_string(backup)
 		f.close()
 	Engine.max_fps = 0
+	FactionArtManager.use_3d_building_models = true
 	print("RESULT: %s (%d failures)" % ["PASS" if failures == 0 else "FAIL", failures])
 	quit(0 if failures == 0 else 1)

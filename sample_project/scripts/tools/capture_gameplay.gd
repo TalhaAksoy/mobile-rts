@@ -25,6 +25,7 @@ var map_seed := -1                     # --seed=N: same map every run (before/af
 var upgrade_all := false               # --upgrade=1: grant every building upgrade (level 2 look) to team 0
 var n_fields := 0                      # --fields=N: with --showcase=mill, add N finished fields + farmers
 var map_type := -1                     # --map=0 forest valley, 1 desert oasis
+var style := ""                        # --style=2d / --style=3d: building + prop look (default: settings)
 
 func _init() -> void:
 	for a in OS.get_cmdline_user_args():
@@ -39,6 +40,7 @@ func _init() -> void:
 		elif a.begins_with("--map="): map_type = int(a.substr(6))
 		elif a.begins_with("--fields="): n_fields = int(a.substr(9))
 		elif a.begins_with("--upgrade="): upgrade_all = a.substr(10) == "1"
+		elif a.begins_with("--style="): style = a.substr(8)
 	call_deferred("_run")
 
 func _wait(sec: float) -> void:
@@ -61,6 +63,9 @@ func _run() -> void:
 	root.add_child(scene)
 	await process_frame
 	var game = scene as GameController3D
+	if style != "":
+		GraphicsSettings.set_value("style", 1 if style == "2d" else 0)
+		FactionArtManager.use_3d_building_models = style != "2d"
 	if map_seed >= 0:
 		seed(map_seed)
 	game._on_start_game_requested(civ, enemy, game.selected_map_type if map_type < 0 else map_type)

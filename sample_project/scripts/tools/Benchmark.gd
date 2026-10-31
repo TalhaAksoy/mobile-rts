@@ -33,9 +33,9 @@ const PHASES := [
 	{"name": "base_sprites", "models": false, "height": 24.0, "battle": false},
 	{"name": "base_models_scale50", "models": true, "height": 24.0, "battle": false, "scale": 50},
 	{"name": "base_models_nomsaa", "models": true, "height": 24.0, "battle": false, "msaa": 0},
-	{"name": "preset_low", "preset": 0, "models": true, "height": 24.0, "battle": false},
-	{"name": "preset_medium", "preset": 1, "models": true, "height": 24.0, "battle": false},
-	{"name": "preset_high", "preset": 2, "models": true, "height": 24.0, "battle": false},
+	{"name": "preset_low", "preset": 0, "height": 24.0, "battle": false},
+	{"name": "preset_medium", "preset": 1, "height": 24.0, "battle": false},
+	{"name": "preset_high", "preset": 2, "height": 24.0, "battle": false},
 	{"name": "battle_models", "models": true, "height": 24.0, "battle": true},
 ]
 
@@ -90,26 +90,30 @@ func _table() -> String:
 	return s
 
 func _phase(p: Dictionary) -> Dictionary:
-	FactionArtManager.use_3d_building_models = p["models"]
 	FactionArtManager._model_cache.clear()
 	seed(SEED)
 	var scene = load("res://scenes/Main3D.tscn").instantiate()
 	add_child(scene)
 	await get_tree().process_frame
 	var game = scene as GameController3D
-	seed(SEED)
-	game._on_start_game_requested(CIV, ENEMY, MAP)
-	if game.tutorial_mgr != null and game.tutorial_mgr.has_method("stop_tutorial"):
-		game.tutorial_mgr.stop_tutorial()
-	game.enemy_ai.set_process(false)
-	game.enemy_ai.set_physics_process(false)
+	# graphics BEFORE the match starts: the style (3D models / 2D sprites) is read when buildings and
+	# map props are created
 	var light := scene.get_node_or_null("DirectionalLight3D") as DirectionalLight3D
 	var vp := get_viewport()
 	GraphicsSettings.set_preset(p.get("preset", GraphicsSettings.Preset.HIGH))
 	for k in ["scale", "msaa", "shadows"]:
 		if p.has(k):
 			GraphicsSettings.set_value(k, p[k])      # a single override is a Custom setting
+	if p.has("models") and int(GraphicsSettings.values["style"]) != (0 if p["models"] else 1):
+		GraphicsSettings.set_value("style", 0 if p["models"] else 1)
 	GraphicsSettings.apply(vp, light)
+	Engine.max_fps = 0
+	seed(SEED)
+	game._on_start_game_requested(CIV, ENEMY, MAP)
+	if game.tutorial_mgr != null and game.tutorial_mgr.has_method("stop_tutorial"):
+		game.tutorial_mgr.stop_tutorial()
+	game.enemy_ai.set_process(false)
+	game.enemy_ai.set_physics_process(false)
 	Engine.max_fps = 0
 	_build_base(game)
 	if p["battle"]:
@@ -153,7 +157,7 @@ func _phase(p: Dictionary) -> Dictionary:
 		"video_mem_mb": snappedf(Performance.get_monitor(Performance.RENDER_VIDEO_MEM_USED) / 1048576.0, 0.1),
 		"static_mem_mb": snappedf(Performance.get_monitor(Performance.MEMORY_STATIC) / 1048576.0, 0.1),
 		"buildings": game.buildings.size(), "units_start": units_start, "units_end": units,
-		"models": p["models"], "preset": GraphicsSettings.PRESET_NAMES[GraphicsSettings.preset],
+		"models": FactionArtManager.use_3d_building_models, "preset": GraphicsSettings.PRESET_NAMES[GraphicsSettings.preset],
 		"scale": GraphicsSettings.values["scale"], "msaa": GraphicsSettings.values["msaa"],
 		"shadows": GraphicsSettings.values["shadows"],
 		"render_size": str(vp.get_visible_rect().size),
