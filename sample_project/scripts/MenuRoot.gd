@@ -4,6 +4,7 @@ extends Control
 const FactionArtManager = preload("res://scripts/FactionArtManager.gd")
 
 signal start_game(player_civ, enemy_civ, map_type)
+signal load_game_requested      # "KAYITLI OYUN": continue the quick-saved match
 
 @onready var main_menu_view: Control = get_node_or_null("MainMenuView")
 @onready var civ_select_view: Control = get_node_or_null("CivSelectView")
@@ -17,6 +18,7 @@ signal start_game(player_civ, enemy_civ, map_type)
 @onready var btn_gallery: Button = get_node_or_null("MainMenuView/VBox/GalleryButton")
 @onready var btn_exit: Button = get_node_or_null("MainMenuView/VBox/ExitButton")
 @onready var art_preview: Control = get_node_or_null("ArtPreview")
+var btn_continue: Button = null   # built in code, shown only when a saved game exists
 
 # Civ Select Elements
 @onready var civ_list_container: VBoxContainer = get_node_or_null("CivSelectView/HBox/ScrollCivs/CivList")
@@ -88,7 +90,17 @@ func _ready() -> void:
 		btn_gallery.text = "SANAT GALERİSİ"
 	btn_exit.text = "OYUNDAN ÇIK"
 
-	for b in [btn_new_game, btn_settings, btn_gallery, btn_exit]:
+	if btn_continue == null:
+		btn_continue = Button.new()
+		btn_continue.name = "ContinueButton"
+		btn_new_game.get_parent().add_child(btn_continue)
+		btn_new_game.get_parent().move_child(btn_continue, btn_new_game.get_index() + 1)
+		btn_continue.pressed.connect(func():
+			SoundManager.play_sound("click")
+			load_game_requested.emit())
+	btn_continue.text = "KAYITLI OYUN"
+
+	for b in [btn_new_game, btn_continue, btn_settings, btn_gallery, btn_exit]:
 		if is_instance_valid(b):
 			ParchmentTheme.apply_parchment_button(b, 20)
 			b.custom_minimum_size = Vector2(260, 58)
@@ -188,6 +200,8 @@ func _ready() -> void:
 
 func _show_main_menu() -> void:
 	main_menu_view.visible = true
+	if is_instance_valid(btn_continue):
+		btn_continue.visible = SaveManager.has_saved_game()
 	civ_select_view.visible = false
 	settings_view.visible = false
 	if is_instance_valid(art_preview):

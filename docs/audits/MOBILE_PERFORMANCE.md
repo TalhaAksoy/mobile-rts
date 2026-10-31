@@ -100,6 +100,21 @@ applied after the match had started, so the look option did not take effect in t
 Test: `scripts/tests/test_graphics_settings.gd`. It covers the presets, Custom on a manual change, applying the settings,
 the menu controls, and save/load. It backs up and restores the user's settings file.
 
+## Smooth hills: geometry cost (desktop measurement, not phone FPS)
+
+The stepped terraces were replaced by one smooth ground mesh: a 65×121 vertex grid, about 15.4k triangles. The
+per-cell water quads (73–95 per water map) became one water surface. Measured with `capture_gameplay.gd`, River
+Crossing, seed 7, 3D style, desktop High preset:
+
+| | draw calls | primitives |
+|---|---|---|
+| before (stepped terraces) | 385 | 72,249 |
+| after (smooth hills) | 386 | 105,486 |
+
+Draw calls do not change. Primitives rise by about 33k: the ground mesh is drawn in the colour pass and again in
+the shadow pass. On the Low preset, shadows are off, so the shadow-pass copy is not drawn. This has not been
+measured on the emulator or a phone yet, so no FPS claim is made here.
+
 ## Bugs found by running on Android (fixed)
 
 * **Main menu background was empty in exported builds.** `MenuRoot.gd` read the raw `battle_bg.png` from disk, which

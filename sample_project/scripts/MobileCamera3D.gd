@@ -108,11 +108,39 @@ func _clamp_camera() -> void:
 	var max_z = map_bounds_max.y + bottom_view_offset - 2.0
 	position.z = clamp(position.z, min_z, max(min_z, max_z))
 
+## Where a screen point hits the ground. With a terrain (`terrain` = MapGenerator3D) the ray is
+## marched down to the hill surface, so a tap on a hilltop lands on the hilltop and not on the
+## y = 0 plane behind it.
+var terrain: Node = null
+
 func raycast_ground(screen_pos: Vector2) -> Vector3:
 	var ray_origin = project_ray_origin(screen_pos)
 	var ray_normal = project_ray_normal(screen_pos)
 	var ground_plane = Plane(Vector3.UP, 0.0)
 	var hit = ground_plane.intersects_ray(ray_origin, ray_normal)
+	if terrain != null and is_instance_valid(terrain) and ray_normal.y < -0.01:
+		var top: float = terrain.max_terrain_h + 0.1
+		# from the ray's point at the highest ground down to the lowest bed, 0.25 m steps
+		var t0: float = (ray_origin.y - top) / -ray_normal.y
+		var t1: float = (ray_origin.y - (MapGenerator3D.WATER_H - 0.1)) / -ray_normal.y
+		var prev_t := t0
+		var t := t0
+		while t <= t1:
+			var p: Vector3 = ray_origin + ray_normal * t
+			if p.y <= terrain.get_height_at(p):
+				# refine between the last point above and this one
+				var lo := prev_t
+				var hi := t
+				for k in 6:
+					var mid := (lo + hi) * 0.5
+					var q: Vector3 = ray_origin + ray_normal * mid
+					if q.y <= terrain.get_height_at(q):
+						hi = mid
+					else:
+						lo = mid
+				return ray_origin + ray_normal * hi
+			prev_t = t
+			t += 0.25
 	if hit != null:
 		return hit
 	return Vector3.ZERO

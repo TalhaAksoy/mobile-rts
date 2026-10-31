@@ -101,7 +101,7 @@ static func build(mg, control: Image) -> Dictionary:
 				var pz: float = (y + rng.randf_range(0.1, 0.9)) * mg.TILE_SIZE
 				var s := rng.randf_range(0.8, 1.25)
 				var basis := Basis(Vector3.UP, rng.randf() * TAU).scaled(Vector3(s, s, s))
-				var t := Transform3D(basis, Vector3(px, mg.height_map[x][y], pz))
+				var t := Transform3D(basis, Vector3(px, mg.get_height_at(Vector3(px, 0, pz)), pz))
 				per_chunk[y / CHUNK_ROWS].append([t, a, cell])
 
 	var nodes: Array = []

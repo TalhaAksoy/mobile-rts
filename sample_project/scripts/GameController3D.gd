@@ -77,6 +77,12 @@ func _ready() -> void:
 	ui_manager.clear_selection_requested.connect(_on_clear_selection_requested)
 	ui_manager.toggle_speed_requested.connect(_on_toggle_speed)
 	ui_manager.restart_requested.connect(_on_restart_requested)
+	ui_manager.pause_menu_requested.connect(open_pause_menu)
+	ui_manager.resume_requested.connect(close_pause_menu)
+	ui_manager.save_requested.connect(_on_save_from_menu)
+	ui_manager.main_menu_requested.connect(return_to_main_menu)
+	ui_manager.quit_requested.connect(func(): get_tree().quit())
+	ui_manager.load_game_requested.connect(load_saved_game)
 	ui_manager.zoom_in_requested.connect(func(): camera.zoom_in())
 	ui_manager.zoom_out_requested.connect(func(): camera.zoom_out())
 	ui_manager.box_select_toggled.connect(func(enabled: bool): is_box_select_mode = enabled)
@@ -129,16 +135,7 @@ func _on_start_game_requested(p_civ: CivData.CivType, e_civ: CivData.CivType, m_
 	start_match()
 
 func start_match() -> void:
-	for u in units:
-		if is_instance_valid(u):
-			u.queue_free()
-	units.clear()
-	for b in buildings:
-		if is_instance_valid(b):
-			b.queue_free()
-	buildings.clear()
-	selected_units.clear()
-	selected_building = null
+	_clear_match()
 
 	team_resources = {
 		0: {"food": 200, "wood": 200, "gold": 100, "stone": 100},
@@ -154,6 +151,7 @@ func start_match() -> void:
 	# 1. Generate 3D Map
 	map_gen.generate(selected_map_type)
 	camera.setup_bounds(MapGenerator3D.MAP_WIDTH * MapGenerator3D.TILE_SIZE, MapGenerator3D.MAP_HEIGHT * MapGenerator3D.TILE_SIZE)
+	camera.terrain = map_gen
 
 	# 2. Player Base (South)
 	var player_base_cell = map_gen.world_to_cell(map_gen.player_start_pos)
@@ -182,6 +180,7 @@ func start_match() -> void:
 	ui_manager.menu_root.visible = false
 	ui_manager.hud_root.visible = true
 	ui_manager.game_over_modal.visible = false
+	_set_match_running(true)
 
 	ui_manager.set_player_civ(player_civ)
 	_update_hud()
@@ -208,7 +207,7 @@ func _process(delta: float) -> void:
 		var hit_ground = camera.raycast_ground(mouse_pos)
 		var cell = map_gen.world_to_cell(hit_ground)
 		var size = _get_building_size(placing_building_type)
-		var snapped_pos = Vector3((cell.x + size.x * 0.5) * MapGenerator3D.TILE_SIZE, 0.5, (cell.y + size.y * 0.5) * MapGenerator3D.TILE_SIZE)
+		var snapped_pos = Vector3((cell.x + size.x * 0.5) * MapGenerator3D.TILE_SIZE, map_gen.get_footprint_height(cell, size) + 0.5, (cell.y + size.y * 0.5) * MapGenerator3D.TILE_SIZE)
 		ghost_preview.global_position = snapped_pos
 
 func _update_hud() -> void:
@@ -240,8 +239,7 @@ func _unhandled_input(event: InputEvent) -> void:
 				ui_manager.notify_banner("OYUN KAYDEDİLDİ (F5)", Color(0.2, 0.95, 0.4))
 			return
 		elif event.keycode == KEY_F9:
-			if SaveManager.has_saved_game():
-				SaveManager.load_game(self)
+			load_saved_game()
 			return
 
 	# Mouse / Touch press
@@ -563,8 +561,7 @@ func _find_resource_at_click(screen_pos: Vector2, ground_pos: Vector3, precise_o
 	var min_screen_dist: float = 48.0
 
 	for c in map_gen.gold_mines.keys():
-		var gh = map_gen.height_map[c.x][c.y] if map_gen.is_valid_cell(c.x, c.y) else 0.0
-		var w_pos = map_gen.cell_to_world(c) + Vector3(0, gh + 0.9, 0)
+		var w_pos = map_gen.cell_to_world(c) + Vector3(0, 0.9, 0)   # cell_to_world includes the ground height
 		var s_pos = camera.unproject_position(w_pos)
 		var d = screen_pos.distance_to(s_pos)
 		if d < min_screen_dist:
@@ -574,8 +571,7 @@ func _find_resource_at_click(screen_pos: Vector2, ground_pos: Vector3, precise_o
 				best_res = info
 
 	for c in map_gen.stone_mines.keys():
-		var gh = map_gen.height_map[c.x][c.y] if map_gen.is_valid_cell(c.x, c.y) else 0.0
-		var w_pos = map_gen.cell_to_world(c) + Vector3(0, gh + 0.9, 0)
+		var w_pos = map_gen.cell_to_world(c) + Vector3(0, 0.9, 0)   # cell_to_world includes the ground height
 		var s_pos = camera.unproject_position(w_pos)
 		var d = screen_pos.distance_to(s_pos)
 		if d < min_screen_dist:
@@ -585,8 +581,7 @@ func _find_resource_at_click(screen_pos: Vector2, ground_pos: Vector3, precise_o
 				best_res = info
 
 	for c in map_gen.berry_bushes.keys():
-		var gh = map_gen.height_map[c.x][c.y] if map_gen.is_valid_cell(c.x, c.y) else 0.0
-		var w_pos = map_gen.cell_to_world(c) + Vector3(0, gh + 0.9, 0)
+		var w_pos = map_gen.cell_to_world(c) + Vector3(0, 0.9, 0)   # cell_to_world includes the ground height
 		var s_pos = camera.unproject_position(w_pos)
 		var d = screen_pos.distance_to(s_pos)
 		if d < min_screen_dist:
@@ -596,8 +591,7 @@ func _find_resource_at_click(screen_pos: Vector2, ground_pos: Vector3, precise_o
 				best_res = info
 
 	for c in map_gen.trees.keys():
-		var gh = map_gen.height_map[c.x][c.y] if map_gen.is_valid_cell(c.x, c.y) else 0.0
-		var w_pos = map_gen.cell_to_world(c) + Vector3(0, gh + 1.6, 0)
+		var w_pos = map_gen.cell_to_world(c) + Vector3(0, 1.6, 0)
 		var s_pos = camera.unproject_position(w_pos)
 		var d = screen_pos.distance_to(s_pos)
 		if d < min_screen_dist:
@@ -695,7 +689,7 @@ func spawn_unit(u_type: Unit3D.UnitType, team: int, pos: Vector3) -> Unit3D:
 	var civ = player_civ if team == 0 else enemy_civ
 	var unit = Unit3D.new()
 	add_child(unit)
-	unit.global_position = pos
+	unit.global_position = Vector3(pos.x, map_gen.get_height_at(pos) if map_gen != null else pos.y, pos.z)
 	unit.setup_unit(u_type, team, civ, map_gen, self)
 	unit.died.connect(_on_unit_died)
 	units.append(unit)
@@ -709,7 +703,7 @@ func place_building(b_type: Building3D.BuildingType, team: int, cell: Vector2i, 
 	var civ = player_civ if team == 0 else enemy_civ
 	var b = Building3D.new()
 	var b_size = _get_building_size(b_type)
-	var world_center = Vector3((cell.x + b_size.x * 0.5) * MapGenerator3D.TILE_SIZE, 0.0, (cell.y + b_size.y * 0.5) * MapGenerator3D.TILE_SIZE)
+	var world_center = Vector3((cell.x + b_size.x * 0.5) * MapGenerator3D.TILE_SIZE, map_gen.get_footprint_height(cell, b_size), (cell.y + b_size.y * 0.5) * MapGenerator3D.TILE_SIZE)
 
 	add_child(b)
 	b.global_position = world_center
@@ -754,7 +748,7 @@ func _field_fits(origin: Vector2i) -> bool:
 			if not map_gen.is_valid_cell(c.x, c.y) or not map_gen.is_cell_buildable(c) \
 					or not map_gen.get_resource_at_cell(c).is_empty():
 				return false
-	return true
+	return map_gen.is_area_level(origin, Vector2i(2, 2))
 
 ## Free spot for a field: the 8 tidy slots around the mill first; when trees/buildings block them
 ## (dense forest maps), the nearest free 2x2 plot within 4 cells of the mill.
@@ -936,6 +930,8 @@ func _attempt_place_building(ground_pos: Vector3) -> void:
 			if not map_gen.is_valid_cell(x, y) or not map_gen.is_cell_buildable(Vector2i(x, y)):
 				clear = false
 				break
+	if clear and not map_gen.is_area_level(cell, size):
+		clear = false   # too steep: buildings go on level ground
 
 	if not clear:
 		SoundManager.play_sound("hit")
@@ -1366,6 +1362,75 @@ func _on_toggle_speed() -> void:
 	else:
 		Engine.time_scale = 1.0
 		ui_manager.speed_btn.text = "Hız: 1x"
+
+## Removes the match's units and buildings and leaves any placement / pause state.
+func _clear_match() -> void:
+	if get_tree() != null:
+		get_tree().paused = false
+	if ui_manager != null and ui_manager.pause_menu != null:
+		ui_manager.pause_menu.close()
+	for u in units:
+		if is_instance_valid(u):
+			u.queue_free()
+	units.clear()
+	for b in buildings:
+		if is_instance_valid(b):
+			b.queue_free()
+	buildings.clear()
+	selected_units.clear()
+	selected_building = null
+	is_placing_building = false
+	if ghost_preview != null:
+		ghost_preview.visible = false
+
+## A match is running: Escape / Android Back open the in-match menu instead of quitting the app.
+func _set_match_running(running: bool) -> void:
+	if ui_manager != null and ui_manager.pause_menu != null:
+		ui_manager.pause_menu.match_running = running
+	if get_tree() != null:
+		get_tree().quit_on_go_back = not running
+
+## In-match menu: the match is paused while it is open.
+func open_pause_menu() -> void:
+	if not is_game_active or ui_manager.game_over_modal.visible:
+		return
+	get_tree().paused = true
+	ui_manager.pause_menu.open()
+
+func close_pause_menu() -> void:
+	get_tree().paused = false
+	ui_manager.pause_menu.close()
+
+func _on_save_from_menu() -> void:
+	if SaveManager.save_game(self):
+		ui_manager.pause_menu.show_status("Oyun kaydedildi. Ana menüden \"KAYITLI OYUN\" ile devam edebilirsin.")
+	else:
+		ui_manager.pause_menu.show_status("Kaydedilemedi!")
+
+## Leaves the match (pause menu or game-over modal) and shows the main menu.
+func return_to_main_menu() -> void:
+	_clear_match()
+	is_game_active = false
+	_set_match_running(false)
+	Engine.time_scale = 1.0
+	ui_manager.speed_btn.text = "Hız: 1x"
+	ui_manager.set_selected_entity(null)
+	ui_manager.build_panel.visible = false
+	ui_manager.game_over_modal.visible = false
+	ui_manager.hud_root.visible = false
+	ui_manager.menu_root.visible = true
+	if ui_manager.menu_root.has_method("_show_main_menu"):
+		ui_manager.menu_root._show_main_menu()
+
+## Main menu "KAYITLI OYUN": continue the quick-saved match.
+func load_saved_game() -> void:
+	if not SaveManager.has_saved_game():
+		return
+	_clear_match()
+	if SaveManager.load_game(self):
+		Engine.time_scale = 1.0
+		ui_manager.speed_btn.text = "Hız: 1x"
+		_set_match_running(true)
 
 func _on_restart_requested() -> void:
 	Engine.time_scale = 1.0

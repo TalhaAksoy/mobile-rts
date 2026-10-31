@@ -36,7 +36,9 @@ static func save_game(game: GameController3D, file_path: String = AUTO_SAVE_FILE
 			"1": game.team_techs.get(1, {})
 		},
 		"units": [],
-		"buildings": []
+		"buildings": [],
+		# the map is regenerated from its seed on load; what was cut / mined / eaten since stays gone
+		"resources": game.map_gen.get_resource_state()
 	}
 
 	for u in game.units:
@@ -108,6 +110,8 @@ static func load_game(game: GameController3D, file_path: String = AUTO_SAVE_FILE
 
 	# Generate same map
 	game.map_gen.generate(game.selected_map_type, map_seed)
+	if data.has("resources"):
+		game.map_gen.apply_resource_state(data["resources"])
 
 	# Restore Meta & Resources
 	game.kills_count = data.get("kills_count", 0)
@@ -166,3 +170,4 @@ static func load_game(game: GameController3D, file_path: String = AUTO_SAVE_FILE
 	game.ui_manager.game_over_modal.visible = false
 	game.ui_manager.notify_banner("KAYITLI OYUN YÜKLENDİ!", Color(0.2, 0.95, 0.4))
 	return true
+

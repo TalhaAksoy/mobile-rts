@@ -57,22 +57,31 @@ func _tap(vp_pos: Vector2, touch: bool) -> void:
 		Input.parse_input_event(u)
 	await _frames(3)
 
+## Nearest free spot for a building. On dense forest maps a big footprint (castle 4x4) may only fit
+## where trees stand: then the trees there are cut first, as a player would.
 func _free_area(center: Vector2i, size: Vector2i):
 	var mg = game.map_gen
-	for r in range(3, 30):
-		for dy in range(-r, r + 1):
-			for dx in range(-r, r + 1):
-				if abs(dx) != r and abs(dy) != r:
-					continue
-				var o := center + Vector2i(dx, dy)
-				var ok := true
-				for yy in range(size.y):
-					for xx in range(size.x):
-						var c := o + Vector2i(xx, yy)
-						if not mg.is_valid_cell(c.x, c.y) or not mg.is_cell_buildable(c) or not mg.get_resource_at_cell(c).is_empty():
-							ok = false
-				if ok:
-					return o
+	for allow_trees in [false, true]:
+		for r in range(3, 30):
+			for dy in range(-r, r + 1):
+				for dx in range(-r, r + 1):
+					if abs(dx) != r and abs(dy) != r:
+						continue
+					var o := center + Vector2i(dx, dy)
+					var ok := true
+					var cut := []
+					for yy in range(size.y):
+						for xx in range(size.x):
+							var c := o + Vector2i(xx, yy)
+							if allow_trees and mg.trees.has(c) and not mg.occupied_cells.has(c) and not mg.field_cells.has(c) \
+									and not (c in mg.gold_mines or c in mg.stone_mines or c in mg.berry_bushes):
+								cut.append(c)
+							elif not mg.is_valid_cell(c.x, c.y) or not mg.is_cell_buildable(c) or not mg.get_resource_at_cell(c).is_empty():
+								ok = false
+					if ok and mg.is_area_level(o, size):
+						for c in cut:
+							mg.harvest_tree(c, 100000)
+						return o
 	return null
 
 func _select_target(b) -> Vector2:

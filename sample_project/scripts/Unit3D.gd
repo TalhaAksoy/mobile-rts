@@ -609,8 +609,19 @@ func _physics_process(delta: float) -> void:
 		State.RETURNING_RESOURCES:
 			_process_return_resources(delta)
 
+	_snap_to_ground()
+
 	if is_selected:
 		_update_status_label()
+
+## Ground distance (ignores height: on hills a target can be a little above or below the unit).
+static func _hdist(a: Vector3, b: Vector3) -> float:
+	return Vector2(a.x - b.x, a.z - b.z).length()
+
+## Feet on the terrain surface (hills are smooth slopes, so the height changes continuously).
+func _snap_to_ground() -> void:
+	if map_gen != null and is_instance_valid(map_gen):
+		global_position.y = map_gen.get_height_at(global_position)
 
 func _handle_idle_scanning() -> void:
 	if unit_type == UnitType.VILLAGER:
@@ -691,7 +702,7 @@ func _distance_to_attack_target(entity: Node3D) -> float:
 		var d := Vector2(global_position.x - b.global_position.x, global_position.z - b.global_position.z)
 		var outside := Vector2(maxf(absf(d.x) - half.x, 0.0), maxf(absf(d.y) - half.y, 0.0))
 		return outside.length()
-	return global_position.distance_to(entity.global_position)
+	return _hdist(global_position, entity.global_position)
 
 func _execute_attack() -> void:
 	if not is_instance_valid(target_entity):
@@ -749,7 +760,7 @@ func _process_gathering(delta: float) -> void:
 	if on_field:
 		# fields are walkable 2x2 plots: work standing inside them, around the plot centre
 		res_pos = _field_work_pos(target_cell)
-	var world_dist = global_position.distance_to(res_pos)
+	var world_dist = _hdist(global_position, res_pos)
 	var far: bool = (map_gen.field_origin_at(my_cell) != target_cell and world_dist > 1.6) if on_field else (cell_dist > 1 and world_dist > 2.8)
 
 	# If further than adjacent tile and further than 2.8 meters -> pathfind to adjacent cell
@@ -849,7 +860,9 @@ func _process_return_resources(delta: float) -> void:
 		return
 
 	# Verify currently targeted dropoff building is valid, completed, and alive
-	var dropoff: Building3D = target_entity as Building3D
+	# the dropoff can be destroyed and freed while we walk to it: casting a freed object is an error
+	# (it was raised every frame for every villager on its way), so check before casting
+	var dropoff: Building3D = (target_entity as Building3D) if is_instance_valid(target_entity) else null
 	if not is_instance_valid(dropoff) or dropoff.hp <= 0 or not dropoff.is_completed:
 		# Target dropoff was destroyed, uncompleted, or invalid -> seek alternative dropoff
 		dropoff = _find_valid_dropoff()
@@ -872,7 +885,7 @@ func _process_return_resources(delta: float) -> void:
 		my_cell.y >= o_cell.y - 1 and my_cell.y <= o_cell.y + g_size.y
 	)
 	var b_radius = max(g_size.x, g_size.y) * MapGenerator3D.TILE_SIZE * 0.5
-	var dist = global_position.distance_to(dropoff.global_position)
+	var dist = _hdist(global_position, dropoff.global_position)
 
 	if not is_adjacent and dist > (b_radius + 3.2):
 		if current_path.is_empty() or path_idx >= current_path.size():
@@ -911,7 +924,7 @@ func _process_building(delta: float) -> void:
 		my_cell.y >= o_cell.y - 1 and my_cell.y <= o_cell.y + g_size.y
 	)
 	var b_radius = max(g_size.x, g_size.y) * MapGenerator3D.TILE_SIZE * 0.5
-	var dist = global_position.distance_to(target_entity.global_position)
+	var dist = _hdist(global_position, target_entity.global_position)
 
 	if not is_adjacent and dist > (b_radius + 2.8):
 		if current_path.is_empty() or path_idx >= current_path.size():
@@ -987,7 +1000,7 @@ func _calculate_path(target_pos: Vector3) -> void:
 	if map_gen != null:
 		current_path = map_gen.get_path_to_target(global_position, target_pos)
 		path_idx = 0
-		if current_path.size() > 0 and global_position.distance_to(current_path[0]) < 0.6:
+		if current_path.size() > 0 and _hdist(global_position, current_path[0]) < 0.6:
 			path_idx = 1
 
 func _find_closest_enemy(max_dist: float) -> Node3D:

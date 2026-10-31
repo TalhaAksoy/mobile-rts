@@ -128,6 +128,6 @@ Verification:
 | Buildings | 0 | every building type has a 3D model for all 10 civs (sections 1, 1b, 2b) | 2D mode uses sprites rendered from those models (section 2c); the old hand-drawn sprites are only the last fallback |
 | Farm (all civs) | – | replaced by biome **fields** placed from the Mill (section 2b) | done |
 | Units (villager, swordsman, spearman, archer, cavalry + 10 unique) | 50 roles | HD-2D sprites + new occlusion silhouette | **3D characters + rigs + 6 animations not started.** Spec allows sprites until 3D replacements are validated. A rigged character pipeline is a separate milestone. |
-| Cliffs / bridges / map skirt | — | procedural `PixelArtTextures` (cliffs tinted per biome) | ground, water and scatter were redone in the environment pass. Real biome cliff geometry is next |
+| Hills / bridges / map skirt | — | smooth terrain mesh (no stepped walls); steep slopes use earth + the procedural `PixelArtTextures` rock (tinted per biome) in the ground shader | hills redone as natural slopes, see ART_DIRECTION_BIBLE §7.2. Bridges and skirt are still procedural |
 | Market, Stone Wall | 20 gallery cells | — | not gameplay types in `Building3D`, so not built |
 | Placement ghost | 1 | green box | could show the model as a translucent ghost |

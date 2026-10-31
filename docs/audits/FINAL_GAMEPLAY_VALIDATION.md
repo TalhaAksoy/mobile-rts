@@ -58,6 +58,17 @@ buildings** · **L5 resources spawned inside Town Centers (7/12 maps)** · **L6 
 drop-off tap hijacked by fuzzy resource pick · **L9 bot construction sites stuck at 0% forever** · L10 units trapped inside
 newly placed buildings.
 
+**Save / load map (found while adding the smooth hills).** Loading regenerates the map from its seed, but:
+- Mines, resource clusters, oasis palms, tree species and prop rotation used the global random generator, so gold
+  and stone mines came back in different cells. They now use the map's own seeded generator, and every map type
+  regenerates identically.
+- The stone mine list was never cleared on regenerate. After a load, the old map's invisible stone mines stayed,
+  blocking cells and still gatherable.
+- Nothing that had been used up was saved. Cut trees, mined-out mines and eaten bushes came back full. Saves now
+  store what is left of every node.
+
+Covered by `test_save_load_map` (all 5 maps).
+
 ## 5. Spec §13 checklist
 
 | Area | Item | Evidence | Status |
@@ -97,7 +108,7 @@ See BLENDER_GODOT_INTEGRATION_REPORT.md §4 and `docs/audits/evidence/perf/perf_
 5. The tutorial hint label overflows the top HUD bar and minimap at 540×960 (pre-existing UI issue, visible in captures).
 6. No export presets, so no Android/iOS validation.
 7. ~20 GDScript warnings (unused variables, shadowed class names). Cosmetic.
-8. Mine depletion size is not restored after loading a save (mines show 100% size until the next harvest).
+8. (Fixed) Mine depletion size is now restored after loading a save, together with the remaining amount.
 9. 3D trees/mines in explored-but-not-visible fog are not dimmed (the sprite path tinted them; the fog overlay still darkens the area).
 10. Bot sims end early against the passive test player (consequence of L4), so 300 s population is not comparable with older runs.
 

@@ -448,7 +448,7 @@ func _is_area_clear(c: Vector2i, size: Vector2i) -> bool:
 		for y in range(c.y, c.y + size.y):
 			if not map_gen.is_valid_cell(x, y) or not map_gen.is_cell_buildable(Vector2i(x, y)):
 				return false
-	return true
+	return map_gen.is_area_level(c, size)
 
 ## Builds a Mill when wild food near the TC is running out, then keeps adding fields (one villager
 ## each) while there is wood. Returns true when it spent this think-tick on farming.

@@ -177,6 +177,29 @@ No snow biome: the user chose to theme only the existing five maps.
 
 Before/after on the same seeded map: `docs/audits/evidence/environment/before_map{0,1}_*` vs `after_map{0,1}_*`.
 
+### 7.2 Hills (natural elevation)
+
+Hills used to be stepped block terraces: flat 1-cell tiles with thin vertical stone walls between them. They are now
+real slopes:
+
+* **Shape.** Each cell still gets a target level (lowland 0, hill 2.2 m, highland rock peak 4.4 m, water bed −0.65 m).
+  `MapGenerator3D._build_height_grid` blurs these levels (gaussian σ ≈ 1 cell) into a 1 m vertex grid and adds a gentle
+  roll (±0.22 m) to open ground. The two bases stay level out to 7.5 cells, and land next to water is held low so banks
+  slope into rivers and lakes instead of dropping as a wall.
+* **One surface.** The ground mesh is built from that grid. `get_height_at()` samples the same triangles, so units,
+  buildings, trees, mines, bushes and grass tufts all stand on the visible ground. Units follow it every frame, and a tap
+  on a hilltop is ray-marched onto the hilltop.
+* **Readability from the high camera.** In `hd2d_ground.gdshader`, slopes facing the sun are lighter and slopes facing
+  away are darker, in quantised dithered bands. High ground is slightly lighter. Steep ground shows earth, and the
+  steepest shows the biome-tinted rock.
+* **Water.** There is one water surface over the wet area, so the shoreline follows the terrain. Lake corners are rounded.
+* **Building on hills.** A building needs ground that rises at most 0.8 m across its footprint. It sits at the lowest
+  point, slightly dug into the uphill side and never floating. The player, the AI and mill fields all use the same
+  check. On the hilly Highland map about half of the open 2×2 plots are level enough; on the other maps 70–90 % are.
+
+Evidence: `docs/audits/evidence/terrain/hills_before.png` vs `hills_after.png` (same seeds, fog hidden for the capture),
+and `hills_details.png` (villagers on a slope beside a barracks built on sloped ground, a river ford, an oasis shore).
+
 ## 8. Interpretation decisions & known deviations (honest list)
 
 * Gallery art is a single 3/4 view. Hidden sides are inferred by mirroring the visible massing without the entrance.

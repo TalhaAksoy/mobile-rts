@@ -32,7 +32,28 @@ var fog_mesh_inst: MeshInstance3D = null
 var map_type: CivData.MapType = CivData.MapType.FOREST_VALLEY
 var seed_val: int = 1337
 var tiles: Array = []
-var height_map: Array = [] # 2D array [x][y] of float heights
+var height_map: Array = [] # 2D array [x][y] of float heights: the terrain surface at each cell centre
+
+## Continuous terrain surface (natural rolling hills, no stepped terraces). The tier logic in
+## _generate_terrain_types_and_heights gives each cell a target level; _build_height_grid blurs those
+## levels into a vertex grid (SUB vertices per cell edge) that the ground mesh is built from, and
+## get_height_at() samples the SAME triangles, so units, buildings, trees and grass sit exactly on
+## the visible ground.
+const SUB: int = 2                   # height-grid vertices per cell edge -> 1 m spacing
+const HILL_H: float = 2.2            # hill / plateau level
+const PEAK_H: float = 4.4            # highland rock peaks
+const WATER_H: float = -0.65         # lake / river bed
+const SHALLOW_H: float = -0.2        # ford
+const WATER_SURFACE_Y: float = -0.3
+const BLUR_SIGMA: float = 0.95       # in cells: how wide the slopes are
+const ROLL_AMPLITUDE: float = 0.22   # gentle undulation of the open ground (not in the bases)
+const BASE_FLAT_R: float = 7.5       # cells around each Town Center kept level
+## Max height difference inside a building footprint: buildings go on level ground, not on slopes.
+const MAX_BUILD_RISE: float = 0.8
+var hgrid := PackedFloat32Array()
+var hgrid_w: int = 0
+var hgrid_h: int = 0
+var max_terrain_h: float = 0.0
 var astar: AStar2D = AStar2D.new()
 
 var trees: Dictionary = {} # Vector2i -> Node3D
@@ -54,6 +75,10 @@ var player_start_pos: Vector3
 var enemy_start_pos: Vector3
 
 var noise: FastNoiseLite = FastNoiseLite.new()
+## Everything random in map generation (resource spots, cluster sizes, oasis palms, tree species,
+## prop yaw/scale) draws from this generator, seeded from seed_val: the same seed always builds the
+## same map, which is how a saved game gets its map back (SaveManager regenerates it from the seed).
+var map_rng := RandomNumberGenerator.new()
 var detail_noise: FastNoiseLite = FastNoiseLite.new()
 
 @onready var ground_container: Node3D = $GroundContainer
@@ -79,7 +104,7 @@ func _process(delta: float) -> void:
 	# 1. Subtle water surface ripples
 	for w_inst in water_mesh_instances:
 		if is_instance_valid(w_inst):
-			w_inst.position.y = -0.3 + sin(anim_time * 2.2 + w_inst.position.x * 0.4) * 0.04
+			w_inst.position.y = WATER_SURFACE_Y + sin(anim_time * 2.2) * 0.03
 			
 	# 2. Pulsing gold mine sparkles / gleam
 	var gold_pulse = 0.35 + sin(anim_time * 4.0) * 0.25
@@ -97,6 +122,7 @@ func _process(delta: float) -> void:
 func generate(chosen_map_type: CivData.MapType, custom_seed: int = -1) -> void:
 	map_type = chosen_map_type
 	seed_val = custom_seed if custom_seed != -1 else randi()
+	map_rng.seed = seed_val
 	noise.seed = seed_val
 	noise.frequency = 0.05
 	detail_noise.seed = seed_val + 99
@@ -113,7 +139,9 @@ func generate(chosen_map_type: CivData.MapType, custom_seed: int = -1) -> void:
 	height_map.clear()
 	trees.clear()
 	gold_mines.clear()
+	stone_mines.clear()      # was missing: a reload kept the old map's (invisible) stone mines
 	berry_bushes.clear()
+	unreachable_resource_cells.clear()
 	occupied_cells.clear()
 	field_cells.clear()
 	farm_fields.clear()
@@ -134,6 +162,9 @@ func generate(chosen_map_type: CivData.MapType, custom_seed: int = -1) -> void:
 
 	_clear_area(world_to_cell(player_start_pos), 7)
 	_clear_area(world_to_cell(enemy_start_pos), 7)
+	_build_height_grid()
+	player_start_pos = cell_to_world(world_to_cell(player_start_pos))
+	enemy_start_pos = cell_to_world(world_to_cell(enemy_start_pos))
 
 	# 1. Create Natural Organic Smooth Terrain Mesh
 	_create_natural_organic_terrain()
@@ -305,7 +336,7 @@ func update_fog_of_war(player_units: Array, player_buildings: Array, enemy_units
 				if is_instance_valid(spr) and spr is Sprite3D:
 					spr.modulate = Color(1.0, 1.0, 1.0, 1.0) if st == FogState.VISIBLE else Color(0.68, 0.68, 0.74, 1.0)
 
-	# 7. Hide water and bridges in UNEXPLORED fog
+	# 7. Hide bridges in UNEXPLORED fog (the single water surface stays; the fog overlay covers it)
 	for wi in water_mesh_instances:
 		if is_instance_valid(wi):
 			var cell = wi.get_meta("cell", Vector2i(-1, -1))
@@ -342,12 +373,12 @@ func _generate_terrain_types_and_heights() -> void:
 					var dist_center = Vector2(x, y).distance_to(Vector2(MAP_WIDTH * 0.5, MAP_HEIGHT * 0.5))
 					if dist_center < 4.8 + n * 1.8:
 						tile = TileType.WATER
-						h = -0.65
+						h = WATER_H
 					elif dist_center < 7.2:
 						tile = TileType.GRASS
 						h = 0.0
 					elif n > 0.32:
-						h = 0.75 # Plateau dune
+						h = HILL_H # dune ridge
 					else:
 						h = 0.0
 
@@ -356,13 +387,13 @@ func _generate_terrain_types_and_heights() -> void:
 					if abs(y - river_y) < 2.0:
 						if abs(x - 7) <= 1 or abs(x - 15) <= 1 or abs(x - 23) <= 1:
 							tile = TileType.SHALLOW_WATER
-							h = -0.15
+							h = SHALLOW_H
 						else:
 							tile = TileType.WATER
-							h = -0.65
+							h = WATER_H
 					elif n > 0.28:
 						tile = TileType.DIRT
-						h = 0.75 # Stepped hill tier
+						h = HILL_H # hill
 					else:
 						tile = TileType.GRASS
 						h = 0.0
@@ -370,10 +401,10 @@ func _generate_terrain_types_and_heights() -> void:
 				CivData.MapType.HIGHLAND_PLAINS:
 					if n > 0.45:
 						tile = TileType.ROCK
-						h = 1.50 # Tier 3 Peak
+						h = PEAK_H # rocky peak
 					elif n > 0.15:
 						tile = TileType.DIRT
-						h = 0.75 # Tier 2 Plateau
+						h = HILL_H # hill
 					else:
 						tile = TileType.GRASS
 						h = 0.0
@@ -381,10 +412,10 @@ func _generate_terrain_types_and_heights() -> void:
 				CivData.MapType.GOLD_RUSH:
 					if n < -0.38:
 						tile = TileType.WATER
-						h = -0.65
+						h = WATER_H
 					elif n > 0.25:
 						tile = TileType.DIRT
-						h = 0.75
+						h = HILL_H
 					else:
 						tile = TileType.GRASS
 						h = 0.0
@@ -392,10 +423,10 @@ func _generate_terrain_types_and_heights() -> void:
 				CivData.MapType.FOREST_VALLEY:
 					if n < -0.38:
 						tile = TileType.WATER
-						h = -0.65
+						h = WATER_H
 					elif n > 0.30:
 						tile = TileType.DIRT
-						h = 0.75 # Stepped Forest Plateau
+						h = HILL_H # forested hill
 					else:
 						tile = TileType.GRASS
 						h = 0.0
@@ -411,8 +442,187 @@ func _clear_area(center: Vector2i, radius: int) -> void:
 					tiles[x][y] = TileType.GRASS if map_type != CivData.MapType.DESERT_OASIS else TileType.SAND
 				height_map[x][y] = 0.0 # Clean flat diorama building terrace
 
+## Blurs the per-cell target levels (height_map, after the bases were flattened) into the vertex
+## grid, keeps lake / river beds under the water surface and fords at ford level, adds a gentle
+## roll to open ground, then stores the surface height at every cell centre back into height_map.
+func _build_height_grid() -> void:
+	# 1) separable gaussian blur of the cell levels (edge cells extended)
+	var r := int(ceil(BLUR_SIGMA * 2.5))
+	var kernel: Array[float] = []
+	for k in range(-r, r + 1):
+		kernel.append(exp(-float(k * k) / (2.0 * BLUR_SIGMA * BLUR_SIGMA)))
+	# banks: land next to water is held low, so hills meet rivers and lakes with a slope, not a wall
+	var level := PackedFloat32Array(); level.resize(MAP_WIDTH * MAP_HEIGHT)
+	for y in MAP_HEIGHT:
+		for x in MAP_WIDTH:
+			var lv: float = height_map[x][y]
+			if tiles[x][y] != TileType.WATER and tiles[x][y] != TileType.SHALLOW_WATER:
+				for d in [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1), Vector2i(1, 1), Vector2i(-1, 1), Vector2i(1, -1), Vector2i(-1, -1)]:
+					var nb: Vector2i = Vector2i(x, y) + d
+					if is_valid_cell(nb.x, nb.y) and tiles[nb.x][nb.y] == TileType.WATER:
+						lv = minf(lv, 0.2)
+						break
+			level[y * MAP_WIDTH + x] = lv
+	var tmp := PackedFloat32Array(); tmp.resize(MAP_WIDTH * MAP_HEIGHT)
+	var blurred := PackedFloat32Array(); blurred.resize(MAP_WIDTH * MAP_HEIGHT)
+	for y in MAP_HEIGHT:
+		for x in MAP_WIDTH:
+			var sum := 0.0
+			var wsum := 0.0
+			for k in range(-r, r + 1):
+				var w: float = kernel[k + r]
+				sum += level[y * MAP_WIDTH + clampi(x + k, 0, MAP_WIDTH - 1)] * w
+				wsum += w
+			tmp[y * MAP_WIDTH + x] = sum / wsum
+	for y in MAP_HEIGHT:
+		for x in MAP_WIDTH:
+			var sum := 0.0
+			var wsum := 0.0
+			for k in range(-r, r + 1):
+				var w: float = kernel[k + r]
+				sum += tmp[clampi(y + k, 0, MAP_HEIGHT - 1) * MAP_WIDTH + x] * w
+				wsum += w
+			blurred[y * MAP_WIDTH + x] = sum / wsum
+
+	# 2) vertex grid: bilinear between blurred cell centres
+	hgrid_w = MAP_WIDTH * SUB + 1
+	hgrid_h = MAP_HEIGHT * SUB + 1
+	hgrid.resize(hgrid_w * hgrid_h)
+	var roll := FastNoiseLite.new()
+	roll.seed = seed_val + 77
+	roll.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
+	roll.frequency = 0.09
+	var bases: Array[Vector2] = [Vector2(world_to_cell(player_start_pos)) + Vector2(0.5, 0.5), Vector2(world_to_cell(enemy_start_pos)) + Vector2(0.5, 0.5)]
+	max_terrain_h = 0.0
+	for j in hgrid_h:
+		for i in hgrid_w:
+			var u := float(i) / SUB          # cell units
+			var v := float(j) / SUB
+			var fx := clampf(u - 0.5, 0.0, MAP_WIDTH - 1.0)
+			var fz := clampf(v - 0.5, 0.0, MAP_HEIGHT - 1.0)
+			var x0 := mini(int(fx), MAP_WIDTH - 2)
+			var z0 := mini(int(fz), MAP_HEIGHT - 2)
+			var tx := fx - x0
+			var tz := fz - z0
+			var h := lerpf(lerpf(blurred[z0 * MAP_WIDTH + x0], blurred[z0 * MAP_WIDTH + x0 + 1], tx),
+				lerpf(blurred[(z0 + 1) * MAP_WIDTH + x0], blurred[(z0 + 1) * MAP_WIDTH + x0 + 1], tx), tz)
+			# the cells touching this vertex (1 at a cell centre, 2 on an edge, 4 at a corner); under
+			# water when at least half of them are water, so lake corners come out rounded
+			var n_touch := 0
+			var n_water := 0
+			var ford := false
+			var xs: Array = [int(floor(u))] if int(ceil(u)) - 1 == int(floor(u)) else [int(ceil(u)) - 1, int(floor(u))]
+			var zs: Array = [int(floor(v))] if int(ceil(v)) - 1 == int(floor(v)) else [int(ceil(v)) - 1, int(floor(v))]
+			for cx in xs:
+				for cz in zs:
+					if is_valid_cell(cx, cz):
+						n_touch += 1
+						if tiles[cx][cz] == TileType.WATER:
+							n_water += 1
+						elif tiles[cx][cz] == TileType.SHALLOW_WATER:
+							ford = true
+			var deep := n_water > 0 and n_water * 2 >= n_touch
+			if deep:
+				h = minf(h, WATER_SURFACE_Y - 0.2)       # under the water surface
+			elif ford:
+				h = SHALLOW_H
+			else:
+				# bases stay level ground (the blur would otherwise pull nearby hills into them)
+				var base_d := minf(Vector2(u, v).distance_to(bases[0]), Vector2(u, v).distance_to(bases[1]))
+				h *= smoothstep(BASE_FLAT_R, BASE_FLAT_R + 2.5, base_d)
+				h += roll.get_noise_2d(u, v) * ROLL_AMPLITUDE * smoothstep(BASE_FLAT_R + 0.5, BASE_FLAT_R + 4.0, base_d)
+				h = maxf(h, WATER_SURFACE_Y + 0.18)      # dry land stays above it (shore = sloping bank)
+			hgrid[j * hgrid_w + i] = h
+			max_terrain_h = maxf(max_terrain_h, h)
+
+	# 3) cell centres = the surface there (exactly a grid vertex when SUB is even)
+	for x in MAP_WIDTH:
+		for y in MAP_HEIGHT:
+			height_map[x][y] = get_height_at(Vector3((x + 0.5) * TILE_SIZE, 0, (y + 0.5) * TILE_SIZE))
+
+func _gh(i: int, j: int) -> float:
+	return hgrid[clampi(j, 0, hgrid_h - 1) * hgrid_w + clampi(i, 0, hgrid_w - 1)]
+
+## Terrain surface height at a world position: the same two triangles per grid square as the mesh.
+func get_height_at(pos: Vector3) -> float:
+	if hgrid.is_empty():
+		return 0.0
+	var gx := clampf(pos.x / TILE_SIZE * SUB, 0.0, hgrid_w - 1.001)
+	var gz := clampf(pos.z / TILE_SIZE * SUB, 0.0, hgrid_h - 1.001)
+	var i := int(gx)
+	var j := int(gz)
+	var fx := gx - i
+	var fz := gz - j
+	var h00 := hgrid[j * hgrid_w + i]
+	var h10 := hgrid[j * hgrid_w + i + 1]
+	var h01 := hgrid[(j + 1) * hgrid_w + i]
+	var h11 := hgrid[(j + 1) * hgrid_w + i + 1]
+	if fx >= fz:
+		return h00 + fx * (h10 - h00) + fz * (h11 - h10)
+	return h00 + fz * (h01 - h00) + fx * (h11 - h01)
+
+## Lowest / highest ground under a footprint (grid vertices inside it, edges included).
+func get_footprint_height_range(origin: Vector2i, size: Vector2i) -> Vector2:
+	var lo := INF
+	var hi := -INF
+	for j in range(origin.y * SUB, (origin.y + size.y) * SUB + 1):
+		for i in range(origin.x * SUB, (origin.x + size.x) * SUB + 1):
+			var h := _gh(i, j)
+			lo = minf(lo, h)
+			hi = maxf(hi, h)
+	return Vector2(lo, hi)
+
+## Buildings sit at the lowest point of their footprint (slightly dug into the uphill side, never
+## floating over the downhill side).
+func get_footprint_height(origin: Vector2i, size: Vector2i) -> float:
+	return get_footprint_height_range(origin, size).x
+
+## Level enough to build on: the ground rises at most MAX_BUILD_RISE across the footprint.
+func is_area_level(origin: Vector2i, size: Vector2i) -> bool:
+	var r := get_footprint_height_range(origin, size)
+	return r.y - r.x <= MAX_BUILD_RISE
+
+func _build_ground_mesh() -> ArrayMesh:
+	var step_m := TILE_SIZE / SUB
+	var verts := PackedVector3Array(); verts.resize(hgrid_w * hgrid_h)
+	var norms := PackedVector3Array(); norms.resize(hgrid_w * hgrid_h)
+	for j in hgrid_h:
+		for i in hgrid_w:
+			verts[j * hgrid_w + i] = Vector3(i * step_m, hgrid[j * hgrid_w + i], j * step_m)
+			norms[j * hgrid_w + i] = Vector3(_gh(i - 1, j) - _gh(i + 1, j), 2.0 * step_m, _gh(i, j - 1) - _gh(i, j + 1)).normalized()
+	var idx := PackedInt32Array()
+	idx.resize((hgrid_w - 1) * (hgrid_h - 1) * 6)
+	var k := 0
+	for j in hgrid_h - 1:
+		for i in hgrid_w - 1:
+			var p0 := j * hgrid_w + i
+			var p1 := p0 + 1
+			var p3 := p0 + hgrid_w
+			var p2 := p3 + 1
+			# same diagonal (p0-p2) as get_height_at
+			idx[k] = p0; idx[k + 1] = p1; idx[k + 2] = p2
+			idx[k + 3] = p0; idx[k + 4] = p2; idx[k + 5] = p3
+			k += 6
+	var arrays := []
+	arrays.resize(Mesh.ARRAY_MAX)
+	arrays[Mesh.ARRAY_VERTEX] = verts
+	arrays[Mesh.ARRAY_NORMAL] = norms
+	arrays[Mesh.ARRAY_INDEX] = idx
+	var mesh := ArrayMesh.new()
+	mesh.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, arrays)
+	return mesh
+
+func _skirt_quad(st: SurfaceTool, a: Vector3, b: Vector3, n: Vector3, bottom: float) -> void:
+	st.set_normal(n)
+	st.set_uv(Vector2(0, 0)); st.add_vertex(a)
+	st.set_uv(Vector2(1, 0)); st.add_vertex(b)
+	st.set_uv(Vector2(1, 1)); st.add_vertex(Vector3(b.x, bottom, b.z))
+	st.set_uv(Vector2(0, 0)); st.add_vertex(a)
+	st.set_uv(Vector2(1, 1)); st.add_vertex(Vector3(b.x, bottom, b.z))
+	st.set_uv(Vector2(0, 1)); st.add_vertex(Vector3(a.x, bottom, a.z))
+
 func _create_natural_organic_terrain() -> void:
-	# Build Stepped HD-2D Diorama Terrain (Top faces, Stepped Cliff drops, and Diorama Base Skirting)
+	# HD-2D diorama terrain: smooth ground surface + base skirting
 	var grass_mat = StandardMaterial3D.new()
 	grass_mat.albedo_texture = PixelArtTextures.get_diorama_grass_texture()
 	# Tone the procedural grass down (it was near-neon next to the 3D diorama buildings);
@@ -421,6 +631,7 @@ func _create_natural_organic_terrain() -> void:
 	grass_mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
 	grass_mat.roughness = 0.85
 
+	# rock texture for steep slopes (sampled by the ground shader)
 	var cliff_mat = StandardMaterial3D.new()
 	cliff_mat.albedo_texture = PixelArtTextures.get_stepped_cliff_texture()
 	cliff_mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
@@ -438,165 +649,35 @@ func _create_natural_organic_terrain() -> void:
 	sand_mat.albedo_color = Color(0.85, 0.75, 0.48)
 	sand_mat.roughness = 0.85
 
-	# 1. Top Plateau Faces
-	var st_top = SurfaceTool.new()
-	st_top.begin(Mesh.PRIMITIVE_TRIANGLES)
-	for x in range(MAP_WIDTH):
-		for y in range(MAP_HEIGHT):
-			var h = height_map[x][y]
-			var x0 = x * TILE_SIZE
-			var x1 = (x + 1) * TILE_SIZE
-			var z0 = y * TILE_SIZE
-			var z1 = (y + 1) * TILE_SIZE
-
-			var p0 = Vector3(x0, h, z0)
-			var p1 = Vector3(x1, h, z0)
-			var p2 = Vector3(x1, h, z1)
-			var p3 = Vector3(x0, h, z1)
-
-			st_top.set_normal(Vector3(0, 1, 0))
-			st_top.set_uv(Vector2(0, 0))
-			st_top.add_vertex(p0)
-			st_top.set_uv(Vector2(1, 0))
-			st_top.add_vertex(p1)
-			st_top.set_uv(Vector2(1, 1))
-			st_top.add_vertex(p2)
-
-			st_top.set_uv(Vector2(0, 0))
-			st_top.add_vertex(p0)
-			st_top.set_uv(Vector2(1, 1))
-			st_top.add_vertex(p2)
-			st_top.set_uv(Vector2(0, 1))
-			st_top.add_vertex(p3)
-
-	var top_mesh = st_top.commit()
+	# 1. Ground surface: one smooth mesh over the height grid (rolling hills, no stepped walls).
+	#    Steep slopes get earth / rock in the ground shader from the surface normal.
 	var top_inst = MeshInstance3D.new()
-	top_inst.mesh = top_mesh
+	top_inst.mesh = _build_ground_mesh()
 	ground_mat = HD2DGround.make_material(map_type)
 	ground_mat.set_shader_parameter("map_size_m", Vector2(MAP_WIDTH * TILE_SIZE, MAP_HEIGHT * TILE_SIZE))
+	ground_mat.set_shader_parameter("tex_cliff", cliff_mat.albedo_texture)
+	ground_mat.set_shader_parameter("cliff_tint", HD2DGround.cliff_tint(map_type))
 	top_inst.material_override = ground_mat
 	ground_container.add_child(top_inst)
 
-	# 2. Vertical Stepped Cliff Quads between elevation tiers
-	var st_cliffs = SurfaceTool.new()
-	st_cliffs.begin(Mesh.PRIMITIVE_TRIANGLES)
-
-	for x in range(MAP_WIDTH):
-		for y in range(MAP_HEIGHT):
-			var h = height_map[x][y]
-			var x0 = x * TILE_SIZE
-			var x1 = (x + 1) * TILE_SIZE
-			var z0 = y * TILE_SIZE
-			var z1 = (y + 1) * TILE_SIZE
-
-			# Check +X neighbor
-			if x + 1 < MAP_WIDTH and h > height_map[x + 1][y]:
-				var nh = height_map[x + 1][y]
-				st_cliffs.set_normal(Vector3(1, 0, 0))
-				st_cliffs.set_uv(Vector2(0, 0)); st_cliffs.add_vertex(Vector3(x1, h, z0))
-				st_cliffs.set_uv(Vector2(1, 0)); st_cliffs.add_vertex(Vector3(x1, h, z1))
-				st_cliffs.set_uv(Vector2(1, 1)); st_cliffs.add_vertex(Vector3(x1, nh, z1))
-				st_cliffs.set_uv(Vector2(0, 0)); st_cliffs.add_vertex(Vector3(x1, h, z0))
-				st_cliffs.set_uv(Vector2(1, 1)); st_cliffs.add_vertex(Vector3(x1, nh, z1))
-				st_cliffs.set_uv(Vector2(0, 1)); st_cliffs.add_vertex(Vector3(x1, nh, z0))
-
-			# Check -X neighbor
-			if x - 1 >= 0 and h > height_map[x - 1][y]:
-				var nh = height_map[x - 1][y]
-				st_cliffs.set_normal(Vector3(-1, 0, 0))
-				st_cliffs.set_uv(Vector2(0, 0)); st_cliffs.add_vertex(Vector3(x0, h, z1))
-				st_cliffs.set_uv(Vector2(1, 0)); st_cliffs.add_vertex(Vector3(x0, h, z0))
-				st_cliffs.set_uv(Vector2(1, 1)); st_cliffs.add_vertex(Vector3(x0, nh, z0))
-				st_cliffs.set_uv(Vector2(0, 0)); st_cliffs.add_vertex(Vector3(x0, h, z1))
-				st_cliffs.set_uv(Vector2(1, 1)); st_cliffs.add_vertex(Vector3(x0, nh, z0))
-				st_cliffs.set_uv(Vector2(0, 1)); st_cliffs.add_vertex(Vector3(x0, nh, z1))
-
-			# Check +Z neighbor
-			if y + 1 < MAP_HEIGHT and h > height_map[x][y + 1]:
-				var nh = height_map[x][y + 1]
-				st_cliffs.set_normal(Vector3(0, 0, 1))
-				st_cliffs.set_uv(Vector2(0, 0)); st_cliffs.add_vertex(Vector3(x1, h, z1))
-				st_cliffs.set_uv(Vector2(1, 0)); st_cliffs.add_vertex(Vector3(x0, h, z1))
-				st_cliffs.set_uv(Vector2(1, 1)); st_cliffs.add_vertex(Vector3(x0, nh, z1))
-				st_cliffs.set_uv(Vector2(0, 0)); st_cliffs.add_vertex(Vector3(x1, h, z1))
-				st_cliffs.set_uv(Vector2(1, 1)); st_cliffs.add_vertex(Vector3(x0, nh, z1))
-				st_cliffs.set_uv(Vector2(0, 1)); st_cliffs.add_vertex(Vector3(x1, nh, z1))
-
-			# Check -Z neighbor
-			if y - 1 >= 0 and h > height_map[x][y - 1]:
-				var nh = height_map[x][y - 1]
-				st_cliffs.set_normal(Vector3(0, 0, -1))
-				st_cliffs.set_uv(Vector2(0, 0)); st_cliffs.add_vertex(Vector3(x0, h, z0))
-				st_cliffs.set_uv(Vector2(1, 0)); st_cliffs.add_vertex(Vector3(x1, h, z0))
-				st_cliffs.set_uv(Vector2(1, 1)); st_cliffs.add_vertex(Vector3(x1, nh, z0))
-				st_cliffs.set_uv(Vector2(0, 0)); st_cliffs.add_vertex(Vector3(x0, h, z0))
-				st_cliffs.set_uv(Vector2(1, 1)); st_cliffs.add_vertex(Vector3(x1, nh, z0))
-				st_cliffs.set_uv(Vector2(0, 1)); st_cliffs.add_vertex(Vector3(x0, nh, z0))
-
-	var cliff_mesh = st_cliffs.commit()
-	var cliff_inst = MeshInstance3D.new()
-	cliff_inst.mesh = cliff_mesh
-	cliff_inst.material_override = cliff_mat
-	ground_container.add_child(cliff_inst)
-
-	# 3. Outer Diorama Perimeter Skirting Slab (Handcrafted Tabletop Model Box Frame)
+	# 2. Outer Diorama Perimeter Skirting Slab (follows the terrain edge)
 	var st_skirt = SurfaceTool.new()
 	st_skirt.begin(Mesh.PRIMITIVE_TRIANGLES)
 	var skirt_bottom_y = -2.5
-
-	# -X Edge
-	for y in range(MAP_HEIGHT):
-		var h = height_map[0][y]
-		var z0 = y * TILE_SIZE
-		var z1 = (y + 1) * TILE_SIZE
-		st_skirt.set_normal(Vector3(-1, 0, 0))
-		st_skirt.set_uv(Vector2(0, 0)); st_skirt.add_vertex(Vector3(0, h, z1))
-		st_skirt.set_uv(Vector2(1, 0)); st_skirt.add_vertex(Vector3(0, h, z0))
-		st_skirt.set_uv(Vector2(1, 1)); st_skirt.add_vertex(Vector3(0, skirt_bottom_y, z0))
-		st_skirt.set_uv(Vector2(0, 0)); st_skirt.add_vertex(Vector3(0, h, z1))
-		st_skirt.set_uv(Vector2(1, 1)); st_skirt.add_vertex(Vector3(0, skirt_bottom_y, z0))
-		st_skirt.set_uv(Vector2(0, 1)); st_skirt.add_vertex(Vector3(0, skirt_bottom_y, z1))
-
-	# +X Edge
+	var step_m := TILE_SIZE / SUB
 	var max_x_pos = MAP_WIDTH * TILE_SIZE
-	for y in range(MAP_HEIGHT):
-		var h = height_map[MAP_WIDTH - 1][y]
-		var z0 = y * TILE_SIZE
-		var z1 = (y + 1) * TILE_SIZE
-		st_skirt.set_normal(Vector3(1, 0, 0))
-		st_skirt.set_uv(Vector2(0, 0)); st_skirt.add_vertex(Vector3(max_x_pos, h, z0))
-		st_skirt.set_uv(Vector2(1, 0)); st_skirt.add_vertex(Vector3(max_x_pos, h, z1))
-		st_skirt.set_uv(Vector2(1, 1)); st_skirt.add_vertex(Vector3(max_x_pos, skirt_bottom_y, z1))
-		st_skirt.set_uv(Vector2(0, 0)); st_skirt.add_vertex(Vector3(max_x_pos, h, z0))
-		st_skirt.set_uv(Vector2(1, 1)); st_skirt.add_vertex(Vector3(max_x_pos, skirt_bottom_y, z1))
-		st_skirt.set_uv(Vector2(0, 1)); st_skirt.add_vertex(Vector3(max_x_pos, skirt_bottom_y, z0))
-
-	# -Z Edge
-	for x in range(MAP_WIDTH):
-		var h = height_map[x][0]
-		var x0 = x * TILE_SIZE
-		var x1 = (x + 1) * TILE_SIZE
-		st_skirt.set_normal(Vector3(0, 0, -1))
-		st_skirt.set_uv(Vector2(0, 0)); st_skirt.add_vertex(Vector3(x0, h, 0))
-		st_skirt.set_uv(Vector2(1, 0)); st_skirt.add_vertex(Vector3(x1, h, 0))
-		st_skirt.set_uv(Vector2(1, 1)); st_skirt.add_vertex(Vector3(x1, skirt_bottom_y, 0))
-		st_skirt.set_uv(Vector2(0, 0)); st_skirt.add_vertex(Vector3(x0, h, 0))
-		st_skirt.set_uv(Vector2(1, 1)); st_skirt.add_vertex(Vector3(x1, skirt_bottom_y, 0))
-		st_skirt.set_uv(Vector2(0, 1)); st_skirt.add_vertex(Vector3(x0, skirt_bottom_y, 0))
-
-	# +Z Edge
 	var max_z_pos = MAP_HEIGHT * TILE_SIZE
-	for x in range(MAP_WIDTH):
-		var h = height_map[x][MAP_HEIGHT - 1]
-		var x0 = x * TILE_SIZE
-		var x1 = (x + 1) * TILE_SIZE
-		st_skirt.set_normal(Vector3(0, 0, 1))
-		st_skirt.set_uv(Vector2(0, 0)); st_skirt.add_vertex(Vector3(x1, h, max_z_pos))
-		st_skirt.set_uv(Vector2(1, 0)); st_skirt.add_vertex(Vector3(x0, h, max_z_pos))
-		st_skirt.set_uv(Vector2(1, 1)); st_skirt.add_vertex(Vector3(x0, skirt_bottom_y, max_z_pos))
-		st_skirt.set_uv(Vector2(0, 0)); st_skirt.add_vertex(Vector3(x1, h, max_z_pos))
-		st_skirt.set_uv(Vector2(1, 1)); st_skirt.add_vertex(Vector3(x0, skirt_bottom_y, max_z_pos))
-		st_skirt.set_uv(Vector2(0, 1)); st_skirt.add_vertex(Vector3(x1, skirt_bottom_y, max_z_pos))
+	# each edge: list of [top_a, top_b, normal] with the quad wound to face outwards
+	for j in range(hgrid_h - 1):
+		var za := j * step_m
+		var zb := (j + 1) * step_m
+		_skirt_quad(st_skirt, Vector3(0, _gh(0, j + 1), zb), Vector3(0, _gh(0, j), za), Vector3(-1, 0, 0), skirt_bottom_y)
+		_skirt_quad(st_skirt, Vector3(max_x_pos, _gh(hgrid_w - 1, j), za), Vector3(max_x_pos, _gh(hgrid_w - 1, j + 1), zb), Vector3(1, 0, 0), skirt_bottom_y)
+	for i in range(hgrid_w - 1):
+		var xa := i * step_m
+		var xb := (i + 1) * step_m
+		_skirt_quad(st_skirt, Vector3(xa, _gh(i, 0), 0), Vector3(xb, _gh(i + 1, 0), 0), Vector3(0, 0, -1), skirt_bottom_y)
+		_skirt_quad(st_skirt, Vector3(xb, _gh(i + 1, hgrid_h - 1), max_z_pos), Vector3(xa, _gh(i, hgrid_h - 1), max_z_pos), Vector3(0, 0, 1), skirt_bottom_y)
 
 	var skirt_mesh = st_skirt.commit()
 	var skirt_inst = MeshInstance3D.new()
@@ -618,25 +699,33 @@ func _create_natural_organic_terrain() -> void:
 	water_mat.shader = load("res://shaders/hd2d_water.gdshader")
 	HD2DGround.apply_water_palette(water_mat, map_type)
 
-	var w_mesh = PlaneMesh.new()
-	w_mesh.size = Vector2(TILE_SIZE * 1.02, TILE_SIZE * 1.02)
-
+	# One water surface over the whole wet area: the smooth ground dips under it at lakes and rivers,
+	# so the shoreline follows the terrain (sloping banks) instead of square cell edges.
+	var wmin := Vector2i(MAP_WIDTH, MAP_HEIGHT)
+	var wmax := Vector2i(-1, -1)
 	for x in range(MAP_WIDTH):
 		for y in range(MAP_HEIGHT):
 			if tiles[x][y] == TileType.WATER:
-				var wi = MeshInstance3D.new()
-				wi.mesh = w_mesh
-				wi.position = Vector3(x * TILE_SIZE + TILE_SIZE * 0.5, -0.35, y * TILE_SIZE + TILE_SIZE * 0.5)
-				wi.material_override = water_mat
-				wi.set_meta("cell", Vector2i(x, y))
-				ground_container.add_child(wi)
-				water_mesh_instances.append(wi)
+				wmin = Vector2i(mini(wmin.x, x), mini(wmin.y, y))
+				wmax = Vector2i(maxi(wmax.x, x), maxi(wmax.y, y))
 			elif tiles[x][y] == TileType.SHALLOW_WATER:
 				_spawn_wooden_bridge(Vector2i(x, y))
+	if wmax.x >= 0:
+		wmin = Vector2i(maxi(wmin.x - 1, 0), maxi(wmin.y - 1, 0))
+		wmax = Vector2i(mini(wmax.x + 1, MAP_WIDTH - 1), mini(wmax.y + 1, MAP_HEIGHT - 1))
+		var w_mesh = PlaneMesh.new()
+		w_mesh.size = Vector2((wmax.x - wmin.x + 1) * TILE_SIZE, (wmax.y - wmin.y + 1) * TILE_SIZE)
+		var wi = MeshInstance3D.new()
+		wi.mesh = w_mesh
+		wi.position = Vector3((wmin.x + wmax.x + 1) * 0.5 * TILE_SIZE, WATER_SURFACE_Y, (wmin.y + wmax.y + 1) * 0.5 * TILE_SIZE)
+		wi.material_override = water_mat
+		wi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+		ground_container.add_child(wi)
+		water_mesh_instances.append(wi)
 
 func _spawn_wooden_bridge(cell: Vector2i) -> void:
 	var bridge = Node3D.new()
-	bridge.position = cell_to_world(cell) + Vector3(0, -0.1, 0)
+	bridge.position = cell_to_world(cell) + Vector3(0, -0.03, 0)
 	bridge.set_meta("cell", cell)
 	var plank_mat = StandardMaterial3D.new()
 	plank_mat.albedo_color = Color(0.42, 0.28, 0.16)
@@ -678,7 +767,7 @@ func _generate_3d_resources() -> void:
 				should_spawn = (dist_cx > 4.5 and tree_noise > -0.12) or tree_noise > 0.30
 			elif map_type == CivData.MapType.DESERT_OASIS:
 				var dist_center = Vector2(x, y).distance_to(Vector2(MAP_WIDTH * 0.5, MAP_HEIGHT * 0.5))
-				should_spawn = dist_center >= 5.0 and dist_center <= 8.5 and randf() < 0.4
+				should_spawn = dist_center >= 5.0 and dist_center <= 8.5 and map_rng.randf() < 0.4
 			else:
 				should_spawn = tree_noise > (0.46 - tree_density)
 
@@ -689,19 +778,19 @@ func _generate_3d_resources() -> void:
 	for i in range(total_gold):
 		var spot = _find_random_empty_spot(Vector2i(3, 8), Vector2i(MAP_WIDTH - 4, MAP_HEIGHT - 9))
 		if spot != Vector2i(-1, -1):
-			_spawn_resource_cluster(spot, "gold", randi_range(2, 3))
+			_spawn_resource_cluster(spot, "gold", map_rng.randi_range(2, 3))
 
 	var total_stone = cfg.get("stone_nodes", 6)
 	for i in range(total_stone):
 		var spot = _find_random_empty_spot(Vector2i(3, 8), Vector2i(MAP_WIDTH - 4, MAP_HEIGHT - 9))
 		if spot != Vector2i(-1, -1):
-			_spawn_resource_cluster(spot, "stone", randi_range(2, 3))
+			_spawn_resource_cluster(spot, "stone", map_rng.randi_range(2, 3))
 
 	var total_food = cfg.get("food_nodes", 7)
 	for i in range(total_food):
 		var spot = _find_random_empty_spot(Vector2i(3, 8), Vector2i(MAP_WIDTH - 4, MAP_HEIGHT - 9))
 		if spot != Vector2i(-1, -1):
-			_spawn_resource_cluster(spot, "food", randi_range(2, 3))
+			_spawn_resource_cluster(spot, "food", map_rng.randi_range(2, 3))
 
 func _spawn_base_cluster(center: Vector2i) -> void:
 	var dir_y = 1 if center.y > int(MAP_HEIGHT * 0.5) else -1
@@ -787,7 +876,7 @@ func _add_env_model(parent: Node3D, asset_id: String, min_scale: float, max_scal
 	if m == null and "/" in asset_id:
 		# biome variant missing/disabled -> same prop from the temperate set
 		m = FactionArtManager.instantiate_environment_model(asset_id.get_slice("/", 1))
-	var yaw := randf() * TAU            # drawn even in 2D mode so seeded maps stay identical
+	var yaw := map_rng.randf() * TAU    # drawn even in 2D mode so seeded maps stay identical
 	if m == null:
 		# 2D sprite mode: the same prop rendered in Blender; mirrored at random instead of rotated
 		m = FactionArtManager.instantiate_environment_sprite(asset_id, yaw > PI)
@@ -796,7 +885,7 @@ func _add_env_model(parent: Node3D, asset_id: String, min_scale: float, max_scal
 	m.name = "Visual"
 	if not m.has_node("SpritePlane"):
 		m.rotation.y = yaw
-	var s := randf_range(min_scale, max_scale)
+	var s := map_rng.randf_range(min_scale, max_scale)
 	m.scale = Vector3(s, s, s)
 	m.set_meta("base_scale", s)
 	parent.add_child(m)
@@ -816,12 +905,11 @@ func _update_deposit_visual(entry: Dictionary, remaining: int) -> void:
 
 func _spawn_3d_tree(cell: Vector2i) -> void:
 	var tree_node = Node3D.new()
-	var ground_y = height_map[cell.x][cell.y]
-	tree_node.position = cell_to_world(cell) + Vector3(0, ground_y, 0)
+	tree_node.position = cell_to_world(cell)   # includes the ground height
 
-	# species from the map biome; exactly one randf() so seeded maps stay reproducible
+	# species from the map biome; exactly one map_rng draw so seeded maps stay reproducible
 	var species: Array = CivData.get_biome_props(map_type)["trees"]
-	var roll := randf()
+	var roll := map_rng.randf()
 	var pick: Array = species[species.size() - 1]
 	var acc := 0.0
 	for sp in species:
@@ -855,8 +943,7 @@ func _spawn_3d_tree(cell: Vector2i) -> void:
 
 func _spawn_3d_gold(cell: Vector2i) -> void:
 	var gold_node = Node3D.new()
-	var ground_y = height_map[cell.x][cell.y]
-	gold_node.position = cell_to_world(cell) + Vector3(0, ground_y, 0)
+	gold_node.position = cell_to_world(cell)   # includes the ground height
 
 	if not _add_env_model(gold_node, CivData.get_biome_props(map_type)["gold"][0], 0.95, 1.05):
 		var spr = Sprite3D.new()
@@ -883,8 +970,7 @@ func _spawn_3d_gold(cell: Vector2i) -> void:
 
 func _spawn_3d_stone(cell: Vector2i) -> void:
 	var stone_node = Node3D.new()
-	var ground_y = height_map[cell.x][cell.y]
-	stone_node.position = cell_to_world(cell) + Vector3(0, ground_y, 0)
+	stone_node.position = cell_to_world(cell)   # includes the ground height
 
 	if not _add_env_model(stone_node, CivData.get_biome_props(map_type)["stone"][0], 0.95, 1.05):
 		var spr = Sprite3D.new()
@@ -911,8 +997,7 @@ func _spawn_3d_stone(cell: Vector2i) -> void:
 
 func _spawn_3d_berry(cell: Vector2i) -> void:
 	var berry_node = Node3D.new()
-	var ground_y = height_map[cell.x][cell.y]
-	berry_node.position = cell_to_world(cell) + Vector3(0, ground_y, 0)
+	berry_node.position = cell_to_world(cell)   # includes the ground height
 
 	if not _add_env_model(berry_node, CivData.get_biome_props(map_type)["food"][0], 0.9, 1.1):
 		var spr = Sprite3D.new()
@@ -947,8 +1032,8 @@ func _is_in_base_keepout(c: Vector2i) -> bool:
 
 func _find_random_empty_spot(min_b: Vector2i, max_b: Vector2i) -> Vector2i:
 	for attempt in range(40):
-		var rx = randi_range(min_b.x, max_b.x)
-		var ry = randi_range(min_b.y, max_b.y)
+		var rx = map_rng.randi_range(min_b.x, max_b.x)
+		var ry = map_rng.randi_range(min_b.y, max_b.y)
 		var c = Vector2i(rx, ry)
 		if is_cell_passable_terrain(rx, ry) and not _is_in_base_keepout(c) and not (c in trees or c in gold_mines or c in stone_mines or c in berry_bushes):
 			return c
@@ -1076,6 +1161,34 @@ func get_path_to_target(from_world: Vector3, to_world: Vector3) -> Array[Vector3
 	for p in pts2d:
 		pts3d.append(cell_to_world(Vector2i(int(p.x), int(p.y))))
 	return pts3d
+
+## Save / load: what is left of every resource node, by type ("wood", "gold", "stone", "food").
+func get_resource_state() -> Dictionary:
+	var out := {}
+	for t in [["wood", trees, "hp"], ["gold", gold_mines, "gold"], ["stone", stone_mines, "stone"], ["food", berry_bushes, "food"]]:
+		var list := []
+		for cell in t[1].keys():
+			var e: Dictionary = t[1][cell]
+			list.append([cell.x, cell.y, int(e.get(t[2], e.get("amount", 0)))])
+		out[t[0]] = list
+	return out
+
+## After regenerating the same map from its seed: nodes used up before the save are removed, partly
+## used ones get their remaining amount back (through the normal harvest path, so walkability and the
+## shrinking mine visuals update too).
+func apply_resource_state(state: Dictionary) -> void:
+	for t in [["wood", trees, "hp", harvest_tree], ["gold", gold_mines, "gold", harvest_gold], ["stone", stone_mines, "stone", harvest_stone], ["food", berry_bushes, "food", harvest_food]]:
+		if not state.has(t[0]):
+			continue
+		var left := {}
+		for e in state[t[0]]:
+			left[Vector2i(int(e[0]), int(e[1]))] = int(e[2])
+		for cell in t[1].keys():
+			var e: Dictionary = t[1][cell]
+			var cur: int = int(e.get(t[2], e.get("amount", 0)))
+			var keep: int = left.get(cell, 0)
+			if keep < cur:
+				t[3].call(cell, cur - keep)
 
 func harvest_tree(cell: Vector2i, amount: int) -> int:
 	if not cell in trees:

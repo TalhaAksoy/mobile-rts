@@ -55,10 +55,16 @@ func _open_block(near: Vector2i) -> Vector2i:
 				for dy in 6:
 					var cc := c + Vector2i(dx, dy)
 					if not mg.is_valid_cell(cc.x, cc.y) or not mg.is_cell_passable_terrain(cc.x, cc.y) or mg.occupied_cells.has(cc) \
-							or cc in mg.gold_mines or cc in mg.stone_mines or absf(mg.height_map[cc.x][cc.y]) > 0.01:
+							or cc in mg.gold_mines or cc in mg.stone_mines:
 						bad = true
 					elif mg.is_cell_buildable(cc) and mg.get_resource_at_cell(cc).is_empty():
 						score += 1
+			# level ground where the mill and each field go (the terrain rolls gently; hills are
+			# slopes, not flat tiers), the same check the game uses for fields
+			for sx in [0, 2, 4]:
+				for sy in [0, 2, 4]:
+					if not bad and not mg.is_area_level(c + Vector2i(sx, sy), Vector2i(2, 2)):
+						bad = true
 			if not bad and score > best_score:
 				best_score = score
 				best = c
@@ -104,6 +110,12 @@ func _run() -> void:
 
 	# --- mill with a free 6x6 ring: take the most open 6x6 block near the base and clear the few
 	# scattered trees/bushes in it (tree scatter rarely leaves a perfectly empty 6x6 naturally)
+	# the starting villagers stand aside: gathering next to the test plots, one of them would take
+	# the new field before the test's builder does
+	for u in game.units:
+		if u.team == 0:
+			u.command_stop()
+			u.global_position = mg.cell_to_world(Vector2i(2, 2))
 	var spot := _open_block(base)
 	_expect(spot != Vector2i(-1, -1), "found a 6x6 area for a mill + fields")
 	_clear_block(spot, Vector2i(6, 6))

@@ -13,6 +13,13 @@ signal jump_to_base_requested
 signal find_idle_villager_requested
 signal clear_selection_requested
 signal toggle_speed_requested
+## in-match menu (PauseMenu) and leaving a match
+signal pause_menu_requested
+signal resume_requested
+signal save_requested
+signal main_menu_requested
+signal quit_requested
+signal load_game_requested
 signal restart_requested
 
 var game_controller: Node = null
@@ -74,6 +81,11 @@ var player_civ_type: CivData.CivType = CivData.CivType.OTTOMANS
 @onready var restart_btn: Button = $GameOverModal/VBox/RestartButton
 
 var selected_entity: Node3D = null
+## "Menü" button in the top bar and the in-match menu it opens
+var menu_btn: Button = null
+var pause_menu: PauseMenu = null
+## "ANA MENÜ" on the game-over modal (next to YENİDEN OYNA)
+var game_over_menu_btn: Button = null
 
 const BOTTOM_BAR_COMPACT_TOP: float = -105.0
 const BOTTOM_BAR_EXPANDED_TOP: float = -245.0
@@ -146,6 +158,38 @@ func _ready() -> void:
 
 	_setup_build_grid()
 	_reset_context_deck()
+	_build_match_menu(p_theme)
+
+## Top-bar "Menü" button + in-match pause menu; "ANA MENÜ" on the game-over modal; "KAYITLI OYUN"
+## on the main menu forwarded to the game.
+func _build_match_menu(p_theme: Theme) -> void:
+	menu_btn = Button.new()
+	menu_btn.name = "MenuButton"
+	menu_btn.text = "Menü"
+	menu_btn.custom_minimum_size = Vector2(64, 28)
+	ParchmentTheme.apply_parchment_button(menu_btn, 14)
+	speed_btn.get_parent().add_child(menu_btn)
+	menu_btn.pressed.connect(func(): pause_menu_requested.emit())
+
+	pause_menu = PauseMenu.new()
+	pause_menu.build(p_theme)
+	add_child(pause_menu)          # last child: drawn above the HUD and the game-over modal
+	pause_menu.open_requested.connect(func(): pause_menu_requested.emit())
+	pause_menu.resume_requested.connect(func(): resume_requested.emit())
+	pause_menu.save_requested.connect(func(): save_requested.emit())
+	pause_menu.main_menu_requested.connect(func(): main_menu_requested.emit())
+	pause_menu.quit_requested.connect(func(): quit_requested.emit())
+
+	game_over_menu_btn = Button.new()
+	game_over_menu_btn.name = "MainMenuButton"
+	game_over_menu_btn.text = "ANA MENÜ"
+	game_over_menu_btn.custom_minimum_size = Vector2(0, 56)
+	ParchmentTheme.apply_parchment_button(game_over_menu_btn, 18)
+	restart_btn.get_parent().add_child(game_over_menu_btn)
+	game_over_menu_btn.pressed.connect(func(): main_menu_requested.emit())
+
+	if menu_root.has_signal("load_game_requested"):
+		menu_root.load_game_requested.connect(func(): load_game_requested.emit())
 
 func _setup_build_grid() -> void:
 	for child in build_grid.get_children():
