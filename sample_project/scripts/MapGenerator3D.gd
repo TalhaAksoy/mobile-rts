@@ -77,6 +77,10 @@ var occupied_cells: Dictionary = {}
 ## farm_fields: origin -> {"building", "team", "farmer"} once the field is completed (infinite food).
 var field_cells: Dictionary = {}
 var farm_fields: Dictionary = {}
+## field origin -> height of the field's top. A field is flat, so it sits on the HIGHEST ground under
+## it (on the lowest it sank up to MAX_BUILD_RISE into a slope); get_height_at() returns this on its
+## cells so units walk on the field, not inside it.
+var field_tops: Dictionary = {}
 
 var player_start_pos: Vector3
 var enemy_start_pos: Vector3          # = start_positions[1] (the first bot)
@@ -195,6 +199,7 @@ func generate(chosen_map_type: CivData.MapType, custom_seed: int = -1, n_bots: i
 	occupied_cells.clear()
 	field_cells.clear()
 	farm_fields.clear()
+	field_tops.clear()
 	astar.clear()
 
 	for x in range(MAP_WIDTH):
@@ -622,9 +627,16 @@ func get_height_at(pos: Vector3) -> float:
 	var h10 := hgrid[j * hgrid_w + i + 1]
 	var h01 := hgrid[(j + 1) * hgrid_w + i]
 	var h11 := hgrid[(j + 1) * hgrid_w + i + 1]
+	var h: float
 	if fx >= fz:
-		return h00 + fx * (h10 - h00) + fz * (h11 - h10)
-	return h00 + fz * (h01 - h00) + fx * (h11 - h01)
+		h = h00 + fx * (h10 - h00) + fz * (h11 - h10)
+	else:
+		h = h00 + fz * (h01 - h00) + fx * (h11 - h01)
+	if not field_cells.is_empty():
+		var c := Vector2i(int(pos.x / TILE_SIZE), int(pos.z / TILE_SIZE))
+		if field_cells.has(c):
+			h = maxf(h, float(field_tops.get(field_cells[c], h)))
+	return h
 
 ## Lowest / highest ground under a footprint (grid vertices inside it, edges included).
 func get_footprint_height_range(origin: Vector2i, size: Vector2i) -> Vector2:
@@ -1344,6 +1356,7 @@ func is_cell_buildable(cell: Vector2i) -> bool:
 	return is_cell_walkable(cell) and not field_cells.has(cell)
 
 func register_field_cells(origin_cell: Vector2i, size: Vector2i) -> void:
+	field_tops[origin_cell] = get_footprint_height_range(origin_cell, size).y
 	for dx in range(size.x):
 		for dy in range(size.y):
 			field_cells[origin_cell + Vector2i(dx, dy)] = origin_cell
@@ -1354,6 +1367,7 @@ func unregister_field(origin_cell: Vector2i, size: Vector2i) -> void:
 		for dy in range(size.y):
 			field_cells.erase(origin_cell + Vector2i(dx, dy))
 	farm_fields.erase(origin_cell)
+	field_tops.erase(origin_cell)
 
 ## Called when a field finishes construction (and again after a save is restored): idempotent.
 func register_field_resource(field: Node3D) -> void:

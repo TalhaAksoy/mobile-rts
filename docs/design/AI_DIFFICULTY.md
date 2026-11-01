@@ -27,7 +27,7 @@ Against a player who only moved a few villagers, on Highland, seed 901:
 | between waves | 150 s | 90 s | 55 s |
 | wave waits for an army of | 4 | 5 | 5 |
 | part of the army sent | 50 % | 60 % | 100 % |
-| villagers | 10 | 14 | 20 |
+| villagers | 10 | 14 | 26 |
 | army size (soldiers in training counted) | 8 | 14 | 40 |
 
 Waves get 3 s shorter each time, down to 70 % of the interval. When the army is too small at wave time, the bot
@@ -40,9 +40,17 @@ Highland, the map where the old bot was harshest. Same seed for every row; headl
 | | first soldier at the base | most at the base at once | largest army | Town Center |
 |---|---|---|---|---|
 | before (fixed setting) | 105 s | 17 | – | lost before 4 min |
-| Kolay | 491 s | 5 | 9 | lost at 581 s (≈ 90 s after the first wave) |
+| Kolay | 491 s | 4 | 8 | standing at 600 s (end of run) |
 | Orta | 311 s | 9 | 14 | standing at 330 s (end of run) |
-| Zor | 189 s | 23 | 27 | lost at 218 s |
+| Zor | 189 s | 14 | 20 | lost at 281 s |
+
+These rows are with one-at-a-time gathering and villagers walking right up to the node and the drop-off
+(`GATHERING.md`). With the old 4–5 per swing and 15 per trip the waves were bigger: Kolay took the Town Center at
+581 s, Zor at 218 s with 23 soldiers at the base.
+
+**Zor villager cap.** Walking right up to the node slowed every economy. After that change the Zor bot took a passive
+player's Town Center only at 299 s, against its "before minute 5" promise. Its villager cap went from 20 to 26 to fix
+that: now 281 s.
 
 Covered by `scripts/tests/test_ai_difficulty.gd`. It uses fixed time and size limits taken from the on-screen
 hints, not the profile values, so a profile edit that makes a level harsher fails the test.

@@ -106,11 +106,13 @@ func _test_building_placement_auto_assign(game: GameController3D) -> void:
 			for sx in range(2):
 				for sy in range(2):
 					var test_c = c + Vector2i(sx, sy)
-					if not game.map_gen.is_valid_cell(test_c.x, test_c.y) or not game.map_gen.is_cell_walkable(test_c):
+					if not game.map_gen.is_valid_cell(test_c.x, test_c.y) or not game.map_gen.is_cell_buildable(test_c):
 						ok = false
 						break
 				if not ok: break
-			if ok:
+			# the game refuses houses on sloped ground (is_area_level); a walkable-only spot made this
+			# check fail on the random maps where the first such spot sat on a hillside
+			if ok and game.map_gen.is_area_level(c, Vector2i(2, 2)):
 				clear_cell = c
 				break
 		if clear_cell != Vector2i(-1, -1):

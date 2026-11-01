@@ -425,6 +425,8 @@ func _build_3d_structure() -> void:
 	add_child(selection_mesh)
 
 	_update_field_visual()
+	if building_type == BuildingType.FARM:
+		_add_field_bank()
 
 	# 3D Health Bar
 	_build_3d_hp_bar(v_height + 0.4)
@@ -1157,6 +1159,30 @@ func _on_field_state_changed() -> void:
 	if building_type == BuildingType.FARM and is_completed and map_gen != null:
 		map_gen.register_field_resource(self)
 	_update_field_visual()
+
+## A field sits on the highest ground under it (GameController3D.place_building). On a slope its low
+## side would float, so a soil bank fills the gap down to the ground, like a terraced plot.
+var field_bank: MeshInstance3D = null
+func _add_field_bank() -> void:
+	if map_gen == null:
+		return
+	var lo: float = map_gen.get_footprint_height_range(origin_cell, grid_size).x
+	var drop: float = global_position.y - lo
+	if drop < 0.03:
+		return
+	var t := MapGenerator3D.TILE_SIZE
+	var depth := drop + 0.15
+	var box := BoxMesh.new()
+	box.size = Vector3(grid_size.x * t * 0.97, depth, grid_size.y * t * 0.97)
+	var mat := StandardMaterial3D.new()
+	mat.albedo_color = Color(0.42, 0.30, 0.19)
+	mat.roughness = 0.95
+	field_bank = MeshInstance3D.new()
+	field_bank.name = "FieldBank"
+	field_bank.mesh = box
+	field_bank.material_override = mat
+	field_bank.position = Vector3(0, -depth * 0.5 - 0.01, 0)
+	add_child(field_bank)
 
 func _update_field_visual() -> void:
 	if building_type != BuildingType.FARM:

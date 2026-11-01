@@ -34,6 +34,35 @@ research, ages). It was used for mechanics only. Names, numbers and art are orig
 * **Bot:** it builds a mill once the wild food near its TC runs low (< 700) or after 4 minutes, leaving a 6×6 ring
   free. It then adds fields, about 45% of its villager count, at most 6.
 
+### Fields on sloped ground
+
+A flat 2×2 field used to sit on the lowest ground under it. The ground under a field can rise up to 0.8 m
+(`MAX_BUILD_RISE`), so on a slope part of the field sank into the terrain.
+
+**Measured before the fix:** 4 maps × 3 seeds, up to 3 mills with six fields each.
+
+- 135 of 166 fields were more than 0.1 m under the ground, at worst 0.8 m.
+- Tapping the field right behind a Mill selected the Mill, 5 of 44 taps in all. The Mill's tap box was built for tall
+  buildings and reached over that field, and the first building in the list won.
+
+**Now:**
+
+- **Height.** A field sits on the highest ground under it, and a soil bank (`Building3D.FieldBank`) fills its low side.
+- **Units.** `MapGenerator3D.get_height_at()` returns the field's top on its cells, so units walk on the field.
+- **Taps.**
+  - A tap whose ground point is on a field picks that field.
+  - If a building's model covers the tap on screen, that building wins, such as a Mill roof drawn over the field
+    behind it.
+  - Otherwise, when the tap boxes of several buildings overlap, the closest one wins.
+- **Tests:** `test_farm_fields.gd` checks 44 fields on slopes up to 0.79 m:
+  - no field sinks;
+  - every field on a slope has a bank;
+  - units stand on top of the fields;
+  - every field tap picks its field;
+  - Mill taps pick the Mill.
+
+  The old code fails three of these checks: 29 sunk fields, 28 fields without a bank, and 5 missed taps.
+
 ## 2. Build times
 
 `Building3D.BUILD_TIME` gives the seconds needed by one villager; more builders add up.

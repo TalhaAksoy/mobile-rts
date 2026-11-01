@@ -7,6 +7,9 @@ extends SceneTree
 ##  * the builder of a field starts farming it by itself
 ##  * destroying a field removes the food source; save -> load keeps fields farmable
 ##  * the FARM entry is gone from the build menu (fields come only from a Mill)
+##  * on sloped ground no field sinks into the terrain (it sits on its highest point, a soil bank fills
+##    the low side), units on it stand on the field, and tapping any field (also the one behind the
+##    Mill) picks that field while tapping the Mill still picks the Mill
 const GameController3D = preload("res://scripts/GameController3D.gd")
 const SaveManager = preload("res://scripts/SaveManager.gd")
 
@@ -223,7 +226,83 @@ func _run() -> void:
 	_expect(not mg.farm_fields.has(o) and not mg.field_cells.has(o), "destroyed field is no longer a food source")
 	_expect(mg.is_cell_buildable(o), "its ground is buildable again")
 
+	await _fields_on_slopes()
+
 	Engine.time_scale = 1.0
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
 	print("RESULT: %s (%d failures)" % ["PASS" if failures == 0 else "FAIL", failures])
 	quit(0 if failures == 0 else 1)
+
+## Mills with six fields on several maps and seeds, on whatever slope the spot has.
+func _fields_on_slopes() -> void:
+	var fields_seen := 0
+	var sunk := 0
+	var floating_without_bank := 0
+	var unit_inside := 0
+	var tap_miss := 0
+	var mill_miss := 0
+	var steepest := 0.0
+	for mt in [0, 1, 2, 3]:
+		for sd in [11, 22]:
+			seed(sd)
+			game._on_start_game_requested(0, 1, mt)
+			game.enemy_ai.set_process(false)
+			if game.tutorial_mgr != null and game.tutorial_mgr.has_method("stop_tutorial"):
+				game.tutorial_mgr.stop_tutorial()
+			var mg = game.map_gen
+			var base: Vector2i = mg.world_to_cell(mg.player_start_pos)
+			var mill = null
+			for dx in range(-8, 9, 2):
+				for dy in range(-10, 1, 2):
+					if mill != null:
+						break
+					var o: Vector2i = base + Vector2i(dx, dy)
+					var ok := true
+					for cx in 2:
+						for cy in 2:
+							var c := o + Vector2i(cx, cy)
+							if not mg.is_valid_cell(c.x, c.y) or not mg.is_cell_buildable(c) or not mg.get_resource_at_cell(c).is_empty():
+								ok = false
+					if ok and mg.is_area_level(o, Vector2i(2, 2)):
+						mill = game.place_building(Building3D.BuildingType.MILL, 0, o, false)
+			if mill == null:
+				continue
+			game.team_resources[0]["wood"] = 5000
+			var fields: Array = []
+			for i in game.MAX_FIELDS_PER_MILL:
+				var f = game.try_add_field(mill, 0)
+				if f == null:
+					break
+				f.contribute_construction(1000.0)
+				fields.append(f)
+			for u in game.units:
+				if u.team == 0:
+					u.command_stop()
+					u.global_position = mg.cell_to_world(base + Vector2i(0, 6))
+			game.camera.global_position.x = mill.global_position.x
+			game.camera.global_position.z = mill.global_position.z + 10.0
+			await process_frame
+			await process_frame
+			for f in fields:
+				fields_seen += 1
+				var r: Vector2 = mg.get_footprint_height_range(f.origin_cell, f.grid_size)
+				steepest = maxf(steepest, r.y - r.x)
+				if r.y > f.global_position.y + 0.01:
+					sunk += 1
+				if r.y - r.x > 0.03 and not is_instance_valid(f.get_node_or_null("FieldBank")):
+					floating_without_bank += 1
+				if mg.get_height_at(f.global_position) < f.global_position.y - 0.01:
+					unit_inside += 1
+				var scr: Vector2 = game.camera.unproject_position(f.global_position + Vector3(0, 0.1, 0))
+				if game._get_entity_at_position(scr, game.camera.raycast_ground(scr)) != f:
+					tap_miss += 1
+			for hf in [0.3, 0.8]:
+				var ms: Vector2 = game.camera.unproject_position(mill.global_position + Vector3(0, mill.model_height * hf, 0))
+				if game._get_entity_at_position(ms, game.camera.raycast_ground(ms)) != mill:
+					mill_miss += 1
+	_expect(fields_seen >= 30 and steepest > 0.4, "fields placed on %d spots, steepest ground under one: %.2f m" % [fields_seen, steepest])
+	_expect(sunk == 0, "no field sinks into the slope (%d sunk)" % sunk)
+	_expect(floating_without_bank == 0, "every field on a slope has a soil bank under its low side (%d without)" % floating_without_bank)
+	_expect(unit_inside == 0, "units on a field stand on it, not inside it (%d fields)" % unit_inside)
+	_expect(tap_miss == 0, "tapping a field picks that field, also behind the Mill (%d of %d missed)" % [tap_miss, fields_seen])
+	_expect(mill_miss == 0, "tapping the Mill (body or roof) still picks the Mill (%d missed)" % mill_miss)

@@ -691,6 +691,19 @@ func _find_resource_at_click(screen_pos: Vector2, ground_pos: Vector3, precise_o
 
 	return {}
 
+## Screen box of a building's model: its footprint (as drawn, 90 %) from the ground up to the model's
+## height, projected through the camera.
+func _building_screen_rect(b: Building3D) -> Rect2:
+	var hw: float = b.grid_size.x * MapGenerator3D.TILE_SIZE * 0.45
+	var hl: float = b.grid_size.y * MapGenerator3D.TILE_SIZE * 0.45
+	var h: float = maxf(1.0, b.model_height)
+	var r := Rect2(camera.unproject_position(b.global_position), Vector2.ZERO)
+	for x in [-hw, hw]:
+		for z in [-hl, hl]:
+			for y in [0.0, h]:
+				r = r.expand(camera.unproject_position(b.global_position + Vector3(x, y, z)))
+	return r
+
 func _get_entity_at_position(screen_pos: Vector2, ground_pos: Vector3) -> Node3D:
 	# 1. Units ALWAYS have absolute priority over buildings!
 	var unit_by_screen = _find_unit_near_screen(screen_pos, 36.0)
@@ -708,9 +721,36 @@ func _get_entity_at_position(screen_pos: Vector2, ground_pos: Vector3) -> Node3D
 	if best_ground_unit != null:
 		return best_ground_unit
 
-	# 2. Check buildings in screen-space (handles 3D roofs, towers, and facades)
+	# 2. A tap on the ground of a farm field picks that field. Fields are flat, so the tapped ground
+	#    point is exact; the screen boxes below are built for tall buildings, and the Mill's box
+	#    reached over the field behind it (tapping that field selected the Mill).
+	#    A building whose model covers the tap on screen (a Mill roof drawn over the field behind it)
+	#    still wins over the field.
+	var g_cell: Vector2i = map_gen.world_to_cell(ground_pos)
+	var field_origin: Vector2i = map_gen.field_origin_at(g_cell)
+	if field_origin != Vector2i(-1, -1):
+		var cover: Building3D = null
+		var cover_d := INF
+		for b in buildings:
+			if is_instance_valid(b) and b.hp > 0 and b.building_type != Building3D.BuildingType.FARM:
+				var r := _building_screen_rect(b)
+				if r.has_point(screen_pos):
+					var d := screen_pos.distance_to(r.get_center())
+					if d < cover_d:
+						cover_d = d
+						cover = b
+		if cover != null:
+			return cover
+		for b in buildings:
+			if is_instance_valid(b) and b.hp > 0 and b.building_type == Building3D.BuildingType.FARM and b.origin_cell == field_origin:
+				return b
+
+	# 3. Check buildings in screen-space (handles 3D roofs, towers, and facades). When boxes overlap,
+	#    the building whose centre is closest to the tap wins (not simply the first in the list).
+	var best_b: Building3D = null
+	var best_score := INF
 	for b in buildings:
-		if is_instance_valid(b) and b.hp > 0:
+		if is_instance_valid(b) and b.hp > 0 and b.building_type != Building3D.BuildingType.FARM:
 			var b_center = b.global_position + Vector3(0, 1.8, 0)
 			var s_center = camera.unproject_position(b_center)
 			var half_w = (b.grid_size.x * MapGenerator3D.TILE_SIZE * 0.5)
@@ -719,10 +759,17 @@ func _get_entity_at_position(screen_pos: Vector2, ground_pos: Vector3) -> Node3D
 			var s_top = camera.unproject_position(b_center + Vector3(0, 2.2, -half_l))
 			var rx = max(36.0, abs(s_right.x - s_center.x) + 4.0)
 			var ry = max(36.0, abs(s_top.y - s_center.y) + 6.0)
-			if abs(screen_pos.x - s_center.x) <= rx and abs(screen_pos.y - s_center.y) <= ry:
-				return b
+			var nx: float = abs(screen_pos.x - s_center.x) / rx
+			var ny: float = abs(screen_pos.y - s_center.y) / ry
+			if nx <= 1.0 and ny <= 1.0:
+				var score := nx * nx + ny * ny
+				if score < best_score:
+					best_score = score
+					best_b = b
+	if best_b != null:
+		return best_b
 
-	# 3. Ground footprint proximity fallback
+	# 4. Ground footprint proximity fallback
 	for b in buildings:
 		if is_instance_valid(b) and b.hp > 0:
 			var w = b.grid_size.x * MapGenerator3D.TILE_SIZE * 0.5 + 0.3
@@ -779,7 +826,10 @@ func place_building(b_type: Building3D.BuildingType, team: int, cell: Vector2i, 
 	var civ = civ_of(team)
 	var b = Building3D.new()
 	var b_size = _get_building_size(b_type)
-	var world_center = Vector3((cell.x + b_size.x * 0.5) * MapGenerator3D.TILE_SIZE, map_gen.get_footprint_height(cell, b_size), (cell.y + b_size.y * 0.5) * MapGenerator3D.TILE_SIZE)
+	# buildings stand on the lowest ground (their walls hide the rise); a flat field on the highest,
+	# with a soil bank under its low side (Building3D), so it never sinks into a slope
+	var ground_y: float = map_gen.get_footprint_height_range(cell, b_size).y if b_type == Building3D.BuildingType.FARM else map_gen.get_footprint_height(cell, b_size)
+	var world_center = Vector3((cell.x + b_size.x * 0.5) * MapGenerator3D.TILE_SIZE, ground_y, (cell.y + b_size.y * 0.5) * MapGenerator3D.TILE_SIZE)
 
 	add_child(b)
 	b.global_position = world_center

@@ -145,7 +145,7 @@ func _run() -> void:
 	_check(normal["first"] < 0 or normal["first"] >= 280.0, "Orta: no soldier at the base before ~minute 5 (first at %.0f s)" % normal["first"])
 	_check(normal["max_army"] <= 16 and normal["max_near"] <= 12, "Orta: medium army and waves (largest %d, at most %d at the base)" % [normal["max_army"], normal["max_near"]])
 
-	var hard := await _passive_match(game, EnemyAI3D.Difficulty.HARD, 240.0)
+	var hard := await _passive_match(game, EnemyAI3D.Difficulty.HARD, 300.0)   # the TC check below is "before minute 5"
 	print("  Zor: ", hard)
 	_check(hard["first"] >= 170.0 and hard["first"] < 230.0, "Zor: the attack comes right after minute 3 (first at %.0f s)" % hard["first"])
 	_check(hard["max_near"] > easy["max_near"], "Zor: bigger waves than Kolay (%d vs %d at the base)" % [hard["max_near"], easy["max_near"]])

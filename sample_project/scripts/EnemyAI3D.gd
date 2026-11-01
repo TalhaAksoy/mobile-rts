@@ -21,7 +21,7 @@ const DIFFICULTY_HINTS := [
 const PROFILES := {
 	Difficulty.EASY: {"think": 4.0, "first_attack": 480.0, "wave_interval": 150.0, "min_wave": 4, "wave_share": 0.5, "max_vills": 10, "max_army": 8},
 	Difficulty.NORMAL: {"think": 2.5, "first_attack": 300.0, "wave_interval": 90.0, "min_wave": 5, "wave_share": 0.6, "max_vills": 14, "max_army": 14},
-	Difficulty.HARD: {"think": 1.5, "first_attack": 180.0, "wave_interval": 55.0, "min_wave": 5, "wave_share": 1.0, "max_vills": 20, "max_army": 40},
+	Difficulty.HARD: {"think": 1.5, "first_attack": 180.0, "wave_interval": 55.0, "min_wave": 5, "wave_share": 1.0, "max_vills": 26, "max_army": 40},
 }
 const WAVE_RETRY: float = 15.0   # army too small at wave time: look again this much later
 
@@ -289,6 +289,17 @@ func _balance_workforce(villagers: Array[Unit3D], resources: Dictionary, my_age:
 		var reassign_v = active_by_res["gold"].pop_back() as Unit3D
 		_send_to_resource(reassign_v, target_res)
 		active_by_res[target_res].append(reassign_v)
+
+	# Food piling up while wood runs dry (or the other way round): villagers only get a job when idle,
+	# so without this the early food crew keeps farming and no barracks or houses get built.
+	if cur_food > 300 and cur_wood < 150 and active_by_res["food"].size() > 2:
+		var reassign_v = active_by_res["food"].pop_back() as Unit3D
+		_send_to_resource(reassign_v, "wood")
+		active_by_res["wood"].append(reassign_v)
+	elif cur_wood > 400 and cur_food < 100 and active_by_res["wood"].size() > 2:
+		var reassign_v = active_by_res["wood"].pop_back() as Unit3D
+		_send_to_resource(reassign_v, "food")
+		active_by_res["food"].append(reassign_v)
 
 	if cur_stone > 200 and my_age == 1 and active_by_res["stone"].size() > 0:
 		var reassign_v = active_by_res["stone"].pop_back() as Unit3D

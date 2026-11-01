@@ -65,16 +65,25 @@ var target_entity: Node3D = null
 var target_cell: Vector2i = Vector2i(-1, -1)
 var resource_type: String = ""
 var carried_resource: int = 0
-var max_carry: int = 15
+## What a villager carries before walking back. Techs add to it (TechData "carry").
+var max_carry: int = 5
 const AUTO_GATHER_SEARCH_RADIUS: float = 16.0
-## Food per harvest swing on a farm field (berries give 5): fields never run out but are slower.
-const FIELD_HARVEST: float = 4.0
-var harvest_remainder: float = 0.0
+## Every harvest swing takes exactly 1 resource; this is the time between swings, in seconds.
+## Civ and tech gather bonuses make the swings faster, never bigger, so the load counts up 1 by 1.
+const GATHER_INTERVAL := {"wood": 0.4, "food": 0.4, "gold": 0.5, "stone": 0.5, "field": 0.5}
 var last_resource_pos: Vector3 = Vector3.ZERO
 
 var attack_timer: float = 0.0
 var swing_progress: float = 0.0
 var walk_timer: float = 0.0
+## Gatherers work right next to the node and unload right next to the drop-off building: the A* path
+## ends in the neighbouring cell, then the villager walks the last metre straight in. If it is blocked
+## for longer than APPROACH_TIMEOUT (another unit in the way), it works from where it stands.
+const GATHER_REACH: float = 0.6     # metres from the resource cell's edge
+const DROPOFF_REACH: float = 0.8    # metres from the building footprint's edge
+const APPROACH_TIMEOUT: float = 1.5
+var approach_time: float = 0.0
+var _dropoff_repathed := false
 var regen_rate: float = 0.0
 
 var map_gen: MapGenerator3D = null
@@ -742,6 +751,35 @@ func _physics_process(delta: float) -> void:
 static func _hdist(a: Vector3, b: Vector3) -> float:
 	return Vector2(a.x - b.x, a.z - b.z).length()
 
+## Ground distance from `p` to the edge of the cell block `origin` .. `origin + size` (0 inside it).
+static func _dist_to_cells(p: Vector3, origin: Vector2i, size: Vector2i) -> float:
+	var t := MapGenerator3D.TILE_SIZE
+	var dx := maxf(maxf(origin.x * t - p.x, p.x - (origin.x + size.x) * t), 0.0)
+	var dz := maxf(maxf(origin.y * t - p.z, p.z - (origin.y + size.y) * t), 0.0)
+	return Vector2(dx, dz).length()
+
+func _reset_approach() -> void:
+	approach_time = 0.0
+	_dropoff_repathed = false
+
+## Walks straight towards `pt` (the last metre to a resource or a drop-off). False once it gave up.
+func _approach(pt: Vector3, delta: float) -> bool:
+	approach_time += delta
+	if approach_time > APPROACH_TIMEOUT:
+		return false
+	var dir := pt - global_position
+	dir.y = 0.0
+	if dir.length_squared() < 0.0001:
+		return false
+	dir = dir.normalized()
+	walk_timer += delta
+	if is_instance_valid(model_root):
+		model_root.position.y = sin(walk_timer * 16.0) * 0.08
+	rotation.y = lerp_angle(rotation.y, atan2(dir.x, dir.z), delta * 12.0)
+	velocity = dir * move_speed
+	move_and_slide()
+	return true
+
 ## Feet on the terrain surface (hills are smooth slopes, so the height changes continuously).
 func _snap_to_ground() -> void:
 	if map_gen != null and is_instance_valid(map_gen):
@@ -908,6 +946,13 @@ func _process_gathering(delta: float) -> void:
 		_process_path_movement(delta)
 		return
 
+	# In the next cell: walk the last bit up to the node (fields are worked from inside)
+	if not on_field and _dist_to_cells(global_position, target_cell, Vector2i.ONE) > GATHER_REACH:
+		current_path.clear()
+		if _approach(res_pos, delta):
+			return
+	approach_time = 0.0
+
 	# We are at the resource! Clear path and stop moving
 	current_path.clear()
 	velocity = Vector3.ZERO
@@ -920,20 +965,14 @@ func _process_gathering(delta: float) -> void:
 		rotation.y = atan2(look_dir.x, look_dir.z)
 
 	if attack_timer <= 0.0:
-		attack_timer = 0.8
-		swing_progress = 1.0
-		SoundManager.play_sound("gather")
-
 		var civ_cfg = CivData.get_civ(civ_type)
 		var kind: String = "field" if on_field else resource_type
-		var base_amt: float = {"wood": 5.0, "gold": 4.0, "stone": 4.0, "food": 5.0}.get(resource_type, 5.0)
-		if on_field:
-			base_amt = FIELD_HARVEST
 		var team_mult: float = main_game.get_gather_mult(team, kind) if main_game != null and main_game.has_method("get_gather_mult") else 1.0
-		# fractional bonuses (+15% of 5 = 0.75) accumulate instead of being truncated away
-		harvest_remainder += base_amt * civ_cfg.get(resource_type + "_gather_mult", 1.0) * team_mult
-		var harvest_amt := int(harvest_remainder)
-		harvest_remainder -= harvest_amt
+		var mult: float = maxf(0.1, float(civ_cfg.get(resource_type + "_gather_mult", 1.0)) * team_mult)
+		attack_timer = float(GATHER_INTERVAL.get(kind, 0.8)) / mult
+		swing_progress = 1.0
+		SoundManager.play_sound("gather")
+		var harvest_amt := 1
 		var got = 0
 		if resource_type == "wood":
 			got = map_gen.harvest_tree(target_cell, harvest_amt)
@@ -1008,14 +1047,31 @@ func _process_return_resources(delta: float) -> void:
 		my_cell.x >= o_cell.x - 1 and my_cell.x <= o_cell.x + g_size.x and
 		my_cell.y >= o_cell.y - 1 and my_cell.y <= o_cell.y + g_size.y
 	)
-	var b_radius = max(g_size.x, g_size.y) * MapGenerator3D.TILE_SIZE * 0.5
-	var dist = _hdist(global_position, dropoff.global_position)
-
-	if not is_adjacent and dist > (b_radius + 3.2):
+	var edge_dist := _dist_to_cells(global_position, o_cell, g_size)
+	var arrived := edge_dist <= DROPOFF_REACH
+	if not arrived and not is_adjacent:
 		if current_path.is_empty() or path_idx >= current_path.size():
-			_calculate_path(dropoff.global_position)
-		_process_path_movement(delta)
-	else:
+			if not _dropoff_repathed:
+				_dropoff_repathed = true
+				_calculate_path(dropoff.global_position)
+			if current_path.is_empty() or path_idx >= current_path.size():
+				# the path ended short of the building (cells around it blocked): walk straight in,
+				# and unload from here if even that does not get closer
+				if _approach(dropoff.global_position, delta):
+					return
+				arrived = true
+		if not arrived:
+			_process_path_movement(delta)
+			return
+	if not arrived and is_adjacent:
+		# in the ring of cells around the building: walk the last bit up to its wall
+		current_path.clear()
+		if _approach(dropoff.global_position, delta):
+			return
+		arrived = true
+	if arrived:
+		approach_time = 0.0
+		_dropoff_repathed = false
 		# Arrived at Depot / Town Center! Deposit cargo
 		if carried_resource > 0:
 			main_game.deposit_resource(team, resource_type, carried_resource)
@@ -1134,12 +1190,14 @@ func _find_closest_enemy(max_dist: float) -> Node3D:
 
 # Commands
 func command_move(dest: Vector3) -> void:
+	_reset_approach()
 	state = State.MOVING
 	target_entity = null
 	target_cell = Vector2i(-1, -1)
 	_calculate_path(dest)
 
 func command_attack(entity: Node3D) -> void:
+	_reset_approach()
 	if not is_instance_valid(entity):
 		return
 	state = State.ATTACKING
@@ -1147,6 +1205,7 @@ func command_attack(entity: Node3D) -> void:
 	_calculate_path(entity.global_position)
 
 func command_gather(cell: Vector2i, type: String) -> void:
+	_reset_approach()
 	state = State.GATHERING
 	target_cell = cell
 	resource_type = type
@@ -1160,11 +1219,13 @@ func _field_work_pos(origin: Vector2i) -> Vector3:
 	return Vector3((origin.x + 1.0) * MapGenerator3D.TILE_SIZE, global_position.y, (origin.y + 1.0) * MapGenerator3D.TILE_SIZE)
 
 func command_build(building: Node3D) -> void:
+	_reset_approach()
 	state = State.BUILDING
 	target_entity = building
 	_calculate_path(building.global_position)
 
 func command_return_resources(dropoff: Node3D = null) -> void:
+	_reset_approach()
 	state = State.RETURNING_RESOURCES
 	current_path.clear()
 	if is_instance_valid(dropoff):
@@ -1181,6 +1242,7 @@ func command_return_resources(dropoff: Node3D = null) -> void:
 			velocity = Vector3.ZERO
 
 func command_stop() -> void:
+	_reset_approach()
 	state = State.IDLE
 	target_entity = null
 	target_cell = Vector2i(-1, -1)
