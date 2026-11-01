@@ -292,10 +292,7 @@ func _process(delta: float) -> void:
 	if is_placing_building:
 		var mouse_pos = get_viewport().get_mouse_position()
 		var hit_ground = camera.raycast_ground(mouse_pos)
-		var cell = map_gen.world_to_cell(hit_ground)
-		var size = _get_building_size(placing_building_type)
-		var snapped_pos = Vector3((cell.x + size.x * 0.5) * MapGenerator3D.TILE_SIZE, map_gen.get_footprint_height(cell, size) + 0.5, (cell.y + size.y * 0.5) * MapGenerator3D.TILE_SIZE)
-		ghost_preview.global_position = snapped_pos
+		update_ghost(map_gen.world_to_cell(hit_ground))
 
 func _update_hud() -> void:
 	var res = team_resources[0]
@@ -1061,19 +1058,11 @@ func _on_build_selected(b_type: Building3D.BuildingType) -> void:
 
 func _attempt_place_building(ground_pos: Vector3) -> void:
 	var cell = map_gen.world_to_cell(ground_pos)
-	var size = _get_building_size(placing_building_type)
-
-	var clear = true
-	for x in range(cell.x, cell.x + size.x):
-		for y in range(cell.y, cell.y + size.y):
-			if not map_gen.is_valid_cell(x, y) or not map_gen.is_cell_buildable(Vector2i(x, y)):
-				clear = false
-				break
-	if clear and not map_gen.is_area_level(cell, size):
-		clear = false   # too steep: buildings go on level ground
-
-	if not clear:
+	update_ghost(cell)
+	var reason := placement_block_reason(placing_building_type, cell)
+	if reason != "":
 		SoundManager.play_sound("hit")
+		ui_manager.notify_banner(reason, Color(1.0, 0.45, 0.35))
 		return
 
 	var cost = _get_building_cost(placing_building_type)
@@ -1088,6 +1077,76 @@ func _attempt_place_building(ground_pos: Vector3) -> void:
 	assign_builders(new_b, selected_units)
 
 	SoundManager.play_sound("build")
+
+# ---- Placement rules (the ghost turns red where a building can't go) ---------------------------
+const GHOST_OK := Color(0.2, 0.95, 0.3)
+const GHOST_BAD := Color(0.85, 0.02, 0.02)
+var _ghost_cell := Vector2i(-9999, -9999)
+var _ghost_type := -1
+var ghost_reason := ""
+
+## Why a `b_type` building can't go with its corner at `cell` ("" = it can):
+##  * every cell free (no tree, mine, bush, building, field or water) - "Burada ağaç ya da kaynak var"
+##  * level ground                                                     - "Zemin çok eğimli"
+##  * the player's villagers can walk up to it                          - "Köylüler buraya ulaşamaz"
+func placement_block_reason(b_type: Building3D.BuildingType, cell: Vector2i, team: int = 0) -> String:
+	var size := _get_building_size(b_type)
+	for x in range(cell.x, cell.x + size.x):
+		for y in range(cell.y, cell.y + size.y):
+			var c := Vector2i(x, y)
+			if not map_gen.is_valid_cell(x, y):
+				return "Harita dışı"
+			if not map_gen.is_cell_buildable(c):
+				if map_gen.trees.has(c) or map_gen.gold_mines.has(c) or map_gen.stone_mines.has(c) or map_gen.berry_bushes.has(c):
+					return "Burada ağaç ya da kaynak var"
+				return "Burası dolu"
+	if not map_gen.is_area_level(cell, size):
+		return "Zemin çok eğimli"
+	if not _site_reachable(cell, size, team):
+		return "Köylüler buraya ulaşamaz"
+	return ""
+
+## A villager of `team` (the selected ones first, else the nearest one) can walk to within building reach
+## of the footprint (Unit3D builds from next to the walls, or from 1.3 cells out when it can't get closer).
+func _site_reachable(cell: Vector2i, size: Vector2i, team: int) -> bool:
+	var target := Vector3((cell.x + size.x * 0.5) * MapGenerator3D.TILE_SIZE, 0.0, (cell.y + size.y * 0.5) * MapGenerator3D.TILE_SIZE)
+	var walker: Unit3D = null
+	for u in selected_units:
+		if is_instance_valid(u) and u.team == team and u.unit_type == Unit3D.UnitType.VILLAGER:
+			walker = u
+			break
+	if walker == null:
+		var best := INF
+		for u in units:
+			if is_instance_valid(u) and u.hp > 0 and u.team == team and u.unit_type == Unit3D.UnitType.VILLAGER:
+				var d: float = u.global_position.distance_squared_to(target)
+				if d < best:
+					best = d
+					walker = u
+	if walker == null:
+		return true          # nobody to send yet: do not block the player on this
+	var reach: float = MapGenerator3D.TILE_SIZE * 1.3
+	if Unit3D._dist_to_cells(walker.global_position, cell, size) <= reach:
+		return true
+	var path: Array = map_gen.get_path_to_target(walker.global_position, target)
+	return not path.is_empty() and Unit3D._dist_to_cells(path[-1], cell, size) <= reach
+
+## Moves the placement ghost to `cell` and colours it: green where the building can go, red where not
+## (the reason shows in the placement bar). The check runs only when the cell or building changes.
+func update_ghost(cell: Vector2i) -> void:
+	var size = _get_building_size(placing_building_type)
+	ghost_preview.global_position = Vector3((cell.x + size.x * 0.5) * MapGenerator3D.TILE_SIZE, map_gen.get_footprint_height(cell, size) + 0.5, (cell.y + size.y * 0.5) * MapGenerator3D.TILE_SIZE)
+	if cell == _ghost_cell and int(placing_building_type) == _ghost_type:
+		return
+	_ghost_cell = cell
+	_ghost_type = int(placing_building_type)
+	ghost_reason = placement_block_reason(placing_building_type, cell)
+	var col: Color = GHOST_OK if ghost_reason == "" else GHOST_BAD
+	var mat := ghost_preview.material_override as StandardMaterial3D
+	mat.albedo_color = Color(col.r, col.g, col.b, 0.45 if ghost_reason == "" else 0.6)
+	mat.emission = col
+	if ui_manager.has_method("set_placement_reason"):
+		ui_manager.set_placement_reason(placing_building_type, ghost_reason)
 
 # ---- Construction crews and cancelling --------------------------------------------------------
 ## At most this many villagers work on one construction site (each one adds its own build speed).
@@ -1179,6 +1238,7 @@ func cancel_building_placement() -> bool:
 
 func _end_placement() -> void:
 	is_placing_building = false
+	_ghost_cell = Vector2i(-9999, -9999)
 	if ghost_preview != null:
 		ghost_preview.visible = false
 	if ui_manager != null and ui_manager.has_method("show_placement_bar"):

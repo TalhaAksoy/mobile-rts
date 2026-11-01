@@ -512,7 +512,18 @@ func show_placement_bar(on: bool, b_type: int = -1) -> void:
 		hud_root.add_child(placement_bar)
 	placement_bar.visible = on
 	if on:
+		set_placement_reason(b_type, "")
+
+## Placement bar text: how to place, or (red) why the building can't go where the ghost is.
+func set_placement_reason(b_type: int, reason: String) -> void:
+	if placement_label == null:
+		return
+	if reason == "":
 		placement_label.text = "%s: yerleştirmek için haritaya dokun" % _building_name(b_type)
+		placement_label.add_theme_color_override("font_color", Color(0.22, 0.13, 0.05))
+	else:
+		placement_label.text = "%s: buraya yapılamaz. %s" % [_building_name(b_type), reason]
+		placement_label.add_theme_color_override("font_color", Color(0.70, 0.08, 0.05))
 
 static func _building_name(b_type: int) -> String:
 	match b_type:

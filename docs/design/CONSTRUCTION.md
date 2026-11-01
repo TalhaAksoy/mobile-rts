@@ -14,6 +14,26 @@ Placement can be left without spending anything in three ways:
 
 Before this change there was no way out: after a wrong pick, the player had to place the building somewhere.
 
+## Red or green ghost
+
+The placement ghost is coloured by the same rules that decide whether a tap places the building
+(`GameController3D.placement_block_reason`):
+
+| Rule | Reason shown when it fails |
+|---|---|
+| Every cell is free: no tree, mine, building or water | "Burada ağaç ya da kaynak var" / "Burası dolu" |
+| The ground is level | "Zemin çok eğimli" |
+| A villager can walk up to the site | "Köylüler buraya ulaşamaz" |
+
+The ghost is **green** where the building can go and **red** where it can't. On red, the placement bar shows the reason
+in red, and tapping there places nothing and spends nothing; placement stays on.
+
+**Reachability.** The check uses the selected villagers or, if none is selected, the nearest villager. It requires a
+path that ends within building reach of the walls: next to them, or 1.3 cells out (see below). Before this, a building
+could be placed in a pocket walled in by trees; its builders walked to it, gave up, and the site stayed at 0 %.
+
+The check runs only when the ghost moves to another cell or another building is picked.
+
 ## Building crews (`GameController3D.MAX_BUILDERS = 5`)
 
 Every builder adds its own build speed, so five villagers build a House in about 2.4 s instead of 12 s.
@@ -49,6 +69,8 @@ walls. Further away, the site really is out of reach, and the builder still give
 `scripts/tests/test_construction_controls.gd` checks:
 
 - the placement bar and İPTAL;
+- the red ghost and its reason over a tree, the green ghost on a free spot, "Köylüler buraya ulaşamaz" for a spot
+  walled in, and that tapping a red spot places nothing;
 - the Back key order;
 - 7 selected villagers giving exactly 5 builders;
 - the site panel and + Köylü Ekle;

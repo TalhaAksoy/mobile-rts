@@ -99,8 +99,10 @@ func _test_building_placement_auto_assign(game: GameController3D) -> void:
 	var tc = game.get_team_buildings(0)[0]
 	var tc_cell = tc.origin_cell
 	var clear_cell = Vector2i(-1, -1)
-	for dx in range(3, 16):
-		for dy in range(3, 16):
+	for dx in range(-14, 16):
+		for dy in range(-14, 16):
+			if dx > -3 and dx < 4 and dy > -3 and dy < 4:
+				continue   # on / right next to the Town Center
 			var c = tc_cell + Vector2i(dx, dy)
 			var ok = true
 			for sx in range(2):
@@ -110,9 +112,9 @@ func _test_building_placement_auto_assign(game: GameController3D) -> void:
 						ok = false
 						break
 				if not ok: break
-			# the game refuses houses on sloped ground (is_area_level); a walkable-only spot made this
-			# check fail on the random maps where the first such spot sat on a hillside
-			if ok and game.map_gen.is_area_level(c, Vector2i(2, 2)):
+			# the game's own placement rule: free, level, and the selected villagers can walk to it (a
+			# spot behind a row of trees passed the free + level check but was refused)
+			if ok and game.placement_block_reason(Building3D.BuildingType.HOUSE, c) == "":
 				clear_cell = c
 				break
 		if clear_cell != Vector2i(-1, -1):

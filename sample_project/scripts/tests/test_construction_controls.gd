@@ -7,6 +7,8 @@ extends SceneTree
 ##    and "İnşaatı İptal Et"
 ##  * 5 builders build about 5 times as fast as one
 ##  * cancelling a site refunds the part not built yet, frees its builders and its ground
+##  * the placement ghost is red (with the reason in the bar) on trees, and where villagers can't walk
+##    to; green on free, level, reachable ground; tapping a red spot places nothing
 
 var failures := 0
 
@@ -92,6 +94,55 @@ func _run() -> void:
 	_check(pm.visible, "next Back opens the pause menu")
 	pm._handle_back()
 	await _frames(2)
+
+	# --- red / green ghost
+	var tree_cell: Vector2i = mg.trees.keys()[0]
+	var bestd := INF
+	for c in mg.trees.keys():
+		var d: float = mg.cell_to_world(c).distance_to(game.get_team_buildings(0)[0].global_position)
+		if d < bestd:
+			bestd = d
+			tree_cell = c
+	game._on_build_selected(Building3D.BuildingType.HOUSE)
+	game.update_ghost(tree_cell)
+	var gmat := game.ghost_preview.material_override as StandardMaterial3D
+	_check(game.ghost_reason == "Burada ağaç ya da kaynak var" and gmat.emission == game.GHOST_BAD and "ağaç" in ui.placement_label.text,
+		"over a tree: red ghost, the bar says why (%s)" % ui.placement_label.text)
+	var wood_before: int = game.team_resources[0]["wood"]
+	game._attempt_place_building(mg.cell_to_world(tree_cell))
+	_check(game.is_placing_building and game.team_resources[0]["wood"] == wood_before, "tapping the red spot places nothing, placement stays on")
+	var ok_spot: Vector2i = _house_spot(mg, mg.world_to_cell(game.units.filter(func(u): return u.team == 0)[0].global_position), [])
+	game.update_ghost(ok_spot)
+	_check(game.ghost_reason == "" and gmat.emission == game.GHOST_OK and "dokun" in ui.placement_label.text, "free, level, reachable ground: green ghost")
+	# wall a free spot in (a ring of blocked cells two cells out): the villagers can't walk there
+	var walled := Vector2i(-1, -1)
+	for o_x in range(2, mg.MAP_WIDTH - 4):
+		for o_y in range(2, mg.MAP_HEIGHT - 4):
+			if walled != Vector2i(-1, -1):
+				break
+			# any spot the house can go now, with no unit inside the ring that will wall it in
+			var o := Vector2i(o_x, o_y)
+			var ok := true
+			for u in game.units:
+				var uc: Vector2i = mg.world_to_cell(u.global_position)
+				if uc.x >= o.x - 2 and uc.x <= o.x + 3 and uc.y >= o.y - 2 and uc.y <= o.y + 3:
+					ok = false
+			if ok and game.placement_block_reason(Building3D.BuildingType.HOUSE, o) == "":
+				walled = o
+	var wall_cells: Array = []
+	var dummy := Node3D.new()
+	for x in range(walled.x - 2, walled.x + 4):
+		for y in range(walled.y - 2, walled.y + 4):
+			if x == walled.x - 2 or x == walled.x + 3 or y == walled.y - 2 or y == walled.y + 3:
+				wall_cells.append(Vector2i(x, y))
+				mg.register_building_cells(Vector2i(x, y), Vector2i.ONE, dummy)
+	_check(walled != Vector2i(-1, -1) and game.placement_block_reason(Building3D.BuildingType.HOUSE, walled) == "Köylüler buraya ulaşamaz",
+		"a free spot walled in: Köylüler buraya ulaşamaz (%s)" % game.placement_block_reason(Building3D.BuildingType.HOUSE, walled))
+	for c in wall_cells:
+		mg.unregister_building_cells(c, Vector2i.ONE)
+	dummy.free()
+	_check(game.placement_block_reason(Building3D.BuildingType.HOUSE, walled) == "", "the same spot with the wall gone is fine again")
+	game.cancel_building_placement()
 
 	# --- 7 villagers selected, 5 build
 	var tc = game.get_team_buildings(0)[0]
