@@ -3,7 +3,7 @@ extends SceneTree
 ##  * every size generates at its dimensions with one base per team, far apart, on dry level ground,
 ##    each with a Town Center, 3 villagers and its own civ; every bot base can be walked to
 ##  * Small with one bot is the original 1v1 layout (player bottom centre, bot top centre)
-##  * the bot count is capped by the map size
+##  * the bot count is capped by the map size; the new-game screen follows it and passes the setup on
 ##  * every team has its own colour (3D team trim, minimap)
 ##  * a bot that loses its Town Center is out; the match is won when the last bot is out
 ##  * a saved game brings back the map size, every bot (civ, resources, age, clock, out or not)
@@ -84,10 +84,46 @@ func _run() -> void:
 	if FileAccess.file_exists(SaveManager.AUTO_SAVE_FILE):
 		save_text = FileAccess.get_file_as_string(SaveManager.AUTO_SAVE_FILE)
 
+	var cfg_text = null
+	if FileAccess.file_exists(GraphicsSettings.PATH):
+		cfg_text = FileAccess.get_file_as_string(GraphicsSettings.PATH)
+
 	var scene = load("res://scenes/Main3D.tscn").instantiate()
 	root.add_child(scene)
 	await _frames(2)
 	var game = scene as GameController3D
+
+	# --- new-game screen: map size sets the opponent limit, the match gets what was picked
+	var menu = game.ui_manager.menu_root
+	menu._on_new_game_pressed()
+	await _frames(2)
+	menu.map_size_buttons[MapGenerator3D.MapSize.LARGE].emit_signal("pressed")
+	await _frames(1)
+	var rows_shown := 0
+	for r in menu.bots_box.get_children():
+		if r.visible:
+			rows_shown += 1
+	_check(menu.selected_map_size == 2 and menu.selected_bot_count == 5 and rows_shown == 5 and menu.bot_plus_btn.disabled,
+		"Büyük: 5 opponents, 5 rows with a civ picker each, + disabled")
+	menu.bot_minus_btn.emit_signal("pressed")
+	await _frames(1)
+	menu.bot_civ_options[1].select(menu.bot_civ_options[1].get_item_index(CivData.CivType.MONGOLS))
+	_check(menu.selected_bot_count == 4 and menu.bot_count_label.text == "4" and not menu.bots_box.get_child(4).visible, "− makes it 4 opponents")
+	menu.map_size_buttons[MapGenerator3D.MapSize.SMALL].emit_signal("pressed")
+	await _frames(1)
+	_check(menu.selected_bot_count == 1 and menu.bot_minus_btn.disabled and menu.bot_plus_btn.disabled, "Küçük: 1 opponent, the stepper is locked")
+	menu.map_size_buttons[MapGenerator3D.MapSize.MEDIUM].emit_signal("pressed")
+	menu.bot_minus_btn.emit_signal("pressed")
+	await _frames(1)
+	menu.bot_civ_options[1].select(menu.bot_civ_options[1].get_item_index(CivData.CivType.MONGOLS))
+	menu.start_btn.emit_signal("pressed")
+	await _frames(3)
+	_check(game.is_game_active and game.map_size == MapGenerator3D.MapSize.MEDIUM and game.bot_count == 2 and game.map_gen.MAP_WIDTH == 48
+		and game.bot_ais.size() == 2 and game.civ_of(2) == CivData.CivType.MONGOLS,
+		"Seferi Başlat: medium map, 2 bots, bot 2 plays the Mongols")
+	var cfg := ConfigFile.new()
+	cfg.load(GraphicsSettings.PATH)
+	_check(int(cfg.get_value("game", "map_size", -1)) == 1 and int(cfg.get_value("game", "bot_count", -1)) == 2, "map size and opponent count are remembered")
 
 	# --- sizes and bases
 	seed(4242)
@@ -202,6 +238,11 @@ func _run() -> void:
 
 	scene.queue_free()
 	await _frames(2)
+	DirAccess.remove_absolute(ProjectSettings.globalize_path(GraphicsSettings.PATH))
+	if cfg_text != null:
+		var cf := FileAccess.open(GraphicsSettings.PATH, FileAccess.WRITE)
+		cf.store_string(cfg_text)
+		cf.close()
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(SaveManager.AUTO_SAVE_FILE))
 	if save_text != null:
 		var f := FileAccess.open(SaveManager.AUTO_SAVE_FILE, FileAccess.WRITE)

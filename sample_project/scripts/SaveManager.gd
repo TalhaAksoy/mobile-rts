@@ -201,6 +201,6 @@ static func load_game(game: GameController3D, file_path: String = AUTO_SAVE_FILE
 	game.ui_manager.menu_root.visible = false
 	game.ui_manager.hud_root.visible = true
 	game.ui_manager.game_over_modal.visible = false
-	game.ui_manager.notify_banner("KAYITLI OYUN YÜKLENDİ!", Color(0.2, 0.95, 0.4))
+	game.ui_manager.notify_banner("Kayıtlı oyun yüklendi")
 	return true
 

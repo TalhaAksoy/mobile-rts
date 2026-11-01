@@ -35,13 +35,43 @@ const TUTORIAL_TEXTS = {
 func start_tutorial(game_ctrl: GameController3D) -> void:
 	game = game_ctrl
 	current_step = Step.CAMERA_MOVE
+	dismissed = false
+	if is_instance_valid(game.ui_manager) and game.ui_manager.has_signal("objective_dismissed") \
+			and not game.ui_manager.objective_dismissed.is_connected(_on_objective_dismissed):
+		game.ui_manager.objective_dismissed.connect(_on_objective_dismissed)
 	initial_cam_pos = game.camera.global_position
 	_show_current_step()
 
 func _show_current_step() -> void:
+	if game == null or not is_instance_valid(game.ui_manager) or dismissed:
+		return
+	var text: String = TUTORIAL_TEXTS.get(current_step, "")
+	if current_step == Step.COMPLETED:
+		game.ui_manager.hide_objective()
+		game.ui_manager.notify_banner(text, Color(0.35, 0.75, 0.35))
+		return
+	# "Adım 3/8: Odun Topla!\n<what to do>" -> card: "GÖREV 3/8", "Odun Topla", what to do
+	var lines := text.split("\n", false, 1)
+	var head := lines[0]
+	var step_txt := ""
+	var title := head
+	if head.contains(":"):
+		step_txt = head.get_slice(":", 0).replace("Adım", "Görev").strip_edges()
+		title = head.substr(head.find(":") + 1).strip_edges()
+	title = title.trim_suffix("!")
+	game.ui_manager.show_objective(step_txt, title, lines[1].strip_edges() if lines.size() > 1 else "")
+
+## The player closed the objective card: no more tutorial cards this match.
+var dismissed := false
+
+func _on_objective_dismissed() -> void:
+	dismissed = true
+
+## Hides the tutorial for the rest of the match (the objective card's ×, tests).
+func stop_tutorial() -> void:
+	dismissed = true
 	if game != null and is_instance_valid(game.ui_manager):
-		var text = TUTORIAL_TEXTS.get(current_step, "")
-		game.ui_manager.notify_banner(text, Color(1.0, 0.9, 0.4))
+		game.ui_manager.hide_objective()
 
 func check_progress() -> void:
 	if game == null or not game.is_game_active:

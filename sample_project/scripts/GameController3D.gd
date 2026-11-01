@@ -1504,7 +1504,7 @@ func close_pause_menu() -> void:
 
 func _on_save_from_menu() -> void:
 	if SaveManager.save_game(self):
-		ui_manager.pause_menu.show_status("Oyun kaydedildi. Ana menüden \"KAYITLI OYUN\" ile devam edebilirsin.")
+		ui_manager.pause_menu.show_status("Oyun kaydedildi. Ana menüden \"Kayıtlı Oyuna Devam Et\" ile sürdürebilirsin.")
 	else:
 		ui_manager.pause_menu.show_status("Kaydedilemedi!")
 

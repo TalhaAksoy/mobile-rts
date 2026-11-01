@@ -131,18 +131,24 @@ func _ready() -> void:
 			box_select_toggled.emit(is_box_mode_active)
 			if is_box_mode_active:
 				box_select_btn.modulate = Color(0.3, 1.0, 0.4)
-				notify_banner("KUTU SEÇİMİ: AKTİF", Color(0.3, 1.0, 0.4))
+				notify_banner("Kutu seçimi açık: sürükleyerek birlik seç", Color(0.3, 0.7, 0.35))
 			else:
 				box_select_btn.modulate = Color(1.0, 1.0, 1.0)
-				notify_banner("KUTU SEÇİMİ: KAPALI", Color(0.9, 0.9, 0.9))
+				notify_banner("Kutu seçimi kapalı")
 		)
 
-	build_main_btn.text = "İNŞAAT"
-	army_btn.text = "ORDU"
-	base_btn.text = "ANA ÜS"
-	idle_villager_btn.text = "BOŞTA"
+	build_main_btn.text = "İnşaat"
+	army_btn.text = "Ordu"
+	base_btn.text = "Ana Üs"
+	idle_villager_btn.text = "Boşta"
 	close_build_btn.text = "Kapat"
-	restart_btn.text = "YENİDEN OYNA"
+	restart_btn.text = "Yeniden Oyna"
+	var build_title := get_node_or_null("HUDRoot/BuildPanel/VBox/Header/BuildTitle") as Label
+	if build_title != null:
+		build_title.text = "İnşaat"
+		build_title.add_theme_font_override("font", ParchmentTheme.get_cinzel_font())
+		build_title.add_theme_font_size_override("font_size", 19)
+		build_title.add_theme_color_override("font_color", ParchmentTheme.INK_DARK)
 	speed_btn.text = "Hız: 1x"
 
 	if menu_root.has_signal("start_game"):
@@ -199,9 +205,16 @@ func _build_match_menu(p_theme: Theme) -> void:
 
 	game_over_menu_btn = Button.new()
 	game_over_menu_btn.name = "MainMenuButton"
-	game_over_menu_btn.text = "ANA MENÜ"
-	game_over_menu_btn.custom_minimum_size = Vector2(0, 56)
-	ParchmentTheme.apply_parchment_button(game_over_menu_btn, 18)
+	game_over_menu_btn.text = "Ana Menü"
+	game_over_menu_btn.custom_minimum_size = Vector2(0, 50)
+	ParchmentTheme.apply_parchment_button(game_over_menu_btn, 16)
+	restart_btn.text = "Yeniden Oyna"
+	restart_btn.custom_minimum_size = Vector2(0, 54)
+	ParchmentTheme.apply_primary_button(restart_btn, 19)
+	game_over_modal.add_theme_stylebox_override("panel", ParchmentTheme.panel_style(0.98, 12, 24))
+	game_over_modal.offset_left = -200
+	game_over_modal.offset_right = 200
+	(restart_btn.get_parent() as VBoxContainer).add_theme_constant_override("separation", 10)
 	restart_btn.get_parent().add_child(game_over_menu_btn)
 	game_over_menu_btn.pressed.connect(func(): main_menu_requested.emit())
 
@@ -217,21 +230,22 @@ func _setup_build_grid() -> void:
 		child.queue_free()
 
 	var buildings_list = [
-		{"type": Building3D.BuildingType.HOUSE, "label": "EV\n30 Odun", "desc": "+5 Nüfus Limiti"},
-		{"type": Building3D.BuildingType.LUMBER_CAMP, "label": "ODUNCU KAMPI\n100 Odun", "desc": "Odun Teslim Noktası"},
-		{"type": Building3D.BuildingType.MINING_CAMP, "label": "MADEN KAMPI\n100 Odun", "desc": "Altın & Taş Teslim Noktası"},
-		{"type": Building3D.BuildingType.MILL, "label": "DEĞİRMEN\n100 Odun", "desc": "Çiftlik Merkezi: Tarla Açar"},
-		{"type": Building3D.BuildingType.BARRACKS, "label": "KIŞLA\n150 Odun", "desc": "Piyade ve Mızrakçı"},
-		{"type": Building3D.BuildingType.ARCHERY_RANGE, "label": "OKÇU ALANI\n150 Odun", "desc": "Menzilli Birlikler"},
-		{"type": Building3D.BuildingType.STABLE, "label": "AHIR\n175 Odun", "desc": "Hızlı Süvariler"},
-		{"type": Building3D.BuildingType.BLACKSMITH, "label": "DEMİRCİ\n150 Odun", "desc": "Zırh ve Silah Geliştirmesi"},
-		{"type": Building3D.BuildingType.TOWER, "label": "KULE\n75 Odun | 125 Taş", "desc": "Savunma Kulesi"},
-		{"type": Building3D.BuildingType.CASTLE, "label": "BÜYÜK KALE\n200 Odun | 350 Taş | 150 Altın", "desc": "Çağ II & Krallık Elit Birimi"}
+		{"type": Building3D.BuildingType.HOUSE, "label": "Ev", "cost": "30 odun", "desc": "+5 nüfus"},
+		{"type": Building3D.BuildingType.LUMBER_CAMP, "label": "Oduncu Kampı", "cost": "100 odun", "desc": "Odun teslim yeri"},
+		{"type": Building3D.BuildingType.MINING_CAMP, "label": "Maden Kampı", "cost": "100 odun", "desc": "Altın ve taş teslim yeri"},
+		{"type": Building3D.BuildingType.MILL, "label": "Değirmen", "cost": "100 odun", "desc": "Besin teslimi, tarla açar"},
+		{"type": Building3D.BuildingType.BARRACKS, "label": "Kışla", "cost": "150 odun", "desc": "Kılıçlı ve mızrakçı"},
+		{"type": Building3D.BuildingType.ARCHERY_RANGE, "label": "Okçu Alanı", "cost": "150 odun", "desc": "Okçular"},
+		{"type": Building3D.BuildingType.STABLE, "label": "Ahır", "cost": "175 odun", "desc": "Süvariler"},
+		{"type": Building3D.BuildingType.BLACKSMITH, "label": "Demirci", "cost": "150 odun", "desc": "Silah ve zırh"},
+		{"type": Building3D.BuildingType.TOWER, "label": "Kule", "cost": "75 odun · 125 taş", "desc": "Savunma"},
+		{"type": Building3D.BuildingType.CASTLE, "label": "Kale", "cost": "200 odun · 350 taş · 150 altın", "desc": "Çağ II, krallığın elit birimi"}
 	]
 
 	for item in buildings_list:
 		var btn = Button.new()
-		btn.text = " %s\n(%s)" % [item["label"], item["desc"]]
+		btn.text = "%s · %s\n%s" % [item["label"], item["cost"], item["desc"]]
+		btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
 		var b_icon = FactionArtManager.get_building_texture(player_civ_type, item["type"])
 		if b_icon == null:
 			b_icon = PixelArtTextures.get_building_icon_texture(item["type"])
@@ -634,37 +648,137 @@ func hide_drag_box() -> void:
 	if drag_box_panel != null:
 		drag_box_panel.visible = false
 
+## Left column under the top bar (left of the minimap): the tutorial objective card, then short
+## notices. The old banner was a fixed 400 px label at y = 50-70 over the top bar: two-line tutorial
+## texts overflowed it and banners fired close together were drawn on top of each other.
+var hud_column: VBoxContainer = null
+var objective_card: PanelContainer = null
+var objective_step_label: Label = null
+var objective_title_label: Label = null
+var objective_desc_label: Label = null
+var toast_stack: VBoxContainer = null
+signal objective_dismissed
+const MAX_TOASTS := 3
+
+func _ensure_hud_column() -> void:
+	if hud_column != null and is_instance_valid(hud_column):
+		return
+	hud_column = VBoxContainer.new()
+	hud_column.name = "HudColumn"
+	hud_column.set_anchors_preset(Control.PRESET_TOP_WIDE)
+	hud_column.offset_left = 10
+	hud_column.offset_right = -128      # the minimap sits on the right
+	hud_column.offset_top = 80
+	hud_column.offset_bottom = 400
+	hud_column.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hud_column.add_theme_constant_override("separation", 6)
+	hud_root.add_child(hud_column)
+
+	objective_card = PanelContainer.new()
+	objective_card.name = "ObjectiveCard"
+	objective_card.visible = false
+	objective_card.mouse_filter = Control.MOUSE_FILTER_IGNORE   # taps go through to the map, except on ×
+	objective_card.add_theme_stylebox_override("panel", ParchmentTheme._sb(Color(0.97, 0.94, 0.87, 0.94), ParchmentTheme.HAIRLINE, 1, 10, 12, 10))
+	hud_column.add_child(objective_card)
+	var row := HBoxContainer.new()
+	row.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	row.add_theme_constant_override("separation", 6)
+	objective_card.add_child(row)
+	var txt := VBoxContainer.new()
+	txt.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	txt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	txt.add_theme_constant_override("separation", 1)
+	row.add_child(txt)
+	objective_step_label = ParchmentTheme.section_label("")
+	objective_step_label.add_theme_font_size_override("font_size", 10)
+	txt.add_child(objective_step_label)
+	objective_title_label = Label.new()
+	objective_title_label.add_theme_font_override("font", ParchmentTheme.get_body_bold_font())
+	objective_title_label.add_theme_font_size_override("font_size", 15)
+	objective_title_label.add_theme_color_override("font_color", ParchmentTheme.INK_DARK)
+	objective_title_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	txt.add_child(objective_title_label)
+	objective_desc_label = ParchmentTheme.body_label("", 13, true)
+	txt.add_child(objective_desc_label)
+	var close := Button.new()
+	close.name = "DismissObjective"
+	close.text = "×"
+	close.tooltip_text = "Öğreticiyi gizle"
+	ParchmentTheme.apply_ghost_button(close, 20)
+	close.custom_minimum_size = Vector2(36, 36)
+	close.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+	close.pressed.connect(func():
+		hide_objective()
+		objective_dismissed.emit())
+	row.add_child(close)
+
+	toast_stack = VBoxContainer.new()
+	toast_stack.name = "ToastStack"
+	toast_stack.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	toast_stack.add_theme_constant_override("separation", 4)
+	hud_column.add_child(toast_stack)
+
+## Tutorial step card ("GÖREV 2/8", title, what to do). Stays until the next step or dismissed.
+func show_objective(step_text: String, title: String, desc: String) -> void:
+	_ensure_hud_column()
+	objective_step_label.text = step_text.to_upper()
+	objective_title_label.text = title
+	objective_desc_label.text = desc
+	objective_desc_label.visible = desc != ""
+	objective_card.visible = true
+
+func hide_objective() -> void:
+	if objective_card != null and is_instance_valid(objective_card):
+		objective_card.visible = false
+
+## Short notice under the objective card; fades after a few seconds. `col` tints the left accent.
 func notify_banner(message: String, col: Color = Color.WHITE) -> void:
-	var banner = Label.new()
-	banner.text = message
-	banner.add_theme_font_override("font", ParchmentTheme.get_serif_font(18, true))
-	banner.add_theme_color_override("font_color", col)
-	banner.add_theme_color_override("font_outline_color", Color(0.05, 0.05, 0.05, 0.95))
-	banner.add_theme_constant_override("outline_size", 4)
-	banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	banner.position = Vector2(hud_root.size.x * 0.5 - 200, 70)
-	banner.size = Vector2(400, 40)
-	hud_root.add_child(banner)
-	
-	var tween = banner.create_tween()
-	tween.tween_property(banner, "position:y", 50.0, 0.4).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	tween.tween_interval(2.5)
-	tween.tween_property(banner, "modulate:a", 0.0, 0.6)
-	tween.tween_callback(banner.queue_free)
+	_ensure_hud_column()
+	while toast_stack.get_child_count() >= MAX_TOASTS:
+		var old := toast_stack.get_child(0)
+		toast_stack.remove_child(old)
+		old.queue_free()
+	var toast := PanelContainer.new()
+	toast.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var sb := ParchmentTheme._sb(Color(0.13, 0.10, 0.07, 0.88), Color(0, 0, 0, 0), 0, 8, 12, 7)
+	sb.border_width_left = 3
+	sb.border_color = col if col != Color.WHITE else ParchmentTheme.BRONZE_GOLD
+	toast.add_theme_stylebox_override("panel", sb)
+	var lbl := Label.new()
+	lbl.text = message
+	lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	lbl.add_theme_font_override("font", ParchmentTheme.get_body_bold_font())
+	lbl.add_theme_font_size_override("font_size", 13)
+	lbl.add_theme_color_override("font_color", ParchmentTheme.ON_DARK)
+	toast.add_child(lbl)
+	toast_stack.add_child(toast)
+	toast.modulate.a = 0.0
+	var tween = toast.create_tween()
+	tween.tween_property(toast, "modulate:a", 1.0, 0.18)
+	tween.tween_interval(2.6)
+	tween.tween_property(toast, "modulate:a", 0.0, 0.5)
+	tween.tween_callback(toast.queue_free)
 
 func show_game_over(victory: bool, stats: Dictionary) -> void:
 	game_over_modal.visible = true
 	var title = game_over_modal.get_node("VBox/TitleLabel") as Label
 	var desc = game_over_modal.get_node("VBox/DescLabel") as Label
 
+	title.add_theme_font_override("font", ParchmentTheme.get_cinzel_font())
+	title.add_theme_font_size_override("font_size", 34)
+	title.modulate = Color(1, 1, 1)
 	if victory:
-		title.text = "ZAFER KAZANDIN!"
-		title.modulate = Color(0.25, 0.95, 0.35)
+		title.text = "Zafer"
+		title.add_theme_color_override("font_color", Color(0.20, 0.42, 0.18))
 	else:
-		title.text = "BOZGUNA UĞRADIN!"
-		title.modulate = Color(0.95, 0.25, 0.25)
+		title.text = "Yenilgi"
+		title.add_theme_color_override("font_color", Color(0.55, 0.16, 0.11))
+	desc.add_theme_font_override("font", ParchmentTheme.get_medieval_font())
+	desc.add_theme_font_size_override("font_size", 15)
+	desc.add_theme_color_override("font_color", ParchmentTheme.INK_DARK)
+	desc.add_theme_constant_override("line_spacing", 4)
 
-	desc.text = "Geçen Süre: %s\nYok Edilen Düşman: %d\nEğitilen Asker: %d\nToplanan Kaynak: %d" % [
+	desc.text = "Süre  %s\nYok edilen düşman  %d\nEğitilen birim  %d\nToplanan kaynak  %d" % [
 		stats.get("duration", "02:15"),
 		stats.get("kills", 0),
 		stats.get("trained", 0),
