@@ -1,7 +1,12 @@
 # Map sizes and more bots
 
-The map size and the number of opponents are picked on the new-game screen. The choice is remembered in
-`user://settings.cfg` (section `game`, keys `map_size` and `bot_count`).
+The map size and the number of opponents are picked on the new-game screen, under the map:
+
+- **Harita Boyutu:** Küçük / Orta / Büyük.
+- **Rakip Krallıklar:** a − / + counter limited by the size, then one civ picker per opponent with its team colour.
+  Rakip 1 starts on Bizanslılar, the others on Rastgele.
+
+The choice is remembered in `user://settings.cfg` (section `game`, keys `map_size` and `bot_count`).
 
 | Size | Cells | Opponents |
 |---|---|---|

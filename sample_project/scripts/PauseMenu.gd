@@ -12,8 +12,7 @@ signal save_requested
 signal main_menu_requested
 signal quit_requested
 
-const CONFIRM_TEXT := "Emin misin? Kaydedilmemiş ilerleme kaybolur"
-const DANGER := Color(0.62, 0.14, 0.09)
+const CONFIRM_TEXT := "EMİN MİSİN? (KAYDEDİLMEMİŞ İLERLEME KAYBOLUR)"
 
 ## Set by the game: Escape / Back only open the menu during a match.
 var match_running := false
@@ -37,50 +36,46 @@ func _init() -> void:
 func build(p_theme: Theme) -> void:
 	theme = p_theme
 	var dim := ColorRect.new()
-	dim.color = ParchmentTheme.SCRIM
+	dim.color = Color(0.03, 0.02, 0.01, 0.6)
 	dim.set_anchors_preset(Control.PRESET_FULL_RECT)
 	dim.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	add_child(dim)
 
 	panel = PanelContainer.new()
 	panel.set_anchors_preset(Control.PRESET_CENTER)
-	panel.offset_left = -200.0
-	panel.offset_right = 200.0
-	panel.offset_top = -210.0
-	panel.offset_bottom = 210.0
+	panel.offset_left = -210.0
+	panel.offset_right = 210.0
+	panel.offset_top = -230.0
+	panel.offset_bottom = 230.0
 	panel.grow_horizontal = Control.GROW_DIRECTION_BOTH
 	panel.grow_vertical = Control.GROW_DIRECTION_BOTH
-	panel.add_theme_stylebox_override("panel", ParchmentTheme.panel_style(0.98, 12, 22))
 	add_child(panel)
 
 	var vbox := VBoxContainer.new()
-	vbox.add_theme_constant_override("separation", 10)
+	vbox.add_theme_constant_override("separation", 12)
 	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
 	panel.add_child(vbox)
 
 	title_label = Label.new()
-	title_label.text = "Duraklatıldı"
+	title_label.text = "OYUN DURAKLATILDI"
 	title_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	title_label.add_theme_font_override("font", ParchmentTheme.get_cinzel_font())
+	title_label.add_theme_font_override("font", ParchmentTheme.get_medieval_font())
 	title_label.add_theme_font_size_override("font_size", 26)
-	title_label.add_theme_color_override("font_color", ParchmentTheme.INK_DARK)
+	title_label.add_theme_color_override("font_color", Color(0.24, 0.14, 0.08))
 	vbox.add_child(title_label)
 
 	status_label = Label.new()
 	status_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	status_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
 	status_label.add_theme_font_size_override("font_size", 14)
-	status_label.add_theme_font_override("font", ParchmentTheme.get_medieval_font())
-	status_label.add_theme_color_override("font_color", ParchmentTheme.INK_MUTED)
+	status_label.add_theme_color_override("font_color", Color(0.24, 0.14, 0.08))
 	status_label.custom_minimum_size = Vector2(0, 20)
 	vbox.add_child(status_label)
 
-	btn_resume = _button(vbox, "Devam Et")
-	ParchmentTheme.apply_primary_button(btn_resume, 19)
-	btn_save = _button(vbox, "Oyunu Kaydet")
-	btn_main_menu = _button(vbox, "Ana Menüye Dön")
-	btn_quit = _button(vbox, "Oyundan Çık")
-	ParchmentTheme.apply_ghost_button(btn_quit, 16)
+	btn_resume = _button(vbox, "DEVAM ET")
+	btn_save = _button(vbox, "OYUNU KAYDET")
+	btn_main_menu = _button(vbox, "ANA MENÜYE DÖN")
+	btn_quit = _button(vbox, "OYUNDAN ÇIK")
 
 	btn_resume.pressed.connect(func(): resume_requested.emit())
 	btn_save.pressed.connect(func(): save_requested.emit())
@@ -90,9 +85,9 @@ func build(p_theme: Theme) -> void:
 func _button(parent: Control, text: String) -> Button:
 	var b := Button.new()
 	b.text = text
-	b.custom_minimum_size = Vector2(0, 52)
+	b.custom_minimum_size = Vector2(0, 56)
 	b.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	ParchmentTheme.apply_parchment_button(b, 16)
+	ParchmentTheme.apply_parchment_button(b, 18)
 	b.set_meta("label", text)
 	parent.add_child(b)
 	return b
@@ -118,15 +113,13 @@ func _confirm_then(btn: Button, sig: Signal) -> void:
 	_disarm()
 	_armed = btn
 	btn.text = CONFIRM_TEXT
-	for st in ["font_color", "font_hover_color", "font_focus_color"]:
-		btn.add_theme_color_override(st, DANGER)
+	btn.add_theme_color_override("font_color", Color(0.6, 0.08, 0.05))
 
 func _disarm() -> void:
 	for b in [btn_main_menu, btn_quit]:
 		if is_instance_valid(b):
 			b.text = b.get_meta("label")
-			for st in ["font_color", "font_hover_color", "font_focus_color"]:
-				b.add_theme_color_override(st, ParchmentTheme.INK_DARK)
+			b.add_theme_color_override("font_color", ParchmentTheme.INK_DARK)
 	_armed = null
 
 func _unhandled_input(event: InputEvent) -> void:

@@ -138,7 +138,7 @@ func _run() -> void:
 
 	# --- main menu: first tap asks (and disarms quit), second leaves
 	await _tap_button(pm.btn_main_menu)
-	_check(pm.btn_main_menu.text == PauseMenu.CONFIRM_TEXT and pm.btn_quit.text == "Oyundan Çık" and game.is_game_active,
+	_check(pm.btn_main_menu.text == PauseMenu.CONFIRM_TEXT and pm.btn_quit.text == "OYUNDAN ÇIK" and game.is_game_active,
 		"ANA MENÜYE DÖN asks for confirmation first, the match is still on")
 	await _tap_button(pm.btn_main_menu)
 	await _frames(3)
