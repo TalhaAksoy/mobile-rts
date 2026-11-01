@@ -131,9 +131,15 @@ func _notification(what: int) -> void:
 	if what == NOTIFICATION_WM_GO_BACK_REQUEST:     # Android Back button
 		_handle_back()
 
+## Checked first on Escape / Android Back (GameController3D: leave building placement). Returns true
+## when it used the key.
+var back_handler: Callable
+
 func _handle_back() -> bool:
 	if visible:
 		resume_requested.emit()
+		return true
+	if back_handler.is_valid() and back_handler.call():
 		return true
 	if match_running:
 		open_requested.emit()

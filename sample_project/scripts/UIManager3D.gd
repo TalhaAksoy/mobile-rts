@@ -8,6 +8,9 @@ signal build_selected(building_type)
 signal train_unit_requested(unit_type)
 signal research_requested(tech_id)
 signal field_requested
+signal cancel_placement_requested
+signal add_builder_requested
+signal cancel_construction_requested
 signal select_all_military_requested
 signal jump_to_base_requested
 signal find_idle_villager_requested
@@ -361,6 +364,9 @@ func _update_bottom_bar_height(expanded: bool) -> void:
 		build_panel.offset_bottom = target_top - 6.0
 
 func _process(_delta: float) -> void:
+	if placement_bar != null and placement_bar.visible:
+		placement_bar.offset_bottom = bottom_bar.offset_top - 6.0
+		placement_bar.offset_top = placement_bar.offset_bottom - 56.0
 	if queue_bar != null:
 		queue_bar.offset_bottom = bottom_bar.offset_top - 6.0
 		queue_bar.offset_top = queue_bar.offset_bottom - queue_bar.get_combined_minimum_size().y
@@ -396,6 +402,10 @@ func _process(_delta: float) -> void:
 				int(selected_entity.armor),
 				"Aktif" if selected_entity.is_completed else "İnşaat Sürüyor (%%%d)..." % int(selected_entity.construction_progress)
 			]
+			if not selected_entity.is_completed:
+				_refresh_builders_label(selected_entity)
+			elif is_instance_valid(builders_label):
+				set_selected_entity(selected_entity)   # finished while selected: show its real buttons
 	elif not selected_resource_info.is_empty():
 		if game_controller != null and is_instance_valid(game_controller.map_gen):
 			var r_cell = selected_resource_info.get("cell", Vector2i(-1, -1)) as Vector2i
@@ -459,6 +469,106 @@ func _display_unit_ui(unit: Unit3D) -> void:
 			)
 			action_flow.add_child(build_btn)
 
+## Bar shown while a building is being placed: what is placed, how, and an "İptal" button.
+var placement_bar: PanelContainer = null
+var placement_label: Label = null
+
+func show_placement_bar(on: bool, b_type: int = -1) -> void:
+	if placement_bar == null:
+		placement_bar = PanelContainer.new()
+		placement_bar.name = "PlacementBar"
+		# just above the bottom bar (kept there in _process); the top is taken by the tutorial line
+		placement_bar.set_anchors_preset(Control.PRESET_BOTTOM_WIDE)
+		placement_bar.offset_left = 10
+		placement_bar.offset_right = -10
+		var sb := StyleBoxFlat.new()
+		sb.bg_color = Color(0.93, 0.86, 0.70, 0.96)
+		sb.border_color = Color(0.40, 0.26, 0.12)
+		sb.set_border_width_all(3)
+		sb.set_corner_radius_all(8)
+		sb.content_margin_left = 10
+		sb.content_margin_right = 6
+		sb.content_margin_top = 4
+		sb.content_margin_bottom = 4
+		placement_bar.add_theme_stylebox_override("panel", sb)
+		var row := HBoxContainer.new()
+		row.add_theme_constant_override("separation", 8)
+		placement_bar.add_child(row)
+		placement_label = Label.new()
+		placement_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		placement_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+		placement_label.add_theme_font_override("font", ParchmentTheme.get_medieval_font())
+		placement_label.add_theme_font_size_override("font_size", 14)
+		placement_label.add_theme_color_override("font_color", Color(0.22, 0.13, 0.05))
+		placement_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+		row.add_child(placement_label)
+		var cancel := Button.new()
+		cancel.name = "CancelPlacementButton"
+		cancel.text = "✖ İPTAL"
+		cancel.custom_minimum_size = Vector2(104, 44)
+		ParchmentTheme.apply_parchment_button(cancel, 15)
+		cancel.pressed.connect(func(): cancel_placement_requested.emit())
+		row.add_child(cancel)
+		hud_root.add_child(placement_bar)
+	placement_bar.visible = on
+	if on:
+		placement_label.text = "%s: yerleştirmek için haritaya dokun" % _building_name(b_type)
+
+static func _building_name(b_type: int) -> String:
+	match b_type:
+		Building3D.BuildingType.TOWN_CENTER: return "Ana Merkez"
+		Building3D.BuildingType.HOUSE: return "Ev"
+		Building3D.BuildingType.BARRACKS: return "Kışla"
+		Building3D.BuildingType.ARCHERY_RANGE: return "Okçu Alanı"
+		Building3D.BuildingType.STABLE: return "Ahır"
+		Building3D.BuildingType.CASTLE: return "Büyük Kale"
+		Building3D.BuildingType.TOWER: return "Kule"
+		Building3D.BuildingType.BLACKSMITH: return "Demirci"
+		Building3D.BuildingType.FARM: return "Tarla"
+		Building3D.BuildingType.LUMBER_CAMP: return "Oduncu Kampı"
+		Building3D.BuildingType.MINING_CAMP: return "Maden Kampı"
+		Building3D.BuildingType.MILL: return "Değirmen"
+	return "Bina"
+
+## Construction site panel: crew size (updated live in _process), add a villager, cancel with refund.
+var builders_label: Label = null
+
+func _add_construction_controls(b: Building3D) -> void:
+	if game_controller == null or not game_controller.has_method("get_site_builders"):
+		return
+	builders_label = Label.new()
+	builders_label.name = "BuildersLabel"
+	builders_label.add_theme_font_override("font", ParchmentTheme.get_medieval_font())
+	builders_label.add_theme_font_size_override("font_size", 14)
+	builders_label.add_theme_color_override("font_color", Color(0.22, 0.13, 0.05))
+	builders_label.custom_minimum_size = Vector2(120, 48)
+	builders_label.vertical_alignment = VERTICAL_ALIGNMENT_CENTER
+	_refresh_builders_label(b)
+	action_flow.add_child(builders_label)
+	var add := Button.new()
+	add.name = "AddBuilderButton"
+	add.text = "+ Köylü Ekle\n(en fazla %d)" % game_controller.MAX_BUILDERS
+	add.custom_minimum_size = Vector2(150, 48)
+	ParchmentTheme.apply_parchment_button(add, 13)
+	add.pressed.connect(func(): add_builder_requested.emit())
+	action_flow.add_child(add)
+	var refund: Dictionary = game_controller.construction_refund(b)
+	var parts: Array = []
+	for k in ["wood", "stone", "gold"]:
+		if int(refund.get(k, 0)) > 0:
+			parts.append("%d %s" % [refund[k], {"wood": "Odun", "stone": "Taş", "gold": "Altın"}[k]])
+	var cancel := Button.new()
+	cancel.name = "CancelConstructionButton"
+	cancel.text = "✖ İnşaatı İptal Et\n(iade: %s)" % (", ".join(parts) if not parts.is_empty() else "yok")
+	cancel.custom_minimum_size = Vector2(190, 48)
+	ParchmentTheme.apply_parchment_button(cancel, 12)
+	cancel.pressed.connect(func(): cancel_construction_requested.emit())
+	action_flow.add_child(cancel)
+
+func _refresh_builders_label(b: Building3D) -> void:
+	if is_instance_valid(builders_label) and game_controller != null:
+		builders_label.text = "İnşaatçı: %d/%d" % [game_controller.get_site_builders(b).size(), game_controller.MAX_BUILDERS]
+
 func _display_building_ui(b: Building3D) -> void:
 	if entity_portrait_rect != null:
 		var tex = FactionArtManager.get_building_texture(b.civ_type, b.building_type)
@@ -489,6 +599,10 @@ func _display_building_ui(b: Building3D) -> void:
 	entity_hp_bar.value = b.hp
 	entity_hp_label.text = "%d / %d CAN" % [int(b.hp), int(b.max_hp)]
 	entity_stats_label.text = "Zırh: %d  |  %s" % [int(b.armor), "Aktif" if b.is_completed else "İnşaat Sürüyor..."]
+
+	builders_label = null
+	if b.team == 0 and not b.is_completed and b.building_type != Building3D.BuildingType.TOWN_CENTER:
+		_add_construction_controls(b)
 
 	if b.team == 0 and b.is_completed:
 		match b.building_type:

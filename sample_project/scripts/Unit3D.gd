@@ -1146,18 +1146,24 @@ func _process_building(delta: float) -> void:
 	var b_radius = max(g_size.x, g_size.y) * MapGenerator3D.TILE_SIZE * 0.5
 	var dist = _hdist(global_position, target_entity.global_position)
 
-	if not is_adjacent and dist > (b_radius + 2.8):
+	var in_reach: bool = is_adjacent or dist <= (b_radius + 2.8)
+	if not in_reach:
 		if current_path.is_empty() or path_idx >= current_path.size():
 			_calculate_path(target_entity.global_position)
 			if current_path.is_empty() or path_idx >= current_path.size():
-				# Cannot get any closer to the site (unreachable from here). Previously the builder
-				# stood still forever and the site stayed at 0%; give up so the owner can re-task.
-				state = State.IDLE
-				target_entity = null
-				velocity = Vector3.ZERO
-				return
-		_process_path_movement(delta)
-	else:
+				# The path cannot get any closer. One cell short of the walls (the cells right next to
+				# the site are taken, e.g. by the Town Center or other builders): build from here.
+				# Further away the site is unreachable from here: give up so the owner can re-task.
+				if _dist_to_cells(global_position, o_cell, g_size) <= MapGenerator3D.TILE_SIZE * 1.3:
+					in_reach = true
+				else:
+					state = State.IDLE
+					target_entity = null
+					velocity = Vector3.ZERO
+					return
+		if not in_reach:
+			_process_path_movement(delta)
+	if in_reach:
 		current_path.clear()
 		velocity = Vector3.ZERO
 		walk_timer = 0.0

@@ -83,6 +83,17 @@ func _ready() -> void:
 	ui_manager.train_unit_requested.connect(_on_train_unit_requested)
 	ui_manager.research_requested.connect(_on_research_requested)
 	ui_manager.field_requested.connect(_on_field_requested)
+	ui_manager.cancel_placement_requested.connect(cancel_building_placement)
+	ui_manager.add_builder_requested.connect(func():
+		if is_instance_valid(selected_building) and selected_building.team == 0:
+			if add_builder_to_site(selected_building) == null:
+				ui_manager.notify_banner("Gönderilecek köylü yok" if get_site_builders(selected_building).size() < MAX_BUILDERS else "İnşaatçı sınırı dolu (%d)" % MAX_BUILDERS, Color(1.0, 0.6, 0.4))
+			ui_manager.set_selected_entity(selected_building))
+	ui_manager.cancel_construction_requested.connect(func():
+		if is_instance_valid(selected_building) and selected_building.team == 0:
+			cancel_construction(selected_building))
+	# Escape / Android Back first leave building placement, then open the pause menu
+	ui_manager.pause_menu.back_handler = cancel_building_placement
 	ui_manager.select_all_military_requested.connect(_on_select_all_military)
 	ui_manager.jump_to_base_requested.connect(_on_jump_to_base)
 	ui_manager.find_idle_villager_requested.connect(_on_find_idle_villager)
@@ -440,8 +451,8 @@ func _handle_3d_click(screen_pos: Vector2, ground_pos: Vector3) -> void:
 				for u in selected_units:
 					if u.unit_type == Unit3D.UnitType.VILLAGER:
 						has_vill = true
-						u.command_build(clicked_entity)
 				if has_vill:
+					assign_builders(clicked_entity, selected_units)
 					_spawn_click_marker(clicked_entity.global_position, "build")
 					SoundManager.play_sound("build")
 					return
@@ -1045,6 +1056,8 @@ func _on_build_selected(b_type: Building3D.BuildingType) -> void:
 	var size = _get_building_size(b_type)
 	(ghost_preview.mesh as BoxMesh).size = Vector3(size.x * MapGenerator3D.TILE_SIZE, 1.5, size.y * MapGenerator3D.TILE_SIZE)
 	ghost_preview.visible = true
+	if ui_manager.has_method("show_placement_bar"):
+		ui_manager.show_placement_bar(true, b_type)
 
 func _attempt_place_building(ground_pos: Vector3) -> void:
 	var cell = map_gen.world_to_cell(ground_pos)
@@ -1069,15 +1082,107 @@ func _attempt_place_building(ground_pos: Vector3) -> void:
 	team_resources[0]["stone"] -= cost["stone"]
 
 	var new_b = place_building(placing_building_type, 0, cell, true)
-	is_placing_building = false
-	ghost_preview.visible = false
+	_end_placement()
 
-	# All selected villagers immediately construct the new building
-	for u in selected_units:
-		if is_instance_valid(u) and u.unit_type == Unit3D.UnitType.VILLAGER:
-			u.command_build(new_b)
+	# The selected villagers (up to MAX_BUILDERS, nearest first) start building right away
+	assign_builders(new_b, selected_units)
 
 	SoundManager.play_sound("build")
+
+# ---- Construction crews and cancelling --------------------------------------------------------
+## At most this many villagers work on one construction site (each one adds its own build speed).
+const MAX_BUILDERS: int = 5
+
+## Villagers of the site's team building it now.
+func get_site_builders(site: Building3D) -> Array:
+	var out: Array = []
+	for u in units:
+		if is_instance_valid(u) and u.hp > 0 and u.team == site.team and u.unit_type == Unit3D.UnitType.VILLAGER \
+				and u.state == Unit3D.State.BUILDING and u.target_entity == site:
+			out.append(u)
+	return out
+
+## Sends villagers from `candidates` (nearest first) to the site until it has MAX_BUILDERS.
+## Returns how many were sent; the rest keep their orders.
+func assign_builders(site: Building3D, candidates: Array) -> int:
+	if not is_instance_valid(site) or site.is_completed:
+		return 0
+	var crew := get_site_builders(site)
+	var free_slots := MAX_BUILDERS - crew.size()
+	var pool: Array = candidates.filter(func(u): return is_instance_valid(u) and u.hp > 0 and u.team == site.team \
+		and u.unit_type == Unit3D.UnitType.VILLAGER and not crew.has(u))
+	pool.sort_custom(func(a, b): return a.global_position.distance_squared_to(site.global_position) < b.global_position.distance_squared_to(site.global_position))
+	var sent := 0
+	for u in pool:
+		if sent >= free_slots:
+			break
+		u.command_build(site)
+		sent += 1
+	if pool.size() > sent and site.team == 0:
+		ui_manager.notify_banner("Bir inşaatta en fazla %d köylü çalışabilir" % MAX_BUILDERS, Color(1.0, 0.85, 0.4))
+	return sent
+
+## "+ Köylü Ekle" on a selected construction site: the nearest idle villager, otherwise the nearest one
+## that is gathering or walking (not one already building something). Null when none or the crew is full.
+func add_builder_to_site(site: Building3D) -> Unit3D:
+	if not is_instance_valid(site) or site.is_completed or get_site_builders(site).size() >= MAX_BUILDERS:
+		return null
+	var best: Unit3D = null
+	var best_score := INF
+	for u in units:
+		if not is_instance_valid(u) or u.hp <= 0 or u.team != site.team or u.unit_type != Unit3D.UnitType.VILLAGER:
+			continue
+		if u.state == Unit3D.State.BUILDING:
+			continue
+		var d: float = u.global_position.distance_to(site.global_position)
+		var score: float = d if u.state == Unit3D.State.IDLE else d + 1000.0   # idle hands first
+		if score < best_score:
+			best_score = score
+			best = u
+	if best != null:
+		best.command_build(site)
+	return best
+
+## What cancelling a site gives back: the cost of the part not built yet (all of it before work starts).
+func construction_refund(site: Building3D) -> Dictionary:
+	var cost := _get_building_cost(site.building_type, site.team)
+	var left: float = clampf(1.0 - site.construction_progress / 100.0, 0.0, 1.0)
+	var out := {}
+	for k in ["wood", "gold", "stone"]:
+		out[k] = int(ceil(float(cost.get(k, 0)) * left))
+	return out
+
+## Removes an unfinished building of `site.team`, refunds construction_refund(), frees its builders.
+func cancel_construction(site: Building3D) -> bool:
+	if not is_instance_valid(site) or site.is_completed or site.building_type == Building3D.BuildingType.TOWN_CENTER:
+		return false
+	var refund := construction_refund(site)
+	for k in refund.keys():
+		team_resources[site.team][k] += refund[k]
+	for u in get_site_builders(site):
+		u.command_stop()
+	if selected_building == site:
+		selected_building = null
+		ui_manager.set_selected_entity(null)
+	site.die()
+	if site.team == 0:
+		ui_manager.notify_banner("İnşaat iptal edildi, kaynaklar iade edildi", Color(0.95, 0.85, 0.45))
+	return true
+
+## Leaves building placement without placing anything (the "İptal" button, Escape, Android Back).
+func cancel_building_placement() -> bool:
+	if not is_placing_building:
+		return false
+	_end_placement()
+	SoundManager.play_sound("click")
+	return true
+
+func _end_placement() -> void:
+	is_placing_building = false
+	if ghost_preview != null:
+		ghost_preview.visible = false
+	if ui_manager != null and ui_manager.has_method("show_placement_bar"):
+		ui_manager.show_placement_bar(false)
 
 func _on_train_unit_requested(u_type: Unit3D.UnitType) -> void:
 	if selected_building == null or selected_building.team != 0:
@@ -1530,9 +1635,7 @@ func _clear_match() -> void:
 	buildings.clear()
 	selected_units.clear()
 	selected_building = null
-	is_placing_building = false
-	if ghost_preview != null:
-		ghost_preview.visible = false
+	_end_placement()
 
 ## A match is running: Escape / Android Back open the in-match menu instead of quitting the app.
 func _set_match_running(running: bool) -> void:
