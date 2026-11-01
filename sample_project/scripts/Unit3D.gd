@@ -370,7 +370,7 @@ func _add_sprite_silhouette() -> void:
 		mat.stencil_reference = SPRITE_STENCIL_REF
 		var xray := StandardMaterial3D.new()
 		xray.albedo_texture = unit_sprite.texture
-		xray.albedo_color = Color(0.35, 0.65, 1.0, 0.5) if team == 0 else Color(1.0, 0.35, 0.35, 0.5)
+		xray.albedo_color = FactionArtManager.team_xray_color(team)
 		xray.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
 		xray.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
 		xray.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST

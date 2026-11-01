@@ -211,7 +211,7 @@ func _build_3d_structure() -> void:
 	model_root = Node3D.new()
 	add_child(model_root)
 
-	var team_col = Color(0.18, 0.52, 0.95) if team == 0 else Color(0.92, 0.22, 0.22)
+	var team_col: Color = FactionArtManager.team_color(team)
 	var civ_cfg = CivData.get_civ(civ_type)
 	var civ_flag = civ_cfg.get("flag_color", team_col)
 

@@ -59,11 +59,22 @@ static func build_control_image(mg) -> Image:
 	var road := PackedFloat32Array(); road.resize(w * h)
 	var dirt := PackedFloat32Array(); dirt.resize(w * h)
 
-	var bases: Array[Vector2i] = [mg.world_to_cell(mg.player_start_pos), mg.world_to_cell(mg.enemy_start_pos)]
-	# main road between the bases, leaving each TC from its front door
-	var p_front: Vector3 = mg.player_start_pos + Vector3(0, 0, -3.5 * mg.TILE_SIZE)
-	var e_front: Vector3 = mg.enemy_start_pos + Vector3(0, 0, 3.5 * mg.TILE_SIZE)
-	_stamp_path(road, w, h, mg, mg.get_path_to_target(p_front, e_front), ROAD_HALF_W)
+	var bases: Array[Vector2i] = []
+	for sp in mg.start_positions:
+		bases.append(mg.world_to_cell(sp))
+	if bases.size() <= 2:
+		# main road between the bases, leaving each TC from its front door
+		var p_front: Vector3 = mg.player_start_pos + Vector3(0, 0, -3.5 * mg.TILE_SIZE)
+		var e_front: Vector3 = mg.enemy_start_pos + Vector3(0, 0, 3.5 * mg.TILE_SIZE)
+		_stamp_path(road, w, h, mg, mg.get_path_to_target(p_front, e_front), ROAD_HALF_W)
+	else:
+		# more bots: a road from every base, out of the side facing the map centre, to the centre
+		var centre: Vector3 = mg.cell_to_world(Vector2i(int(mg.MAP_WIDTH * 0.5), int(mg.MAP_HEIGHT * 0.5)))
+		for sp in mg.start_positions:
+			var dir: Vector3 = (centre - sp)
+			dir.y = 0.0
+			var front: Vector3 = sp + dir.normalized() * 3.5 * mg.TILE_SIZE
+			_stamp_path(road, w, h, mg, mg.get_path_to_target(front, centre), ROAD_HALF_W)
 	# spurs from each base to its resource clusters (same offsets as MapGenerator3D._spawn_base_cluster)
 	for bc in bases:
 		var dir_y := 1 if bc.y > int(mg.MAP_HEIGHT * 0.5) else -1

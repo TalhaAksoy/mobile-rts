@@ -98,22 +98,22 @@ func _run() -> void:
 			var rng := RandomNumberGenerator.new()
 			rng.seed = 99 + m
 			for k in 400:
-				var x := rng.randf_range(0.01, MG.MAP_WIDTH * MG.TILE_SIZE - 0.01)
-				var z := rng.randf_range(0.01, MG.MAP_HEIGHT * MG.TILE_SIZE - 0.01)
+				var x := rng.randf_range(0.01, game.map_gen.MAP_WIDTH * MG.TILE_SIZE - 0.01)
+				var z := rng.randf_range(0.01, game.map_gen.MAP_HEIGHT * MG.TILE_SIZE - 0.01)
 				var mh := _mesh_height(arr, mg.hgrid_w, MG.TILE_SIZE / MG.SUB, x, z)
 				worst = maxf(worst, absf(mh - mg.get_height_at(Vector3(x, 0, z))))
 			_check(worst < 0.001, "%s: get_height_at matches the ground mesh (worst %.4f m)" % [tag, worst])
 		var hm_worst := 0.0
-		for x in MG.MAP_WIDTH:
-			for y in MG.MAP_HEIGHT:
+		for x in game.map_gen.MAP_WIDTH:
+			for y in game.map_gen.MAP_HEIGHT:
 				hm_worst = maxf(hm_worst, absf(mg.height_map[x][y] - mg.get_height_at(mg.cell_to_world(Vector2i(x, y)))))
 		_check(hm_worst < 0.001, "%s: height_map / cell_to_world are the ground at cell centres" % tag)
 
 		# --- real elevation, level bases
 		var lo := INF
 		var hi := -INF
-		for x in MG.MAP_WIDTH:
-			for y in MG.MAP_HEIGHT:
+		for x in game.map_gen.MAP_WIDTH:
+			for y in game.map_gen.MAP_HEIGHT:
 				if mg.tiles[x][y] != MG.TileType.WATER and mg.tiles[x][y] != MG.TileType.SHALLOW_WATER:
 					lo = minf(lo, mg.height_map[x][y])
 					hi = maxf(hi, mg.height_map[x][y])
@@ -126,8 +126,8 @@ func _run() -> void:
 		# --- water below, land above the water surface
 		var wet_bad := 0
 		var dry_bad := 0
-		for x in MG.MAP_WIDTH:
-			for y in MG.MAP_HEIGHT:
+		for x in game.map_gen.MAP_WIDTH:
+			for y in game.map_gen.MAP_HEIGHT:
 				var h: float = mg.height_map[x][y]
 				if mg.tiles[x][y] == MG.TileType.WATER:
 					if h > MG.WATER_SURFACE_Y - 0.1: wet_bad += 1
@@ -157,8 +157,8 @@ func _run() -> void:
 	# a walkable path that climbs: from the base towards the highest walkable cell
 	var top := Vector2i(-1, -1)
 	var top_h := -INF
-	for x in MG.MAP_WIDTH:
-		for y in range(20, MG.MAP_HEIGHT - 4):
+	for x in game.map_gen.MAP_WIDTH:
+		for y in range(20, game.map_gen.MAP_HEIGHT - 4):
 			if mg.is_cell_walkable(Vector2i(x, y)) and mg.height_map[x][y] > top_h:
 				var path: Array = mg.get_path_to_target(mg.player_start_pos, mg.cell_to_world(Vector2i(x, y)))
 				if not path.is_empty() and mg.world_to_cell(path[path.size() - 1]) == Vector2i(x, y):
@@ -184,8 +184,8 @@ func _run() -> void:
 	# buildings: level enough spot on sloped ground vs a too-steep spot
 	var sloped = null
 	var steep = null
-	for x in range(0, MG.MAP_WIDTH - 2):
-		for y in range(4, MG.MAP_HEIGHT - 4):
+	for x in range(0, game.map_gen.MAP_WIDTH - 2):
+		for y in range(4, game.map_gen.MAP_HEIGHT - 4):
 			var o := Vector2i(x, y)
 			var free := true
 			for dx in 2:

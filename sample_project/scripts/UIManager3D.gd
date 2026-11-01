@@ -21,6 +21,7 @@ signal main_menu_requested
 signal quit_requested
 signal load_game_requested
 signal difficulty_selected(difficulty: int)
+signal match_setup_selected(map_size: int, bot_count: int, bot_civs: Array)
 signal restart_requested
 
 var game_controller: Node = null
@@ -206,6 +207,8 @@ func _build_match_menu(p_theme: Theme) -> void:
 
 	if menu_root.has_signal("difficulty_selected"):
 		menu_root.difficulty_selected.connect(func(d): difficulty_selected.emit(d))
+	if menu_root.has_signal("match_setup_selected"):
+		menu_root.match_setup_selected.connect(func(sz, n, civs): match_setup_selected.emit(sz, n, civs))
 	if menu_root.has_signal("load_game_requested"):
 		menu_root.load_game_requested.connect(func(): load_game_requested.emit())
 

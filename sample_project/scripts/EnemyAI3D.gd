@@ -28,6 +28,11 @@ const WAVE_RETRY: float = 15.0   # army too small at wave time: look again this 
 @export var difficulty: Difficulty = Difficulty.NORMAL
 var profile: Dictionary = PROFILES[Difficulty.NORMAL]
 var civ_type: CivData.CivType = CivData.CivType.BYZANTINES
+## The team this bot plays (1 = first bot; up to 5 on a large map). Every bot is hostile to every
+## other team, so bots also fight each other.
+var team: int = 1
+## Set when the bot lost its last Town Center: it stops building and attacking.
+var eliminated: bool = false
 var map_gen: MapGenerator3D = null
 var main_game: Node = null
 
@@ -41,8 +46,10 @@ const SITE_STALL_TIMEOUT: float = 60.0
 var ai_clock: float = 0.0
 var site_watch: Dictionary = {}
 
-func setup_ai(civ: CivData.CivType, map: MapGenerator3D, game: Node, diff: Difficulty = Difficulty.NORMAL) -> void:
+func setup_ai(civ: CivData.CivType, map: MapGenerator3D, game: Node, diff: Difficulty = Difficulty.NORMAL, p_team: int = 1) -> void:
 	civ_type = civ
+	team = p_team
+	eliminated = false
 	map_gen = map
 	main_game = game
 	difficulty = diff
@@ -56,15 +63,16 @@ func setup_ai(civ: CivData.CivType, map: MapGenerator3D, game: Node, diff: Diffi
 ## Save / load: the match clock and wave count, so a loaded game does not get a fresh grace period
 ## (or lose its next wave).
 func get_state() -> Dictionary:
-	return {"clock": ai_clock, "waves": wave_count, "next_attack_at": next_attack_at}
+	return {"clock": ai_clock, "waves": wave_count, "next_attack_at": next_attack_at, "eliminated": eliminated}
 
 func set_state(st: Dictionary) -> void:
 	ai_clock = float(st.get("clock", ai_clock))
 	wave_count = int(st.get("waves", wave_count))
 	next_attack_at = float(st.get("next_attack_at", next_attack_at))
+	eliminated = bool(st.get("eliminated", eliminated))
 
 func _process(delta: float) -> void:
-	if main_game == null or not main_game.is_game_active:
+	if main_game == null or not main_game.is_game_active or eliminated:
 		return
 
 	ai_clock += delta
@@ -86,7 +94,7 @@ func _cancel_stalled_sites() -> void:
 	for site in site_watch.keys():
 		if not is_instance_valid(site) or site.is_completed:
 			site_watch.erase(site)
-	for site in main_game.get_team_buildings(1):
+	for site in main_game.get_team_buildings(team):
 		if not is_instance_valid(site) or site.is_completed or site.building_type == Building3D.BuildingType.TOWN_CENTER:
 			continue
 		if not site_watch.has(site):
@@ -94,18 +102,18 @@ func _cancel_stalled_sites() -> void:
 		elif site.construction_progress > site_watch[site]["p"]:
 			site_watch[site] = {"t": ai_clock, "p": site.construction_progress}
 		elif ai_clock - site_watch[site]["t"] > SITE_STALL_TIMEOUT:
-			var cost = main_game._get_building_cost(site.building_type, 1)
-			var res = main_game.get_team_resources(1)
+			var cost = main_game._get_building_cost(site.building_type, team)
+			var res = main_game.get_team_resources(team)
 			for k in ["wood", "gold", "stone"]:
 				res[k] += cost.get(k, 0)
 			site_watch.erase(site)
 			site.die()
 
 func _think() -> void:
-	var enemy_units = main_game.get_team_units(1)
-	var enemy_buildings = main_game.get_team_buildings(1)
-	var resources = main_game.get_team_resources(1)
-	var my_age = main_game.team_age.get(1, 1)
+	var enemy_units = main_game.get_team_units(team)
+	var enemy_buildings = main_game.get_team_buildings(team)
+	var resources = main_game.get_team_resources(team)
+	var my_age = main_game.team_age.get(team, 1)
 
 	var villagers: Array[Unit3D] = []
 	var military: Array[Unit3D] = []
@@ -126,21 +134,21 @@ func _think() -> void:
 	var max_vills: int = profile["max_vills"]
 	if tc != null and villagers.size() < max_vills and tc.train_queue.size() < 2:
 		if resources["food"] >= 50:
-			main_game.try_train_unit(tc, Unit3D.UnitType.VILLAGER, 1)
+			main_game.try_train_unit(tc, Unit3D.UnitType.VILLAGER, team)
 
 	# Age advancement
 	if my_age == 1 and tc != null and not tc.has_queued_research():
 		if resources["food"] >= 500 and resources["gold"] >= 200:
-			main_game.try_start_research(tc, "AGE_2", 1)
+			main_game.try_start_research(tc, "AGE_2", team)
 	elif my_age == 2 and tc != null and not tc.has_queued_research() and ai_clock > 420.0:
 		if resources["food"] >= 1000 and resources["gold"] >= 600:
-			main_game.try_start_research(tc, "AGE_3", 1)
+			main_game.try_start_research(tc, "AGE_3", team)
 
 	# Dynamic Workforce Balancing
 	_balance_workforce(villagers, resources, my_age)
 
-	var pop = main_game.get_team_population(1)
-	var max_pop = main_game.get_team_max_population(1)
+	var pop = main_game.get_team_population(team)
+	var max_pop = main_game.get_team_max_population(team)
 
 	if (max_pop - pop) <= 2 and resources["wood"] >= 30 and not _is_building_in_progress(Building3D.BuildingType.HOUSE):
 		if _build_structure(Building3D.BuildingType.HOUSE, villagers):
@@ -196,21 +204,21 @@ func _think() -> void:
 		match b.building_type:
 			Building3D.BuildingType.BARRACKS:
 				if resources["food"] >= 60 and resources["gold"] >= 20:
-					main_game.try_train_unit(b, Unit3D.UnitType.SWORDSMAN, 1)
+					main_game.try_train_unit(b, Unit3D.UnitType.SWORDSMAN, team)
 				elif resources["food"] >= 50 and resources["wood"] >= 35:
-					main_game.try_train_unit(b, Unit3D.UnitType.SPEARMAN, 1)
+					main_game.try_train_unit(b, Unit3D.UnitType.SPEARMAN, team)
 			Building3D.BuildingType.ARCHERY_RANGE:
 				if resources["wood"] >= 45 and resources["gold"] >= 40:
-					main_game.try_train_unit(b, Unit3D.UnitType.ARCHER, 1)
+					main_game.try_train_unit(b, Unit3D.UnitType.ARCHER, team)
 			Building3D.BuildingType.STABLE:
 				if my_age >= 2 and resources["food"] >= 90 and resources["gold"] >= 75:
-					main_game.try_train_unit(b, Unit3D.UnitType.PALADIN, 1)
+					main_game.try_train_unit(b, Unit3D.UnitType.PALADIN, team)
 				elif resources["food"] >= 75 and resources["gold"] >= 60:
-					main_game.try_train_unit(b, Unit3D.UnitType.CAVALRY, 1)
+					main_game.try_train_unit(b, Unit3D.UnitType.CAVALRY, team)
 			Building3D.BuildingType.CASTLE:
 				var unique_type = _get_civ_unique_unit()
 				if resources["food"] >= 80 and resources["gold"] >= 60:
-					main_game.try_train_unit(b, unique_type, 1)
+					main_game.try_train_unit(b, unique_type, team)
 
 func _balance_workforce(villagers: Array[Unit3D], resources: Dictionary, my_age: int) -> void:
 	var total_vills = villagers.size()
@@ -241,7 +249,7 @@ func _balance_workforce(villagers: Array[Unit3D], resources: Dictionary, my_age:
 	for v in villagers:
 		if is_instance_valid(v) and v.state == Unit3D.State.BUILDING and is_instance_valid(v.target_entity):
 			busy_sites[v.target_entity] = true
-	for site in main_game.get_team_buildings(1):
+	for site in main_game.get_team_buildings(team):
 		if is_instance_valid(site) and not site.is_completed and not busy_sites.has(site):
 			# Prefer an idle villager; otherwise borrow one from the largest gathering group.
 			var pool: Array = idle_vills
@@ -340,7 +348,7 @@ func _send_to_resource(v: Unit3D, type: String) -> void:
 		return
 	if type == "food":
 		# a free field of ours beats a long walk to far-away berries
-		var field: Vector2i = map_gen.find_free_field(v.global_position, 1, v)
+		var field: Vector2i = map_gen.find_free_field(v.global_position, team, v)
 		if field != Vector2i(-1, -1):
 			var near_berry := false
 			for c in map_gen.berry_bushes.keys():
@@ -372,12 +380,12 @@ func _build_structure(b_type: Building3D.BuildingType, villagers: Array) -> bool
 		return false
 
 	var tc = null
-	for b in main_game.get_team_buildings(1):
+	for b in main_game.get_team_buildings(team):
 		if is_instance_valid(b) and b.building_type == Building3D.BuildingType.TOWN_CENTER:
 			tc = b
 			break
 
-	var start_cell = map_gen.world_to_cell(tc.global_position) if tc != null else map_gen.world_to_cell(map_gen.enemy_start_pos)
+	var start_cell = map_gen.world_to_cell(tc.global_position) if tc != null else map_gen.world_to_cell(map_gen.get_start_pos(team))
 	var b_size = main_game._get_building_size(b_type) if main_game != null else Vector2i(2, 2)
 
 	# Reachability and "does it seal anything off" are measured from the home area next to the Town
@@ -411,13 +419,13 @@ func _build_structure(b_type: Building3D.BuildingType, villagers: Array) -> bool
 		return false
 
 	if free_worker != null:
-		var cost = main_game._get_building_cost(b_type, 1) if main_game != null else {"wood": 0, "gold": 0, "stone": 0}
-		var res = main_game.get_team_resources(1)
+		var cost = main_game._get_building_cost(b_type, team) if main_game != null else {"wood": 0, "gold": 0, "stone": 0}
+		var res = main_game.get_team_resources(team)
 		if res["wood"] >= cost["wood"] and res["gold"] >= cost["gold"] and res["stone"] >= cost["stone"]:
 			res["wood"] -= cost["wood"]
 			res["gold"] -= cost["gold"]
 			res["stone"] -= cost["stone"]
-			var b = main_game.place_building(b_type, 1, found_cell, true)
+			var b = main_game.place_building(b_type, team, found_cell, true)
 			if b != null:
 				free_worker.command_build(b)
 				return true
@@ -518,7 +526,7 @@ func _manage_farms(villagers: Array, resources: Dictionary, tc) -> bool:
 		if Vector2(c).distance_to(Vector2(tc_cell)) <= 14.0:
 			wild_food += int(map_gen.berry_bushes[c].get("food", 0))
 	var mill = null
-	for b in main_game.get_team_buildings(1):
+	for b in main_game.get_team_buildings(team):
 		if is_instance_valid(b) and b.building_type == Building3D.BuildingType.MILL:
 			mill = b
 			break
@@ -532,7 +540,7 @@ func _manage_farms(villagers: Array, resources: Dictionary, tc) -> bool:
 		return false
 	var fields: int = main_game.get_mill_fields(mill).size()
 	var want: int = clampi(int(villagers.size() * 0.45) - (1 if wild_food > 500 else 0), 1, main_game.MAX_FIELDS_PER_MILL)
-	if fields < want and resources["wood"] >= 50 + (30 if fields > 0 else 0) and main_game.field_block_reason(mill, 1) == "":
+	if fields < want and resources["wood"] >= 50 + (30 if fields > 0 else 0) and main_game.field_block_reason(mill, team) == "":
 		var builder = null
 		var best_d := INF
 		for v in villagers:
@@ -544,7 +552,7 @@ func _manage_farms(villagers: Array, resources: Dictionary, tc) -> bool:
 					best_d = d
 					builder = v
 		if builder != null:
-			main_game.try_add_field(mill, 1, [builder])
+			main_game.try_add_field(mill, team, [builder])
 			return true
 	return false
 
@@ -559,7 +567,7 @@ func _research_next(enemy_buildings: Array, resources: Dictionary, _my_age: int)
 			if not is_instance_valid(b) or b.building_type != b_type or not b.is_completed or b.has_queued_research():
 				continue
 			for id in TechData.techs_for_building(b_type):
-				if id.begins_with("AGE_") or main_game.research_block_reason(b, id, 1) != "":
+				if id.begins_with("AGE_") or main_game.research_block_reason(b, id, team) != "":
 					continue
 				# keep enough food/gold behind for villagers and the next age
 				# reserve only applies to what the tech actually spends (a wood/food tech must not be
@@ -569,46 +577,32 @@ func _research_next(enemy_buildings: Array, resources: Dictionary, _my_age: int)
 					continue
 				if int(cost.get("gold", 0)) > 0 and resources["gold"] - int(cost["gold"]) < 50:
 					continue
-				if main_game.try_start_research(b, id, 1):
+				if main_game.try_start_research(b, id, team):
 					return
 
 func _has_building(b_type: Building3D.BuildingType) -> bool:
-	for b in main_game.get_team_buildings(1):
+	for b in main_game.get_team_buildings(team):
 		if b.building_type == b_type:
 			return true
 	return false
 
 func _is_building_in_progress(b_type: Building3D.BuildingType) -> bool:
-	for b in main_game.get_team_buildings(1):
+	for b in main_game.get_team_buildings(team):
 		if b.building_type == b_type and not b.is_completed:
 			return true
 	return false
 
-## Sends part of the army (wave_share) at the player's Town Center, once the army is big enough
-## (min_wave). Returns false when no wave went out.
+## Sends part of the army (wave_share) at the nearest hostile Town Center (the player's in a 1v1; with
+## more bots the closest base of any other team), once the army is big enough (min_wave).
+## Returns false when no wave went out.
 func _launch_attack_wave() -> bool:
-	var enemy_units = main_game.get_team_units(1)
-	var player_buildings = main_game.get_team_buildings(0)
-	var player_units = main_game.get_team_units(0)
-
-	if player_buildings.is_empty() and player_units.is_empty():
-		return false
-
-	var target: Node3D = null
-	for b in player_buildings:
-		if b.building_type == Building3D.BuildingType.TOWN_CENTER:
-			target = b
-			break
-	if target == null and not player_buildings.is_empty():
-		target = player_buildings[0]
-	elif target == null and not player_units.is_empty():
-		target = player_units[0]
-
+	var my_units = main_game.get_team_units(team)
+	var target := _pick_attack_target()
 	if target == null:
 		return false
 
 	var army: Array = []
-	for u in enemy_units:
+	for u in my_units:
 		if is_instance_valid(u) and u.hp > 0 and u.unit_type != Unit3D.UnitType.VILLAGER:
 			army.append(u)
 	if army.size() < int(profile["min_wave"]):
@@ -619,3 +613,26 @@ func _launch_attack_wave() -> bool:
 	for i in n:
 		army[i].command_attack(target)
 	return true
+
+## Nearest hostile Town Center from this bot's home; no TC left anywhere -> any hostile building, then unit.
+func _pick_attack_target() -> Node3D:
+	var home: Vector3 = map_gen.get_start_pos(team) if map_gen != null else Vector3.ZERO
+	for b in main_game.get_team_buildings(team):
+		if is_instance_valid(b) and b.building_type == Building3D.BuildingType.TOWN_CENTER:
+			home = b.global_position
+			break
+	var best: Node3D = null
+	var best_d := INF
+	for pass_i in 3:
+		for e in (main_game.buildings if pass_i < 2 else main_game.units):
+			if not is_instance_valid(e) or e.team == team or e.hp <= 0:
+				continue
+			if pass_i == 0 and e.building_type != Building3D.BuildingType.TOWN_CENTER:
+				continue
+			var d := home.distance_squared_to(e.global_position)
+			if d < best_d:
+				best_d = d
+				best = e
+		if best != null:
+			return best
+	return null

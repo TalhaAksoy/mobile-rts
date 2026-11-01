@@ -193,7 +193,20 @@ static func get_building_texture_by_id(faction_id: String, building_id: String) 
 # =====================================================================================
 const MODEL_MANIFEST_PATH: String = "res://data/art/building_model_manifest.json"
 const MATERIAL_LIB_DIR: String = "res://assets/3d/materials/"
-const TEAM_COLORS: Array[Color] = [Color(0.18, 0.52, 0.95), Color(0.92, 0.22, 0.22)]
+## Team colours: 0 = the player (blue), 1..5 = bots (red, yellow, green, purple, teal).
+## art_source/blender/render_sprites.py and units/render_unit_sprites.py render the first two (2D sheets).
+const TEAM_COLORS: Array[Color] = [Color(0.18, 0.52, 0.95), Color(0.92, 0.22, 0.22), Color(0.96, 0.78, 0.12),
+	Color(0.22, 0.72, 0.28), Color(0.62, 0.32, 0.86), Color(0.10, 0.76, 0.72)]
+const TEAM_COLOR_NAMES: Array[String] = ["Mavi", "Kırmızı", "Sarı", "Yeşil", "Mor", "Turkuaz"]
+
+static func team_color(team: int) -> Color:
+	return TEAM_COLORS[clampi(team, 0, TEAM_COLORS.size() - 1)]
+
+## Occlusion tint (silhouette behind buildings): the team colour, lightened, half transparent.
+static func team_xray_color(team: int) -> Color:
+	var c := team_color(team).lerp(Color.WHITE, 0.25)
+	c.a = 0.5
+	return c
 
 ## Global switch: false -> every building uses the HD-2D sprite path (reversible fallback).
 static var use_3d_building_models: bool = true
@@ -555,7 +568,7 @@ static func get_unit_material(mat_name: String, team: int) -> Material:
 	# stencil "X-Ray": the material marks the unit's own pixels, the x-ray pass draws only where something
 	# else (a building, a tree) is in front - overlapping parts of the model itself never show it
 	m.stencil_mode = BaseMaterial3D.STENCIL_MODE_XRAY
-	m.stencil_color = Color(0.35, 0.65, 1.0, 0.5) if team == 0 else Color(1.0, 0.35, 0.35, 0.5)
+	m.stencil_color = team_xray_color(team)
 	_unit_mat_cache[key] = m
 	return m
 

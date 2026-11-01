@@ -29,8 +29,8 @@ func _gui_input(event: InputEvent) -> void:
 func _jump_camera_to_click(local_pos: Vector2) -> void:
 	var norm_x = clamp(local_pos.x / size.x, 0.0, 1.0)
 	var norm_y = clamp(local_pos.y / size.y, 0.0, 1.0)
-	var world_x = norm_x * (MapGenerator3D.MAP_WIDTH * MapGenerator3D.TILE_SIZE)
-	var world_z = norm_y * (MapGenerator3D.MAP_HEIGHT * MapGenerator3D.TILE_SIZE)
+	var world_x = norm_x * (map_gen.MAP_WIDTH * MapGenerator3D.TILE_SIZE)
+	var world_z = norm_y * (map_gen.MAP_HEIGHT * MapGenerator3D.TILE_SIZE)
 	camera.jump_to(Vector3(world_x, 0, world_z))
 
 func _draw() -> void:
@@ -45,12 +45,12 @@ func _draw() -> void:
 	draw_rect(Rect2(Vector2.ZERO, size), ParchmentTheme.LEATHER_BORDER, false, 3.0)
 	draw_rect(Rect2(Vector2.ZERO, size).grow(-3.0), ParchmentTheme.BRONZE_GOLD, false, 1.0)
 
-	var sx = size.x / float(MapGenerator3D.MAP_WIDTH)
-	var sy = size.y / float(MapGenerator3D.MAP_HEIGHT)
+	var sx = size.x / float(map_gen.MAP_WIDTH)
+	var sy = size.y / float(map_gen.MAP_HEIGHT)
 
 	# Water & Bridges (Antique ink wash style)
-	for x in range(MapGenerator3D.MAP_WIDTH):
-		for y in range(MapGenerator3D.MAP_HEIGHT):
+	for x in range(map_gen.MAP_WIDTH):
+		for y in range(map_gen.MAP_HEIGHT):
 			var t = map_gen.tiles[x][y]
 			if t == MapGenerator3D.TileType.WATER:
 				draw_rect(Rect2(x * sx, y * sy, ceil(sx), ceil(sy)), Color(0.32, 0.46, 0.58, 0.85))
@@ -76,7 +76,7 @@ func _draw() -> void:
 			var cell = b.origin_cell
 			if b.team != 0 and map_gen.get_fog_state(cell) == MapGenerator3D.FogState.UNEXPLORED:
 				continue
-			var col = Color(0.18, 0.45, 0.85) if b.team == 0 else Color(0.85, 0.18, 0.18)
+			var col: Color = FactionArtManager.team_color(b.team).darkened(0.08)
 			var bw = b.grid_size.x * sx
 			var bh = b.grid_size.y * sy
 			var b_rect = Rect2(cell.x * sx, cell.y * sy, bw, bh)
@@ -89,15 +89,15 @@ func _draw() -> void:
 			var c = map_gen.world_to_cell(u.global_position)
 			if u.team != 0 and map_gen.get_fog_state(c) != MapGenerator3D.FogState.VISIBLE:
 				continue
-			var col = Color(0.15, 0.45, 0.95) if u.team == 0 else Color(0.9, 0.15, 0.15)
+			var col: Color = FactionArtManager.team_color(u.team)
 			var u_center = Vector2(c.x * sx + sx * 0.5, c.y * sy + sy * 0.5)
 			draw_circle(u_center, 2.8, col)
 			draw_circle(u_center, 2.8, ParchmentTheme.INK_DARK, false, 1.0)
 
 	# Fog of War on Minimap Shroud
 	if not map_gen.fog_grid.is_empty():
-		for x in range(MapGenerator3D.MAP_WIDTH):
-			for y in range(MapGenerator3D.MAP_HEIGHT):
+		for x in range(map_gen.MAP_WIDTH):
+			for y in range(map_gen.MAP_HEIGHT):
 				var st = map_gen.fog_grid[x][y]
 				if st == MapGenerator3D.FogState.UNEXPLORED:
 					draw_rect(Rect2(x * sx, y * sy, ceil(sx), ceil(sy)), Color(0.12, 0.10, 0.08, 0.88))
@@ -106,8 +106,8 @@ func _draw() -> void:
 
 	# Camera Viewport Box (Inked surveyor box)
 	if is_instance_valid(camera):
-		var total_w = MapGenerator3D.MAP_WIDTH * MapGenerator3D.TILE_SIZE
-		var total_h = MapGenerator3D.MAP_HEIGHT * MapGenerator3D.TILE_SIZE
+		var total_w = map_gen.MAP_WIDTH * MapGenerator3D.TILE_SIZE
+		var total_h = map_gen.MAP_HEIGHT * MapGenerator3D.TILE_SIZE
 		var cam_cx = (camera.position.x / total_w) * size.x
 		var cam_cz = ((camera.position.z - camera.position.y * 0.65) / total_h) * size.y
 		var box_w = (camera.position.y / total_w) * size.x * 0.9

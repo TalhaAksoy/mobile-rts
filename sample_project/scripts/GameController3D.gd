@@ -57,6 +57,16 @@ var last_click_time_msec: int = 0
 var tutorial_mgr: TutorialManager = null
 ## Enemy bot difficulty for the next match (picked on the civ select screen; EnemyAI3D.PROFILES).
 var ai_difficulty: int = EnemyAI3D.Difficulty.NORMAL
+## Map size and number of bots for the next match (new-game screen). Small fits 1 bot, Medium 3,
+## Large 5 (MapGenerator3D.MAP_SIZE_MAX_BOTS). Bot civs: bot_civs[i] for bot i+1 when set, else
+## enemy_civ for the first bot and a random civ nobody else plays for the others.
+var map_size: int = MapGenerator3D.MapSize.SMALL
+var bot_count: int = 1
+var bot_civs: Array = []
+## Civ of every team in the running match (0 = player).
+var team_civs: Dictionary = {}
+## One EnemyAI3D per bot; bot_ais[0] is the scene's $EnemyAI3D (= enemy_ai, team 1).
+var bot_ais: Array[EnemyAI3D] = []
 
 func _ready() -> void:
 	GraphicsSettings.apply(get_viewport(), get_node_or_null("DirectionalLight3D") as DirectionalLight3D)
@@ -86,6 +96,10 @@ func _ready() -> void:
 	ui_manager.quit_requested.connect(func(): get_tree().quit())
 	ui_manager.load_game_requested.connect(load_saved_game)
 	ui_manager.difficulty_selected.connect(func(d: int): ai_difficulty = d)
+	ui_manager.match_setup_selected.connect(func(sz: int, n: int, civs: Array):
+		map_size = sz
+		bot_count = n
+		bot_civs = civs.duplicate())
 	ui_manager.zoom_in_requested.connect(func(): camera.zoom_in())
 	ui_manager.zoom_out_requested.connect(func(): camera.zoom_out())
 	ui_manager.box_select_toggled.connect(func(enabled: bool): is_box_select_mode = enabled)
@@ -140,20 +154,18 @@ func _on_start_game_requested(p_civ: CivData.CivType, e_civ: CivData.CivType, m_
 func start_match() -> void:
 	_clear_match()
 
-	team_resources = {
-		0: {"food": 200, "wood": 200, "gold": 100, "stone": 100},
-		1: {"food": 200, "wood": 200, "gold": 100, "stone": 100}
-	}
-	team_age = {0: 1, 1: 1}
-	team_techs = {0: {}, 1: {}}   # tech id -> true once researched (see TechData)
+	bot_count = clampi(bot_count, 1, MapGenerator3D.max_bots_for(map_size))
+	_init_team_tables()
+	_assign_team_civs()
 	kills_count = 0
 	trained_count = 0
 	gathered_count = 0
 	game_start_time = Time.get_ticks_msec() / 1000.0
 
 	# 1. Generate 3D Map
-	map_gen.generate(selected_map_type)
-	camera.setup_bounds(MapGenerator3D.MAP_WIDTH * MapGenerator3D.TILE_SIZE, MapGenerator3D.MAP_HEIGHT * MapGenerator3D.TILE_SIZE)
+	map_gen.set_map_size(map_size)
+	map_gen.generate(selected_map_type, -1, bot_count)
+	camera.setup_bounds(map_gen.MAP_WIDTH * MapGenerator3D.TILE_SIZE, map_gen.MAP_HEIGHT * MapGenerator3D.TILE_SIZE)
 	camera.terrain = map_gen
 
 	# 2. Player Base (South)
@@ -166,15 +178,18 @@ func start_match() -> void:
 		var offset = Vector3(cos(i * 1.5) * 3.5, 0, sin(i * 1.5) * 3.5 + 2.5)
 		spawn_unit(Unit3D.UnitType.VILLAGER, 0, map_gen.player_start_pos + offset)
 
-	# 3. Enemy Base (North)
-	var enemy_base_cell = map_gen.world_to_cell(map_gen.enemy_start_pos)
-	var _enemy_tc = place_building(Building3D.BuildingType.TOWN_CENTER, 1, enemy_base_cell - Vector2i(1, 1), false)
+	# 3. Bot bases (one bot: north; more: round the map). Villagers stand behind the TC, away from
+	# the map centre (the first bot of a 1v1: north of it, as before).
+	var map_centre := Vector3(map_gen.MAP_WIDTH * MapGenerator3D.TILE_SIZE * 0.5, 0, map_gen.MAP_HEIGHT * MapGenerator3D.TILE_SIZE * 0.5)
+	for t in range(1, bot_count + 1):
+		var sp: Vector3 = map_gen.get_start_pos(t)
+		place_building(Building3D.BuildingType.TOWN_CENTER, t, map_gen.world_to_cell(sp) - Vector2i(1, 1), false)
+		var back := Vector3(0, 0, -1) if bot_count == 1 else Vector3(sp.x - map_centre.x, 0, sp.z - map_centre.z).normalized()
+		for i in range(3):
+			var offset = Vector3(cos(i * 1.5) * 3.5, 0, sin(i * 1.5) * 3.5) + back * 2.5
+			spawn_unit(Unit3D.UnitType.VILLAGER, t, sp + offset)
 
-	for i in range(3):
-		var offset = Vector3(cos(i * 1.5) * 3.5, 0, sin(i * 1.5) * 3.5 - 2.5)
-		spawn_unit(Unit3D.UnitType.VILLAGER, 1, map_gen.enemy_start_pos + offset)
-
-	enemy_ai.setup_ai(enemy_civ, map_gen, self, ai_difficulty)
+	_setup_bot_ais()
 
 	# Jump camera to player base
 	camera.jump_to(map_gen.player_start_pos, false)
@@ -191,6 +206,64 @@ func start_match() -> void:
 	if tutorial_mgr != null:
 		tutorial_mgr.start_tutorial(self)
 
+## Resources / age / techs for the player and every bot.
+func _init_team_tables() -> void:
+	team_resources = {}
+	team_age = {}
+	team_techs = {}   # tech id -> true once researched (see TechData)
+	for t in range(bot_count + 1):
+		team_resources[t] = {"food": 200, "wood": 200, "gold": 100, "stone": 100}
+		team_age[t] = 1
+		team_techs[t] = {}
+
+func _assign_team_civs() -> void:
+	team_civs = {0: player_civ}
+	var used := [player_civ]
+	for t in range(1, bot_count + 1):
+		var c = null
+		if t - 1 < bot_civs.size() and bot_civs[t - 1] != null and int(bot_civs[t - 1]) >= 0:
+			c = int(bot_civs[t - 1])
+		elif t == 1:
+			c = enemy_civ
+		else:
+			var free: Array = []
+			for civ in CivData.CivType.values():
+				if not used.has(civ):
+					free.append(civ)
+			c = free[randi() % free.size()] if not free.is_empty() else CivData.CivType.values()[randi() % CivData.CivType.size()]
+		team_civs[t] = c
+		used.append(c)
+	enemy_civ = team_civs[1]
+
+func civ_of(team: int) -> CivData.CivType:
+	if team == 0:
+		return player_civ
+	return team_civs.get(team, enemy_civ)
+
+## bot_ais[0] is the scene's EnemyAI3D (team 1); bots 2..5 get their own node.
+func _setup_bot_ais() -> void:
+	for i in range(1, bot_ais.size()):
+		if is_instance_valid(bot_ais[i]):
+			bot_ais[i].queue_free()
+	bot_ais = [enemy_ai]
+	for t in range(2, bot_count + 1):
+		var ai := EnemyAI3D.new()
+		ai.name = "EnemyAI3D_team%d" % t
+		add_child(ai)
+		bot_ais.append(ai)
+	for i in bot_ais.size():
+		bot_ais[i].setup_ai(team_civs[i + 1], map_gen, self, ai_difficulty, i + 1)
+
+func get_bot_ai(team: int) -> EnemyAI3D:
+	return bot_ais[team - 1] if team >= 1 and team - 1 < bot_ais.size() else null
+
+## Every unit / building that is not the player's (fog of war hides them out of sight).
+func _hostile_units() -> Array:
+	return units.filter(func(u): return is_instance_valid(u) and u.team != 0)
+
+func _hostile_buildings() -> Array:
+	return buildings.filter(func(b): return is_instance_valid(b) and b.team != 0)
+
 func _process(delta: float) -> void:
 	if not is_game_active:
 		return
@@ -203,7 +276,7 @@ func _process(delta: float) -> void:
 	fog_timer -= delta
 	if fog_timer <= 0.0:
 		fog_timer = 0.2
-		map_gen.update_fog_of_war(get_team_units(0), get_team_buildings(0), get_team_units(1), get_team_buildings(1))
+		map_gen.update_fog_of_war(get_team_units(0), get_team_buildings(0), _hostile_units(), _hostile_buildings())
 
 	if is_placing_building:
 		var mouse_pos = get_viewport().get_mouse_position()
@@ -689,7 +762,7 @@ func _select_units_in_screen_rect(rect: Rect2) -> void:
 		SoundManager.play_sound("click")
 
 func spawn_unit(u_type: Unit3D.UnitType, team: int, pos: Vector3) -> Unit3D:
-	var civ = player_civ if team == 0 else enemy_civ
+	var civ = civ_of(team)
 	var unit = Unit3D.new()
 	add_child(unit)
 	unit.global_position = Vector3(pos.x, map_gen.get_height_at(pos) if map_gen != null else pos.y, pos.z)
@@ -703,7 +776,7 @@ func spawn_unit(u_type: Unit3D.UnitType, team: int, pos: Vector3) -> Unit3D:
 	return unit
 
 func place_building(b_type: Building3D.BuildingType, team: int, cell: Vector2i, under_construction: bool = false) -> Building3D:
-	var civ = player_civ if team == 0 else enemy_civ
+	var civ = civ_of(team)
 	var b = Building3D.new()
 	var b_size = _get_building_size(b_type)
 	var world_center = Vector3((cell.x + b_size.x * 0.5) * MapGenerator3D.TILE_SIZE, map_gen.get_footprint_height(cell, b_size), (cell.y + b_size.y * 0.5) * MapGenerator3D.TILE_SIZE)
@@ -884,7 +957,7 @@ func _get_building_size(b_type: Building3D.BuildingType) -> Vector2i:
 		_: return Vector2i(2, 2)
 
 func _get_building_cost(b_type: Building3D.BuildingType, team: int = 0) -> Dictionary:
-	var civ_cfg = CivData.get_civ(player_civ if team == 0 else enemy_civ)
+	var civ_cfg = CivData.get_civ(civ_of(team))
 	var cost_mult = civ_cfg.get("building_cost_mult", 1.0)
 
 	var cost = {"wood": 0, "gold": 0, "stone": 0}
@@ -1001,7 +1074,7 @@ func try_train_unit(b: Building3D, u_type: Unit3D.UnitType, team: int) -> bool:
 			gold_cost = 60
 			duration = 7.0
 
-	var civ_cfg = CivData.get_civ(player_civ if team == 0 else enemy_civ)
+	var civ_cfg = CivData.get_civ(civ_of(team))
 	if civ_cfg.has("cost_discount_mult"):
 		food_cost = int(food_cost * civ_cfg["cost_discount_mult"])
 		wood_cost = int(wood_cost * civ_cfg["cost_discount_mult"])
@@ -1294,7 +1367,7 @@ func get_team_max_population(team: int) -> int:
 	return min(max_pop, 70)
 
 func _on_unit_died(u: Unit3D) -> void:
-	if u.team == 1:
+	if u.team != 0:
 		kills_count += 1
 	units.erase(u)
 	selected_units.erase(u)
@@ -1306,10 +1379,29 @@ func _on_building_destroyed(b: Building3D) -> void:
 		ui_manager.set_selected_entity(null)
 
 	if b.building_type == Building3D.BuildingType.TOWN_CENTER:
-		if b.team == 1:
-			_game_over(true)
-		elif b.team == 0:
+		if b.team == 0:
 			_game_over(false)
+		elif not _team_has_town_center(b.team):
+			# that bot is out; the last bot out = victory
+			var ai := get_bot_ai(b.team)
+			if ai != null:
+				ai.eliminated = true
+			if bots_alive() == 0:
+				_game_over(true)
+
+func _team_has_town_center(team: int) -> bool:
+	for o in buildings:
+		if is_instance_valid(o) and o.team == team and o.building_type == Building3D.BuildingType.TOWN_CENTER and o.hp > 0 and not o.is_queued_for_deletion():
+			return true
+	return false
+
+## Bots that still have a Town Center.
+func bots_alive() -> int:
+	var n := 0
+	for ai in bot_ais:
+		if is_instance_valid(ai) and not ai.eliminated:
+			n += 1
+	return n
 
 func _game_over(victory: bool) -> void:
 	is_game_active = false

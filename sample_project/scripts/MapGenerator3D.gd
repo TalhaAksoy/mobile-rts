@@ -6,8 +6,15 @@ const PixelArtTextures = preload("res://scripts/PixelArtTextures.gd")
 signal map_generated
 
 const TILE_SIZE: float = 2.0
-const MAP_WIDTH: int = 32
-const MAP_HEIGHT: int = 60
+## Map size (picked on the new-game screen). Small is the original 32x60 map every mobile test ran on.
+enum MapSize { SMALL, MEDIUM, LARGE }
+const MAP_SIZE_DIMS: Array[Vector2i] = [Vector2i(32, 60), Vector2i(48, 76), Vector2i(64, 96)]
+const MAP_SIZE_MAX_BOTS: Array[int] = [1, 3, 5]
+const MAP_SIZE_NAMES: Array[String] = ["Küçük", "Orta", "Büyük"]
+## Instance values (set by set_map_size before generate); read them from the generator, not the class.
+var MAP_WIDTH: int = 32
+var MAP_HEIGHT: int = 60
+var map_size: int = MapSize.SMALL
 
 enum TileType {
 	GRASS,
@@ -72,7 +79,9 @@ var field_cells: Dictionary = {}
 var farm_fields: Dictionary = {}
 
 var player_start_pos: Vector3
-var enemy_start_pos: Vector3
+var enemy_start_pos: Vector3          # = start_positions[1] (the first bot)
+## Town Center spot of every team: [0] = player (bottom centre), [1..] = bots around the map.
+var start_positions: Array[Vector3] = []
 
 var noise: FastNoiseLite = FastNoiseLite.new()
 ## Everything random in map generation (resource spots, cluster sizes, oasis palms, tree species,
@@ -119,7 +128,48 @@ func _process(delta: float) -> void:
 			var sway = sin(anim_time * 2.6 + t_node.position.x * 0.8 + t_node.position.z * 0.4) * 0.045
 			t_node.rotation.z = sway
 
-func generate(chosen_map_type: CivData.MapType, custom_seed: int = -1) -> void:
+func set_map_size(sz: int) -> void:
+	map_size = clampi(sz, 0, MAP_SIZE_DIMS.size() - 1)
+	MAP_WIDTH = MAP_SIZE_DIMS[map_size].x
+	MAP_HEIGHT = MAP_SIZE_DIMS[map_size].y
+
+static func max_bots_for(sz: int) -> int:
+	return MAP_SIZE_MAX_BOTS[clampi(sz, 0, MAP_SIZE_MAX_BOTS.size() - 1)]
+
+## Start cells: the player at the bottom centre; one bot = top centre (the original 1v1 layout);
+## more bots are spread evenly on an ellipse round the map, so every base is ~25+ cells from the next.
+func _start_cells(n_bots: int) -> Array[Vector2i]:
+	var cells: Array[Vector2i] = [Vector2i(int(MAP_WIDTH * 0.5), MAP_HEIGHT - 12)]
+	if n_bots <= 1:
+		cells.append(Vector2i(int(MAP_WIDTH * 0.5), 10))
+		return cells
+	var top := 10.0
+	var bottom := float(MAP_HEIGHT - 12)
+	var cx := MAP_WIDTH * 0.5
+	var cy := (top + bottom) * 0.5
+	var rx := MAP_WIDTH * 0.5 - 9.0
+	var ry := (bottom - top) * 0.5
+	for i in n_bots:
+		var a := PI * 0.5 + TAU * float(i + 1) / float(n_bots + 1)
+		cells.append(Vector2i(roundi(cx + cos(a) * rx), roundi(cy + sin(a) * ry)))
+	return cells
+
+func get_start_pos(team: int) -> Vector3:
+	return start_positions[team] if team >= 0 and team < start_positions.size() else enemy_start_pos
+
+func _base_cells() -> Array[Vector2i]:
+	var out: Array[Vector2i] = []
+	for p in start_positions:
+		out.append(world_to_cell(p))
+	return out
+
+func _near_any_base(c: Vector2i, r: float) -> bool:
+	for p in start_positions:
+		if c.distance_to(world_to_cell(p)) < r:
+			return true
+	return false
+
+func generate(chosen_map_type: CivData.MapType, custom_seed: int = -1, n_bots: int = 1) -> void:
 	map_type = chosen_map_type
 	seed_val = custom_seed if custom_seed != -1 else randi()
 	map_rng.seed = seed_val
@@ -157,14 +207,17 @@ func generate(chosen_map_type: CivData.MapType, custom_seed: int = -1) -> void:
 
 	_generate_terrain_types_and_heights()
 
-	player_start_pos = cell_to_world(Vector2i(int(MAP_WIDTH * 0.5), MAP_HEIGHT - 12))
-	enemy_start_pos = cell_to_world(Vector2i(int(MAP_WIDTH * 0.5), 10))
-
-	_clear_area(world_to_cell(player_start_pos), 7)
-	_clear_area(world_to_cell(enemy_start_pos), 7)
+	start_positions.clear()
+	for c in _start_cells(n_bots):
+		start_positions.append(cell_to_world(c))
+		_clear_area(c, 7)
+	player_start_pos = start_positions[0]
+	enemy_start_pos = start_positions[1]
 	_build_height_grid()
-	player_start_pos = cell_to_world(world_to_cell(player_start_pos))
-	enemy_start_pos = cell_to_world(world_to_cell(enemy_start_pos))
+	for i in start_positions.size():
+		start_positions[i] = cell_to_world(world_to_cell(start_positions[i]))
+	player_start_pos = start_positions[0]
+	enemy_start_pos = start_positions[1]
 
 	# 1. Create Natural Organic Smooth Terrain Mesh
 	_create_natural_organic_terrain()
@@ -385,7 +438,7 @@ func _generate_terrain_types_and_heights() -> void:
 				CivData.MapType.RIVER_CROSSING:
 					var river_y = MAP_HEIGHT * 0.5 + sin(x * 0.32) * 2.6 + n * 1.5
 					if abs(y - river_y) < 2.0:
-						if abs(x - 7) <= 1 or abs(x - 15) <= 1 or abs(x - 23) <= 1:
+						if _is_ford_column(x):
 							tile = TileType.SHALLOW_WATER
 							h = SHALLOW_H
 						else:
@@ -434,11 +487,19 @@ func _generate_terrain_types_and_heights() -> void:
 			tiles[x][y] = tile
 			height_map[x][y] = h
 
+## River Crossing fords: every 8 columns from x = 7, kept 8 columns off the east edge (32 wide: 7, 15, 23).
+func _is_ford_column(x: int) -> bool:
+	for fx in range(7, MAP_WIDTH - 8, 8):
+		if abs(x - fx) <= 1:
+			return true
+	return false
+
 func _clear_area(center: Vector2i, radius: int) -> void:
 	for x in range(center.x - radius, center.x + radius + 1):
 		for y in range(center.y - radius, center.y + radius + 1):
 			if is_valid_cell(x, y):
-				if tiles[x][y] == TileType.WATER:
+				# (fords too: with more bots a base can sit on the River Crossing river)
+				if tiles[x][y] == TileType.WATER or tiles[x][y] == TileType.SHALLOW_WATER:
 					tiles[x][y] = TileType.GRASS if map_type != CivData.MapType.DESERT_OASIS else TileType.SAND
 				height_map[x][y] = 0.0 # Clean flat diorama building terrace
 
@@ -492,7 +553,9 @@ func _build_height_grid() -> void:
 	roll.seed = seed_val + 77
 	roll.noise_type = FastNoiseLite.TYPE_SIMPLEX_SMOOTH
 	roll.frequency = 0.09
-	var bases: Array[Vector2] = [Vector2(world_to_cell(player_start_pos)) + Vector2(0.5, 0.5), Vector2(world_to_cell(enemy_start_pos)) + Vector2(0.5, 0.5)]
+	var bases: Array[Vector2] = []
+	for bc in _base_cells():
+		bases.append(Vector2(bc) + Vector2(0.5, 0.5))
 	max_terrain_h = 0.0
 	for j in hgrid_h:
 		for i in hgrid_w:
@@ -528,7 +591,9 @@ func _build_height_grid() -> void:
 				h = SHALLOW_H
 			else:
 				# bases stay level ground (the blur would otherwise pull nearby hills into them)
-				var base_d := minf(Vector2(u, v).distance_to(bases[0]), Vector2(u, v).distance_to(bases[1]))
+				var base_d := INF
+				for bp in bases:
+					base_d = minf(base_d, Vector2(u, v).distance_to(bp))
 				h *= smoothstep(BASE_FLAT_R, BASE_FLAT_R + 2.5, base_d)
 				h += roll.get_noise_2d(u, v) * ROLL_AMPLITUDE * smoothstep(BASE_FLAT_R + 0.5, BASE_FLAT_R + 4.0, base_d)
 				h = maxf(h, WATER_SURFACE_Y + 0.18)      # dry land stays above it (shore = sloping bank)
@@ -747,8 +812,14 @@ func _generate_3d_resources() -> void:
 	var cfg = CivData.get_map_config(map_type)
 	var tree_density = cfg.get("tree_density", 0.25)
 
-	_spawn_base_cluster(world_to_cell(player_start_pos))
-	_spawn_base_cluster(world_to_cell(enemy_start_pos))
+	for bc in _base_cells():
+		_spawn_base_cluster(bc)
+	# Forest Valley: open valleys run from every base through the map centre (1v1: the middle column)
+	var valley_c := Vector2(MAP_WIDTH * 0.5, MAP_HEIGHT * 0.5)
+	var valley_dirs: Array[Vector2] = []
+	for bc in _base_cells():
+		var d := Vector2(bc) - valley_c
+		valley_dirs.append(d.normalized() if d.length() > 0.01 else Vector2(0, 1))
 
 	for x in range(MAP_WIDTH):
 		for y in range(MAP_HEIGHT):
@@ -757,13 +828,16 @@ func _generate_3d_resources() -> void:
 				continue
 			if cell in trees or cell in gold_mines or cell in berry_bushes:
 				continue
-			if cell.distance_to(world_to_cell(player_start_pos)) < 4 or cell.distance_to(world_to_cell(enemy_start_pos)) < 4:
+			if _near_any_base(cell, 4):
 				continue
 
 			var tree_noise = noise.get_noise_2d(float(x * 6.0 + 80), float(y * 6.0 + 80))
 			var should_spawn = false
 			if map_type == CivData.MapType.FOREST_VALLEY:
-				var dist_cx = abs(x - MAP_WIDTH * 0.5)
+				var dist_cx := INF            # distance to the nearest valley line
+				for vd in valley_dirs:
+					var rel := Vector2(x, y) - valley_c
+					dist_cx = minf(dist_cx, absf(rel.x * vd.y - rel.y * vd.x))
 				should_spawn = (dist_cx > 4.5 and tree_noise > -0.12) or tree_noise > 0.30
 			elif map_type == CivData.MapType.DESERT_OASIS:
 				var dist_center = Vector2(x, y).distance_to(Vector2(MAP_WIDTH * 0.5, MAP_HEIGHT * 0.5))
@@ -1028,7 +1102,7 @@ func _spawn_3d_berry(cell: Vector2i) -> void:
 const BASE_KEEPOUT_RADIUS: float = 4.0
 
 func _is_in_base_keepout(c: Vector2i) -> bool:
-	return c.distance_to(world_to_cell(player_start_pos)) < BASE_KEEPOUT_RADIUS or c.distance_to(world_to_cell(enemy_start_pos)) < BASE_KEEPOUT_RADIUS
+	return _near_any_base(c, BASE_KEEPOUT_RADIUS)
 
 func _find_random_empty_spot(min_b: Vector2i, max_b: Vector2i) -> Vector2i:
 	for attempt in range(40):
