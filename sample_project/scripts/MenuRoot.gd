@@ -88,7 +88,25 @@ func _ready() -> void:
 		if tex != null:
 			bg.texture = tex
 
-	# 1. Main Menu Titles Typography
+	# 1. Main menu logo (art_source/blender/logo/render_logo.py); the text title stays as the fallback
+	var logo_tex := load("res://assets/logo/logo.png") as Texture2D
+	if logo_tex != null and is_instance_valid(title_label):
+		var header := title_label.get_parent() as Control
+		var logo_rect := header.get_node_or_null("LogoRect") as TextureRect
+		if logo_rect == null:
+			logo_rect = TextureRect.new()
+			logo_rect.name = "LogoRect"
+			logo_rect.texture = logo_tex
+			logo_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+			logo_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+			logo_rect.custom_minimum_size = Vector2(0, 330)
+			logo_rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
+			header.add_child(logo_rect)
+			header.move_child(logo_rect, title_label.get_index())
+			header.offset_top = 28.0
+			header.offset_bottom = 392.0
+		title_label.visible = false
+
 	if is_instance_valid(title_label):
 		title_label.text = "POCKET EMPIRES"
 		title_label.add_theme_font_override("font", ParchmentTheme.get_cinzel_font())
