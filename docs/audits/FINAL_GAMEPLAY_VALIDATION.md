@@ -103,7 +103,7 @@ See BLENDER_GODOT_INTEGRATION_REPORT.md §4 and `docs/audits/evidence/perf/perf_
 
 1. Visual overhaul incomplete (ASSET_INVENTORY.md §3); units are sprites.
 2. Unit draw calls too high for mobile; trees not instanced.
-3. Bot military spending is uneven (pre-existing; not addressed).
+3. (Fixed) The bot built no army on some Forest Valley seeds: it sealed its own villagers in a berry pocket (docs/design/AI_DIFFICULTY.md).
 4. (Resolved by the environment pass) The grass no longer reads as flat neon. Environment pass costs ≈1.3 ms/frame on the iGPU (integration report §4).
 5. The tutorial hint label overflows the top HUD bar and minimap at 540×960 (pre-existing UI issue, visible in captures).
 6. No export presets, so no Android/iOS validation.

@@ -380,23 +380,34 @@ func _build_structure(b_type: Building3D.BuildingType, villagers: Array) -> bool
 	var start_cell = map_gen.world_to_cell(tc.global_position) if tc != null else map_gen.world_to_cell(map_gen.enemy_start_pos)
 	var b_size = main_game._get_building_size(b_type) if main_game != null else Vector2i(2, 2)
 
-	var free_worker = null
-	for v in villagers:
-		if is_instance_valid(v) and v.hp > 0 and v.state != Unit3D.State.BUILDING:
-			free_worker = v
-			break
-	if free_worker == null:
-		return false
-
-	# Search around the TC, but validate reachability from the WORKER's position: pathing from the
-	# (blocked) TC centre escapes into whatever pocket the candidate is in, so sealed pockets passed.
+	# Reachability and "does it seal anything off" are measured from the home area next to the Town
+	# Center (where every villager has to bring its cargo), not from the worker's own cell. A worker
+	# picked while standing inside the future site, or already in a side pocket, made both checks pass
+	# for a house that then closed a berry pocket: 7-10 villagers sat there with food for the rest of
+	# the match and, as later builders were picked from the trapped ones, the bot never got a barracks
+	# (Forest Valley, seed 900: no army in 8 minutes with 2,600+ wood).
+	var home := _home_cell(tc, start_cell)
 	var found_cell := Vector2i(-1, -1)
 	if b_type == Building3D.BuildingType.MILL:
 		# leave a ring for fields: the 6x6 block around the 2x2 mill must be free
-		found_cell = _find_build_spot(start_cell, b_size, map_gen.world_to_cell(free_worker.global_position), 2)
+		found_cell = _find_build_spot(start_cell, b_size, home, 2)
 	if found_cell == Vector2i(-1, -1):
-		found_cell = _find_build_spot(start_cell, b_size, map_gen.world_to_cell(free_worker.global_position))
+		found_cell = _find_build_spot(start_cell, b_size, home)
 	if found_cell == Vector2i(-1, -1):
+		return false
+
+	# the nearest villager (not already building) that can actually walk to the site
+	var free_worker = null
+	var best_d := INF
+	for v in villagers:
+		if not is_instance_valid(v) or v.hp <= 0 or v.state == Unit3D.State.BUILDING:
+			continue
+		var vc: Vector2i = map_gen.world_to_cell(v.global_position)
+		var d: float = Vector2(vc).distance_squared_to(Vector2(found_cell))
+		if d < best_d and _is_site_reachable(vc, found_cell, b_size):
+			best_d = d
+			free_worker = v
+	if free_worker == null:
 		return false
 
 	if free_worker != null:
@@ -411,6 +422,19 @@ func _build_structure(b_type: Building3D.BuildingType, villagers: Array) -> bool
 				free_worker.command_build(b)
 				return true
 	return false
+
+## A walkable cell right next to the Town Center: the area every villager must be able to reach.
+func _home_cell(tc, center: Vector2i) -> Vector2i:
+	if tc != null and is_instance_valid(tc):
+		var o: Vector2i = tc.origin_cell
+		var sz: Vector2i = tc.grid_size
+		for r in range(1, 4):
+			for x in range(o.x - r, o.x + sz.x + r):
+				for y in range(o.y - r, o.y + sz.y + r):
+					var c := Vector2i(x, y)
+					if map_gen.is_valid_cell(x, y) and map_gen.is_cell_walkable(c) and not map_gen.berry_bushes.has(c):
+						return c
+	return center
 
 func _find_build_spot(center: Vector2i, size: Vector2i, reach_from: Vector2i = Vector2i(-1, -1), margin: int = 0) -> Vector2i:
 	var from_cell = reach_from if reach_from != Vector2i(-1, -1) else center

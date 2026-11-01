@@ -8,6 +8,7 @@ extends SceneTree
 ##  * what was used up before the save stays gone (cut trees, a mined-out stone mine, an eaten bush),
 ##    and partly used nodes keep what was left (a half-mined gold mine is not full again, and is still
 ##    drawn smaller)
+##  * buildings keep their production queue (units and research, order, progress, paid costs)
 const GameController3D = preload("res://scripts/GameController3D.gd")
 
 var failures := 0
@@ -118,6 +119,59 @@ func _run() -> void:
 			var s: float = mg.gold_mines[gold_half]["node"].get_node("Visual").scale.x
 			_check(is_equal_approx(s, gold_scale), "%s: and is still drawn smaller (scale %.2f, before save %.2f)" % [tag, s, gold_scale])
 		_check(mg.berry_bushes.has(bush_part) and int(mg.berry_bushes[bush_part]["food"]) == bush_left, "%s: nibbled bush keeps %d food" % [tag, bush_left])
+
+	# --- production queues survive a save: units + research, their order, the running job's progress and
+	# what was paid (cancelling after the load gives it back)
+	seed(7400)
+	game.selected_map_type = CivData.MapType.FOREST_VALLEY
+	game.start_match()
+	game.enemy_ai.set_process(false)
+	await process_frame
+	game.team_resources[0] = {"food": 5000, "wood": 5000, "gold": 5000, "stone": 5000}
+	var tc = null
+	for b in game.buildings:
+		if b.team == 0 and b.building_type == Building3D.BuildingType.TOWN_CENTER:
+			tc = b
+	game.try_train_unit(tc, Unit3D.UnitType.VILLAGER, 0)
+	game.try_start_research(tc, "AGE_2", 0)
+	game.try_train_unit(tc, Unit3D.UnitType.VILLAGER, 0)
+	tc.current_train_timer = tc.current_train_duration * 0.6      # first villager 60 % done
+	var before_q: Array = tc.train_queue.map(func(it): return [it["kind"], it.get("type", it.get("tech"))])
+	var timer_before: float = tc.current_train_timer
+	var res_before: Dictionary = game.team_resources[0].duplicate()
+	_check(SaveManager.save_game(game, path), "queue: saved")
+	seed(1)
+	game.start_match()
+	await process_frame
+	SaveManager.load_game(game, path)
+	await process_frame
+	tc = null
+	for b in game.buildings:
+		if b.team == 0 and b.building_type == Building3D.BuildingType.TOWN_CENTER:
+			tc = b
+	var after_q: Array = tc.train_queue.map(func(it): return [it["kind"], it.get("type", it.get("tech"))])
+	_check(after_q == before_q, "queue: same jobs in the same order after loading %s" % str(after_q))
+	_check(tc.train_queue[0]["type"] is int and absf(tc.current_train_timer - timer_before) < 0.2 and not tc.is_researching,
+		"queue: the running villager keeps its progress (%.2f of %.2f s)" % [tc.current_train_timer, tc.current_train_duration])
+	_check(game.team_resources[0] == res_before and game.team_resources[0]["food"] is int, "queue: resources as saved (whole numbers)")
+	var food0: int = game.team_resources[0]["food"]
+	var gold0: int = game.team_resources[0]["gold"]
+	game.cancel_unit_production(tc, 1)
+	_check(game.team_resources[0]["food"] == food0 + 500 and game.team_resources[0]["gold"] == gold0 + 200 and not tc.has_queued_research(),
+		"queue: the loaded upgrade can be cancelled and its cost comes back")
+	var n_units := 0
+	for u in game.units:
+		if is_instance_valid(u) and u.team == 0:
+			n_units += 1
+	for k in 600:
+		await physics_frame
+		if tc.train_queue.is_empty():
+			break
+	var n_after := 0
+	for u in game.units:
+		if is_instance_valid(u) and u.team == 0:
+			n_after += 1
+	_check(tc.train_queue.is_empty() and n_after == n_units + 2, "queue: both loaded villagers come out (%d -> %d units)" % [n_units, n_after])
 
 	DirAccess.remove_absolute(ProjectSettings.globalize_path(path))
 	print("RESULT: %s (%d checks, %d failures)" % ["PASS" if failures == 0 else "FAIL", checks, failures])

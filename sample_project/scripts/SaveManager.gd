@@ -62,7 +62,8 @@ static func save_game(game: GameController3D, file_path: String = AUTO_SAVE_FILE
 				"cell": [b.origin_cell.x, b.origin_cell.y],
 				"hp": b.hp,
 				"is_completed": b.is_completed,
-				"construction_progress": b.construction_progress
+				"construction_progress": b.construction_progress,
+				"queue": b.get_queue_state()
 			})
 
 	var file = FileAccess.open(file_path, FileAccess.WRITE)
@@ -121,8 +122,13 @@ static func load_game(game: GameController3D, file_path: String = AUTO_SAVE_FILE
 	game.gathered_count = data.get("gathered_count", 0)
 
 	var res_dict = data.get("team_resources", {})
-	if res_dict.has("0"): game.team_resources[0] = res_dict["0"]
-	if res_dict.has("1"): game.team_resources[1] = res_dict["1"]
+	# JSON numbers come back as floats: resources are whole numbers in the game
+	for key in ["0", "1"]:
+		if res_dict.has(key):
+			var r := {}
+			for k in res_dict[key].keys():
+				r[k] = int(res_dict[key][k])
+			game.team_resources[int(key)] = r
 
 	var age_dict = data.get("team_age", {})
 	if age_dict.has("0"): game.team_age[0] = int(age_dict["0"])
@@ -145,6 +151,8 @@ static func load_game(game: GameController3D, file_path: String = AUTO_SAVE_FILE
 			b.is_completed = is_comp
 			b.construction_progress = float(b_data.get("construction_progress", 100.0))
 			b.refresh_construction_state()
+			if b_data.has("queue"):
+				b.set_queue_state(b_data["queue"])
 
 	# Restore Units
 	for u_data in data.get("units", []):

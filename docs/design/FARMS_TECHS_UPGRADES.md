@@ -126,8 +126,8 @@ military buildings, defences. It keeps 100 food and 50 gold in reserve, and goes
 
 * **(Fixed)** Save files now store what is left of trees, mines and bushes, and the map regenerates identically from
   its seed (FINAL_GAMEPLAY_VALIDATION.md §4).
-* **Production queues are not saved.** After a load, buildings start with an empty queue and the paid costs are lost.
-  This was pre-existing.
+* **(Fixed)** Production queues are saved: units and research, their order, the running job's progress and the paid
+  costs. Resources also come back as whole numbers after a load; JSON had turned them into floats.
 * **A villager keeps its cargo when switched to another resource type.** The cargo is then delivered as the new type.
   This was pre-existing and was left as is.
 * Civ-specific 3D models now exist for every building type and all 10 civs (ASSET_INVENTORY §1, §1b, §2b). The upgrade

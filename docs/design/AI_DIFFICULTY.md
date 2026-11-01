@@ -47,7 +47,20 @@ Highland, the map where the old bot was harshest. Same seed for every row; headl
 Covered by `scripts/tests/test_ai_difficulty.gd`. It uses fixed time and size limits taken from the on-screen
 hints, not the profile values, so a profile edit that makes a level harsher fails the test.
 
-## Known limit
+## Fixed: the bot sealing its own villagers (Forest Valley)
 
-On some seeds of the dense Forest Valley map, the bot builds no army at all. This is a pre-existing economy issue:
-"bot military spending is uneven" in FINAL_GAMEPLAY_VALIDATION.md §7. Difficulty does not change it.
+On some seeds of the dense Forest Valley map, the bot built no army at all. Seed 900: no soldiers in 8 minutes, with
+2,600+ wood.
+
+- **What happened.** At 39 s the bot placed a house across the mouth of a berry pocket, closed in by trees, a gold
+  mine and bushes. 7–10 villagers were trapped there carrying food for the rest of the match.
+- **Why the check missed it.** Site checks are "can the builder reach it" and "does it seal anything off". Both were
+  measured from the worker's own cell. That worker stood inside the future house, so both checks passed.
+- **Why no army followed.** Later builders were picked from the trapped villagers, so no site was ever reachable.
+- **The fix.** Both checks now use a walkable cell next to the Town Center: the home area every villager must reach.
+  The builder is the nearest villager that can actually walk to the site.
+- **Result.** 12/12 Forest Valley seeds and 16/16 seeds on the other maps build an army.
+
+Covered by `scripts/tests/test_bot_no_sealed_villagers.gd`. It runs three Forest Valley seeds, including 900, and
+checks that the bot builds an army, that every villager can walk home, and that no villager carries food for a minute
+or more.

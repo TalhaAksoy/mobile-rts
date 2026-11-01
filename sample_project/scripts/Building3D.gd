@@ -913,6 +913,32 @@ func find_research_index(tech_id: String = "") -> int:
 			return i
 	return -1
 
+## Save / load: the production queue (units and research, with what was paid) and the running job's
+## progress. Before this, a loaded game started every building with an empty queue and the paid costs
+## were gone.
+func get_queue_state() -> Dictionary:
+	return {"items": train_queue.duplicate(true), "timer": current_train_timer}
+
+func set_queue_state(st: Dictionary) -> void:
+	train_queue.clear()
+	for it in st.get("items", []):
+		var item: Dictionary = {}
+		for k in it.keys():
+			item[k] = it[k]
+		item["kind"] = String(it.get("kind", "unit"))
+		if item["kind"] == "unit":
+			item["type"] = int(it["type"])        # JSON turns ints into floats
+		for k in ["food", "wood", "gold", "stone"]:
+			item[k] = int(it.get(k, 0))
+		item["duration"] = float(it.get("duration", 1.0))
+		train_queue.append(item)
+	current_train_timer = 0.0
+	current_train_duration = 1.0
+	if train_queue.size() > 0:
+		current_train_duration = train_queue[0]["duration"]
+		current_train_timer = clampf(float(st.get("timer", 0.0)), 0.0, current_train_duration)
+	_sync_research_state()
+
 ## Keeps is_researching / current_research_* in step with the queue's front item.
 func _sync_research_state() -> void:
 	if train_queue.size() > 0 and train_queue[0].get("kind", "unit") == "research":
