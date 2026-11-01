@@ -1,0 +1,19 @@
+{
+ "civ": "japanese",
+ "role": "cavalry",
+ "tris": 1470,
+ "bones": 31,
+ "height": 2.8,
+ "actions": [
+  "attack",
+  "build-loop",
+  "death",
+  "gather-loop",
+  "idle-loop",
+  "walk-loop"
+ ],
+ "props": [],
+ "attack": "slash",
+ "mount": "horse",
+ "model": "res://assets/3d/units/japanese/cavalry.glb"
+}

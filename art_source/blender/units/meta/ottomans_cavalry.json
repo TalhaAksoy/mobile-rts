@@ -1,0 +1,19 @@
+{
+ "civ": "ottomans",
+ "role": "cavalry",
+ "tris": 2018,
+ "bones": 31,
+ "height": 2.56,
+ "actions": [
+  "attack",
+  "build-loop",
+  "death",
+  "gather-loop",
+  "idle-loop",
+  "walk-loop"
+ ],
+ "props": [],
+ "attack": "slash",
+ "mount": "horse",
+ "model": "res://assets/3d/units/ottomans/cavalry.glb"
+}

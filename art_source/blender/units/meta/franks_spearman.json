@@ -1,0 +1,19 @@
+{
+ "civ": "franks",
+ "role": "spearman",
+ "tris": 832,
+ "bones": 18,
+ "height": 2.25,
+ "actions": [
+  "attack",
+  "build-loop",
+  "death",
+  "gather-loop",
+  "idle-loop",
+  "walk-loop"
+ ],
+ "props": [],
+ "attack": "thrust",
+ "mount": "",
+ "model": "res://assets/3d/units/franks/spearman.glb"
+}

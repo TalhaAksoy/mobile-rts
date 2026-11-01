@@ -112,6 +112,48 @@ Placement (`FactionArtManager.make_sprite_node`):
 * In 2D mode, buildings under construction show the sprite revealed from the ground up.
 * Environment props are mirrored at random instead of rotated.
 
+### 3.3 Units (rigged characters)
+
+```
+art_source/blender/units/
+  charkit.py        shared 20-bone rig, rigid part skinning (Body), palette atlas, the six actions, glTF export
+  outfit.py         body parts and gear (headwear, coat / vest / tunic, weapons, shields, quiver, cargo)
+  unitstyle.py      civ x role style table read from the gallery concept sheets
+  build_units.py    blender -b --factory-startup --python build_units.py -- [civ/role ...] [--preview]
+  update_unit_manifest.py            -> sample_project/data/art/unit_model_manifest.json
+  render_unit_sprites.py             2D: renders every action (blender -b ...)
+  finish_unit_sprites.py             2D: downsample, hard alpha, sheet per team, unit_sprite_manifest.json
+```
+
+* **Headless.** Everything runs in `blender -b` and does not need the MCP server.
+  `bpy.ops.wm.read_factory_settings` must not be used through MCP: it also stops the MCP add-on server.
+* **Rig and skinning.** One rig for every civ and role. Each part is 100 % on one bone (rigid skinning).
+* **Actions.** The actions are written once in Python on pose bones and pushed to NLA tracks. They are exported
+  with `export_animation_mode='ACTIONS'`. The `-loop` suffix makes Godot loop the animation and is stripped from the
+  name, giving `idle` / `walk` / `attack` / `gather` / `build` / `death`.
+* **Materials.** Two per character: `PE_UnitPalette` and `TEAM_Trim` (the sash). `PE_UnitPalette` is a
+  256×256 atlas shared by every unit, with three regions:
+  - rows 0–63: flat swatches;
+  - rows 64–191: 16 px patterns, fitted to each face (`pat:<name>`);
+  - rows 192–255: 32 px emblems cut from the gallery flags, mapped planar on shields, pennants, banners and barding.
+* **Mounts.** `charkit.mounted_bones(kind)` adds the horse or camel bones under the humanoid rider: body, neck,
+  head, tail, four two-part legs and a saddle that the rider's hips hang from. Mounted actions:
+  `make_mount_actions`.
+* **Props.** `PROP_cargo_wood` and similar are separate meshes the game shows and hides.
+* **Godot side.** The game scales units by 1.25 (`Unit3D.UNIT_VISUAL_SCALE`) so they read as big as the gallery
+  sprites. The occlusion silhouette uses the material's stencil X-Ray mode: an inverted depth test also hit the
+  model's own overlapping parts.
+* **2D sheets.** One 3/4 front-left view (yaw 30°, pitch 35°) at 32 px/m. Every frame of a role has the same size
+  and the feet on the same pixel, and the game mirrors the sprite when the unit walks to the right. Rendering takes
+  about 40–75 s per role with 8 EEVEE samples. Three parallel `blender -b` jobs take about 25 min for all 56.
+  Occlusion tint for billboards (`Unit3D._add_sprite_silhouette`): the sprite writes the stencil only on its opaque
+  pixels (alpha scissor), and a `next_pass` draws the sheet in the team tint with an inverted depth test where the
+  stencil is not set. The tint shows behind buildings and trees, but never over the visible sprite or a unit in front.
+  The built-in X-Ray pass ignores texture alpha and would tint the whole quad. The old always-on-top copy tinted
+  every visible sprite.
+  Known limit: in 2D building mode the building plane stands at the building's front face, so a unit within about
+  1 m of that face loses its top half to the tint.
+
 ## 4. Godot side
 
 * `FactionArtManager.instantiate_building_model(civ, type, team)` loads the GLB listed in the manifest and replaces every

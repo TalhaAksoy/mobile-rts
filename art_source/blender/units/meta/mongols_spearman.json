@@ -1,0 +1,19 @@
+{
+ "civ": "mongols",
+ "role": "spearman",
+ "tris": 1200,
+ "bones": 18,
+ "height": 2.25,
+ "actions": [
+  "attack",
+  "build-loop",
+  "death",
+  "gather-loop",
+  "idle-loop",
+  "walk-loop"
+ ],
+ "props": [],
+ "attack": "thrust",
+ "mount": "",
+ "model": "res://assets/3d/units/mongols/spearman.glb"
+}

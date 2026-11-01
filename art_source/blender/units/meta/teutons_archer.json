@@ -1,0 +1,19 @@
+{
+ "civ": "teutons",
+ "role": "archer",
+ "tris": 958,
+ "bones": 18,
+ "height": 1.78,
+ "actions": [
+  "attack",
+  "build-loop",
+  "death",
+  "gather-loop",
+  "idle-loop",
+  "walk-loop"
+ ],
+ "props": [],
+ "attack": "bow",
+ "mount": "",
+ "model": "res://assets/3d/units/teutons/archer.glb"
+}

@@ -1,0 +1,21 @@
+{
+ "civ": "franks",
+ "role": "villager",
+ "tris": 838,
+ "bones": 18,
+ "height": 1.78,
+ "actions": [
+  "attack",
+  "build-loop",
+  "death",
+  "gather-loop",
+  "idle-loop",
+  "walk-loop"
+ ],
+ "props": [
+  "PROP_cargo_wood"
+ ],
+ "attack": "slash",
+ "mount": "",
+ "model": "res://assets/3d/units/franks/villager.glb"
+}

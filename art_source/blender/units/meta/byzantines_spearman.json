@@ -1,0 +1,19 @@
+{
+ "civ": "byzantines",
+ "role": "spearman",
+ "tris": 772,
+ "bones": 18,
+ "height": 2.25,
+ "actions": [
+  "attack",
+  "build-loop",
+  "death",
+  "gather-loop",
+  "idle-loop",
+  "walk-loop"
+ ],
+ "props": [],
+ "attack": "thrust",
+ "mount": "",
+ "model": "res://assets/3d/units/byzantines/spearman.glb"
+}

@@ -1,0 +1,19 @@
+{
+ "civ": "mongols",
+ "role": "horse_archer",
+ "tris": 1858,
+ "bones": 31,
+ "height": 2.789,
+ "actions": [
+  "attack",
+  "build-loop",
+  "death",
+  "gather-loop",
+  "idle-loop",
+  "walk-loop"
+ ],
+ "props": [],
+ "attack": "bow",
+ "mount": "horse",
+ "model": "res://assets/3d/units/mongols/horse_archer.glb"
+}

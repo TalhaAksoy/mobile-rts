@@ -1,0 +1,19 @@
+{
+ "civ": "britons",
+ "role": "cavalry",
+ "tris": 1416,
+ "bones": 31,
+ "height": 2.52,
+ "actions": [
+  "attack",
+  "build-loop",
+  "death",
+  "gather-loop",
+  "idle-loop",
+  "walk-loop"
+ ],
+ "props": [],
+ "attack": "slash",
+ "mount": "horse",
+ "model": "res://assets/3d/units/britons/cavalry.glb"
+}

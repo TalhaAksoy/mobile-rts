@@ -1,0 +1,997 @@
+{
+ "units": {
+  "britons": {
+   "archer": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "bow",
+    "enabled": true,
+    "height": 1.78,
+    "model": "res://assets/3d/units/britons/archer.glb",
+    "mount": "",
+    "props": [],
+    "tris": 958
+   },
+   "cavalry": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "slash",
+    "enabled": true,
+    "height": 2.52,
+    "model": "res://assets/3d/units/britons/cavalry.glb",
+    "mount": "horse",
+    "props": [],
+    "tris": 1416
+   },
+   "longbowman": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "bow",
+    "enabled": true,
+    "height": 1.919,
+    "model": "res://assets/3d/units/britons/longbowman.glb",
+    "mount": "",
+    "props": [],
+    "tris": 994
+   },
+   "spearman": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "thrust",
+    "enabled": true,
+    "height": 2.25,
+    "model": "res://assets/3d/units/britons/spearman.glb",
+    "mount": "",
+    "props": [],
+    "tris": 774
+   },
+   "swordsman": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "slash",
+    "enabled": true,
+    "height": 1.82,
+    "model": "res://assets/3d/units/britons/swordsman.glb",
+    "mount": "",
+    "props": [],
+    "tris": 796
+   },
+   "villager": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "slash",
+    "enabled": true,
+    "height": 1.78,
+    "model": "res://assets/3d/units/britons/villager.glb",
+    "mount": "",
+    "props": [
+     "PROP_cargo_wood"
+    ],
+    "tris": 838
+   }
+  },
+  "byzantines": {
+   "archer": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "bow",
+    "enabled": true,
+    "height": 1.93,
+    "model": "res://assets/3d/units/byzantines/archer.glb",
+    "mount": "",
+    "props": [],
+    "tris": 920
+   },
+   "cataphract": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "thrust",
+    "enabled": true,
+    "height": 3.49,
+    "model": "res://assets/3d/units/byzantines/cataphract.glb",
+    "mount": "horse",
+    "props": [],
+    "tris": 1464
+   },
+   "spearman": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "thrust",
+    "enabled": true,
+    "height": 2.25,
+    "model": "res://assets/3d/units/byzantines/spearman.glb",
+    "mount": "",
+    "props": [],
+    "tris": 772
+   },
+   "swordsman": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "slash",
+    "enabled": true,
+    "height": 2.0,
+    "model": "res://assets/3d/units/byzantines/swordsman.glb",
+    "mount": "",
+    "props": [],
+    "tris": 834
+   },
+   "villager": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "slash",
+    "enabled": true,
+    "height": 1.86,
+    "model": "res://assets/3d/units/byzantines/villager.glb",
+    "mount": "",
+    "props": [
+     "PROP_cargo_wood"
+    ],
+    "tris": 1074
+   }
+  },
+  "chinese": {
+   "archer": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "bow",
+    "enabled": true,
+    "height": 2.08,
+    "model": "res://assets/3d/units/chinese/archer.glb",
+    "mount": "",
+    "props": [],
+    "tris": 990
+   },
+   "cavalry": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "slash",
+    "enabled": true,
+    "height": 2.78,
+    "model": "res://assets/3d/units/chinese/cavalry.glb",
+    "mount": "horse",
+    "props": [],
+    "tris": 1418
+   },
+   "chu_ko_nu": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "gun",
+    "enabled": true,
+    "height": 2.08,
+    "model": "res://assets/3d/units/chinese/chu_ko_nu.glb",
+    "mount": "",
+    "props": [],
+    "tris": 986
+   },
+   "spearman": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "thrust",
+    "enabled": true,
+    "height": 2.25,
+    "model": "res://assets/3d/units/chinese/spearman.glb",
+    "mount": "",
+    "props": [],
+    "tris": 972
+   },
+   "swordsman": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "slash",
+    "enabled": true,
+    "height": 2.08,
+    "model": "res://assets/3d/units/chinese/swordsman.glb",
+    "mount": "",
+    "props": [],
+    "tris": 854
+   },
+   "villager": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "slash",
+    "enabled": true,
+    "height": 1.8,
+    "model": "res://assets/3d/units/chinese/villager.glb",
+    "mount": "",
+    "props": [
+     "PROP_cargo_wood"
+    ],
+    "tris": 680
+   }
+  },
+  "franks": {
+   "archer": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "bow",
+    "enabled": true,
+    "height": 1.78,
+    "model": "res://assets/3d/units/franks/archer.glb",
+    "mount": "",
+    "props": [],
+    "tris": 958
+   },
+   "knight": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "thrust",
+    "enabled": true,
+    "height": 3.49,
+    "model": "res://assets/3d/units/franks/knight.glb",
+    "mount": "horse",
+    "props": [],
+    "tris": 1480
+   },
+   "spearman": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "thrust",
+    "enabled": true,
+    "height": 2.25,
+    "model": "res://assets/3d/units/franks/spearman.glb",
+    "mount": "",
+    "props": [],
+    "tris": 832
+   },
+   "swordsman": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "slash",
+    "enabled": true,
+    "height": 1.93,
+    "model": "res://assets/3d/units/franks/swordsman.glb",
+    "mount": "",
+    "props": [],
+    "tris": 870
+   },
+   "villager": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "slash",
+    "enabled": true,
+    "height": 1.78,
+    "model": "res://assets/3d/units/franks/villager.glb",
+    "mount": "",
+    "props": [
+     "PROP_cargo_wood"
+    ],
+    "tris": 838
+   }
+  },
+  "japanese": {
+   "archer": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "bow",
+    "enabled": true,
+    "height": 2.078,
+    "model": "res://assets/3d/units/japanese/archer.glb",
+    "mount": "",
+    "props": [],
+    "tris": 1166
+   },
+   "cavalry": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "slash",
+    "enabled": true,
+    "height": 2.8,
+    "model": "res://assets/3d/units/japanese/cavalry.glb",
+    "mount": "horse",
+    "props": [],
+    "tris": 1470
+   },
+   "samurai": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "slash",
+    "enabled": true,
+    "height": 2.1,
+    "model": "res://assets/3d/units/japanese/samurai.glb",
+    "mount": "",
+    "props": [],
+    "tris": 918
+   },
+   "spearman": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "thrust",
+    "enabled": true,
+    "height": 2.3,
+    "model": "res://assets/3d/units/japanese/spearman.glb",
+    "mount": "",
+    "props": [],
+    "tris": 784
+   },
+   "swordsman": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "slash",
+    "enabled": true,
+    "height": 1.83,
+    "model": "res://assets/3d/units/japanese/swordsman.glb",
+    "mount": "",
+    "props": [],
+    "tris": 978
+   },
+   "villager": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "slash",
+    "enabled": true,
+    "height": 1.8,
+    "model": "res://assets/3d/units/japanese/villager.glb",
+    "mount": "",
+    "props": [
+     "PROP_cargo_wood"
+    ],
+    "tris": 846
+   }
+  },
+  "mongols": {
+   "archer": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "bow",
+    "enabled": true,
+    "height": 2.089,
+    "model": "res://assets/3d/units/mongols/archer.glb",
+    "mount": "",
+    "props": [],
+    "tris": 1250
+   },
+   "horse_archer": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "bow",
+    "enabled": true,
+    "height": 2.789,
+    "model": "res://assets/3d/units/mongols/horse_archer.glb",
+    "mount": "horse",
+    "props": [],
+    "tris": 1858
+   },
+   "spearman": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "thrust",
+    "enabled": true,
+    "height": 2.25,
+    "model": "res://assets/3d/units/mongols/spearman.glb",
+    "mount": "",
+    "props": [],
+    "tris": 1200
+   },
+   "swordsman": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "slash",
+    "enabled": true,
+    "height": 2.089,
+    "model": "res://assets/3d/units/mongols/swordsman.glb",
+    "mount": "",
+    "props": [],
+    "tris": 1246
+   },
+   "villager": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "slash",
+    "enabled": true,
+    "height": 1.86,
+    "model": "res://assets/3d/units/mongols/villager.glb",
+    "mount": "",
+    "props": [
+     "PROP_cargo_wood"
+    ],
+    "tris": 942
+   }
+  },
+  "ottomans": {
+   "archer": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "bow",
+    "enabled": true,
+    "height": 1.86,
+    "model": "res://assets/3d/units/ottomans/archer.glb",
+    "mount": "",
+    "props": [],
+    "tris": 1302
+   },
+   "cavalry": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "slash",
+    "enabled": true,
+    "height": 2.56,
+    "model": "res://assets/3d/units/ottomans/cavalry.glb",
+    "mount": "horse",
+    "props": [],
+    "tris": 2018
+   },
+   "janissary": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "gun",
+    "enabled": true,
+    "height": 2.1,
+    "model": "res://assets/3d/units/ottomans/janissary.glb",
+    "mount": "",
+    "props": [],
+    "tris": 728
+   },
+   "spearman": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "thrust",
+    "enabled": true,
+    "height": 2.25,
+    "model": "res://assets/3d/units/ottomans/spearman.glb",
+    "mount": "",
+    "props": [],
+    "tris": 1240
+   },
+   "swordsman": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "slash",
+    "enabled": true,
+    "height": 1.86,
+    "model": "res://assets/3d/units/ottomans/swordsman.glb",
+    "mount": "",
+    "props": [],
+    "tris": 1410
+   },
+   "villager": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "slash",
+    "enabled": true,
+    "height": 1.86,
+    "model": "res://assets/3d/units/ottomans/villager.glb",
+    "mount": "",
+    "props": [
+     "PROP_cargo_wood"
+    ],
+    "tris": 1086
+   }
+  },
+  "saracens": {
+   "archer": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "bow",
+    "enabled": true,
+    "height": 1.86,
+    "model": "res://assets/3d/units/saracens/archer.glb",
+    "mount": "",
+    "props": [],
+    "tris": 1218
+   },
+   "mamluk": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "slash",
+    "enabled": true,
+    "height": 2.91,
+    "model": "res://assets/3d/units/saracens/mamluk.glb",
+    "mount": "camel",
+    "props": [],
+    "tris": 1670
+   },
+   "spearman": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "thrust",
+    "enabled": true,
+    "height": 2.25,
+    "model": "res://assets/3d/units/saracens/spearman.glb",
+    "mount": "",
+    "props": [],
+    "tris": 1320
+   },
+   "swordsman": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "slash",
+    "enabled": true,
+    "height": 1.86,
+    "model": "res://assets/3d/units/saracens/swordsman.glb",
+    "mount": "",
+    "props": [],
+    "tris": 1378
+   },
+   "villager": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "slash",
+    "enabled": true,
+    "height": 1.86,
+    "model": "res://assets/3d/units/saracens/villager.glb",
+    "mount": "",
+    "props": [
+     "PROP_cargo_wood"
+    ],
+    "tris": 1086
+   }
+  },
+  "teutons": {
+   "archer": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "bow",
+    "enabled": true,
+    "height": 1.78,
+    "model": "res://assets/3d/units/teutons/archer.glb",
+    "mount": "",
+    "props": [],
+    "tris": 958
+   },
+   "cavalry": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "slash",
+    "enabled": true,
+    "height": 2.63,
+    "model": "res://assets/3d/units/teutons/cavalry.glb",
+    "mount": "horse",
+    "props": [],
+    "tris": 1514
+   },
+   "spearman": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "thrust",
+    "enabled": true,
+    "height": 2.25,
+    "model": "res://assets/3d/units/teutons/spearman.glb",
+    "mount": "",
+    "props": [],
+    "tris": 904
+   },
+   "swordsman": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "slash",
+    "enabled": true,
+    "height": 1.93,
+    "model": "res://assets/3d/units/teutons/swordsman.glb",
+    "mount": "",
+    "props": [],
+    "tris": 942
+   },
+   "teutonic_knight": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "slash",
+    "enabled": true,
+    "height": 1.9,
+    "model": "res://assets/3d/units/teutons/teutonic_knight.glb",
+    "mount": "",
+    "props": [],
+    "tris": 794
+   },
+   "villager": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "slash",
+    "enabled": true,
+    "height": 1.78,
+    "model": "res://assets/3d/units/teutons/villager.glb",
+    "mount": "",
+    "props": [
+     "PROP_cargo_wood"
+    ],
+    "tris": 826
+   }
+  },
+  "vikings": {
+   "archer": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "bow",
+    "enabled": true,
+    "height": 1.74,
+    "model": "res://assets/3d/units/vikings/archer.glb",
+    "mount": "",
+    "props": [],
+    "tris": 1026
+   },
+   "berserker": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "slash",
+    "enabled": true,
+    "height": 1.89,
+    "model": "res://assets/3d/units/vikings/berserker.glb",
+    "mount": "",
+    "props": [],
+    "tris": 982
+   },
+   "cavalry": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "slash",
+    "enabled": true,
+    "height": 2.52,
+    "model": "res://assets/3d/units/vikings/cavalry.glb",
+    "mount": "horse",
+    "props": [],
+    "tris": 1830
+   },
+   "spearman": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "thrust",
+    "enabled": true,
+    "height": 2.25,
+    "model": "res://assets/3d/units/vikings/spearman.glb",
+    "mount": "",
+    "props": [],
+    "tris": 1248
+   },
+   "swordsman": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "slash",
+    "enabled": true,
+    "height": 1.82,
+    "model": "res://assets/3d/units/vikings/swordsman.glb",
+    "mount": "",
+    "props": [],
+    "tris": 1306
+   },
+   "villager": {
+    "actions": [
+     "attack",
+     "build-loop",
+     "death",
+     "gather-loop",
+     "idle-loop",
+     "walk-loop"
+    ],
+    "attack": "slash",
+    "enabled": true,
+    "height": 1.83,
+    "model": "res://assets/3d/units/vikings/villager.glb",
+    "mount": "",
+    "props": [
+     "PROP_cargo_wood"
+    ],
+    "tris": 858
+   }
+  }
+ },
+ "version": 1
+}

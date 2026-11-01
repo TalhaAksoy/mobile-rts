@@ -207,4 +207,32 @@ and `hills_details.png` (villagers on a slope beside a barracks built on sloped 
   so gameplay space and selection stay clear.
 * **Japanese TC** has less red lacquer and gold than the gallery cell. **Mongol TC** has simpler ornament than the gallery
   (no painted felt patterns). **Ottoman TC** courtyard wall became side porticos. None of these is a 1:1 reproduction.
-* Units are still the original sprites (see ASSET_INVENTORY.md). The 3D character set has **not started**.
+* Units: all 10 civs are rigged 3D characters (`art_source/blender/units/unitstyle.py` has the table read from each
+  concept sheet). Their 2D sprites are rendered from the same models.
+  - **Culture through materials.** 16 px atlas patterns carry the cloth and armour:
+    - Ottoman / Byzantine / Frankish / Saracen embroidery;
+    - Chinese brocade;
+    - mail;
+    - Mongol, Chinese and Byzantine lamellar;
+    - Byzantine gilded scale;
+    - Japanese lacquered plates;
+    - Viking studded leather;
+    - fur and straw.
+  - **Shields and barding** carry the gallery flag emblems: the chi-rho, the fleur-de-lis, the Mongol flame, the
+    crescents, the Teutonic eagle, the Norse dragon and the Chinese dragon. The Teutonic cross is drawn as a shape.
+  - **Headwear and weapons are modelled per culture:**
+    - turbans, the bork, hoods, mail coifs;
+    - nasal, kettle, spangen, crested, great, Mongol and Chinese helmets;
+    - kabuto with gold kuwagata, jingasa, straw hats, hachimaki, the berserker's wolf pelt;
+    - scimitar, sword, katana, dao, yari, lance with an emblem pennant, recurve / long / yumi bows, musket,
+      repeating crossbow, bearded axes;
+    - sashimono banners on the back.
+  - **Mounts.** A second rig: the humanoid rider on the saddle of a horse or a camel, with its own idle, canter,
+    attack and fall animations. The cataphract wears gilded scale barding, the knight a blue-and-gold check caparison
+    with the fleur-de-lis, and the mamluk rides a camel with a green embroidered blanket and gold tassels.
+  - **Simplified.**
+    - Embroidery is a repeated motif, not hand-painted.
+    - Archers carry their bows at the side and draw only in the attack.
+    - Villagers use the axe for every job.
+  - **Changed for gameplay.** The waist sash is the team colour.
+  - **Evidence.** `docs/audits/evidence/units/<civ>_gallery_3d.png` (the gallery row above the models).

@@ -1,0 +1,21 @@
+{
+ "civ": "vikings",
+ "role": "villager",
+ "tris": 858,
+ "bones": 18,
+ "height": 1.83,
+ "actions": [
+  "attack",
+  "build-loop",
+  "death",
+  "gather-loop",
+  "idle-loop",
+  "walk-loop"
+ ],
+ "props": [
+  "PROP_cargo_wood"
+ ],
+ "attack": "slash",
+ "mount": "",
+ "model": "res://assets/3d/units/vikings/villager.glb"
+}

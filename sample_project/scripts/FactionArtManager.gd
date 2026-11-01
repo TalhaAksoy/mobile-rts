@@ -479,3 +479,112 @@ static func instantiate_upgrade_kit_sprite(civ: int, team: int) -> Node3D:
 			n.name = "Kit_" + half
 			root.add_child(n)
 	return root if root.get_child_count() > 0 else null
+
+
+# ---- 3D units (art_source/blender/units -> data/art/unit_model_manifest.json) ---------------------
+## Rigged character GLBs (shared 20-bone rig, actions idle / walk / attack / gather / build / death).
+## Used when the visual style is 3D (use_3d_building_models); a civ/role without a model keeps its sprite.
+const UNIT_MANIFEST_PATH: String = "res://data/art/unit_model_manifest.json"
+static var _unit_manifest: Dictionary = {}
+static var _unit_manifest_loaded := false
+static var _unit_mat_cache: Dictionary = {}
+
+static func _load_unit_manifest() -> void:
+	if _unit_manifest_loaded:
+		return
+	_unit_manifest_loaded = true
+	if FileAccess.file_exists(UNIT_MANIFEST_PATH):
+		var parsed = JSON.parse_string(FileAccess.get_file_as_string(UNIT_MANIFEST_PATH))
+		if typeof(parsed) == TYPE_DICTIONARY:
+			_unit_manifest = parsed.get("units", {})
+
+## Roles to try for a unit's 3D model / sheet, best first. The gallery role (get_unit_role_id), then for the
+## mounted types the civ's own mounted unit (cataphract / knight / horse archer / mamluk) or its generic "cavalry"
+## (the civ's swordsman on a horse), finally the civ's swordsman.
+static func unit_model_roles(unit_type: Unit3D.UnitType, faction_id: String) -> Array:
+	var role := get_unit_role_id(unit_type, faction_id)
+	const MOUNTED := ["cataphract", "knight", "horse_archer", "mamluk", "cavalry"]
+	if unit_type in [Unit3D.UnitType.CAVALRY, Unit3D.UnitType.PALADIN, Unit3D.UnitType.CATAPHRACT,
+			Unit3D.UnitType.MANGUDAI, Unit3D.UnitType.MAMELUKE]:
+		var roles: Array = [role] if role in MOUNTED else []
+		roles.append_array(MOUNTED)
+		roles.append("swordsman")
+		return roles
+	return [role] if unit_type == Unit3D.UnitType.VILLAGER else [role, "swordsman"]
+
+static func _pick_unit_role(table: Dictionary, unit_type: Unit3D.UnitType, faction_id: String) -> Dictionary:
+	for r in unit_model_roles(unit_type, faction_id):
+		if table.has(r):
+			return table[r]
+	return {}
+
+## The manifest entry for this civ's unit (see unit_model_roles for the fallbacks).
+static func get_unit_model_entry(civ_type: CivData.CivType, unit_type: Unit3D.UnitType) -> Dictionary:
+	_load_unit_manifest()
+	var faction_id = get_faction_id_from_civ(civ_type)
+	var e := _pick_unit_role(_unit_manifest.get(faction_id, {}), unit_type, faction_id)
+	if e.is_empty() or not e.get("enabled", false):
+		return {}
+	return e
+
+static func instantiate_unit_model(civ_type: CivData.CivType, unit_type: Unit3D.UnitType, team: int) -> Node3D:
+	if not use_3d_building_models:
+		return null
+	var e := get_unit_model_entry(civ_type, unit_type)
+	if e.is_empty():
+		return null
+	var path: String = e["model"]
+	if not _model_cache.has(path):
+		_model_cache[path] = load(path) if ResourceLoader.exists(path) else null
+	var ps: PackedScene = _model_cache[path]
+	if ps == null:
+		_log_once(path, "FactionArtManager: unit model missing: %s (using sprite)" % path)
+		return null
+	var inst := ps.instantiate() as Node3D
+	_apply_unit_materials(inst, team)
+	return inst
+
+## Palette + team-colour surfaces, each with a see-through pass: where buildings or trees hide the unit
+## it shows as a flat team-coloured silhouette (depth test inverted), like the sprites' occlusion silhouette.
+static func get_unit_material(mat_name: String, team: int) -> Material:
+	var key := "%s_%d" % [mat_name, team]
+	if _unit_mat_cache.has(key):
+		return _unit_mat_cache[key]
+	var base: Material = get_team_trim_material(team) if mat_name.begins_with("TEAM_") else get_library_material(mat_name)
+	var m: StandardMaterial3D = (base.duplicate() if base != null else StandardMaterial3D.new()) as StandardMaterial3D
+	# stencil "X-Ray": the material marks the unit's own pixels, the x-ray pass draws only where something
+	# else (a building, a tree) is in front - overlapping parts of the model itself never show it
+	m.stencil_mode = BaseMaterial3D.STENCIL_MODE_XRAY
+	m.stencil_color = Color(0.35, 0.65, 1.0, 0.5) if team == 0 else Color(1.0, 0.35, 0.35, 0.5)
+	_unit_mat_cache[key] = m
+	return m
+
+static func _apply_unit_materials(node: Node, team: int) -> void:
+	if node is MeshInstance3D:
+		var mi := node as MeshInstance3D
+		mi.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_ON
+		for i in mi.mesh.get_surface_count():
+			var src = mi.mesh.surface_get_material(i)
+			var mat_name: String = src.resource_name if src != null else ""
+			if mat_name != "":
+				mi.set_surface_override_material(i, get_unit_material(mat_name, team))
+	for c in node.get_children():
+		_apply_unit_materials(c, team)
+
+
+# ---- 2D units: sprite sheets rendered from the 3D units (render_unit_sprites.py) ----------------
+const UNIT_SPRITE_MANIFEST_PATH: String = "res://data/art/unit_sprite_manifest.json"
+static var _unit_sprite_manifest: Dictionary = {}
+static var _unit_sprite_manifest_loaded := false
+
+## Sheet entry for this civ's unit (same swordsman fallback as the models): w, h, anchor, hframes,
+## vframes, anims {name: {row, frames, fps, loop}}, t0 / t1 texture paths. {} -> the old gallery sprite.
+static func get_unit_sheet_entry(civ_type: CivData.CivType, unit_type: Unit3D.UnitType) -> Dictionary:
+	if not _unit_sprite_manifest_loaded:
+		_unit_sprite_manifest_loaded = true
+		if FileAccess.file_exists(UNIT_SPRITE_MANIFEST_PATH):
+			var parsed = JSON.parse_string(FileAccess.get_file_as_string(UNIT_SPRITE_MANIFEST_PATH))
+			if typeof(parsed) == TYPE_DICTIONARY:
+				_unit_sprite_manifest = parsed.get("units", {})
+	var faction_id = get_faction_id_from_civ(civ_type)
+	return _pick_unit_role(_unit_sprite_manifest.get(faction_id, {}), unit_type, faction_id)

@@ -5,6 +5,9 @@ const PixelArtTextures = preload("res://scripts/PixelArtTextures.gd")
 const FactionArtManager = preload("res://scripts/FactionArtManager.gd")
 
 const SPRITE_PIXEL_SIZE: float = 0.022
+## 3D units and their 2D sheets are shown 25 % larger than life (2.25 m villager) so they read on screen as
+## big as the gallery sprites they replace; buildings and the gameplay footprint are unchanged.
+const UNIT_VISUAL_SCALE: float = 1.25
 const SPRITE_BASE_Y: float = 1.76
 const HP_BAR_Y: float = 3.65
 const STATUS_LABEL_Y: float = 4.05
@@ -98,6 +101,16 @@ var arm_right_pivot: Node3D
 var torso_pivot: Node3D
 var head_pivot: Node3D
 var horse_legs: Array[Node3D] = []
+
+# Rigged 3D character (FactionArtManager.instantiate_unit_model). null -> the sprite path below is used.
+var unit_model: Node3D = null
+var unit_anim: AnimationPlayer = null
+var _anim_name := ""
+var _last_swing := 0.0
+var _cargo_props: Dictionary = {}     # resource type -> PROP_cargo_* node
+## 2D style: sprite sheet rendered from the 3D unit (FactionArtManager.get_unit_sheet_entry); {} -> old sprite
+var sheet: Dictionary = {}
+var _sheet_time := 0.0
 
 # Villager tools & backpack basket
 var tool_axe: Node3D
@@ -267,8 +280,33 @@ func _build_3d_model() -> void:
 	model_root = Node3D.new()
 	add_child(model_root)
 
+	# 0. Rigged 3D character when the visual style is 3D and this civ/role has one
+	unit_model = FactionArtManager.instantiate_unit_model(civ_type, unit_type, team)
+	unit_anim = null
+	_cargo_props.clear()
+	_anim_name = ""
+	if unit_model != null:
+		unit_model.name = "UnitModel"
+		unit_model.scale = Vector3.ONE * UNIT_VISUAL_SCALE
+		add_child(unit_model)            # not under model_root: the procedural sprite bob must not move it
+		unit_anim = unit_model.find_child("AnimationPlayer", true, false) as AnimationPlayer
+		for n in unit_model.find_children("PROP_cargo_*", "", true, false):
+			_cargo_props[String(n.name).trim_prefix("PROP_cargo_")] = n
+			n.visible = false
+		_play_anim("idle")
+	else:
+		_build_unit_sprite()
+
+	_build_selection_and_bars()
+
+func _build_unit_sprite() -> void:
 	# 1. Authentic Faction Art Billboard Sprite (Shaded HD-2D)
 	unit_sprite = Sprite3D.new()
+	sheet = FactionArtManager.get_unit_sheet_entry(civ_type, unit_type) if not FactionArtManager.use_3d_building_models else {}
+	if not sheet.is_empty() and ResourceLoader.exists(sheet.get("t%d" % clampi(team, 0, 1), "")):
+		_setup_sheet_sprite()
+		return
+	sheet = {}
 	unit_sprite.texture = FactionArtManager.get_unit_texture(civ_type, unit_type, "pose_01")
 	unit_sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 	unit_sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
@@ -286,25 +324,106 @@ func _build_3d_model() -> void:
 	unit_sprite.render_priority = 2
 	model_root.add_child(unit_sprite)
 
-	occlusion_silhouette = Sprite3D.new()
-	occlusion_silhouette.name = "OcclusionSilhouette"
-	occlusion_silhouette.texture = unit_sprite.texture
-	occlusion_silhouette.billboard = BaseMaterial3D.BILLBOARD_ENABLED
-	occlusion_silhouette.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
-	occlusion_silhouette.pixel_size = SPRITE_PIXEL_SIZE
-	occlusion_silhouette.shaded = false
-	occlusion_silhouette.no_depth_test = true
-	occlusion_silhouette.render_priority = 1
-	occlusion_silhouette.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
-	var sil_col = Color(0.35, 0.65, 1.0, 0.5) if team == 0 else Color(1.0, 0.35, 0.35, 0.5)
-	occlusion_silhouette.modulate = sil_col
-	unit_sprite.add_child(occlusion_silhouette)   # inherits bob / sway transforms
+	_add_sprite_silhouette()
 
+## Billboard showing one frame of the unit's sprite sheet, feet (sheet anchor) on the ground.
+func _setup_sheet_sprite() -> void:
+	unit_sprite.texture = load(sheet["t%d" % clampi(team, 0, 1)])
+	unit_sprite.hframes = int(sheet["hframes"])
+	unit_sprite.vframes = int(sheet["vframes"])
+	unit_sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
+	unit_sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+	unit_sprite.shaded = false
+	unit_sprite.pixel_size = UNIT_VISUAL_SCALE / float(sheet.get("px_per_m", 32))
+	var w: float = sheet["w"]
+	var h: float = sheet["h"]
+	var anchor: Array = sheet["anchor"]
+	unit_sprite.offset = Vector2(w * 0.5 - float(anchor[0]), float(anchor[1]) - h * 0.5)
+	unit_sprite.alpha_cut = Sprite3D.ALPHA_CUT_OPAQUE_PREPASS
+	unit_sprite.render_priority = 2
+	model_root.add_child(unit_sprite)
+	_add_sprite_silhouette()
+	_anim_name = ""
+	_set_sheet_anim("idle")
+
+## Stencil X-Ray for billboards (the built-in STENCIL_MODE_XRAY pass ignores the texture alpha and would tint the
+## whole quad): the sprite marks only its opaque pixels in the stencil buffer, the next pass draws the sprite
+## shape in the team tint where something is in front (inverted depth) and no unit sprite is (stencil).
+## So the tint shows only behind buildings and trees, never over the visible sprite or another unit.
+static var _sprite_mat_cache: Dictionary = {}
+const SPRITE_STENCIL_REF := 7
+
+func _add_sprite_silhouette() -> void:
+	var key := "%s_%d_%s" % [unit_sprite.texture.resource_path, team, unit_sprite.shaded]
+	if not _sprite_mat_cache.has(key):
+		var mat := StandardMaterial3D.new()
+		mat.albedo_texture = unit_sprite.texture
+		mat.vertex_color_use_as_albedo = true            # keeps Sprite3D.modulate
+		mat.shading_mode = BaseMaterial3D.SHADING_MODE_PER_PIXEL if unit_sprite.shaded else BaseMaterial3D.SHADING_MODE_UNSHADED
+		mat.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA_SCISSOR
+		mat.alpha_scissor_threshold = 0.5
+		mat.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+		mat.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
+		mat.stencil_mode = BaseMaterial3D.STENCIL_MODE_CUSTOM
+		mat.stencil_flags = BaseMaterial3D.STENCIL_FLAG_WRITE
+		mat.stencil_compare = BaseMaterial3D.STENCIL_COMPARE_ALWAYS
+		mat.stencil_reference = SPRITE_STENCIL_REF
+		var xray := StandardMaterial3D.new()
+		xray.albedo_texture = unit_sprite.texture
+		xray.albedo_color = Color(0.35, 0.65, 1.0, 0.5) if team == 0 else Color(1.0, 0.35, 0.35, 0.5)
+		xray.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+		xray.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+		xray.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+		xray.billboard_mode = BaseMaterial3D.BILLBOARD_ENABLED
+		xray.depth_test = BaseMaterial3D.DEPTH_TEST_INVERTED
+		xray.stencil_mode = BaseMaterial3D.STENCIL_MODE_CUSTOM
+		xray.stencil_flags = BaseMaterial3D.STENCIL_FLAG_READ
+		xray.stencil_compare = BaseMaterial3D.STENCIL_COMPARE_NOT_EQUAL
+		xray.stencil_reference = SPRITE_STENCIL_REF
+		xray.render_priority = 1
+		mat.next_pass = xray
+		_sprite_mat_cache[key] = mat
+	unit_sprite.material_override = _sprite_mat_cache[key]
+
+func _set_sheet_anim(n: String, restart: bool = false) -> void:
+	if not sheet.get("anims", {}).has(n):
+		return
+	if n == _anim_name and not restart:
+		return
+	_anim_name = n
+	_sheet_time = 0.0
+
+## Advances the sheet animation (same choice of animation as the 3D model) and mirrors it to the walking side.
+func _update_sheet_animation(delta: float) -> void:
+	var pick := _pick_anim()
+	if pick[0] != "":
+		_set_sheet_anim(pick[0], pick[1])
+	var a: Dictionary = sheet["anims"][_anim_name]
+	var speed := clampf(move_speed / 3.2, 0.7, 1.8) if _anim_name == "walk" else 1.0
+	_sheet_time += delta * speed
+	var n: int = int(a["frames"])
+	var i := int(_sheet_time * float(a["fps"]))
+	if a.get("loop", false):
+		i = i % n
+	else:
+		i = mini(i, n - 1)
+	unit_sprite.frame = int(a["row"]) * int(sheet["hframes"]) + i
+	if velocity.x > 0.15:
+		unit_sprite.flip_h = true          # the sheet faces front-left; mirror when walking to the right
+	elif velocity.x < -0.15:
+		unit_sprite.flip_h = false
+	if is_instance_valid(occlusion_silhouette):
+		occlusion_silhouette.frame = unit_sprite.frame
+		occlusion_silhouette.flip_h = unit_sprite.flip_h
+
+func _build_selection_and_bars() -> void:
+	# mounted 3D models (cataphract, knight, camel ...) stand ~1 m taller: lift the bars, widen the ring
+	var mounted: bool = unit_model != null and FactionArtManager.get_unit_model_entry(civ_type, unit_type).get("mount", "") != ""
 	# 2. Diorama Ground Selection Ring
 	selection_ring = MeshInstance3D.new()
 	var ring_mesh = TorusMesh.new()
-	ring_mesh.inner_radius = SELECTION_RING_INNER
-	ring_mesh.outer_radius = SELECTION_RING_OUTER
+	ring_mesh.inner_radius = SELECTION_RING_INNER * (1.35 if mounted else 1.0)
+	ring_mesh.outer_radius = SELECTION_RING_OUTER * (1.35 if mounted else 1.0)
 	selection_ring.mesh = ring_mesh
 	selection_ring.position = Vector3(0, 0.05, 0)
 	var ring_mat = StandardMaterial3D.new()
@@ -319,7 +438,7 @@ func _build_3d_model() -> void:
 	add_child(selection_ring)
 
 	# 3. Crystal Clear Floating Task Badge & HP Bar
-	_build_3d_hp_bar(0.0)
+	_build_3d_hp_bar(0.9 if mounted else 0.0)
 
 func _build_3d_weapon(_mount_y: float, iron_mat: Material, wood_mat: Material, _gold_mat: Material) -> void:
 	match unit_type:
@@ -592,8 +711,13 @@ func _physics_process(delta: float) -> void:
 	if swing_progress > 0.0:
 		swing_progress = max(0.0, swing_progress - delta * 3.5)
 
-	# Procedural HD-2D Sprite Animation
-	_update_hd2d_sprite_animation(delta)
+	# Procedural HD-2D Sprite Animation / rigged model animation
+	if unit_model != null:
+		_update_model_animation()
+	elif not sheet.is_empty() and is_instance_valid(unit_sprite):
+		_update_sheet_animation(delta)
+	else:
+		_update_hd2d_sprite_animation(delta)
 
 	match state:
 		State.IDLE:
@@ -1078,7 +1202,52 @@ func take_damage(amount: float, attacker_team: int) -> void:
 func die() -> void:
 	died.emit(self)
 	SoundManager.play_sound("hit")
+	_leave_corpse()
 	queue_free()
+
+## The unit leaves the game at once; its model stays behind in the world for the death animation, then
+## sinks into the ground and is freed.
+func _leave_corpse() -> void:
+	if not is_inside_tree() or get_parent() == null:
+		return
+	if (unit_model == null or not is_instance_valid(unit_model)) and not sheet.is_empty() and is_instance_valid(unit_sprite):
+		_leave_sprite_corpse()
+		return
+	if unit_model == null or not is_instance_valid(unit_model):
+		return
+	var corpse := unit_model
+	var xf := corpse.global_transform
+	remove_child(corpse)
+	get_parent().add_child(corpse)
+	corpse.global_transform = xf
+	unit_model = null
+	if unit_anim != null and unit_anim.has_animation("death"):
+		unit_anim.speed_scale = 1.0
+		unit_anim.play("death")
+	unit_anim = null
+	var tw := corpse.create_tween()
+	tw.tween_interval(2.5)
+	tw.tween_property(corpse, "position:y", corpse.position.y - 0.7, 1.2)
+	tw.tween_callback(corpse.queue_free)
+
+## 2D: the sprite stays behind and plays the sheet's death row, then fades out.
+func _leave_sprite_corpse() -> void:
+	var corpse := unit_sprite
+	var xf := corpse.global_transform
+	corpse.get_parent().remove_child(corpse)
+	get_parent().add_child(corpse)
+	corpse.global_transform = xf
+	unit_sprite = null
+	if is_instance_valid(occlusion_silhouette):
+		occlusion_silhouette.queue_free()
+	var a: Dictionary = sheet["anims"]["death"]
+	var first: int = int(a["row"]) * int(sheet["hframes"])
+	corpse.frame = first
+	var tw := corpse.create_tween()
+	tw.tween_property(corpse, "frame", first + int(a["frames"]) - 1, float(a["frames"]) / float(a["fps"]))
+	tw.tween_interval(2.5)
+	tw.tween_property(corpse, "modulate:a", 0.0, 1.0)
+	tw.tween_callback(corpse.queue_free)
 
 func set_selected(sel: bool) -> void:
 	is_selected = sel
@@ -1089,6 +1258,53 @@ func set_selected(sel: bool) -> void:
 	_update_hp_bar()
 	_update_status_label()
 	selected_changed.emit(self, sel)
+
+func _play_anim(n: String, restart: bool = false) -> void:
+	if unit_anim == null or not unit_anim.has_animation(n):
+		return
+	if n == _anim_name and not restart and unit_anim.is_playing():
+		return
+	_anim_name = n
+	unit_anim.play(n, 0.12)
+	if restart:
+		unit_anim.seek(0.0, true)
+
+## What the unit is doing -> [animation, restart]. ["", false] = keep the current one (an attack swing
+## plays to its end unless the unit starts moving). Shared by the 3D model and the 2D sprite sheet.
+func _pick_anim() -> Array:
+	var new_swing := swing_progress > _last_swing + 0.5
+	_last_swing = swing_progress
+	var moving := velocity.length_squared() > 0.01 or (current_path.size() > 0 and path_idx < current_path.size())
+	if new_swing and state == State.ATTACKING:
+		return ["attack", true]
+	if _anim_name == "attack" and not moving and _attack_running():
+		return ["", false]
+	if moving:
+		return ["walk", false]
+	if state == State.GATHERING:
+		return ["gather", false]
+	if state == State.BUILDING:
+		return ["build", false]
+	return ["idle", false]
+
+func _attack_running() -> bool:
+	if unit_anim != null:
+		return unit_anim.is_playing() and unit_anim.current_animation == "attack"
+	if not sheet.is_empty():
+		var a: Dictionary = sheet["anims"]["attack"]
+		return _sheet_time * float(a["fps"]) < float(a["frames"])
+	return false
+
+## Plays the model's animation for what the unit is doing; walking speeds up with move speed.
+func _update_model_animation() -> void:
+	if unit_anim == null:
+		return
+	var pick := _pick_anim()
+	if pick[0] != "":
+		_play_anim(pick[0], pick[1])
+	unit_anim.speed_scale = clampf(move_speed / 3.2, 0.7, 1.8) if _anim_name == "walk" else 1.0
+	for k in _cargo_props:
+		_cargo_props[k].visible = carried_resource > 0 and resource_type == k
 
 func _update_hd2d_sprite_animation(_delta: float) -> void:
 	if not is_instance_valid(unit_sprite):

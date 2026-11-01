@@ -1,0 +1,19 @@
+{
+ "civ": "saracens",
+ "role": "archer",
+ "tris": 1218,
+ "bones": 18,
+ "height": 1.86,
+ "actions": [
+  "attack",
+  "build-loop",
+  "death",
+  "gather-loop",
+  "idle-loop",
+  "walk-loop"
+ ],
+ "props": [],
+ "attack": "bow",
+ "mount": "",
+ "model": "res://assets/3d/units/saracens/archer.glb"
+}
