@@ -5,6 +5,13 @@ const FactionArtManager = preload("res://scripts/FactionArtManager.gd")
 
 signal start_game(player_civ, enemy_civ, map_type)
 signal load_game_requested      # "KAYITLI OYUN": continue the quick-saved match
+signal difficulty_selected(difficulty: int)   # sent right before start_game
+
+## Enemy bot difficulty (Kolay / Orta / Zor). First launch: Kolay, so a new player gets time to learn;
+## afterwards the last choice (settings.cfg, section "game").
+var selected_difficulty: int = EnemyAI3D.Difficulty.EASY
+var difficulty_buttons: Array = []
+var difficulty_hint: Label = null
 
 @onready var main_menu_view: Control = get_node_or_null("MainMenuView")
 @onready var civ_select_view: Control = get_node_or_null("CivSelectView")
@@ -192,6 +199,7 @@ func _ready() -> void:
 		close_settings_btn.pressed.connect(_save_settings)
 	_load_audio_settings()
 	_build_graphics_settings()
+	_build_difficulty_row()
 
 	_populate_maps()
 	_populate_enemy_civs()
@@ -384,7 +392,54 @@ func _on_enemy_selected(idx: int) -> void:
 
 func _on_start_pressed() -> void:
 	SoundManager.play_sound("victory")
+	difficulty_selected.emit(selected_difficulty)
 	start_game.emit(selected_player_civ, selected_enemy_civ, selected_map_type)
+
+## "Zorluk" row on the civ select screen, under the enemy kingdom.
+func _build_difficulty_row() -> void:
+	if not is_instance_valid(enemy_civ_option) or not difficulty_buttons.is_empty():
+		return
+	var cfg := ConfigFile.new()
+	if cfg.load(GraphicsSettings.PATH) == OK:
+		selected_difficulty = clampi(int(cfg.get_value("game", "difficulty", selected_difficulty)), 0, 2)
+	var vbox := enemy_civ_option.get_parent()
+	var at := enemy_civ_option.get_index() + 1
+	var label := Label.new()
+	label.name = "DifficultyLabel"
+	label.text = "Zorluk:"
+	if is_instance_valid(enemy_label):
+		label.add_theme_font_override("font", ParchmentTheme.get_medieval_font())
+		label.add_theme_font_size_override("font_size", enemy_label.get_theme_font_size("font_size"))
+		label.add_theme_color_override("font_color", enemy_label.get_theme_color("font_color"))
+	vbox.add_child(label)
+	vbox.move_child(label, at)
+	difficulty_buttons = _gfx_button_row(EnemyAI3D.DIFFICULTY_NAMES, _on_difficulty_picked)
+	var row: Control = difficulty_buttons[0].get_parent()
+	row.name = "DifficultyRow"
+	_gfx_rows.erase(row)
+	vbox.add_child(row)
+	vbox.move_child(row, at + 1)
+	difficulty_hint = _gfx_label("", 13)
+	difficulty_hint.name = "DifficultyHint"
+	difficulty_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	vbox.add_child(difficulty_hint)
+	vbox.move_child(difficulty_hint, at + 2)
+	_refresh_difficulty()
+
+func _on_difficulty_picked(i: int) -> void:
+	SoundManager.play_sound("click")
+	selected_difficulty = i
+	_refresh_difficulty()
+	var cfg := ConfigFile.new()
+	cfg.load(GraphicsSettings.PATH)
+	cfg.set_value("game", "difficulty", i)
+	cfg.save(GraphicsSettings.PATH)
+
+func _refresh_difficulty() -> void:
+	for i in difficulty_buttons.size():
+		difficulty_buttons[i].button_pressed = i == selected_difficulty
+	if difficulty_hint != null:
+		difficulty_hint.text = EnemyAI3D.DIFFICULTY_HINTS[selected_difficulty]
 
 
 # ------------------------------------------------------------------------------------------------

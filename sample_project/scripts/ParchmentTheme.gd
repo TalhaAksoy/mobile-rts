@@ -142,6 +142,11 @@ static func get_button_style(state: String) -> StyleBoxFlat:
 			sb.shadow_color = Color(0.2, 0.12, 0.04, 0.5)
 			sb.shadow_size = 5
 			sb.shadow_offset = Vector2(0, 3)
+		"disabled":
+			sb.bg_color = Color(0.80, 0.74, 0.64) # faded vellum, flat
+			sb.border_color = Color(0.55, 0.45, 0.33)
+			sb.set_border_width_all(2)
+			sb.shadow_size = 0
 		"pressed":
 			sb.bg_color = Color(0.79, 0.69, 0.53) # Indented darker vellum
 			sb.border_color = BRONZE_DARK
@@ -169,6 +174,10 @@ static func apply_parchment_button(btn: Button, font_size: int = 20) -> void:
 	btn.add_theme_stylebox_override("hover", get_button_style("hover"))
 	btn.add_theme_stylebox_override("pressed", get_button_style("pressed"))
 	btn.add_theme_stylebox_override("focus", get_button_style("hover"))
+	# disabled buttons ("Çağ II gerekli", "Araştırılıyor ...") used the default theme, whose text colour
+	# vanished on the parchment: they showed as empty grey boxes
+	btn.add_theme_stylebox_override("disabled", get_button_style("disabled"))
+	btn.add_theme_color_override("font_disabled_color", Color(0.30, 0.22, 0.14))
 
 static func apply_parchment_popup(popup: PopupMenu, font_size: int = 15) -> void:
 	if popup == null:

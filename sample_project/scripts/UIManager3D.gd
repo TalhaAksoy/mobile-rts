@@ -20,6 +20,7 @@ signal save_requested
 signal main_menu_requested
 signal quit_requested
 signal load_game_requested
+signal difficulty_selected(difficulty: int)
 signal restart_requested
 
 var game_controller: Node = null
@@ -86,6 +87,8 @@ var menu_btn: Button = null
 var pause_menu: PauseMenu = null
 ## "ANA MENÜ" on the game-over modal (next to YENİDEN OYNA)
 var game_over_menu_btn: Button = null
+## training / research queue of the selected building, right above the bottom panel
+var queue_bar: ProductionQueueBar = null
 
 const BOTTOM_BAR_COMPACT_TOP: float = -105.0
 const BOTTOM_BAR_EXPANDED_TOP: float = -245.0
@@ -159,6 +162,19 @@ func _ready() -> void:
 	_setup_build_grid()
 	_reset_context_deck()
 	_build_match_menu(p_theme)
+	_build_queue_bar()
+
+func _build_queue_bar() -> void:
+	queue_bar = ProductionQueueBar.new()
+	queue_bar.set_anchors_preset(Control.PRESET_BOTTOM_LEFT)
+	queue_bar.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	queue_bar.offset_left = 8.0
+	queue_bar.hidden_by = build_panel
+	hud_root.add_child(queue_bar)
+	hud_root.move_child(queue_bar, bottom_bar.get_index())   # under the build panel / modals
+	queue_bar.cancel_train_requested.connect(func(b, i):
+		if game_controller != null and is_instance_valid(b):
+			game_controller.cancel_unit_production(b, i))
 
 ## Top-bar "Menü" button + in-match pause menu; "ANA MENÜ" on the game-over modal; "KAYITLI OYUN"
 ## on the main menu forwarded to the game.
@@ -188,6 +204,8 @@ func _build_match_menu(p_theme: Theme) -> void:
 	restart_btn.get_parent().add_child(game_over_menu_btn)
 	game_over_menu_btn.pressed.connect(func(): main_menu_requested.emit())
 
+	if menu_root.has_signal("difficulty_selected"):
+		menu_root.difficulty_selected.connect(func(d): difficulty_selected.emit(d))
 	if menu_root.has_signal("load_game_requested"):
 		menu_root.load_game_requested.connect(func(): load_game_requested.emit())
 
@@ -252,6 +270,9 @@ func set_selected_entity(entity: Node3D) -> void:
 	for child in action_flow.get_children():
 		child.queue_free()
 
+	if queue_bar != null:
+		queue_bar.set_building(entity as Building3D if entity is Building3D else null)
+
 	if not is_instance_valid(entity):
 		_reset_context_deck()
 		return
@@ -271,6 +292,8 @@ func set_selected_entity(entity: Node3D) -> void:
 
 func set_selected_resource(res_info: Dictionary) -> void:
 	selected_entity = null
+	if queue_bar != null:
+		queue_bar.set_building(null)
 	selected_resource_info = res_info
 	build_panel.visible = false
 
@@ -335,6 +358,9 @@ func _update_bottom_bar_height(expanded: bool) -> void:
 		build_panel.offset_bottom = target_top - 6.0
 
 func _process(_delta: float) -> void:
+	if queue_bar != null:
+		queue_bar.offset_bottom = bottom_bar.offset_top - 6.0
+		queue_bar.offset_top = queue_bar.offset_bottom - queue_bar.get_combined_minimum_size().y
 	if is_instance_valid(selected_entity):
 		if selected_entity is Unit3D:
 			entity_hp_bar.value = selected_entity.hp
@@ -517,43 +543,7 @@ func _display_building_ui(b: Building3D) -> void:
 		# This building's own technologies / upgrades (TechData)
 		_add_tech_buttons(b)
 
-		# Production Queue with Cancel & Refund
-		if b.train_queue.size() > 0:
-			var sep = HSeparator.new()
-			action_flow.add_child(sep)
-			var q_lbl = Label.new()
-			q_lbl.text = "ÜRETİM SIRASI (İptal ve İade İçin Dokunun):"
-			q_lbl.add_theme_font_size_override("font_size", 12)
-			q_lbl.add_theme_color_override("font_color", Color(0.35, 0.22, 0.12))
-			action_flow.add_child(q_lbl)
-
-			for i in range(b.train_queue.size()):
-				var item = b.train_queue[i]
-				var q_btn = Button.new()
-				var u_title = "Birim"
-				match item["type"]:
-					Unit3D.UnitType.VILLAGER: u_title = "İşçi"
-					Unit3D.UnitType.SWORDSMAN: u_title = "Kılıçlı"
-					Unit3D.UnitType.SPEARMAN: u_title = "Mızrakçı"
-					Unit3D.UnitType.ARCHER: u_title = "Okçu"
-					Unit3D.UnitType.CAVALRY: u_title = "Süvari"
-					Unit3D.UnitType.PALADIN: u_title = "Şövalye"
-					_: u_title = "Özel Birlik"
-
-				if i == 0:
-					var pct = int(clamp(b.current_train_timer / max(0.1, b.current_train_duration), 0.0, 1.0) * 100.0)
-					q_btn.text = "✖ %s (%%%d)" % [u_title, pct]
-				else:
-					q_btn.text = "✖ %d. %s (Bekliyor)" % [i + 1, u_title]
-				q_btn.custom_minimum_size = Vector2(145, 44)
-				ParchmentTheme.apply_parchment_button(q_btn, 12)
-				var q_idx = i
-				q_btn.pressed.connect(func():
-					if game_controller != null and is_instance_valid(b):
-						game_controller.cancel_unit_production(b, q_idx)
-						set_selected_entity(b)
-				)
-				action_flow.add_child(q_btn)
+		# the training / research queue is shown live in queue_bar (ProductionQueueBar) above the panel
 
 func _add_train_button(label: String, u_type: Unit3D.UnitType) -> void:
 	var btn = Button.new()
@@ -593,7 +583,7 @@ func _add_tech_buttons(b: Building3D) -> void:
 				_add_disabled_button("%s ✓" % TechData.age_name(3))
 			continue
 		if b.is_researching and b.current_research_tech == id:
-			_add_disabled_button("%s\nAraştırılıyor %%%d" % [t["name"], int(b.get_research_progress())])
+			_add_disabled_button("%s\nAraştırılıyor (süre üstte)" % t["name"])
 		elif reason == "" or reason == "Yetersiz kaynak":
 			_add_research_button("%s\n%s (%s)" % [t["name"], t["desc"], TechData.cost_text(id)], id)
 		else:

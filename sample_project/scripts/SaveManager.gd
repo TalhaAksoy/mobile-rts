@@ -19,6 +19,8 @@ static func save_game(game: GameController3D, file_path: String = AUTO_SAVE_FILE
 		"enemy_civ": game.enemy_civ,
 		"map_type": game.selected_map_type,
 		"seed_val": game.map_gen.seed_val,
+		"ai_difficulty": game.ai_difficulty,
+		"ai_state": game.enemy_ai.get_state(),
 		"kills_count": game.kills_count,
 		"trained_count": game.trained_count,
 		"gathered_count": game.gathered_count,
@@ -162,7 +164,10 @@ static func load_game(game: GameController3D, file_path: String = AUTO_SAVE_FILE
 		game.camera.global_position = Vector3(cam_arr[0], cam_arr[1], cam_arr[2])
 
 	# Setup AI
-	game.enemy_ai.setup_ai(game.enemy_civ, game.map_gen, game)
+	game.ai_difficulty = int(data.get("ai_difficulty", EnemyAI3D.Difficulty.NORMAL))
+	game.enemy_ai.setup_ai(game.enemy_civ, game.map_gen, game, game.ai_difficulty)
+	if data.has("ai_state"):
+		game.enemy_ai.set_state(data["ai_state"])
 
 	game.is_game_active = true
 	game.ui_manager.menu_root.visible = false

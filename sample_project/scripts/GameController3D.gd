@@ -55,6 +55,8 @@ const DRAG_THRESHOLD: float = 26.0
 var last_clicked_unit: Unit3D = null
 var last_click_time_msec: int = 0
 var tutorial_mgr: TutorialManager = null
+## Enemy bot difficulty for the next match (picked on the civ select screen; EnemyAI3D.PROFILES).
+var ai_difficulty: int = EnemyAI3D.Difficulty.NORMAL
 
 func _ready() -> void:
 	GraphicsSettings.apply(get_viewport(), get_node_or_null("DirectionalLight3D") as DirectionalLight3D)
@@ -83,6 +85,7 @@ func _ready() -> void:
 	ui_manager.main_menu_requested.connect(return_to_main_menu)
 	ui_manager.quit_requested.connect(func(): get_tree().quit())
 	ui_manager.load_game_requested.connect(load_saved_game)
+	ui_manager.difficulty_selected.connect(func(d: int): ai_difficulty = d)
 	ui_manager.zoom_in_requested.connect(func(): camera.zoom_in())
 	ui_manager.zoom_out_requested.connect(func(): camera.zoom_out())
 	ui_manager.box_select_toggled.connect(func(enabled: bool): is_box_select_mode = enabled)
@@ -171,7 +174,7 @@ func start_match() -> void:
 		var offset = Vector3(cos(i * 1.5) * 3.5, 0, sin(i * 1.5) * 3.5 - 2.5)
 		spawn_unit(Unit3D.UnitType.VILLAGER, 1, map_gen.enemy_start_pos + offset)
 
-	enemy_ai.setup_ai(enemy_civ, map_gen, self)
+	enemy_ai.setup_ai(enemy_civ, map_gen, self, ai_difficulty)
 
 	# Jump camera to player base
 	camera.jump_to(map_gen.player_start_pos, false)
@@ -1035,6 +1038,14 @@ func cancel_unit_production(b: Building3D, index: int) -> bool:
 		ui_manager.set_selected_entity(b)
 	return true
 
+## Stops the running research of `b` and gives its cost back.
+## Cancels the research waiting or running at `b` (refund through the shared queue cancel).
+func cancel_research(b: Building3D) -> bool:
+	if not is_instance_valid(b):
+		return false
+	var i: int = b.find_research_index()
+	return i >= 0 and cancel_unit_production(b, i)
+
 func _on_building_unit_trained(u_type: Unit3D.UnitType, team: int, spawn_pos: Vector3) -> void:
 	spawn_unit(u_type, team, spawn_pos)
 
@@ -1061,10 +1072,8 @@ func research_block_reason(b: Building3D, tech_id: String, team: int) -> String:
 		if not has_tech(team, req):
 			return "Önce: %s" % TechData.get_tech(req).get("name", req)
 	for other in buildings:
-		if is_instance_valid(other) and other.team == team and other.is_researching and other.current_research_tech == tech_id:
-			return "Araştırılıyor"
-	if b.is_researching:
-		return "Bina meşgul"
+		if is_instance_valid(other) and other.team == team and other.has_queued_research(tech_id):
+			return "Araştırılıyor" if other.is_researching and other.current_research_tech == tech_id else "Sırada"
 	var res = team_resources[team]
 	for k in t["cost"].keys():
 		if res.get(k, 0) < int(t["cost"][k]):
@@ -1080,7 +1089,7 @@ func try_start_research(b: Building3D, tech_id: String, team: int) -> bool:
 	var res = team_resources[team]
 	for k in t["cost"].keys():
 		res[k] -= int(t["cost"][k])
-	b.start_research(tech_id, float(t["time"]))
+	b.start_research(tech_id, float(t["time"]), t["cost"])     # waits behind the building's queue
 	if team == 0:
 		SoundManager.play_sound("build")
 	return true

@@ -1,6 +1,6 @@
 extends SceneTree
 ## Data-driven research (TechData): ages I -> II -> III, per-building upgrades, economy lines,
-## gating (age / prerequisites / busy building / resources), effects on existing and new
+## gating (age / prerequisites / queued twice / resources), effects on existing and new
 ## units & buildings, the upgraded (civ) dressing, and save/load.
 const GameController3D = preload("res://scripts/GameController3D.gd")
 const SaveManager = preload("res://scripts/SaveManager.gd")
@@ -26,8 +26,8 @@ func _place(t: int, cell: Vector2i) -> Building3D:
 func _research(b: Building3D, id: String) -> bool:
 	var ok: bool = game.try_start_research(b, id, 0)
 	if ok:
-		b.is_researching = false
-		b.current_research_tech = ""
+		# take the job out of the building's production queue, then apply it
+		b.cancel_train_queue_item(b.find_research_index(id))
 		game._on_building_research_completed(id, 0)
 	return ok
 
@@ -149,10 +149,16 @@ func _run() -> void:
 	_expect(_research(mill, "heavy_plough") and _research(mill, "crop_rotation"), "Age III mill line completes")
 	_expect(mill.upgrade_level == 2, "mill upgraded look after Heavy plough")
 
-	# ---- one research at a time per building / same tech not twice in parallel
+	# ---- one research at a time per building: a second one waits in the building's queue (it used to
+	# be refused as "Bina meşgul"); the same tech is never queued twice
 	var bs := _place(Building3D.BuildingType.BLACKSMITH, Vector2i(14, 30))
 	_expect(game.try_start_research(bs, "iron_weapons", 0), "Blacksmith starts Iron weapons")
-	_expect(game.research_block_reason(bs, "scale_armor", 0) == "Bina meşgul", "building busy while researching")
+	_expect(game.try_start_research(bs, "scale_armor", 0) and bs.train_queue.size() == 2 and bs.current_research_tech == "iron_weapons",
+		"a second research waits behind the running one (queue %d, running %s)" % [bs.train_queue.size(), bs.current_research_tech])
+	_expect(game.research_block_reason(bs, "scale_armor", 0) == "Sırada" and game.research_block_reason(bs, "iron_weapons", 0) == "Araştırılıyor",
+		"the same research cannot be queued twice (Sırada / Araştırılıyor)")
+	bs.train_queue.clear()
+	bs._sync_research_state()
 
 	# ---- save -> load keeps techs, levels and stats
 	var path := "user://saves/test_techs.json"

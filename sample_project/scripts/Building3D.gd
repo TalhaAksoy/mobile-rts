@@ -50,10 +50,17 @@ var construction_progress: float = 100.0
 var is_selected: bool = false
 var rally_point: Vector3
 
+## ONE production queue for units and research, worked through one job at a time in the order the
+## player (or bot) asked for them. Items:
+##   {"kind": "unit", "type": UnitType, "duration", "food", "wood", "gold", "stone"}
+##   {"kind": "research", "tech": id, "duration", "food", "wood", "gold", "stone"}
+## (costs were paid when queued and come back on cancel). Before, research ran on its own timer next
+## to unit training, so an upgrade and a villager could finish at the same moment.
 var train_queue: Array = []
 var current_train_timer: float = 0.0
 var current_train_duration: float = 5.0
 
+## Mirror of the queue's front item when it is a research (kept for the UI / bot / save code):
 var is_researching: bool = false
 var current_research_tech: String = ""
 var current_research_timer: float = 0.0
@@ -868,29 +875,62 @@ func _process(delta: float) -> void:
 
 	if train_queue.size() > 0:
 		current_train_timer += delta
+		if is_researching:
+			current_research_timer = current_train_timer
 		if current_train_timer >= current_train_duration:
-			var trained = train_queue.pop_front()
+			var done = train_queue.pop_front()
 			current_train_timer = 0.0
-			_spawn_unit(trained)
 			if train_queue.size() > 0:
 				current_train_duration = train_queue[0]["duration"]
+			_sync_research_state()
+			if done.get("kind", "unit") == "research":
+				research_completed.emit(done["tech"], team)
+			else:
+				_spawn_unit(done)
 
-	if is_researching:
-		current_research_timer += delta
-		if current_research_timer >= current_research_duration:
-			is_researching = false
-			var completed_tech = current_research_tech
-			current_research_tech = ""
-			research_completed.emit(completed_tech, team)
-
-func start_research(tech_id: String, duration: float) -> bool:
-	if is_researching or not is_completed:
+## Queues a research behind whatever is already in production. `costs` (what was paid) comes back
+## if it is cancelled.
+func start_research(tech_id: String, duration: float, costs: Dictionary = {}) -> bool:
+	if not is_completed or has_queued_research(tech_id):
 		return false
-	is_researching = true
-	current_research_tech = tech_id
-	current_research_timer = 0.0
-	current_research_duration = duration
+	train_queue.append({"kind": "research", "tech": tech_id, "duration": duration,
+		"food": int(costs.get("food", 0)), "wood": int(costs.get("wood", 0)),
+		"gold": int(costs.get("gold", 0)), "stone": int(costs.get("stone", 0))})
+	if train_queue.size() == 1:
+		current_train_timer = 0.0
+		current_train_duration = duration
+	_sync_research_state()
 	return true
+
+## Any research waiting or running here (`tech_id` empty = any).
+func has_queued_research(tech_id: String = "") -> bool:
+	return find_research_index(tech_id) >= 0
+
+func find_research_index(tech_id: String = "") -> int:
+	for i in train_queue.size():
+		var it: Dictionary = train_queue[i]
+		if it.get("kind", "unit") == "research" and (tech_id == "" or it["tech"] == tech_id):
+			return i
+	return -1
+
+## Keeps is_researching / current_research_* in step with the queue's front item.
+func _sync_research_state() -> void:
+	if train_queue.size() > 0 and train_queue[0].get("kind", "unit") == "research":
+		is_researching = true
+		current_research_tech = train_queue[0]["tech"]
+		current_research_duration = current_train_duration
+		current_research_timer = current_train_timer
+	else:
+		is_researching = false
+		current_research_tech = ""
+		current_research_timer = 0.0
+		current_research_duration = 1.0
+
+## Removes the running research (front of the queue); returns its item (with the paid costs).
+func cancel_research() -> Dictionary:
+	if not is_researching:
+		return {}
+	return cancel_train_queue_item(0)
 
 func get_research_progress() -> float:
 	if not is_researching or current_research_duration <= 0.0:
@@ -913,6 +953,7 @@ func queue_unit_production(u_type: Unit3D.UnitType, duration: float, costs: Dict
 	var civ_cfg = CivData.get_civ(civ_type)
 	var final_duration = duration * civ_cfg.get("train_speed_mult", 1.0)
 	var item = {
+		"kind": "unit",
 		"type": u_type,
 		"duration": final_duration,
 		"food": costs.get("food", 0),
@@ -937,6 +978,7 @@ func cancel_train_queue_item(index: int) -> Dictionary:
 			current_train_duration = train_queue[0]["duration"]
 		else:
 			current_train_duration = 1.0
+	_sync_research_state()
 	return removed
 
 func _spawn_unit(item: Dictionary) -> void:

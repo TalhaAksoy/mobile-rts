@@ -3,14 +3,36 @@ extends Node
 
 enum Difficulty { EASY, NORMAL, HARD }
 
+## Picked before the match (Krallık seçimi > Zorluk). Before this existed every match ran one fixed
+## setting: the first attack wave fired 40 s into the match with every soldier the bot had, so a
+## passive new player lost the Town Center before minute 4 on Highland.
+##   think          seconds between economy / build decisions
+##   first_attack   no attack before this much game time (time to set up the economy)
+##   wave_interval  seconds between waves (shrinks 3 s per wave, down to 70 %)
+##   min_wave       a wave waits until the army has at least this many soldiers
+##   wave_share     part of the army sent; the rest stays home to defend
+##   max_vills / max_army   population the bot aims for
+const DIFFICULTY_NAMES := ["Kolay", "Orta", "Zor"]
+const DIFFICULTY_HINTS := [
+	"Yeni başlayanlar için. İlk saldırı yaklaşık 8. dakikada, küçük ordularla.",
+	"Dengeli. İlk saldırı yaklaşık 5. dakikada.",
+	"Deneyimli oyuncular için. İlk saldırı 3. dakikada, büyük ve sık dalgalar.",
+]
+const PROFILES := {
+	Difficulty.EASY: {"think": 4.0, "first_attack": 480.0, "wave_interval": 150.0, "min_wave": 4, "wave_share": 0.5, "max_vills": 10, "max_army": 8},
+	Difficulty.NORMAL: {"think": 2.5, "first_attack": 300.0, "wave_interval": 90.0, "min_wave": 5, "wave_share": 0.6, "max_vills": 14, "max_army": 14},
+	Difficulty.HARD: {"think": 1.5, "first_attack": 180.0, "wave_interval": 55.0, "min_wave": 5, "wave_share": 1.0, "max_vills": 20, "max_army": 40},
+}
+const WAVE_RETRY: float = 15.0   # army too small at wave time: look again this much later
+
 @export var difficulty: Difficulty = Difficulty.NORMAL
+var profile: Dictionary = PROFILES[Difficulty.NORMAL]
 var civ_type: CivData.CivType = CivData.CivType.BYZANTINES
 var map_gen: MapGenerator3D = null
 var main_game: Node = null
 
 var ai_timer: float = 0.0
-var attack_wave_timer: float = 0.0
-var wave_interval: float = 40.0
+var next_attack_at: float = 0.0
 var wave_count: int = 0
 ## Game-time clock + construction-site watchdog: a site with no progress for SITE_STALL_TIMEOUT
 ## seconds is cancelled and refunded (it was unreachable / sealed off), so the bot can rebuild it
@@ -24,19 +46,22 @@ func setup_ai(civ: CivData.CivType, map: MapGenerator3D, game: Node, diff: Diffi
 	map_gen = map
 	main_game = game
 	difficulty = diff
-	
-	match difficulty:
-		Difficulty.EASY:
-			ai_timer = 3.5
-			wave_interval = 55.0
-		Difficulty.NORMAL:
-			ai_timer = 2.0
-			wave_interval = 40.0
-		Difficulty.HARD:
-			ai_timer = 1.0
-			wave_interval = 28.0
-			
-	attack_wave_timer = wave_interval
+	profile = PROFILES.get(diff, PROFILES[Difficulty.NORMAL])
+	ai_clock = 0.0
+	wave_count = 0
+	site_watch.clear()
+	ai_timer = 1.0
+	next_attack_at = profile["first_attack"]
+
+## Save / load: the match clock and wave count, so a loaded game does not get a fresh grace period
+## (or lose its next wave).
+func get_state() -> Dictionary:
+	return {"clock": ai_clock, "waves": wave_count, "next_attack_at": next_attack_at}
+
+func set_state(st: Dictionary) -> void:
+	ai_clock = float(st.get("clock", ai_clock))
+	wave_count = int(st.get("waves", wave_count))
+	next_attack_at = float(st.get("next_attack_at", next_attack_at))
 
 func _process(delta: float) -> void:
 	if main_game == null or not main_game.is_game_active:
@@ -45,15 +70,17 @@ func _process(delta: float) -> void:
 	ai_clock += delta
 	ai_timer -= delta
 	if ai_timer <= 0.0:
-		ai_timer = 2.5
+		ai_timer = profile["think"]
 		_cancel_stalled_sites()
 		_think()
 
-	attack_wave_timer -= delta
-	if attack_wave_timer <= 0.0:
-		attack_wave_timer = max(28.0, wave_interval - wave_count * 2.0)
-		wave_count += 1
-		_launch_attack_wave()
+	if ai_clock >= next_attack_at:
+		if _launch_attack_wave():
+			wave_count += 1
+			var iv: float = profile["wave_interval"]
+			next_attack_at = ai_clock + maxf(iv * 0.7, iv - wave_count * 3.0)
+		else:
+			next_attack_at = ai_clock + WAVE_RETRY
 
 func _cancel_stalled_sites() -> void:
 	for site in site_watch.keys():
@@ -96,16 +123,16 @@ func _think() -> void:
 			tc = b
 			break
 
-	var max_vills = 8 if difficulty == Difficulty.EASY else (14 if difficulty == Difficulty.NORMAL else 18)
+	var max_vills: int = profile["max_vills"]
 	if tc != null and villagers.size() < max_vills and tc.train_queue.size() < 2:
 		if resources["food"] >= 50:
 			main_game.try_train_unit(tc, Unit3D.UnitType.VILLAGER, 1)
 
 	# Age advancement
-	if my_age == 1 and tc != null and not tc.is_researching:
+	if my_age == 1 and tc != null and not tc.has_queued_research():
 		if resources["food"] >= 500 and resources["gold"] >= 200:
 			main_game.try_start_research(tc, "AGE_2", 1)
-	elif my_age == 2 and tc != null and not tc.is_researching and ai_clock > 420.0:
+	elif my_age == 2 and tc != null and not tc.has_queued_research() and ai_clock > 420.0:
 		if resources["food"] >= 1000 and resources["gold"] >= 600:
 			main_game.try_start_research(tc, "AGE_3", 1)
 
@@ -155,7 +182,13 @@ func _think() -> void:
 	# Research: one new technology per think-tick, economy first, keeping a reserve for units
 	_research_next(enemy_buildings, resources, my_age)
 
-	# Military training
+	# Military training (up to the difficulty's army size, counting soldiers already in training)
+	var army_size := military.size()
+	for b in enemy_buildings:
+		if is_instance_valid(b) and b.building_type != Building3D.BuildingType.TOWN_CENTER:
+			army_size += b.train_queue.size()
+	if army_size >= int(profile["max_army"]):
+		return
 	for b in enemy_buildings:
 		if not b.is_completed or b.train_queue.size() >= 2:
 			continue
@@ -499,7 +532,7 @@ const _RESEARCH_PRIORITY := [Building3D.BuildingType.MILL, Building3D.BuildingTy
 func _research_next(enemy_buildings: Array, resources: Dictionary, _my_age: int) -> void:
 	for b_type in _RESEARCH_PRIORITY:
 		for b in enemy_buildings:
-			if not is_instance_valid(b) or b.building_type != b_type or not b.is_completed or b.is_researching:
+			if not is_instance_valid(b) or b.building_type != b_type or not b.is_completed or b.has_queued_research():
 				continue
 			for id in TechData.techs_for_building(b_type):
 				if id.begins_with("AGE_") or main_game.research_block_reason(b, id, 1) != "":
@@ -527,13 +560,15 @@ func _is_building_in_progress(b_type: Building3D.BuildingType) -> bool:
 			return true
 	return false
 
-func _launch_attack_wave() -> void:
+## Sends part of the army (wave_share) at the player's Town Center, once the army is big enough
+## (min_wave). Returns false when no wave went out.
+func _launch_attack_wave() -> bool:
 	var enemy_units = main_game.get_team_units(1)
 	var player_buildings = main_game.get_team_buildings(0)
 	var player_units = main_game.get_team_units(0)
 
 	if player_buildings.is_empty() and player_units.is_empty():
-		return
+		return false
 
 	var target: Node3D = null
 	for b in player_buildings:
@@ -546,8 +581,17 @@ func _launch_attack_wave() -> void:
 		target = player_units[0]
 
 	if target == null:
-		return
+		return false
 
+	var army: Array = []
 	for u in enemy_units:
-		if u.unit_type != Unit3D.UnitType.VILLAGER:
-			u.command_attack(target)
+		if is_instance_valid(u) and u.hp > 0 and u.unit_type != Unit3D.UnitType.VILLAGER:
+			army.append(u)
+	if army.size() < int(profile["min_wave"]):
+		return false
+	# the soldiers nearest the target go; the rest stay home
+	army.sort_custom(func(a, b): return a.global_position.distance_squared_to(target.global_position) < b.global_position.distance_squared_to(target.global_position))
+	var n := clampi(int(ceil(army.size() * float(profile["wave_share"]))), 1, army.size())
+	for i in n:
+		army[i].command_attack(target)
+	return true

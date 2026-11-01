@@ -115,11 +115,19 @@ military buildings, defences. It keeps 100 food and 50 gold in reserve, and goes
   In one simulation it had 0 soldiers after 10 minutes with 5000+ wood.
 * **The research reserve only counts resources a tech spends.** Before, low gold blocked wood/food-only techs too.
 * `try_train_unit` now refuses unfinished buildings. The UI already hid the button; the bot could still call it.
+* **Units and research share one production queue per building** (`Building3D.train_queue`). Jobs run one at a
+  time, in the order they were asked for. Before, research had its own timer next to unit training, so an upgrade
+  and a villager could finish together. A second research on a busy building used to be refused ("Bina meşgul"); it
+  now waits in the queue. The same tech is never queued twice; it shows "Sırada" until it starts. The queue is shown
+  above the bottom panel (`ProductionQueueBar`): a ring and countdown on the running job, numbered waiting jobs, and
+  a tap cancels a job with a refund.
 
 ## 5. Known limits (not changed)
 
-* **Save files do not store depleted trees, mines or bushes.** The map is regenerated from its seed, so chopped trees
-  come back after a load and can overlap fields or buildings placed there later. This was pre-existing.
+* **(Fixed)** Save files now store what is left of trees, mines and bushes, and the map regenerates identically from
+  its seed (FINAL_GAMEPLAY_VALIDATION.md §4).
+* **Production queues are not saved.** After a load, buildings start with an empty queue and the paid costs are lost.
+  This was pre-existing.
 * **A villager keeps its cargo when switched to another resource type.** The cargo is then delivered as the new type.
   This was pre-existing and was left as is.
 * Civ-specific 3D models now exist for every building type and all 10 civs (ASSET_INVENTORY §1, §1b, §2b). The upgrade
