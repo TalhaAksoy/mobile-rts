@@ -101,6 +101,9 @@ var hp_bar_mesh: MeshInstance3D
 var hp_fill_mesh: MeshInstance3D
 var resource_sack: MeshInstance3D
 var status_label: Label3D
+## Always-on activity badge over the player's villagers (VillagerBadge.gd); null for everyone else.
+var badge: VillagerBadge = null
+const BADGE_Y: float = 2.75
 
 # Articulated Limbs & Anatomy
 var leg_left_pivot: Node3D
@@ -709,6 +712,16 @@ func _build_3d_hp_bar(mount_y: float) -> void:
 	status_label.visible = false
 	add_child(status_label)
 
+	# rebuilt with the model: a unit is added to the tree (as a default team-0 villager) before setup_unit()
+	if badge != null:
+		badge.queue_free()
+		badge = null
+	if team == 0 and unit_type == UnitType.VILLAGER:
+		badge = VillagerBadge.new()
+		badge.position = Vector3(0, mount_y + BADGE_Y, 0)
+		add_child(badge)
+		_update_badge()
+
 func _physics_process(delta: float) -> void:
 	if regen_rate > 0.0 and hp < max_hp and hp > 0.0:
 		hp = min(max_hp, hp + regen_rate * delta)
@@ -746,6 +759,33 @@ func _physics_process(delta: float) -> void:
 
 	if is_selected:
 		_update_status_label()
+	_update_badge()
+
+## What the badge over a player villager shows: activity colour, icon and load.
+func _update_badge() -> void:
+	if badge == null:
+		return
+	badge.visible = not is_selected and hp > 0
+	if not badge.visible:
+		return
+	var res_glyph: String = resource_type if resource_type in ["wood", "gold", "stone", "food"] else "move"
+	var load_text: String = "%d/%d" % [carried_resource, max_carry]
+	match state:
+		State.IDLE:
+			badge.show_state("idle", "idle", load_text if carried_resource > 0 else "")
+		State.GATHERING:
+			badge.show_state("gather", res_glyph, load_text)
+		State.RETURNING_RESOURCES:
+			badge.show_state("return", res_glyph, load_text)
+		State.BUILDING:
+			var pct := ""
+			if is_instance_valid(target_entity) and target_entity is Building3D:
+				pct = "%%%d" % int(target_entity.construction_progress)
+			badge.show_state("build", "build", pct)
+		State.ATTACKING:
+			badge.show_state("attack", "attack", "")
+		_:
+			badge.show_state("move", "move", load_text if carried_resource > 0 else "")
 
 ## Ground distance (ignores height: on hills a target can be a little above or below the unit).
 static func _hdist(a: Vector3, b: Vector3) -> float:
@@ -1317,6 +1357,7 @@ func set_selected(sel: bool) -> void:
 		selection_ring.visible = sel
 	if is_instance_valid(status_label):
 		status_label.visible = sel
+	_update_badge()
 	_update_hp_bar()
 	_update_status_label()
 	selected_changed.emit(self, sel)

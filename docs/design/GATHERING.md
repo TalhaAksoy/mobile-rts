@@ -88,3 +88,46 @@ difficulty are in `AI_DIFFICULTY.md`.
 
 `test_ai_difficulty.gd` now simulates the Zor match for 300 s instead of 240 s. Its check is still "Zor takes the
 Town Center before minute 5"; the shorter run ended before that could be seen.
+
+## Villager badges
+
+Every player villager carries a small badge over its head, so the player sees what the whole workforce is doing
+without tapping each villager (`VillagerBadge.gd`, made in `Unit3D._build_3d_hp_bar`).
+
+**Disc colour: the activity.**
+
+| Colour | Activity |
+|---|---|
+| Green | Gathering |
+| Blue | Carrying to a drop-off |
+| Orange | Building |
+| Amber | Idle |
+| Grey | Walking |
+| Red | Fighting |
+
+**Icon: what the activity is about.** The icon is pixel art drawn in code, so it looks the same on every device and
+needs no emoji font.
+
+| Activity | Icon |
+|---|---|
+| Wood | Log |
+| Gold | Nugget |
+| Stone | Rock |
+| Food | Wheat |
+| Building | Hammer |
+| Idle | "Zz" |
+| Walking | Arrow |
+| Fighting | Crossed blades |
+
+**Load, to the right of the disc:**
+
+- the villager's load ("3/5") while it gathers or carries;
+- the building's progress ("%40") while it builds.
+
+**Other rules:**
+
+- When the villager is selected, the badge is hidden and the long status line shows instead.
+- Bot villagers and soldiers have no badge.
+
+`scripts/tests/test_villager_badges.gd` checks all of this. It runs the gathering on real physics frames: stepping
+`_physics_process` by hand with its own delta made `move_and_slide()` overshoot path points once physics was running.
