@@ -32,6 +32,7 @@ func _run() -> void:
 	var game = scene
 	GraphicsSettings.set_value("style", 1 if style == "2d" else 0)
 	FactionArtManager.use_3d_building_models = style != "2d"
+	seed(7)
 	game.map_size = 1
 	game.bot_count = 1
 	game._on_start_game_requested(0, 1, CivData.MapType.FOREST_VALLEY)
@@ -67,4 +68,11 @@ func _run() -> void:
 			if is_instance_valid(b):
 				b._process(1.0 / 60.0))
 	_time("UI _process", 50, func(): game.ui_manager._process(1.0 / 60.0))
+	# whole frames: the scene runs on its own (both armies idle at home) for 300 frames
+	# (TIME_PROCESS is left out: in this windowed run it includes the wait for the next frame)
+	var ph := 0.0
+	for i in 300:
+		await process_frame
+		ph += Performance.get_monitor(Performance.TIME_PHYSICS_PROCESS)
+	print("[profile] %-34s %8.0f us" % ["frame: all _physics_process (avg)", ph / 300.0 * 1e6])
 	quit(0)

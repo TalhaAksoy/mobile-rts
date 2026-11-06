@@ -20,6 +20,8 @@ var speed := 2.0
 var bots := 2
 var size := 1
 var civ := 0
+var map_seed := -1                     # --seed=N: same map every run (before / after comparisons)
+var army_ui := true                     # --army_ui=0: skip the army UI screenshots (pure performance runs)
 var game: GameController3D
 var events: PackedStringArray = []
 var csv: FileAccess
@@ -33,6 +35,8 @@ func _init() -> void:
 		elif a.begins_with("--bots="): bots = int(a.substr(7))
 		elif a.begins_with("--size="): size = int(a.substr(7))
 		elif a.begins_with("--civ="): civ = int(a.substr(6))
+		elif a.begins_with("--army_ui="): army_ui = a.substr(10) != "0"
+		elif a.begins_with("--seed="): map_seed = int(a.substr(7))
 	call_deferred("_run")
 
 func _log(s: String) -> void:
@@ -84,6 +88,8 @@ func _run() -> void:
 	menu.difficulty_option.select(1); menu.difficulty_option.item_selected.emit(1)
 	await _frames(2)
 	await _shot("00_new_game")
+	if map_seed >= 0:
+		seed(map_seed)
 	menu.start_btn.emit_signal("pressed")
 	await _frames(5)
 	if game.tutorial_mgr != null and game.tutorial_mgr.has_method("stop_tutorial"):
@@ -103,7 +109,7 @@ func _run() -> void:
 
 	Engine.time_scale = speed
 	var shots := {1.0: "02_min01", 3.0: "03_min03", 6.0: "05_min06", 9.0: "07_min09", 12.0: "09_min12"}
-	var ui_moments := {7.0: false, 11.0: false}
+	var ui_moments := {7.0: false, 11.0: false} if army_ui else {}
 	var next_sample := 1.0
 	var worst := 0.0
 	var frames := 0
