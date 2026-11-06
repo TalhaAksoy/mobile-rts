@@ -110,6 +110,9 @@ var weapon_node: Node3D
 var selection_ring: MeshInstance3D
 var hp_bar_mesh: MeshInstance3D
 var hp_fill_mesh: MeshInstance3D
+const HP_BAR_SHADER = preload("res://shaders/hp_bar.gdshader")
+static var _hp_bar_quad: QuadMesh = null
+static var _hp_bar_mat: ShaderMaterial = null
 var resource_sack: MeshInstance3D
 var status_label: Label3D
 ## Always-on activity badge over the player's villagers (VillagerBadge.gd); null for everyone else.
@@ -407,43 +410,61 @@ func _setup_oblique_sheet_sprite() -> void:
 	model_root.add_child(unit_sprite)
 	_anim_name = ""
 	_set_sheet_anim("idle")
+	_oblique_last = Vector3.INF
 	_place_oblique_visuals()
 
 ## Every frame: flat, unrotated sprite at the sort height; hp bar, status label and badge float above the head
-## (north on screen), flat to the camera.
+## (north on screen), flat to the camera. The pieces are top_level (the unit turns, they must not), so they only
+## need moving when the unit has moved: a standing unit costs one comparison.
+var _oblique_last := Vector3.INF
+var _oblique_float: Array = []      # [node, north offset] for the hp bar holder, status label and badge
+
 func _place_oblique_visuals() -> void:
 	if not is_inside_tree() or not is_instance_valid(unit_sprite):
 		return
 	var gp := global_position
-	unit_sprite.global_rotation = Vector3(-PI * 0.5, 0, 0)
+	if gp == _oblique_last:
+		return
+	if _oblique_last == Vector3.INF:
+		_setup_oblique_pieces()
+	_oblique_last = gp
 	unit_sprite.global_position = Vector3(gp.x, FactionArtManager.oblique_sort_y(gp.z), gp.z)
+	for e in _oblique_float:
+		var n: Node3D = e[0]
+		if is_instance_valid(n):
+			n.global_position = Vector3(gp.x, 11.0, gp.z - float(e[1]))
+	if is_instance_valid(selection_ring):
+		selection_ring.global_position = Vector3(gp.x, FactionArtManager.OBLIQUE_SORT_BASE - 0.3, gp.z)
+
+## Once per sprite build (and when the badge is rebuilt): detach the pieces from the unit's turning and fix their
+## rotation; the north offsets keep the 3D stacking order on screen (higher in 3D -> further north here).
+func _setup_oblique_pieces() -> void:
+	unit_sprite.top_level = true
+	unit_sprite.global_rotation = Vector3(-PI * 0.5, 0, 0)
 	var head_north: float = float(sheet["anchor"][1]) / float(sheet.get("px_per_m", 20)) * UNIT_VISUAL_SCALE
 	var holder: Node3D = hp_bar_mesh.get_parent() as Node3D if is_instance_valid(hp_bar_mesh) else null
+	_oblique_float.clear()
 	for n in [holder, status_label, badge]:
 		if n == null or not is_instance_valid(n):
 			continue
 		if not n.top_level:
 			n.top_level = true
 			n.set_meta("td_y", n.position.y)
-		# keep the 3D stacking order on screen: higher in 3D -> further north here
-		var north: float = head_north + 0.25 + maxf(0.0, float(n.get_meta("td_y")) - 2.7) * 0.5
-		n.global_position = Vector3(gp.x, 11.0, gp.z - north)
-	if holder != null and is_instance_valid(holder):
+		_oblique_float.append([n, head_north + 0.25 + maxf(0.0, float(n.get_meta("td_y")) - 2.7) * 0.5])
+	if holder != null:
 		holder.global_rotation = Vector3(-PI * 0.5, 0, 0)
 	# selection ring on the ground under the feet: below every unit sprite, above fields and ground decals
-	if is_instance_valid(selection_ring):
-		if not selection_ring.top_level:
-			selection_ring.top_level = true
-			var m := selection_ring.material_override as StandardMaterial3D
-			if m != null:
-				m.no_depth_test = false
-				m.render_priority = 0
-			var tm := selection_ring.mesh as TorusMesh
-			if tm != null:                       # thinner flat ring in pixel-art scale
-				var r := get_body_radius() * 0.6 + 0.3
-				tm.outer_radius = r
-				tm.inner_radius = r - 0.12
-		selection_ring.global_position = Vector3(gp.x, FactionArtManager.OBLIQUE_SORT_BASE - 0.3, gp.z)
+	if is_instance_valid(selection_ring) and not selection_ring.top_level:
+		selection_ring.top_level = true
+		var m := selection_ring.material_override as StandardMaterial3D
+		if m != null:
+			m.no_depth_test = false
+			m.render_priority = 0
+		var tm := selection_ring.mesh as TorusMesh
+		if tm != null:                       # thinner flat ring in pixel-art scale
+			var r := get_body_radius() * 0.6 + 0.3
+			tm.outer_radius = r
+			tm.inner_radius = r - 0.12
 		selection_ring.global_rotation = Vector3.ZERO
 
 ## Stencil X-Ray for billboards (the built-in STENCIL_MODE_XRAY pass ignores the texture alpha and would tint the
@@ -759,27 +780,19 @@ func _build_3d_hp_bar(mount_y: float) -> void:
 	bar_holder.position = Vector3(0, mount_y + HP_BAR_Y, 0)
 	add_child(bar_holder)
 
+	# frame + fill in one quad and one shared material (fill share per instance): one draw per bar, not two
+	if _hp_bar_quad == null:
+		_hp_bar_quad = QuadMesh.new()
+		_hp_bar_quad.size = Vector2(0.92, 0.10)
+		_hp_bar_mat = ShaderMaterial.new()
+		_hp_bar_mat.shader = HP_BAR_SHADER
+		_hp_bar_mat.render_priority = 10
 	hp_bar_mesh = MeshInstance3D.new()
-	var bg_mesh = BoxMesh.new()
-	bg_mesh.size = Vector3(0.92, 0.10, 0.04)
-	hp_bar_mesh.mesh = bg_mesh
-	var bg_mat = StandardMaterial3D.new()
-	bg_mat.albedo_color = Color(0.08, 0.06, 0.04, 0.90)
-	bg_mat.no_depth_test = true
-	bg_mat.render_priority = 10
-	hp_bar_mesh.material_override = bg_mat
+	hp_bar_mesh.mesh = _hp_bar_quad
+	hp_bar_mesh.material_override = _hp_bar_mat
+	hp_bar_mesh.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
 	bar_holder.add_child(hp_bar_mesh)
-
-	hp_fill_mesh = MeshInstance3D.new()
-	var fill_mesh = BoxMesh.new()
-	fill_mesh.size = Vector3(0.88, 0.07, 0.05)
-	hp_fill_mesh.mesh = fill_mesh
-	var fill_mat = StandardMaterial3D.new()
-	fill_mat.albedo_color = Color(0.22, 0.92, 0.28)
-	fill_mat.no_depth_test = true
-	fill_mat.render_priority = 11
-	hp_fill_mesh.material_override = fill_mat
-	bar_holder.add_child(hp_fill_mesh)
+	hp_fill_mesh = hp_bar_mesh
 
 	# Fixed billboard pitch towards game camera
 	bar_holder.rotation_degrees = Vector3(-45, 0, 0)
@@ -809,6 +822,7 @@ func _build_3d_hp_bar(mount_y: float) -> void:
 		badge.position = Vector3(0, mount_y + BADGE_Y, 0)
 		add_child(badge)
 		_update_badge()
+	_oblique_last = Vector3.INF          # the new pieces have to be floated over the head again
 
 func _physics_process(delta: float) -> void:
 	if regen_rate > 0.0 and hp < max_hp and hp > 0.0:
@@ -1711,5 +1725,4 @@ func _update_hp_bar() -> void:
 
 	if show_bar:
 		var pct = clamp(hp / max_hp, 0.0, 1.0)
-		hp_fill_mesh.scale.x = pct
-		hp_fill_mesh.position.x = -(0.86 * (1.0 - pct)) * 0.5
+		hp_bar_mesh.set_instance_shader_parameter("fill", pct)

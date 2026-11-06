@@ -224,6 +224,13 @@ func _run() -> void:
 	var in_row := frames.keys().all(func(f): return int(f) / int(e2["hframes"]) == walk_row)
 	_check(frames.size() >= 3 and in_row, "2D: walking cycles through the walk row (%d frames)" % frames.size())
 	_check(v2.unit_sprite.flip_h, "2D: mirrored while walking to the right")
+	# the unit turns to walk; the flat sprite, its hp bar and badge must follow its position but never its turning
+	var gp2 := v2.global_position
+	var sr := v2.unit_sprite.global_rotation
+	var badge_ok: bool = v2.badge == null or (absf(v2.badge.global_position.x - gp2.x) < 0.01 and v2.badge.global_position.z < gp2.z)
+	_check(absf(v2.unit_sprite.global_position.x - gp2.x) < 0.01 and absf(v2.unit_sprite.global_position.z - gp2.z) < 0.01
+		and absf(sr.x + PI * 0.5) < 0.01 and absf(sr.y) < 0.01 and absf(sr.z) < 0.01 and badge_ok,
+		"2D: after walking and turning the sprite and badge still sit on the unit, flat (rot %s, unit turned %.2f)" % [sr, v2.rotation.y])
 	var spr := v2.unit_sprite
 	v2.die()
 	await process_frame
