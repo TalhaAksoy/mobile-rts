@@ -23,11 +23,15 @@ const SCALE_MIN := 50
 const SCALE_MAX := 100
 const SCALE_STEP := 5
 
-## preset -> values (render scale in %, msaa sample count, shadow level, fps cap, style 0 = 3D / 1 = 2D)
+## preset -> values (render scale in %, msaa sample count, shadow level, fps cap, style 0 = 3D / 1 = 2D,
+## effects 0 = none / 1 = vignette / 2 = vignette + glow)
+## Glow is several full-screen blur passes: the most expensive effect on a phone GPU and nearly invisible in this
+## art (2D: no visible change; 3D: sunlit grass a touch brighter), so only Yüksek keeps it. Measured on desktop,
+## the empty 2D scene went 6.1 -> 3.3 ms per frame without glow; the vignette is another 0.4 ms.
 const PRESETS := {
-	Preset.LOW: {"scale": 60, "msaa": 0, "shadows": Shadows.OFF, "fps": 30, "style": 1},
-	Preset.MEDIUM: {"scale": 75, "msaa": 0, "shadows": Shadows.LOW, "fps": 60, "style": 0},
-	Preset.HIGH: {"scale": 100, "msaa": 2, "shadows": Shadows.HIGH, "fps": 60, "style": 0},
+	Preset.LOW: {"scale": 60, "msaa": 0, "shadows": Shadows.OFF, "fps": 30, "style": 1, "effects": 0},
+	Preset.MEDIUM: {"scale": 75, "msaa": 0, "shadows": Shadows.LOW, "fps": 60, "style": 0, "effects": 1},
+	Preset.HIGH: {"scale": 100, "msaa": 2, "shadows": Shadows.HIGH, "fps": 60, "style": 0, "effects": 2},
 }
 ## directional shadow atlas size and max distance per shadow level
 const SHADOW_ATLAS := {Shadows.LOW: 1024, Shadows.HIGH: 4096}
@@ -71,6 +75,8 @@ static func _sanitize(key: String, v):
 			return int(v) if int(v) in FPS_OPTIONS else 60
 		"style":
 			return clampi(int(v), 0, 1)
+		"effects":
+			return clampi(int(v), 0, 2)
 	return v
 
 
@@ -88,7 +94,7 @@ static func load_settings() -> void:
 		set_preset(p)
 	else:
 		set_preset(default_preset())
-		for k in ["scale", "msaa", "shadows", "fps", "style"]:
+		for k in ["scale", "msaa", "shadows", "fps", "style", "effects"]:
 			values[k] = _sanitize(k, cfg.get_value(SECTION, k, values[k]))
 		preset = Preset.CUSTOM
 
@@ -129,6 +135,7 @@ static func apply(viewport: Viewport, light: DirectionalLight3D = null) -> void:
 	if sh != Shadows.OFF:
 		RenderingServer.directional_shadow_atlas_set_size(SHADOW_ATLAS[sh], true)
 	Engine.max_fps = values["fps"]
+	apply_effects(viewport)
 	# Simulation rate follows the frame cap: at 30 fps (Düşük, the low-end preset) the game ticks 30 times a second, one
 	# tick per frame, so the per-frame simulation cost halves and nothing judders; 60 fps presets keep 60 ticks.
 	# At most 2 ticks per frame: on a slow phone a long frame used to run up to 8 catch-up ticks, which made the next
@@ -142,3 +149,16 @@ static func apply(viewport: Viewport, light: DirectionalLight3D = null) -> void:
 static func describe() -> String:
 	return "%s: %s, çözünürlük %%%d, MSAA %s, gölge %s, %d FPS" % [PRESET_NAMES[preset], STYLE_NAMES[values["style"]],
 		values["scale"], MSAA_NAMES[MSAA_OPTIONS.find(values["msaa"])], SHADOW_NAMES[values["shadows"]], values["fps"]]
+
+
+## Glow on the scene's WorldEnvironment and the HD-2D vignette layer, per the "effects" value.
+static func apply_effects(viewport: Viewport) -> void:
+	if viewport == null:
+		return
+	var fx := int(values.get("effects", 2))
+	for we in viewport.find_children("*", "WorldEnvironment", true, false):
+		var env: Environment = (we as WorldEnvironment).environment
+		if env != null:
+			env.glow_enabled = fx >= 2
+	for v in viewport.find_children("HD2DVignette", "CanvasLayer", true, false):
+		v.visible = fx >= 1

@@ -54,6 +54,11 @@ func _run() -> void:
 	_check(is_equal_approx(vp.scaling_3d_scale, 1.0) and GraphicsSettings.values["scale"] == 60 and vp.msaa_3d == Viewport.MSAA_DISABLED and not light.shadow_enabled and Engine.max_fps == 30,
 		"game start applies Low (scale %.2f, msaa %d, shadows %s, fps %d)" % [vp.scaling_3d_scale, vp.msaa_3d, light.shadow_enabled, Engine.max_fps])
 
+	var env: Environment = (scene.get_node("WorldEnvironment") as WorldEnvironment).environment
+	var vig = scene.get_node_or_null("HD2DVignette")
+	_check(not env.glow_enabled and vig != null and not vig.visible and Engine.physics_ticks_per_second == 30 and Engine.max_physics_steps_per_frame == 2,
+		"Low: no glow, no vignette, 30 simulation ticks a second (one per frame), at most 2 ticks per frame")
+
 	var menu = scene.get_node("UIManager3D/MenuRoot")
 	menu._on_settings_pressed()
 	await process_frame
@@ -66,6 +71,7 @@ func _run() -> void:
 	await process_frame
 	_check(GraphicsSettings.preset == GraphicsSettings.Preset.HIGH and is_equal_approx(vp.scaling_3d_scale, 1.0) and vp.msaa_3d == Viewport.MSAA_2X and light.shadow_enabled and Engine.max_fps == 60,
 		"tapping High applies it at once")
+	_check(env.glow_enabled and vig.visible and Engine.physics_ticks_per_second == 60, "High: glow and vignette on, 60 ticks a second")
 	_check(FactionArtManager.use_3d_building_models and menu.gfx_style_buttons[0].button_pressed, "High: 3D models on")
 	_check(menu.gfx_preset_buttons[GraphicsSettings.Preset.HIGH].button_pressed and not menu.gfx_preset_buttons[GraphicsSettings.Preset.LOW].button_pressed, "only the High button is selected")
 	_check(menu.gfx_scale_slider.value == 100 and menu.gfx_msaa_buttons[1].button_pressed and menu.gfx_shadow_buttons[2].button_pressed, "controls follow the preset")

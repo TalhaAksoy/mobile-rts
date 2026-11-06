@@ -170,6 +170,7 @@ func _add_hd2d_vignette() -> void:
 	var layer := CanvasLayer.new()
 	layer.name = "HD2DVignette"
 	layer.layer = -1
+	layer.visible = int(GraphicsSettings.values.get("effects", 2)) >= 1      # off on the Düşük preset
 	var rect := ColorRect.new()
 	rect.set_anchors_preset(Control.PRESET_FULL_RECT)
 	rect.mouse_filter = Control.MOUSE_FILTER_IGNORE
