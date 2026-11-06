@@ -216,6 +216,15 @@ func _army_ui(m: float) -> void:
 	game._select_units_in_screen_rect(Rect2(vp.x * 0.15, vp.y * 0.30, vp.x * 0.7, vp.y * 0.32))
 	await _frames(4)
 	await _shot("%s_d_box_selected" % tag)
+	# control group + type buttons
+	game._select_units(mil)
+	game.assign_control_group(0)
+	if mil.size() > 3:
+		game._select_units(mil.slice(0, 3))
+		game.assign_control_group(1)
+	game._select_units(mil)
+	await _frames(4)
+	await _shot("%s_e_groups_and_type_buttons" % tag)
 	_log("box select picked %d units" % game.selected_units.size())
 	game.ui_manager.box_select_toggled.emit(false)
 	game._clear_selection()

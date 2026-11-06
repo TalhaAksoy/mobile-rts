@@ -22,7 +22,7 @@ var step_timer: float = 0.0
 
 const TUTORIAL_TEXTS = {
 	Step.CAMERA_MOVE: "Adım 1/8: Haritayı Keşfet!\nParmağını veya fareni sürükleyerek kuşbakışı diorama haritasında gezin.",
-	Step.SELECT_VILLAGER: "Adım 2/8: İşçini Seç!\nÜzerine dokunarak bir köy işçisini seç. (Aynı türdeki tüm birimleri seçmek için çift tıkla)",
+	Step.SELECT_VILLAGER: "Adım 2/8: İşçini Seç!\nÜzerine dokunarak bir köy işçisini seç. (Aynı türdeki tüm birimleri seçmek için birimin üstüne basılı tut)",
 	Step.GATHER_WOOD: "Adım 3/8: Odun Topla!\nİşçi seçiliyken yakındaki bir ağaca dokun. Odun toplayıp ana üsse taşıyacak.",
 	Step.GATHER_GOLD: "Adım 4/8: Altın Kaz!\nParıldayan altın madeni cevherine dokunarak altın rezervi topla.",
 	Step.GATHER_STONE: "Adım 5/8: Taş Çıkar!\nGri renkli granit taş ocağına dokunarak taş rezervi çıkar.",

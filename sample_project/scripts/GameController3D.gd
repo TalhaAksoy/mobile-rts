@@ -54,6 +54,14 @@ var is_touch_active: bool = false
 var has_dragged_significantly: bool = false
 var is_drag_box_selecting: bool = false
 var is_box_select_mode: bool = false
+## Long press (finger held still): released on one of our units it selects every unit of that type on screen;
+## dragged on, it draws a selection box (no mode button needed). Plain taps keep their single-unit behaviour
+## (a fast double tap is deliberately NOT a mass select: in a tight cluster it fired by accident).
+const LONG_PRESS_MS := 450
+var _long_press_box := false
+## Control groups 1-4 (kept / recalled with the group buttons on the right).
+const GROUP_COUNT := 4
+var control_groups: Array = [[], [], [], []]
 const DRAG_THRESHOLD: float = 26.0
 
 var last_clicked_unit: Unit3D = null
@@ -99,6 +107,16 @@ func _ready() -> void:
 	# Escape / Android Back first leave building placement, then open the pause menu
 	ui_manager.pause_menu.back_handler = cancel_building_placement
 	ui_manager.select_all_military_requested.connect(_on_select_all_military)
+	ui_manager.group_tapped.connect(func(i: int):
+		if _group_members(i).is_empty():
+			assign_control_group(i)               # empty group + a selection: tap saves it too
+		else:
+			select_control_group(i))
+	ui_manager.group_held.connect(assign_control_group)
+	ui_manager.group_double_tapped.connect(func(i: int):
+		select_control_group(i)
+		jump_to_control_group(i))
+	ui_manager.type_filter_requested.connect(filter_selection_to_type)
 	ui_manager.army_command_requested.connect(_on_army_command)
 	ui_manager.jump_to_base_requested.connect(_on_jump_to_base)
 	ui_manager.find_idle_villager_requested.connect(_on_find_idle_villager)
@@ -286,6 +304,7 @@ func _process(delta: float) -> void:
 
 	match_time += delta
 	_update_hud()
+	_check_long_press()
 
 	if tutorial_mgr != null:
 		tutorial_mgr.check_progress()
@@ -343,6 +362,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			is_touch_active = true
 			has_dragged_significantly = false
 			is_drag_box_selecting = false
+			_long_press_box = false
 		else:
 			is_touch_active = false
 			var elapsed_ms = Time.get_ticks_msec() - drag_start_time_msec
@@ -364,6 +384,13 @@ func _unhandled_input(event: InputEvent) -> void:
 			if has_dragged_significantly:
 				# Concluded camera pan, ignore release to prevent unintended orders
 				return
+			if _long_press_box:
+				_long_press_box = false
+				ui_manager.hide_drag_box()
+				var held = _get_entity_at_position(drag_start_pos, camera.raycast_ground(drag_start_pos))
+				if held is Unit3D and held.team == 0:
+					select_same_type_on_screen(held.unit_type)
+				return                                     # held without dragging: never a move order
 			
 			var mouse_pos = event.position
 			var hit_ground = camera.raycast_ground(mouse_pos)
@@ -378,7 +405,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			has_dragged_significantly = true
 
 		if has_dragged_significantly:
-			if is_box_select_mode:
+			if is_box_select_mode or _long_press_box:
 				is_drag_box_selecting = true
 				ui_manager.draw_drag_box(drag_start_pos, cur_pos)
 			else:
@@ -389,6 +416,7 @@ func _unhandled_input(event: InputEvent) -> void:
 func _handle_3d_click(screen_pos: Vector2, ground_pos: Vector3) -> void:
 	var clicked_entity = _get_entity_at_position(screen_pos, ground_pos)
 	var cell = map_gen.world_to_cell(ground_pos)
+
 
 	# 0. Armed army order (SALDIR / SAVUN button, then this tap)
 	if pending_army_command != "" and selected_units.size() > 0:
@@ -823,13 +851,71 @@ func _select_units_in_screen_rect(rect: Rect2) -> void:
 			if rect.has_point(s_pos):
 				found.append(u)
 
-	if found.size() > 0:
-		_clear_selection()
-		for u in found:
-			selected_units.append(u)
-			u.set_selected(true)
-		ui_manager.set_selected_entity(found[0])
-		SoundManager.play_sound("click")
+	_select_units(found)
+
+func _check_long_press() -> void:
+	if not is_touch_active or has_dragged_significantly or _long_press_box or is_placing_building or is_box_select_mode:
+		return
+	if Time.get_ticks_msec() - drag_start_time_msec < LONG_PRESS_MS:
+		return
+	_long_press_box = true
+	ui_manager.draw_drag_box(drag_start_pos, drag_start_pos + Vector2(2, 2))    # a dot: "now drag"
+	if OS.has_feature("mobile"):
+		Input.vibrate_handheld(25)
+
+## Replace the selection with `found` (own units). Empty -> nothing changes.
+func _select_units(found: Array) -> void:
+	if found.is_empty():
+		return
+	_clear_selection()
+	for u in found:
+		selected_units.append(u)
+		u.set_selected(true)
+	ui_manager.set_selected_entity(found[0])
+	SoundManager.play_sound("click")
+
+## Every living unit of ours of this type whose feet are on screen.
+func select_same_type_on_screen(u_type: int) -> void:
+	var rect := get_viewport().get_visible_rect()
+	var found: Array = []
+	for u in units:
+		if is_instance_valid(u) and u.team == 0 and u.hp > 0 and int(u.unit_type) == u_type \
+				and not camera.is_position_behind(u.global_position) and rect.has_point(camera.unproject_position(u.global_position)):
+			found.append(u)
+	_select_units(found)
+	if found.size() > 1:
+		ui_manager.notify_banner("%d %s seçildi" % [found.size(), ui_manager._unit_type_name(found[0])], Color(0.85, 0.95, 1.0))
+
+## Keep only the selected units of this type (the type buttons in the group panel).
+func filter_selection_to_type(u_type: int) -> void:
+	_select_units(selected_units.filter(func(u): return is_instance_valid(u) and u.hp > 0 and int(u.unit_type) == u_type))
+
+func _group_members(i: int) -> Array:
+	control_groups[i] = control_groups[i].filter(func(u): return is_instance_valid(u) and u.hp > 0)
+	return control_groups[i]
+
+func assign_control_group(i: int) -> void:
+	var picked: Array = selected_units.filter(func(u): return is_instance_valid(u) and u.team == 0 and u.hp > 0)
+	if picked.is_empty():
+		return
+	for g in GROUP_COUNT:                          # a unit belongs to one group
+		if g != i:
+			control_groups[g] = control_groups[g].filter(func(u): return not picked.has(u))
+	control_groups[i] = picked.duplicate()
+	ui_manager.notify_banner("Grup %d: %d birim kaydedildi" % [i + 1, picked.size()], Color(0.7, 1.0, 0.7))
+	SoundManager.play_sound("click")
+
+func select_control_group(i: int) -> void:
+	_select_units(_group_members(i).duplicate())
+
+func jump_to_control_group(i: int) -> void:
+	var m := _group_members(i)
+	if m.is_empty():
+		return
+	var c := Vector3.ZERO
+	for u in m:
+		c += u.global_position
+	camera.jump_to(c / m.size())
 
 func spawn_unit(u_type: Unit3D.UnitType, team: int, pos: Vector3) -> Unit3D:
 	var civ = civ_of(team)
@@ -1897,6 +1983,7 @@ func _on_toggle_speed() -> void:
 
 ## Removes the match's units and buildings and leaves any placement / pause state.
 func _clear_match() -> void:
+	control_groups = [[], [], [], []]
 	if is_instance_valid(ui_manager) and ui_manager.has_method("hide_hint"):
 		ui_manager.hide_hint()
 	match_time = 0.0

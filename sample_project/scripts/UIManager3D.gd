@@ -74,6 +74,10 @@ var action_buttons_grid: Control:
 signal zoom_in_requested
 signal zoom_out_requested
 signal box_select_toggled(enabled: bool)
+signal group_tapped(index: int)          # control group button: select it
+signal group_held(index: int)            # long press: save the selection into it
+signal group_double_tapped(index: int)   # double tap: select + camera to it
+signal type_filter_requested(u_type: int)  # group panel: keep only this unit type
 var is_box_mode_active: bool = false
 var selected_resource_info: Dictionary = {}
 var player_civ_type: CivData.CivType = CivData.CivType.OTTOMANS
@@ -169,6 +173,7 @@ func _ready() -> void:
 	_build_match_menu(p_theme)
 	_build_queue_bar()
 	_build_message_stack()
+	_build_group_buttons()
 	# top-bar buttons: thumb-sized (44 px high) on the portrait screen
 	speed_btn.custom_minimum_size = Vector2(72, 44)
 	menu_btn.custom_minimum_size = Vector2(72, 44)
@@ -355,6 +360,7 @@ func set_selected_entity(entity: Node3D) -> void:
 	build_panel.visible = false
 
 	for child in action_flow.get_children():
+		action_flow.remove_child(child)          # out now: a queued button kept its name and the new one was renamed
 		child.queue_free()
 
 	if queue_bar != null:
@@ -385,6 +391,7 @@ func set_selected_resource(res_info: Dictionary) -> void:
 	build_panel.visible = false
 
 	for child in action_flow.get_children():
+		action_flow.remove_child(child)          # out now: a queued button kept its name and the new one was renamed
 		child.queue_free()
 
 	if res_info.is_empty():
@@ -457,6 +464,9 @@ func _process(_delta: float) -> void:
 			if zb != null:
 				zb.offset_bottom = mm.offset_bottom + 8.0 + (zb.offset_bottom - zb.offset_top)
 				zb.offset_top = mm.offset_bottom + 8.0
+	if group_box != null and zb != null:
+		group_box.offset_top = zb.offset_top + zb.size.y + 14.0
+	_refresh_group_buttons()
 	if placement_bar != null and placement_bar.visible:
 		placement_bar.offset_bottom = bottom_bar.offset_top - 6.0
 		placement_bar.offset_top = placement_bar.offset_bottom - 56.0
@@ -544,6 +554,7 @@ func _group_summary() -> Dictionary:
 		return {}
 	var kinds := {}
 	var kind_order: Array = []
+	var types := {}
 	var hp := 0.0
 	var hp_max := 0.0
 	var idle := 0
@@ -556,6 +567,10 @@ func _group_summary() -> Dictionary:
 			kinds[n] = 0
 			kind_order.append(n)
 		kinds[n] += 1
+		var ti: int = int(u.unit_type)
+		if not types.has(ti):
+			types[ti] = {"name": n, "count": 0}
+		types[ti]["count"] += 1
 		hp += u.hp
 		hp_max += u.max_hp
 		match u.state:
@@ -571,7 +586,7 @@ func _group_summary() -> Dictionary:
 	if idle > 0: doing.append("%d boşta" % idle)
 	var rest: int = live.size() - fighting - moving - idle
 	if rest > 0: doing.append("%d çalışıyor" % rest)
-	return {"count": live.size(), "hp": hp, "hp_max": hp_max, "makeup": " · ".join(parts), "doing": ", ".join(doing)}
+	return {"count": live.size(), "hp": hp, "hp_max": hp_max, "makeup": " · ".join(parts), "doing": ", ".join(doing), "types": types}
 
 func _apply_group_summary(g: Dictionary) -> void:
 	entity_name_label.text = "%d Birim Seçili [Dost]" % g["count"]
@@ -599,6 +614,17 @@ func _display_unit_ui(unit: Unit3D) -> void:
 	var grp := _group_summary()
 	if not grp.is_empty() and unit.team == 0:
 		_apply_group_summary(grp)
+		var types: Dictionary = grp.get("types", {})
+		if types.size() > 1:                      # one button per unit type: tap = keep only that type
+			for t in types.keys():
+				var tb := Button.new()
+				tb.name = "TypeFilter_%d" % t
+				tb.text = "%d %s" % [types[t]["count"], types[t]["name"]]
+				tb.custom_minimum_size = Vector2(0, 44)
+				ParchmentTheme.apply_parchment_button(tb, 13)
+				var ut: int = t
+				tb.pressed.connect(func(): type_filter_requested.emit(ut))
+				action_flow.add_child(tb)
 
 	if unit.team == 0:
 		# Army orders (Age of Empires style) when the selection holds soldiers: SALDIR / SAVUN arm the next tap
@@ -924,6 +950,65 @@ func draw_drag_box(p1: Vector2, p2: Vector2) -> void:
 func hide_drag_box() -> void:
 	if drag_box_panel != null:
 		drag_box_panel.visible = false
+
+## ---- control groups ----------------------------------------------------------------------------------
+## Four buttons in the right column: tap = select the group, hold = save the selection into it,
+## double tap = select it and move the camera there. The number of living units shows on the button.
+var group_box: VBoxContainer = null
+var group_buttons: Array = []
+var _group_down_ms: Array = [0, 0, 0, 0]
+var _group_last_tap_ms: Array = [0, 0, 0, 0]
+const GROUP_HOLD_MS := 450
+const GROUP_DOUBLE_MS := 350
+
+func _build_group_buttons() -> void:
+	if group_box != null:
+		return
+	group_box = VBoxContainer.new()
+	group_box.name = "GroupBox"
+	group_box.add_theme_constant_override("separation", 6)
+	group_box.anchor_left = 1.0; group_box.anchor_right = 1.0
+	group_box.offset_left = -68; group_box.offset_right = -15
+	group_box.offset_top = 420
+	hud_root.add_child(group_box)
+	for i in 4:
+		var b := Button.new()
+		b.name = "Group%d" % (i + 1)
+		b.custom_minimum_size = Vector2(53, 46)
+		b.tooltip_text = "Grup %d: basılı tut = kaydet, dokun = seç, çift dokun = git" % (i + 1)
+		ParchmentTheme.apply_parchment_button(b, 14)
+		var idx := i
+		b.button_down.connect(func(): _group_down_ms[idx] = Time.get_ticks_msec())
+		b.button_up.connect(func(): _on_group_released(idx))
+		group_box.add_child(b)
+		group_buttons.append(b)
+	_refresh_group_buttons()
+
+func _on_group_released(i: int) -> void:
+	var now := Time.get_ticks_msec()
+	if now - int(_group_down_ms[i]) >= GROUP_HOLD_MS:
+		group_held.emit(i)
+		_group_last_tap_ms[i] = 0
+	elif now - int(_group_last_tap_ms[i]) <= GROUP_DOUBLE_MS:
+		group_double_tapped.emit(i)
+		_group_last_tap_ms[i] = 0
+	else:
+		group_tapped.emit(i)
+		_group_last_tap_ms[i] = now
+
+func _refresh_group_buttons() -> void:
+	if group_buttons.is_empty() or game_controller == null or not ("control_groups" in game_controller):
+		return
+	for i in group_buttons.size():
+		var n := 0
+		for u in game_controller.control_groups[i]:
+			if is_instance_valid(u) and u.hp > 0:
+				n += 1
+		var b: Button = group_buttons[i]
+		var t := "%d" % (i + 1) if n == 0 else "%d·%d" % [i + 1, n]
+		if b.text != t:
+			b.text = t
+		b.modulate = Color(1, 1, 1, 1.0 if n > 0 else 0.6)
 
 ## ---- messages ----------------------------------------------------------------------------------------
 ## One stack under the top bar, left of the minimap, so nothing runs off the portrait screen or overlaps:
