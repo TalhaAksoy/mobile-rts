@@ -154,6 +154,10 @@ def pat_brick_band(rng):
         v[48:52, (xx + 4) % TEX_SIZE] = 0.5
     return v
 
+def pat_brick(rng):
+    """Brick Gothic (Teutonic Order castles): small courses of red brick."""
+    return pat_ashlar(rng, row_h=6, min_w=9, max_w=13)
+
 def pat_barrel_tiles(rng, col_w=8, row_h=12):
     """Mediterranean / Ottoman barrel (Roman) tiles: vertical rounded columns, overlapped rows."""
     v = np.zeros((TEX_SIZE, TEX_SIZE))
@@ -318,7 +322,7 @@ def pat_crop(rng):
 
 PATTERNS = {
     "thatch": pat_thatch, "furrows": pat_furrows, "crop": pat_crop,
-    "flat": pat_flat, "plaster": pat_plaster, "ashlar": pat_ashlar, "brick_band": pat_brick_band,
+    "flat": pat_flat, "plaster": pat_plaster, "ashlar": pat_ashlar, "brick_band": pat_brick_band, "brick": pat_brick,
     "barrel": pat_barrel_tiles, "kawara": pat_kawara, "slate": pat_slate, "planks": pat_planks,
     "beam": pat_beam, "lead": pat_lead_ribs, "felt": pat_felt, "lattice": pat_lattice,
     "dirt": pat_dirt, "grass": pat_grass, "window": pat_window,
@@ -333,6 +337,7 @@ MATERIALS = {
     "PE_StoneGrey":    ("ashlar", "stone_grey", 0.9, 0.0),
     "PE_Sandstone":    ("ashlar", "sandstone", 0.9, 0.0),
     "PE_StoneBrick":   ("brick_band", "stone_warm", 0.9, 0.0),
+    "PE_BrickRed":     ("brick", "brick_red", 0.9, 0.0),
     "PE_RoofRed":      ("barrel", "roof_red", 0.8, 0.0),
     "PE_RoofSlate":    ("slate", "roof_slate", 0.7, 0.0),
     "PE_RoofDark":     ("kawara", "roof_dark", 0.7, 0.0),

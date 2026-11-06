@@ -328,7 +328,7 @@ static func _apply_library_materials(node: Node, team: int) -> void:
 ## standards at the front corners (see add_age_dressing). Mongol felt, domes, lacquer and banners stay as they are.
 const AGE1_MATERIALS := {
 	"PE_StoneWarm": "PE_PlasterCream", "PE_StoneGrey": "PE_PlasterCream", "PE_StoneBrick": "PE_PlasterCream",
-	"PE_Sandstone": "PE_Soil", "PE_SlateDark": "PE_WoodDark",
+	"PE_Sandstone": "PE_Soil", "PE_SlateDark": "PE_WoodDark", "PE_BrickRed": "PE_PlasterCream",
 	"PE_RoofRed": "PE_Thatch", "PE_RoofSlate": "PE_Thatch", "PE_RoofDark": "PE_Thatch", "PE_RoofTeal": "PE_Thatch",
 	"PE_TileTeal": "PE_Thatch", "PE_Shingle": "PE_Thatch", "PE_Gold": "PE_WoodDark",
 }

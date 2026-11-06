@@ -1,33 +1,34 @@
 {
-  "tris": 1196,
-  "verts": 2326,
+  "tris": 868,
+  "verts": 1492,
   "materials": [
     "PE_Dirt",
     "PE_StoneGrey",
-    "PE_RoofTeal",
+    "PE_Window",
     "PE_WoodDark",
     "PE_LacquerRed",
     "PE_Lattice",
     "TEAM_Trim",
+    "PE_RoofTeal",
     "PE_Gold",
     "PE_Banner_chinese"
   ],
   "bounds_min": [
-    -3.545,
-    -3.545,
+    -3.72,
+    -3.485,
     0.0
   ],
   "bounds_max": [
-    3.545,
+    3.72,
     3.555,
-    5.16
+    4.43
   ],
   "asset_id": "castle",
   "civ": "chinese",
   "kind": "buildings",
   "blend": "art_source/blender/chinese/castle.blend",
   "glb": "res://assets/3d/buildings/chinese/castle.glb",
-  "glb_bytes": 92648,
+  "glb_bytes": 70632,
   "grid": [
     4,
     4

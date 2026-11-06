@@ -1,34 +1,35 @@
 {
-  "tris": 1890,
-  "verts": 3236,
+  "tris": 1393,
+  "verts": 1777,
   "materials": [
     "PE_Dirt",
-    "PE_StoneWarm",
-    "PE_PlasterCream",
-    "PE_WoodDark",
-    "TEAM_Trim",
+    "PE_StoneBrick",
     "PE_Window",
-    "PE_DomeLead",
+    "PE_WoodDark",
+    "PE_Banner_ottomans",
     "PE_Gold",
-    "PE_RoofRed",
-    "PE_Banner_ottomans"
+    "TEAM_Trim",
+    "PE_DomeLead",
+    "PE_StoneWarm",
+    "PE_PlasterWhite",
+    "PE_PlasterCream"
   ],
   "bounds_min": [
-    -3.5,
+    -3.622,
     -3.584,
     0.0
   ],
   "bounds_max": [
-    3.44,
+    3.638,
     3.511,
-    5.57
+    7.46
   ],
   "asset_id": "castle",
   "civ": "ottomans",
   "kind": "buildings",
   "blend": "art_source/blender/ottomans/castle.blend",
   "glb": "res://assets/3d/buildings/ottomans/castle.glb",
-  "glb_bytes": 139604,
+  "glb_bytes": 99952,
   "grid": [
     4,
     4

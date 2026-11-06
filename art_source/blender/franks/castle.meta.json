@@ -1,33 +1,33 @@
 {
-  "tris": 1635,
-  "verts": 2729,
+  "tris": 1619,
+  "verts": 2149,
   "materials": [
     "PE_Dirt",
-    "PE_StoneGrey",
     "PE_StoneWarm",
     "TEAM_Trim",
     "PE_Window",
+    "PE_WoodDark",
     "PE_RoofSlate",
     "PE_Gold",
-    "PE_WoodDark",
-    "PE_Banner_franks"
+    "PE_Banner_franks",
+    "PE_StoneGrey"
   ],
   "bounds_min": [
-    -3.466,
+    -3.513,
     -3.553,
     0.0
   ],
   "bounds_max": [
     3.581,
     3.527,
-    6.13
+    7.86
   ],
   "asset_id": "castle",
   "civ": "franks",
   "kind": "buildings",
   "blend": "art_source/blender/franks/castle.blend",
   "glb": "res://assets/3d/buildings/franks/castle.glb",
-  "glb_bytes": 109276,
+  "glb_bytes": 118384,
   "grid": [
     4,
     4

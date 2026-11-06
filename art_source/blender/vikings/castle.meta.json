@@ -1,35 +1,35 @@
 {
-  "tris": 2570,
-  "verts": 4548,
+  "tris": 1291,
+  "verts": 2245,
   "materials": [
     "PE_Dirt",
     "PE_WoodDark",
+    "PE_Grass",
     "PE_WoodLight",
     "TEAM_Trim",
     "PE_Iron",
-    "PE_Shingle",
     "PE_StoneGrey",
-    "PE_Window",
+    "PE_Shingle",
     "PE_LacquerRed",
-    "PE_Banner_vikings",
-    "PE_Gold"
+    "PE_Gold",
+    "PE_Banner_vikings"
   ],
   "bounds_min": [
-    -3.495,
-    -3.495,
+    -3.432,
+    -3.475,
     0.0
   ],
   "bounds_max": [
     3.584,
-    3.495,
-    3.285
+    3.476,
+    2.56
   ],
   "asset_id": "castle",
   "civ": "vikings",
   "kind": "buildings",
   "blend": "art_source/blender/vikings/castle.blend",
   "glb": "res://assets/3d/buildings/vikings/castle.glb",
-  "glb_bytes": 199448,
+  "glb_bytes": 101300,
   "grid": [
     4,
     4

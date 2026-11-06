@@ -1,33 +1,33 @@
 {
-  "tris": 2006,
-  "verts": 3734,
+  "tris": 1633,
+  "verts": 2193,
   "materials": [
     "PE_Dirt",
     "PE_StoneBrick",
     "PE_StoneWarm",
     "PE_Window",
     "TEAM_Trim",
-    "PE_RoofRed",
-    "PE_Gold",
     "PE_WoodDark",
-    "PE_Banner_byzantines"
+    "PE_Banner_byzantines",
+    "PE_Gold",
+    "PE_RoofRed"
   ],
   "bounds_min": [
-    -3.455,
+    -3.565,
     -3.507,
     0.0
   ],
   "bounds_max": [
-    3.53,
+    3.565,
     3.599,
-    5.16
+    4.13
   ],
   "asset_id": "castle",
   "civ": "byzantines",
   "kind": "buildings",
   "blend": "art_source/blender/byzantines/castle.blend",
   "glb": "res://assets/3d/buildings/byzantines/castle.glb",
-  "glb_bytes": 145760,
+  "glb_bytes": 117836,
   "grid": [
     4,
     4

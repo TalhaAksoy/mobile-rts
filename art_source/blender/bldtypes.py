@@ -3,6 +3,7 @@ recognisable across civs; the civ shows in masonry, roof form, tower form and pr
 Every builder returns the finalized object. Front = -Y (camera side)."""
 import pe_kit, parts
 import civstyle as cs
+import castles
 from pe_kit import Builder
 
 
@@ -188,8 +189,12 @@ def build_watch_tower(civ):
 
 
 def build_castle(civ):
-    """4x4 (pad +-3.6): curtain walls with four corner towers, gate in front, keep in the middle."""
+    """4x4 (pad +-3.6). Every civ but the Mongols builds its own fortress type (castles.py); the Mongol
+    karakorum camp (palisade, gers) is the layout below."""
     b, z0 = _pad(civ, "castle", 3.6, 17)
+    if civ in castles.BUILDERS:
+        castles.BUILDERS[civ](b, z0)
+        return b.finalize()
     st = cs.style(civ)
     H = 1.5
     e = 2.75                       # wall line
