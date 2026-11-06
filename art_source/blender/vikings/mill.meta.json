@@ -1,40 +1,38 @@
 {
-  "tris": 667,
-  "verts": 763,
+  "tris": 678,
+  "verts": 678,
   "materials": [
     "PE_Banner_vikings",
     "PE_Beam",
+    "PE_Canal",
     "PE_Dirt",
     "PE_Felt",
     "PE_Gold",
-    "PE_Iron",
-    "PE_SailCloth",
-    "PE_Shingle",
+    "PE_Grass",
     "PE_StoneGrey",
-    "PE_Window",
     "PE_WoodDark",
     "PE_WoodLight",
     "TEAM_Trim"
   ],
   "bounds_min": [
-    -1.758,
+    -1.8,
     -1.788,
     0.0
   ],
   "bounds_max": [
-    1.771,
+    1.8,
     1.763,
-    3.41
+    2.41
   ],
   "parts": [
-    "Sails"
+    "WheelH"
   ],
   "asset_id": "mill",
   "civ": "vikings",
   "kind": "buildings",
   "blend": "art_source/blender/vikings/mill.blend",
   "glb": "res://assets/3d/buildings/vikings/mill.glb",
-  "glb_bytes": 57936,
+  "glb_bytes": 58220,
   "grid": [
     2,
     2

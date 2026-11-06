@@ -1,8 +1,9 @@
 """Japanese Mill (2x2 grid -> 3.6 m footprint) = farm centre + food drop-off.
 
 Reference: art/buildings/japanese/mill.png (tower windmill, shared by every civ in the gallery).
-Civ reading: White plaster tower on a battered stone base with a double-eave dark kawara cap; kura storehouse; rice-straw bales.
-Sails are a separate object "Sails" so Godot can turn them (Building3D)."""
+Civ reading: Mizuguruma: a wooden water wheel feeding a white-plastered rice-pounding hut under a dark tile roof (windmills were not used).
+The wheel is a separate object ("Sails" / "WheelH") so Godot can turn it (Building3D).
+"""
 import pe_kit, parts
 
 CIV = "japanese"
@@ -10,14 +11,13 @@ ASSET = "mill"
 
 
 def extras(b, z0):
-    for (x, y) in ((1.3, 0.55), (1.5, 0.8)):
+    for (x, y) in ((1.05, -0.95), (1.4, -1.0)):
         b.cylinder((x, y, z0), 0.17, 0.32, "PE_Thatch", segs=8, smooth=False)     # rice-straw bales
-    b.box((1.1, 1.35, z0 + 0.45), (0.06, 0.06, 0.9), "PE_LacquerRed")
+    b.box((1.6, -0.5, z0 + 0.45), (0.06, 0.06, 0.9), "PE_LacquerRed")
 
 
 def build():
-    return parts.build_mill("japanese_mill", CIV, {"tower_mat": "PE_PlasterWhite", "base_mat": "PE_StoneGrey", "cap": "tiered", "cap_mat": "PE_RoofDark", "cap_wall": "PE_PlasterWhite",
-            "annex": "kura", "annex_wall": "PE_PlasterWhite", "annex_roof": "PE_RoofDark", "sail_mat": "PE_SailCloth", "extras": extras})
+    return parts.build_watermill("japanese_mill", CIV, {"wall": "PE_PlasterWhite", "base": "PE_RoofDark", "roof": "curved", "roof_mat": "PE_RoofDark", "lattice": True, "extras": extras})
 
 
 def run(export=True):

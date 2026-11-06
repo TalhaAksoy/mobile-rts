@@ -62,6 +62,14 @@ func _run() -> void:
 			_check(absf(aabb.position.y) < 0.05, tag + ": base rests on ground (min y = %.3f)" % aabb.position.y)
 			_check(aabb.position.x >= -half_fp.x - 0.05 and aabb.end.x <= half_fp.x + 0.05 and aabb.position.z >= -half_fp.y - 0.05 and aabb.end.z <= half_fp.y + 0.05,
 				tag + ": fits %dx%d footprint (aabb %s)" % [b.grid_size.x, b.grid_size.y, str(aabb)])
+			if b_id == "mill":
+				var mills_turn: bool = b.sails_node != null and (b.sails_node.name == "Sails" or b.sails_node.name == "WheelH")
+				_check(mills_turn, tag + ": the mill has a turning part (sails or water wheel)")
+				if mills_turn:
+					var before: Basis = b.sails_node.transform.basis
+					b.is_completed = true
+					b._process(0.5)
+					_check(not b.sails_node.transform.basis.is_equal_approx(before), tag + ": its %s turns when the mill is finished" % b.sails_node.name)
 			var col_box := b.collision_shape.shape as BoxShape3D
 			_check(col_box != null and is_equal_approx(col_box.size.x, b.grid_size.x * 2.0 * 0.9), tag + ": collision is the simple footprint box")
 			var bad_surfaces := []

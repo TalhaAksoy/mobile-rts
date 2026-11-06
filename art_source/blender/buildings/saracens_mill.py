@@ -1,8 +1,9 @@
 """Saracens Mill (2x2 grid -> 3.6 m footprint) = farm centre + food drop-off.
 
 Reference: art/buildings/saracens/mill.png (tower windmill, shared by every civ in the gallery).
-Civ reading: Sandstone tower with a teal-tiled dome cap and gold finial; domed sandstone granary; date palm.
-Sails are a separate object "Sails" so Godot can turn them (Building3D)."""
+Civ reading: Hama-style noria: a giant wooden wheel lifting water to a stone aqueduct on pointed arches, with the animal-turned millstone (tahuna) that really ground the grain.
+The wheel is a separate object ("Sails" / "WheelH") so Godot can turn it (Building3D).
+"""
 import pe_kit, parts
 
 CIV = "saracens"
@@ -18,8 +19,7 @@ def extras(b, z0):
 
 
 def build():
-    return parts.build_mill("saracens_mill", CIV, {"tower_mat": "PE_Sandstone", "cap": "dome", "cap_mat": "PE_TileTeal", "rim_mat": "PE_TileTeal",
-            "annex": "dome", "annex_wall": "PE_Sandstone", "annex_roof": "PE_TileTeal", "extras": extras})
+    return parts.build_noria("saracens_mill", CIV, {"wall": "PE_Sandstone", "extras": extras})
 
 
 def run(export=True):

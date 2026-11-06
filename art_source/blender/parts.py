@@ -303,3 +303,162 @@ def shutters(b, center, facing, w, h, mat="TEAM_Trim"):
             b.box((x + s * (w / 2 + w * 0.28), y + fy * 0.03, z), (w * 0.5, 0.03, h), mat)
         else:
             b.box((x + fx * 0.03, y + s * (w / 2 + w * 0.28), z), (0.03, w * 0.5, h), mat)
+
+
+# ---------------------------------------------------------------- watermills (mill = farm centre + food drop-off)
+def _wheel(name, radius, width=0.22, paddles=10, frame="PE_WoodDark", paddle="PE_WoodLight", horizontal=False):
+    """Water wheel as a separate object so Godot can turn it (Building3D): "Sails" turns about the axle along
+    Blender -Y (a vertical wheel facing the camera), "WheelH" about the vertical axis (Norse horizontal mill)."""
+    from pe_kit import Builder
+    s = Builder(name)
+
+    def P(u, v, w):        # wheel-plane coordinates -> object space
+        return (u, w, v) if not horizontal else (u, v, w)
+    n = 12
+    for k in range(n):                                          # rim (one ring; the paddles give the width)
+        a0, a1 = 2 * math.pi * k / n, 2 * math.pi * (k + 1) / n
+        s.cylinder_between(P(radius * math.cos(a0), radius * math.sin(a0), 0),
+                           P(radius * math.cos(a1), radius * math.sin(a1), 0), 0.05, frame, segs=4, smooth=False)
+    for k in range(4):                                          # spokes
+        a = math.pi * k / 4
+        s.cylinder_between(P(-radius * math.cos(a), -radius * math.sin(a), 0), P(radius * math.cos(a), radius * math.sin(a), 0),
+                           0.03, frame, segs=4, smooth=False)
+    for k in range(paddles):                                    # paddles (boards across the rim)
+        a = 2 * math.pi * k / paddles
+        c = (radius * 0.97 * math.cos(a), radius * 0.97 * math.sin(a))
+        r_out = (radius * 1.12 * math.cos(a), radius * 1.12 * math.sin(a))
+        s.cylinder_between(P(c[0], c[1], 0), P(r_out[0], r_out[1], 0), width * 0.55, paddle, segs=4, smooth=False)
+    s.cylinder_between(P(0, 0, -width), P(0, 0, width), 0.08, frame, segs=6, smooth=False)   # hub
+    return s.finalize()
+
+
+def _stream(b, x0, x1, y, w, z0, bank="PE_StoneGrey"):
+    b.quad((x0, y - w / 2, z0 + 0.01), (x1, y - w / 2, z0 + 0.01), (x1, y + w / 2, z0 + 0.01), (x0, y + w / 2, z0 + 0.01), "PE_Canal")
+    for sy in (-1, 1):
+        b.box(((x0 + x1) / 2, y + sy * (w / 2 + 0.06), z0 + 0.06), (x1 - x0, 0.12, 0.12), bank)
+
+
+def _mill_yard(b, civ, z0, extras=None):
+    for (sx, sy) in ((0.35, -1.45), (0.62, -1.5), (0.48, -1.25)):
+        sack(b, (sx, sy, z0))
+    crate(b, (1.35, -1.4, z0), s=0.3)
+    timber_post(b, (-1.45, -1.4, z0), 1.5, s=0.07)
+    b.box((-1.45, -1.4, z0 + 1.52), (0.11, 0.11, 0.12), "TEAM_Trim")
+    b.banner((-1.45, -1.44, z0 + 1.45), (0, -1, 0), 0.26, 0.5, civ)
+    if extras:
+        extras(b, z0)
+
+
+def build_watermill(name, civ, spec):
+    """Mill house on a stream with a vertical undershot wheel (Byzantine, Teutonic, Japanese, Chinese mills).
+    spec: wall, base, roof ('gable'|'hip'|'curved'), roof_mat, stepped (bool), posts (lacquer columns),
+    platform (stone plinth), extras (callable(b, z0))."""
+    import pe_kit
+    from pe_kit import Builder
+    pe_kit.reset_scene()
+    b = Builder(name)
+    pe_kit.ground_pad(b, 1.8, 1.8, seed=sum(map(ord, civ)) % 97)
+    z0 = 0.08
+    hx, hy, hw, hd, hh = 0.35, 0.75, 2.1, 1.4, 1.35
+    zb = z0
+    if spec.get("platform"):
+        b.box((hx, hy, z0 + 0.1), (hw + 0.2, hd + 0.2, 0.2), "PE_StoneGrey")
+        zb = z0 + 0.2
+    b.box((hx, hy, zb + 0.15), (hw + 0.05, hd + 0.05, 0.3), spec.get("base", "PE_StoneGrey"))
+    b.box((hx, hy, zb + hh / 2), (hw, hd, hh), spec["wall"])
+    fy = hy - hd / 2
+    if spec.get("posts"):
+        for i in range(4):
+            b.box((hx - hw / 2 + i * hw / 3, fy - 0.03, zb + hh / 2), (0.1, 0.08, hh), spec["posts"])
+    b.arch_opening((hx + 0.45, fy, zb), (0, -1, 0), 0.45, 0.8, "PE_WoodDark", None, segs=4)
+    b.box((hx - 0.2, fy - 0.02, zb + 0.95), (0.4, 0.03, 0.3), "PE_Lattice" if spec.get("lattice") else "PE_Window")
+    b.box((hx + 0.45, fy - 0.03, zb + hh - 0.15), (0.6, 0.03, 0.09), "TEAM_Trim")
+    roof, rm = spec.get("roof", "gable"), spec["roof_mat"]
+    if roof == "gable":
+        b.gable_roof((hx, hy, zb + hh), hw, hd, 0.75, rm, overhang=0.18, ridge_axis="x", end_mat=spec["wall"])
+        b.gable_end((hx, hy, zb + hh), hw, hd, 0.75, spec["wall"], ridge_axis="x")
+        if spec.get("stepped"):
+            import civstyle
+            civstyle._stepped_gables(b, hx, hy, zb + hh, hw, hd, 0.75, "x", spec["wall"], steps=4)
+    else:
+        b.hip_roof((hx, hy, zb + hh), hw, hd, 0.6, rm, overhang=0.28, curve=0.14 if roof == "curved" else 0.0,
+                   under_mat=spec.get("under", "PE_WoodDark"))
+    # the mill race in front of the house; the wheel stands in it, its axle running into the front wall
+    _stream(b, -1.8, 1.8, -0.35, 0.7, z0)
+    wx = -0.6
+    b.cylinder_between((wx, -0.35, z0 + 0.6), (wx, fy, z0 + 0.6), 0.05, "PE_WoodDark", segs=6, smooth=False)
+    for sx in (-1, 1):                                          # axle bearing posts
+        b.box((wx + sx * 0.18, -0.05, z0 + 0.35), (0.08, 0.08, 0.7), "PE_WoodDark")
+    _mill_yard(b, civ, z0, spec.get("extras"))
+    main = b.finalize()
+    wheel = _wheel("Sails", 0.62, width=0.26)
+    wheel.location = (wx, -0.35, z0 + 0.62)
+    wheel.parent = main
+    return main, wheel
+
+
+def build_noria(name, civ, spec):
+    """Hama-style noria: a giant wooden wheel lifting water to a stone aqueduct on pointed arches, and a small
+    animal-turned millstone (tahuna) beside it, which is what actually ground the grain."""
+    import pe_kit
+    from pe_kit import Builder
+    pe_kit.reset_scene()
+    b = Builder(name)
+    pe_kit.ground_pad(b, 1.8, 1.8, seed=sum(map(ord, civ)) % 97)
+    z0 = 0.08
+    W = spec.get("wall", "PE_Sandstone")
+    _stream(b, -1.8, 0.6, -0.1, 0.8, z0, bank=W)
+    wx, R = -0.75, 1.15
+    zc = z0 + R + 0.05
+    # aqueduct: two arched piers carrying a channel from the wheel top to the back-right
+    for x in (0.0, 1.1):
+        b.box((x, 0.45, z0 + 1.15), (0.35, 0.5, 2.3), W)
+    b.box((0.55, 0.45, z0 + 2.4), (1.9, 0.6, 0.25), W)
+    b.box((0.55, 0.45, z0 + 2.56), (1.9, 0.4, 0.08), "PE_Canal")
+    b.arch_opening((0.55, 0.2, z0), (0, -1, 0), 0.7, 1.9, "PE_Window", None, depth=0.02, frame=0.0, segs=4, pointed=True)
+    b.box((0.55, 0.19, z0 + 2.15), (1.0, 0.03, 0.1), "TEAM_Trim")
+    for sx in (-1, 1):                                          # the wheel's bearing walls
+        b.box((wx, -0.1 + sx * 0.32, zc * 0.5 + z0 * 0.5), (0.3, 0.12, zc - z0 + 0.1), W)
+    # tahuna: millstone turned by a beam
+    b.cylinder((1.15, -1.0, z0), 0.42, 0.22, "PE_StoneGrey", segs=10, smooth=False)
+    b.cylinder((1.15, -1.0, z0 + 0.22), 0.3, 0.16, "PE_StoneGrey", segs=10, smooth=False)
+    b.cylinder_between((1.15, -1.0, z0 + 0.45), (0.25, -1.0, z0 + 0.6), 0.04, "PE_WoodDark", segs=4)
+    _mill_yard(b, civ, z0, spec.get("extras"))
+    main = b.finalize()
+    wheel = _wheel("Sails", R, width=0.3, paddles=16, paddle="PE_WoodLight")
+    wheel.location = (wx, -0.1, zc)
+    wheel.parent = main
+    return main, wheel
+
+
+def build_norse_mill(name, civ, spec):
+    """Norse horizontal watermill: a tiny plank hut on posts over a stream, its horizontal paddle wheel turning
+    below the floor (no windmills in the Norse world)."""
+    import pe_kit
+    from pe_kit import Builder
+    pe_kit.reset_scene()
+    b = Builder(name)
+    pe_kit.ground_pad(b, 1.8, 1.8, seed=sum(map(ord, civ)) % 97)
+    z0 = 0.08
+    _stream(b, -1.8, 1.8, 0.2, 0.9, z0)
+    hx, hy, hw, hd = -0.2, 0.25, 1.3, 1.1
+    for sx in (-1, 1):
+        for sy in (-1, 1):
+            b.box((hx + sx * (hw / 2 - 0.08), hy + sy * (hd / 2 - 0.08), z0 + 0.3), (0.12, 0.12, 0.6), "PE_StoneGrey")
+    zf = z0 + 0.6
+    b.box((hx, hy, zf + 0.04), (hw + 0.1, hd + 0.1, 0.08), "PE_WoodDark")
+    b.box((hx, hy, zf + 0.08 + 0.45), (hw, hd, 0.9), "PE_WoodDark")
+    for i in range(6):
+        b.box((hx - hw / 2 + 0.1 + i * (hw - 0.2) / 5, hy - hd / 2 - 0.015, zf + 0.53), (0.04, 0.03, 0.9), "PE_WoodLight")
+    b.box((hx + 0.3, hy - hd / 2 - 0.02, zf + 0.4), (0.35, 0.03, 0.6), "PE_WoodLight")
+    b.box((hx - 0.25, hy - hd / 2 - 0.02, zf + 0.8), (0.5, 0.03, 0.09), "TEAM_Trim")
+    b.gable_roof((hx, hy, zf + 0.98), hw, hd, 0.75, spec.get("roof_mat", "PE_Grass"), overhang=0.2, ridge_axis="x",
+                 end_mat="PE_WoodDark")
+    b.gable_end((hx, hy, zf + 0.98), hw, hd, 0.75, "PE_WoodDark", ridge_axis="x")
+    b.cylinder((hx, hy, z0), 0.05, zf - z0, "PE_WoodDark", segs=5, cap=False)          # the vertical shaft
+    _mill_yard(b, civ, z0, spec.get("extras"))
+    main = b.finalize()
+    wheel = _wheel("WheelH", 0.38, width=0.1, paddles=12, horizontal=True)
+    wheel.location = (hx, hy, z0 + 0.18)
+    wheel.parent = main
+    return main, wheel

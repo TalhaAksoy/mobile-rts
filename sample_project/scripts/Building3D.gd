@@ -93,8 +93,10 @@ var flag_sprites: Array[Sprite3D] = []
 var anim_time: float = 0.0
 ## FARM only: crop meshes hidden/shrunk while the field is being prepared.
 var field_crops: Array = []
-## Windmill sails sub-node of a Mill model (spins while the mill is finished).
+## Turning part of a Mill model while the mill is finished: windmill sails or a vertical water wheel ("Sails",
+## axle towards the camera), or the horizontal paddle wheel of the Norse mill ("WheelH", vertical axle).
 var sails_node: Node3D = null
+var sails_axis := Vector3(0, 0, 1)
 ## 1 = base, 2 = upgraded by this building's own technology (TechData "level" effect): adds the
 ## civilisation's upgrade dressing (banners, plinth, ornaments) around the building.
 var upgrade_level: int = 1
@@ -377,6 +379,10 @@ func _build_3d_structure() -> void:
 		model_root.add_child(building_model)
 		_refresh_age_dressing()
 		sails_node = _find_named(building_model, "Sails")
+		sails_axis = Vector3(0, 0, 1)                                    # Blender Y (towards camera) = Godot local Z
+		if sails_node == null:
+			sails_node = _find_named(building_model, "WheelH")
+			sails_axis = Vector3(0, 1, 0)
 		var aabb := FactionArtManager.compute_visual_aabb(building_model)
 		model_height = aabb.end.y
 		v_height = clamp(aabb.end.y * 0.82, 1.6, 7.0)
@@ -878,7 +884,7 @@ func _build_3d_hp_bar(height_y: float) -> void:
 func _process(delta: float) -> void:
 	anim_time += delta
 	if sails_node != null and is_completed:
-		sails_node.rotate_object_local(Vector3(0, 0, 1), delta * 0.9)   # Blender Y (towards camera) = Godot local Z
+		sails_node.rotate_object_local(sails_axis, delta * 0.9)
 	for f in flag_sprites:
 		if is_instance_valid(f):
 			f.rotation.z = sin(anim_time * 3.4 + global_position.x) * 0.08

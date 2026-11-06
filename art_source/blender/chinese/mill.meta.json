@@ -1,30 +1,30 @@
 {
-  "tris": 697,
-  "verts": 901,
+  "tris": 655,
+  "verts": 689,
   "materials": [
     "PE_Banner_chinese",
+    "PE_Canal",
     "PE_Dirt",
     "PE_Felt",
     "PE_Gold",
     "PE_LacquerRed",
+    "PE_Lattice",
     "PE_PlasterCream",
     "PE_RoofTeal",
-    "PE_SailCloth",
     "PE_StoneGrey",
-    "PE_Window",
     "PE_WoodDark",
     "PE_WoodLight",
     "TEAM_Trim"
   ],
   "bounds_min": [
-    -1.763,
+    -1.8,
     -1.792,
     0.0
   ],
   "bounds_max": [
-    1.796,
+    1.8,
     1.799,
-    3.26
+    2.23
   ],
   "parts": [
     "Sails"
@@ -34,7 +34,7 @@
   "kind": "buildings",
   "blend": "art_source/blender/chinese/mill.blend",
   "glb": "res://assets/3d/buildings/chinese/mill.glb",
-  "glb_bytes": 60588,
+  "glb_bytes": 57728,
   "grid": [
     2,
     2

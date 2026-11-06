@@ -1,15 +1,15 @@
 {
-  "tris": 625,
-  "verts": 691,
+  "tris": 669,
+  "verts": 687,
   "materials": [
     "PE_Banner_teutons",
     "PE_Beam",
+    "PE_BrickRed",
+    "PE_Canal",
     "PE_Dirt",
     "PE_Felt",
     "PE_Gold",
-    "PE_PlasterWhite",
-    "PE_SailCloth",
-    "PE_SlateDark",
+    "PE_RoofRed",
     "PE_StoneGrey",
     "PE_Window",
     "PE_WoodDark",
@@ -17,14 +17,14 @@
     "TEAM_Trim"
   ],
   "bounds_min": [
-    -1.759,
+    -1.8,
     -1.757,
     0.0
   ],
   "bounds_max": [
-    1.754,
+    1.8,
     1.781,
-    3.41
+    2.19
   ],
   "parts": [
     "Sails"
@@ -34,7 +34,7 @@
   "kind": "buildings",
   "blend": "art_source/blender/teutons/mill.blend",
   "glb": "res://assets/3d/buildings/teutons/mill.glb",
-  "glb_bytes": 55184,
+  "glb_bytes": 59492,
   "grid": [
     2,
     2
