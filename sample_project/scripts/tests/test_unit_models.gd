@@ -136,16 +136,31 @@ func _run() -> void:
 	# team colour on the sash (TEAM_Trim surface) for both teams
 	var sw0: Unit3D = game.spawn_unit(Unit3D.UnitType.SWORDSMAN, 0, _villager_spot() + Vector3(0, 0, -3))
 	var sw1: Unit3D = game.spawn_unit(Unit3D.UnitType.SWORDSMAN, 1, _villager_spot() + Vector3(1.2, 0, -3))
+	# (the trim is merged into the palette surface and drawn from the team's palette swatch,
+	#  FactionArtManager._merge_unit_team_surface; a model left unmerged keeps its TEAM_* surface)
 	var team_cols := []
+	var sw := FactionArtManager.TEAM_SWATCH
 	for u in [sw0, sw1]:
 		var c = null
 		for mi in u.unit_model.find_children("*", "MeshInstance3D", true, false):
 			for si in mi.mesh.get_surface_count():
 				var m = mi.get_surface_override_material(si)
-				if m != null and String(m.resource_name).begins_with("TEAM_"):
+				if m == null:
+					continue
+				if String(m.resource_name).begins_with("TEAM_"):
 					c = m.albedo_color
+				elif String(m.resource_name) == "PE_UnitPalette" and m.albedo_texture is ImageTexture:
+					c = m.albedo_texture.get_image().get_pixel(sw.position.x + sw.size.x / 2, sw.position.y + sw.size.y / 2)
 		team_cols.append(c)
-	_check(team_cols[0] == FactionArtManager.TEAM_COLORS[0] and team_cols[1] == FactionArtManager.TEAM_COLORS[1], "3D: sash in the team colour (%s / %s)" % [team_cols[0], team_cols[1]])
+	var close := func(a, b): return a != null and (a as Color).is_equal_approx(b) or (a != null and absf(a.r - b.r) + absf(a.g - b.g) + absf(a.b - b.b) < 0.02)
+	_check(close.call(team_cols[0], FactionArtManager.TEAM_COLORS[0]) and close.call(team_cols[1], FactionArtManager.TEAM_COLORS[1]),
+		"3D: sash in the team colour (%s / %s)" % [team_cols[0], team_cols[1]])
+	# one body surface per unit (palette + trim merged): fewer draw calls
+	var surf := 0
+	for mi in sw0.unit_model.find_children("*", "MeshInstance3D", true, false):
+		if mi.skin != null and String(mi.name).begins_with("Body"):
+			surf = mi.mesh.get_surface_count()
+	_check(surf == 1, "3D: the unit body is one surface (%d)" % surf)
 	# attack restarts on every swing
 	sw0.command_attack(sw1)
 	var swings := 0

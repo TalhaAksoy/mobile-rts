@@ -866,7 +866,103 @@ static func instantiate_unit_model(civ_type: CivData.CivType, unit_type: Unit3D.
 		return null
 	var inst := ps.instantiate() as Node3D
 	_apply_unit_materials(inst, team)
+	if merge_unit_surfaces:
+		_merge_unit_team_surface(inst, path, team)
 	return inst
+
+## ---- one surface per unit body ----------------------------------------------------------------------------
+## A unit body was 2 surfaces (palette + TEAM_Trim), each drawn with its stencil X-ray pass and in the shadow pass:
+## ~6 draw calls per unit. The trim faces are remapped onto a reserved swatch of the palette (bottom-right 8x8 px,
+## unused) and merged into the palette surface; each team gets a palette copy with its colour in that swatch.
+## Body meshes are merged once per model; materials once per team. (The lasting fix is to export the trim on that
+## swatch in art_source/blender/units/charkit.py; this runtime merge can then go.)
+const TEAM_SWATCH := Rect2i(248, 248, 8, 8)
+static var merge_unit_surfaces := true       # off: the GLB's own two surfaces (A/B checks)
+static var _merged_body_cache := {}          # model path + mesh name -> ArrayMesh (or false: cannot merge)
+static var _team_palette_cache := {}         # team -> StandardMaterial3D
+
+static func team_palette_material(team: int) -> Material:
+	if _team_palette_cache.has(team):
+		return _team_palette_cache[team]
+	var m := (get_unit_material("PE_UnitPalette", team) as StandardMaterial3D).duplicate() as StandardMaterial3D
+	m.resource_name = "PE_UnitPalette"
+	var tex := m.albedo_texture
+	if tex != null:
+		var img := tex.get_image()
+		if img != null:
+			img = img.duplicate()
+			if img.is_compressed():
+				img.decompress()
+			img.fill_rect(TEAM_SWATCH, (get_team_trim_material(team) as StandardMaterial3D).albedo_color)
+			m.albedo_texture = ImageTexture.create_from_image(img)
+	_team_palette_cache[team] = m
+	return m
+
+static func _merge_unit_team_surface(root: Node, path: String, team: int) -> void:
+	for mi in root.find_children("*", "MeshInstance3D", true, false):
+		if mi.skin == null or mi.mesh == null or not String(mi.name).begins_with("Body"):
+			continue
+		var key := path + "|" + String(mi.name)
+		if not _merged_body_cache.has(key):
+			_merged_body_cache[key] = _build_merged_body(mi.mesh)
+		var merged = _merged_body_cache[key]
+		if merged is ArrayMesh:
+			mi.mesh = merged
+			for i in merged.get_surface_count():
+				var nm: String = merged.surface_get_material(i).resource_name if merged.surface_get_material(i) != null else ""
+				mi.set_surface_override_material(i, team_palette_material(team) if i == 0 else (get_unit_material(nm, team) if nm != "" else null))
+
+## Palette surface + TEAM_Trim surface -> one surface (trim UVs on the team swatch); other surfaces copied as they
+## are. null when the mesh is not the expected skinned palette + trim pair.
+static func _build_merged_body(mesh: Mesh) -> Variant:
+	if not (mesh is ArrayMesh) or (mesh as ArrayMesh).get_blend_shape_count() > 0:
+		return false
+	var am := mesh as ArrayMesh
+	var p := -1
+	var t := -1
+	for i in am.get_surface_count():
+		var nm: String = am.surface_get_material(i).resource_name if am.surface_get_material(i) != null else ""
+		if nm == "PE_UnitPalette" and p < 0:
+			p = i
+		elif nm.begins_with("TEAM_") and t < 0:
+			t = i
+	if p < 0 or t < 0:
+		return false
+	var a: Array = am.surface_get_arrays(p)
+	var b: Array = am.surface_get_arrays(t)
+	for k in [Mesh.ARRAY_VERTEX, Mesh.ARRAY_NORMAL, Mesh.ARRAY_TEX_UV, Mesh.ARRAY_BONES, Mesh.ARRAY_WEIGHTS, Mesh.ARRAY_INDEX]:
+		if a[k] == null or (b[k] == null and k != Mesh.ARRAY_TEX_UV):
+			return false
+	var nb: int = (b[Mesh.ARRAY_VERTEX] as PackedVector3Array).size()
+	var na: int = (a[Mesh.ARRAY_VERTEX] as PackedVector3Array).size()
+	var sw := Vector2((TEAM_SWATCH.position.x + TEAM_SWATCH.size.x * 0.5) / 256.0, (TEAM_SWATCH.position.y + TEAM_SWATCH.size.y * 0.5) / 256.0)
+	var uv_b := PackedVector2Array()
+	uv_b.resize(nb)
+	uv_b.fill(sw)
+	var out := []
+	out.resize(Mesh.ARRAY_MAX)
+	out[Mesh.ARRAY_VERTEX] = (a[Mesh.ARRAY_VERTEX] as PackedVector3Array) + (b[Mesh.ARRAY_VERTEX] as PackedVector3Array)
+	out[Mesh.ARRAY_NORMAL] = (a[Mesh.ARRAY_NORMAL] as PackedVector3Array) + (b[Mesh.ARRAY_NORMAL] as PackedVector3Array)
+	out[Mesh.ARRAY_TEX_UV] = (a[Mesh.ARRAY_TEX_UV] as PackedVector2Array) + uv_b
+	out[Mesh.ARRAY_BONES] = a[Mesh.ARRAY_BONES] + b[Mesh.ARRAY_BONES]
+	out[Mesh.ARRAY_WEIGHTS] = a[Mesh.ARRAY_WEIGHTS] + b[Mesh.ARRAY_WEIGHTS]
+	var idx := (a[Mesh.ARRAY_INDEX] as PackedInt32Array).duplicate()
+	for v in (b[Mesh.ARRAY_INDEX] as PackedInt32Array):
+		idx.append(v + na)
+	out[Mesh.ARRAY_INDEX] = idx
+	var flags := 0
+	if am.surface_get_format(p) & Mesh.ARRAY_FLAG_USE_8_BONE_WEIGHTS:
+		flags |= Mesh.ARRAY_FLAG_USE_8_BONE_WEIGHTS
+	var merged := ArrayMesh.new()
+	merged.add_surface_from_arrays(Mesh.PRIMITIVE_TRIANGLES, out, [], {}, flags)
+	merged.surface_set_material(0, am.surface_get_material(p))
+	for i in am.get_surface_count():
+		if i == p or i == t:
+			continue
+		merged.add_surface_from_arrays(am.surface_get_primitive_type(i), am.surface_get_arrays(i), [], {},
+			am.surface_get_format(i) & Mesh.ARRAY_FLAG_USE_8_BONE_WEIGHTS)
+		merged.surface_set_material(merged.get_surface_count() - 1, am.surface_get_material(i))
+	return merged
 
 ## Palette + team-colour surfaces, each with a see-through pass: where buildings or trees hide the unit
 ## it shows as a flat team-coloured silhouette (depth test inverted), like the sprites' occlusion silhouette.
