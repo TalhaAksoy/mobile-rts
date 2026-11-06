@@ -49,7 +49,11 @@ func _run() -> void:
 				u.set_physics_process(false)     # passive player
 		var mg = game.map_gen
 		var ai = game.enemy_ai
+		# 8x fast with the real game's physics step (1/60 s): more ticks, not longer ones. With 60 ticks a step was
+		# 0.133 s, which skewed movement and made this check swing between runs (see test_ai_difficulty).
 		Engine.time_scale = 8.0
+		Engine.physics_ticks_per_second = 480
+		Engine.max_physics_steps_per_frame = 64
 		var max_army := 0
 		var sealed_max := 0
 		var food_carry_since := {}       # villager -> game time it started carrying food home
@@ -88,6 +92,8 @@ func _run() -> void:
 							sealed += 1
 				sealed_max = maxi(sealed_max, sealed)
 		Engine.time_scale = 1.0
+		Engine.physics_ticks_per_second = 60
+		Engine.max_physics_steps_per_frame = 8
 		_check(max_army >= 5, "seed %d: the bot builds an army (%d soldiers within 6 min)" % [sd, max_army])
 		_check(sealed_max == 0, "seed %d: no bot villager is sealed away from its Town Center (worst check: %d)" % [sd, sealed_max])
 		_check(longest_carry < 60.0, "seed %d: no villager carries food home for a minute or more (longest %.0f s)" % [sd, longest_carry])
