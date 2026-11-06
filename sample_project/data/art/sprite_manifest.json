@@ -5,7 +5,7 @@
     "ages": {
      "1": {
       "anchor": [
-       97.5,
+       100.5,
        189
       ],
       "h": 190,
@@ -14,7 +14,7 @@
       "t0": "res://assets/sprites_px/buildings/britons/archery_range_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/britons/archery_range_a1_t1.png",
       "view": "oblique",
-      "w": 210
+      "w": 195
      },
      "3": {
       "anchor": [
@@ -156,16 +156,16 @@
     "ages": {
      "1": {
       "anchor": [
-       62.5,
-       142
+       67.5,
+       128
       ],
-      "h": 143,
+      "h": 129,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/britons/house_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/britons/house_a1_t1.png",
       "view": "oblique",
-      "w": 127
+      "w": 137
      },
      "3": {
       "anchor": [
@@ -239,9 +239,9 @@
      "1": {
       "anchor": [
        62.5,
-       147
+       172
       ],
-      "h": 148,
+      "h": 173,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/britons/mill_a1_t0.png",
@@ -320,7 +320,7 @@
     "ages": {
      "1": {
       "anchor": [
-       100.5,
+       105.5,
        189
       ],
       "h": 190,
@@ -329,7 +329,7 @@
       "t0": "res://assets/sprites_px/buildings/britons/stable_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/britons/stable_a1_t1.png",
       "view": "oblique",
-      "w": 215
+      "w": 220
      },
      "3": {
       "anchor": [
@@ -361,16 +361,16 @@
     "ages": {
      "1": {
       "anchor": [
-       100.5,
-       252
+       94.5,
+       263
       ],
-      "h": 253,
+      "h": 264,
       "plane_z": 3,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/britons/town_center_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/britons/town_center_a1_t1.png",
       "view": "oblique",
-      "w": 210
+      "w": 204
      },
      "3": {
       "anchor": [
@@ -596,16 +596,16 @@
     "ages": {
      "1": {
       "anchor": [
-       62.5,
-       138
+       64.5,
+       152
       ],
-      "h": 139,
+      "h": 153,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/byzantines/house_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/byzantines/house_a1_t1.png",
       "view": "oblique",
-      "w": 127
+      "w": 129
      },
      "3": {
       "anchor": [
@@ -678,16 +678,16 @@
     "ages": {
      "1": {
       "anchor": [
-       62.5,
-       147
+       77.5,
+       143
       ],
-      "h": 148,
+      "h": 144,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/byzantines/mill_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/byzantines/mill_a1_t1.png",
       "view": "oblique",
-      "w": 150
+      "w": 163
      },
      "3": {
       "anchor": [
@@ -801,16 +801,16 @@
     "ages": {
      "1": {
       "anchor": [
-       100.5,
-       252
+       94.5,
+       224
       ],
-      "h": 253,
+      "h": 225,
       "plane_z": 3,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/byzantines/town_center_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/byzantines/town_center_a1_t1.png",
       "view": "oblique",
-      "w": 210
+      "w": 207
      },
      "3": {
       "anchor": [
@@ -843,9 +843,9 @@
      "1": {
       "anchor": [
        62.5,
-       181
+       214
       ],
-      "h": 182,
+      "h": 215,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/byzantines/watch_tower_a1_t0.png",
@@ -1036,16 +1036,16 @@
     "ages": {
      "1": {
       "anchor": [
-       68.5,
-       139
+       70.5,
+       148
       ],
-      "h": 140,
+      "h": 149,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/chinese/house_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/chinese/house_a1_t1.png",
       "view": "oblique",
-      "w": 140
+      "w": 145
      },
      "3": {
       "anchor": [
@@ -1118,16 +1118,16 @@
     "ages": {
      "1": {
       "anchor": [
-       62.5,
-       147
+       77.5,
+       144
       ],
-      "h": 148,
+      "h": 145,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/chinese/mill_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/chinese/mill_a1_t1.png",
       "view": "oblique",
-      "w": 150
+      "w": 163
      },
      "3": {
       "anchor": [
@@ -1241,16 +1241,16 @@
     "ages": {
      "1": {
       "anchor": [
-       107.5,
-       258
+       94.5,
+       222
       ],
-      "h": 259,
+      "h": 223,
       "plane_z": 3,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/chinese/town_center_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/chinese/town_center_a1_t1.png",
       "view": "oblique",
-      "w": 224
+      "w": 209
      },
      "3": {
       "anchor": [
@@ -1477,15 +1477,15 @@
      "1": {
       "anchor": [
        62.5,
-       166
+       193
       ],
-      "h": 167,
+      "h": 194,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/franks/house_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/franks/house_a1_t1.png",
       "view": "oblique",
-      "w": 128
+      "w": 127
      },
      "3": {
       "anchor": [
@@ -1559,9 +1559,9 @@
      "1": {
       "anchor": [
        62.5,
-       147
+       172
       ],
-      "h": 148,
+      "h": 173,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/franks/mill_a1_t0.png",
@@ -1681,16 +1681,16 @@
     "ages": {
      "1": {
       "anchor": [
-       100.5,
-       258
+       102.5,
+       287
       ],
-      "h": 259,
+      "h": 288,
       "plane_z": 3,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/franks/town_center_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/franks/town_center_a1_t1.png",
       "view": "oblique",
-      "w": 210
+      "w": 219
      },
      "3": {
       "anchor": [
@@ -1916,16 +1916,16 @@
     "ages": {
      "1": {
       "anchor": [
-       68.5,
-       143
+       69.5,
+       146
       ],
-      "h": 144,
+      "h": 147,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/japanese/house_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/japanese/house_a1_t1.png",
       "view": "oblique",
-      "w": 140
+      "w": 139
      },
      "3": {
       "anchor": [
@@ -1998,7 +1998,7 @@
     "ages": {
      "1": {
       "anchor": [
-       62.5,
+       77.5,
        147
       ],
       "h": 148,
@@ -2007,7 +2007,7 @@
       "t0": "res://assets/sprites_px/buildings/japanese/mill_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/japanese/mill_a1_t1.png",
       "view": "oblique",
-      "w": 150
+      "w": 163
      },
      "3": {
       "anchor": [
@@ -2121,16 +2121,16 @@
     "ages": {
      "1": {
       "anchor": [
-       107.5,
-       258
+       112.5,
+       195
       ],
-      "h": 259,
+      "h": 196,
       "plane_z": 3,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/japanese/town_center_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/japanese/town_center_a1_t1.png",
       "view": "oblique",
-      "w": 224
+      "w": 232
      },
      "3": {
       "anchor": [
@@ -2163,15 +2163,15 @@
      "1": {
       "anchor": [
        62.5,
-       187
+       206
       ],
-      "h": 188,
+      "h": 207,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/japanese/watch_tower_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/japanese/watch_tower_a1_t1.png",
       "view": "oblique",
-      "w": 125
+      "w": 126
      },
      "3": {
       "anchor": [
@@ -2645,7 +2645,7 @@
     "ages": {
      "1": {
       "anchor": [
-       94.5,
+       100.5,
        189
       ],
       "h": 190,
@@ -2654,7 +2654,7 @@
       "t0": "res://assets/sprites_px/buildings/ottomans/archery_range_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/ottomans/archery_range_a1_t1.png",
       "view": "oblique",
-      "w": 207
+      "w": 203
      },
      "3": {
       "anchor": [
@@ -2686,7 +2686,7 @@
     "ages": {
      "1": {
       "anchor": [
-       94.5,
+       97.5,
        189
       ],
       "h": 190,
@@ -2695,7 +2695,7 @@
       "t0": "res://assets/sprites_px/buildings/ottomans/barracks_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/ottomans/barracks_a1_t1.png",
       "view": "oblique",
-      "w": 204
+      "w": 198
      },
      "3": {
       "anchor": [
@@ -2796,16 +2796,16 @@
     "ages": {
      "1": {
       "anchor": [
-       62.5,
-       137
+       64.5,
+       155
       ],
-      "h": 138,
+      "h": 156,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/ottomans/house_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/ottomans/house_a1_t1.png",
       "view": "oblique",
-      "w": 125
+      "w": 129
      },
      "3": {
       "anchor": [
@@ -2878,16 +2878,16 @@
     "ages": {
      "1": {
       "anchor": [
-       62.5,
-       147
+       69.5,
+       158
       ],
-      "h": 148,
+      "h": 159,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/ottomans/mill_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/ottomans/mill_a1_t1.png",
       "view": "oblique",
-      "w": 150
+      "w": 155
      },
      "3": {
       "anchor": [
@@ -3002,15 +3002,15 @@
      "1": {
       "anchor": [
        94.5,
-       241
+       300
       ],
-      "h": 242,
+      "h": 301,
       "plane_z": 3,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/ottomans/town_center_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/ottomans/town_center_a1_t1.png",
       "view": "oblique",
-      "w": 194
+      "w": 197
      },
      "3": {
       "anchor": [
@@ -3043,9 +3043,9 @@
      "1": {
       "anchor": [
        62.5,
-       181
+       226
       ],
-      "h": 182,
+      "h": 227,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/ottomans/watch_tower_a1_t0.png",
@@ -3086,15 +3086,15 @@
      "1": {
       "anchor": [
        94.5,
-       189
+       193
       ],
-      "h": 190,
+      "h": 194,
       "plane_z": 3,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/saracens/archery_range_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/saracens/archery_range_a1_t1.png",
       "view": "oblique",
-      "w": 207
+      "w": 211
      },
      "3": {
       "anchor": [
@@ -3236,16 +3236,16 @@
     "ages": {
      "1": {
       "anchor": [
-       74.5,
-       137
+       64.5,
+       157
       ],
-      "h": 138,
+      "h": 158,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/saracens/house_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/saracens/house_a1_t1.png",
       "view": "oblique",
-      "w": 137
+      "w": 150
      },
      "3": {
       "anchor": [
@@ -3318,16 +3318,16 @@
     "ages": {
      "1": {
       "anchor": [
-       62.5,
-       147
+       87.5,
+       132
       ],
-      "h": 148,
+      "h": 133,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/saracens/mill_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/saracens/mill_a1_t1.png",
       "view": "oblique",
-      "w": 150
+      "w": 173
      },
      "3": {
       "anchor": [
@@ -3441,16 +3441,16 @@
     "ages": {
      "1": {
       "anchor": [
-       103.5,
-       241
+       94.5,
+       291
       ],
-      "h": 242,
+      "h": 292,
       "plane_z": 3,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/saracens/town_center_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/saracens/town_center_a1_t1.png",
       "view": "oblique",
-      "w": 203
+      "w": 209
      },
      "3": {
       "anchor": [
@@ -3677,15 +3677,15 @@
      "1": {
       "anchor": [
        62.5,
-       168
+       194
       ],
-      "h": 169,
+      "h": 195,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/teutons/house_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/teutons/house_a1_t1.png",
       "view": "oblique",
-      "w": 128
+      "w": 137
      },
      "3": {
       "anchor": [
@@ -3758,16 +3758,16 @@
     "ages": {
      "1": {
       "anchor": [
-       62.5,
-       147
+       77.5,
+       156
       ],
-      "h": 148,
+      "h": 157,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/teutons/mill_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/teutons/mill_a1_t1.png",
       "view": "oblique",
-      "w": 150
+      "w": 163
      },
      "3": {
       "anchor": [
@@ -3882,15 +3882,15 @@
      "1": {
       "anchor": [
        100.5,
-       252
+       286
       ],
-      "h": 253,
+      "h": 287,
       "plane_z": 3,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/teutons/town_center_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/teutons/town_center_a1_t1.png",
       "view": "oblique",
-      "w": 210
+      "w": 204
      },
      "3": {
       "anchor": [
@@ -4116,16 +4116,16 @@
     "ages": {
      "1": {
       "anchor": [
-       63.5,
-       160
+       65.5,
+       125
       ],
-      "h": 161,
+      "h": 126,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/vikings/house_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/vikings/house_a1_t1.png",
       "view": "oblique",
-      "w": 130
+      "w": 134
      },
      "3": {
       "anchor": [
@@ -4199,15 +4199,15 @@
      "1": {
       "anchor": [
        62.5,
-       147
+       125
       ],
-      "h": 148,
+      "h": 126,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/vikings/mill_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/vikings/mill_a1_t1.png",
       "view": "oblique",
-      "w": 150
+      "w": 148
      },
      "3": {
       "anchor": [
@@ -4321,16 +4321,16 @@
     "ages": {
      "1": {
       "anchor": [
-       102.5,
-       252
+       108.5,
+       189
       ],
-      "h": 253,
+      "h": 190,
       "plane_z": 3,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/vikings/town_center_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/vikings/town_center_a1_t1.png",
       "view": "oblique",
-      "w": 214
+      "w": 226
      },
      "3": {
       "anchor": [
@@ -4363,9 +4363,9 @@
      "1": {
       "anchor": [
        62.5,
-       181
+       202
       ],
-      "h": 182,
+      "h": 203,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/vikings/watch_tower_a1_t0.png",

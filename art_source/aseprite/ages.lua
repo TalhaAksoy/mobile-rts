@@ -1,7 +1,7 @@
 -- Age looks (Köy / Hisar / İmparatorluk). Age II is the base design in civs/<civ>.lua; this file derives
 --   Age I  : the village-age kit: no metal armour, cloth caps / hoods / turbans, plain shields, unarmoured horses;
 --            buildings use the civ's vernacular materials (mud brick, wattle and daub, rammed earth, thatch, turf)
---            on the generic layouts instead of the civ landmarks.
+--            on the civ's own layouts (only the materials and the merlons / tower tops change).
 --   Age III: the imperial-age kit: the civ's heaviest historical armour and helmet, plumes / crests, capes, decorated
 --            shields, armoured horses; buildings keep the landmarks and get paved yards and extra standards.
 -- Generic rules first, then per-civ (and per-role) overrides for authenticity (docs/art/culture/<civ>.md).
@@ -158,23 +158,25 @@ local BLD1 = {
 }
 local LANDMARK_KEYS = { "tc", "house", "castle", "mill", "watch", "barracks", "archery", "market", "stable", "smith",
                         "lumber", "mine" }
--- civs whose everyday buildings ARE the landmark layouts (nomad gers): keep them in Age I
-local KEEP_LAYOUTS = { mongols = true }
+-- civs whose Age I falls back to the generic layouts (none: every civ keeps its own layouts in Age I)
+local DROP_LAYOUTS_A1 = {}
 
 function AG.building_spec(s, age, civ)
   if age == 2 then return s end
   local o = copy(s)
   if age == 1 then
-    if not KEEP_LAYOUTS[civ] then for _, k in ipairs(LANDMARK_KEYS) do o[k] = nil end end
+    -- the civ keeps its own layouts in the village age (a Japanese village is a Japanese village); the age shows in
+    -- the vernacular materials (BLD1), no merlons or tower tops, and no Age III standards
+    if DROP_LAYOUTS_A1[civ] then for _, k in ipairs(LANDMARK_KEYS) do o[k] = nil end end
     o.merlon = false
     o.tower_top = "none"
-    if not KEEP_LAYOUTS[civ] then o.watch = "village_lookout" end
+    if not o.watch then o.watch = "village_lookout" end
     o.blind_arches_c = nil
     apply(o, BLD1[civ])
     o.age = 1
   else
     o.age = 3
-    if not KEEP_LAYOUTS[civ] then o.paving_c = o.paving_c or "#A89A84" end   -- nomad camps stay on open ground
+    if civ ~= "mongols" then o.paving_c = o.paving_c or "#A89A84" end   -- nomad camps stay on open ground
   end
   return o
 end
