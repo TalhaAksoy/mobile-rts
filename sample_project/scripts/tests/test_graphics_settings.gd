@@ -72,6 +72,8 @@ func _run() -> void:
 	_check(GraphicsSettings.preset == GraphicsSettings.Preset.HIGH and is_equal_approx(vp.scaling_3d_scale, 1.0) and vp.msaa_3d == Viewport.MSAA_2X and light.shadow_enabled and Engine.max_fps == 60,
 		"tapping High applies it at once")
 	_check(env.glow_enabled and vig.visible and Engine.physics_ticks_per_second == 60, "High: glow and vignette on, 60 ticks a second")
+	var sun: DirectionalLight3D = scene.get_node("DirectionalLight3D")
+	_check(sun.directional_shadow_mode == DirectionalLight3D.SHADOW_PARALLEL_4_SPLITS, "High: 4 shadow splits")
 	_check(FactionArtManager.use_3d_building_models and menu.gfx_style_buttons[0].button_pressed, "High: 3D models on")
 	_check(menu.gfx_preset_buttons[GraphicsSettings.Preset.HIGH].button_pressed and not menu.gfx_preset_buttons[GraphicsSettings.Preset.LOW].button_pressed, "only the High button is selected")
 	_check(menu.gfx_scale_slider.value == 100 and menu.gfx_msaa_buttons[1].button_pressed and menu.gfx_shadow_buttons[2].button_pressed, "controls follow the preset")
@@ -82,6 +84,8 @@ func _run() -> void:
 	_check(is_equal_approx(vp.scaling_3d_scale, 0.7) and menu.gfx_scale_label.text.contains("70"), "resolution applied and labelled (%s)" % menu.gfx_scale_label.text)
 
 	menu.gfx_preset_buttons[GraphicsSettings.Preset.MEDIUM].emit_signal("pressed")
+	await process_frame
+	_check(light.shadow_enabled and light.directional_shadow_mode == DirectionalLight3D.SHADOW_PARALLEL_2_SPLITS, "Medium: shadows with 2 splits")
 	menu.gfx_shadow_buttons[0].emit_signal("pressed")
 	await process_frame
 	_check(GraphicsSettings.preset == GraphicsSettings.Preset.CUSTOM and not light.shadow_enabled, "turning shadows off from Medium -> Custom, shadows off")
