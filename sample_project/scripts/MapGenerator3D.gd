@@ -246,6 +246,7 @@ func generate(chosen_map_type: CivData.MapType, custom_seed: int = -1, n_bots: i
 		scatter_cell_index = scatter["cell_index"]
 
 	# 4. Initialize HD-2D Diorama Fog of War
+	_batch_trees()
 	_init_fog_of_war()
 	_reveal_circle(world_to_cell(player_start_pos), 12)
 	update_fog_of_war([], [], [], [])
@@ -375,6 +376,9 @@ func update_fog_of_war(player_units: Array, player_buildings: Array, enemy_units
 	# 4. resources (hidden while unexplored, shaded while only explored) and bridges, on changed cells only
 	for cell in changed:
 		var st := get_fog_state(cell)
+		var tb = trees.get(cell)
+		if tb != null and tb.has("batch"):
+			_tree_batch_show(tb, st >= FogState.EXPLORED)
 		for dict in [trees, gold_mines, stone_mines, berry_bushes]:
 			var data = dict.get(cell)
 			if data == null:
@@ -392,6 +396,104 @@ func update_fog_of_war(player_units: Array, player_buildings: Array, enemy_units
 			for wi in nodes:
 				if is_instance_valid(wi):
 					wi.visible = (st >= FogState.EXPLORED)
+
+## ---- 3D tree batching ------------------------------------------------------------------------------------
+## Each 3D tree was its own mesh node: ~1500 nodes, one draw call per visible tree (twice with shadows). Their
+## meshes now go into MultiMeshes, one per tree mesh per 12x12-cell map chunk (chunks off screen are culled).
+## The tree nodes stay (gathering, tap areas, save data); only their mesh nodes are hidden. Fog and chopping
+## hide a tree by zeroing its instance transforms. 2D sprite trees are not batched (they need per-sprite sorting).
+const TREE_CHUNK := 12
+var _tree_batches := {}            # key -> {"mmi": MultiMeshInstance3D, "xf": Array[Transform3D]}
+var _tree_mesh_cache := {}         # mesh + material overrides -> mesh with those materials baked in
+
+func _batch_trees() -> void:
+	for k in _tree_batches:
+		if is_instance_valid(_tree_batches[k]["mmi"]):
+			_tree_batches[k]["mmi"].queue_free()
+	_tree_batches.clear()
+	for cell in trees:
+		var t: Dictionary = trees[cell]
+		var node = t.get("node")
+		if not is_instance_valid(node) or node.find_child("SpritePlane", true, false) != null:
+			continue
+		var mis: Array = node.find_children("*", "MeshInstance3D", true, false)
+		if mis.is_empty():
+			continue
+		var refs: Array = []
+		for mi in mis:
+			if mi.mesh == null:
+				continue
+			var mesh := _tree_mesh_with_overrides(mi)
+			var key := "%d_%d|%d" % [cell.x / TREE_CHUNK, cell.y / TREE_CHUNK, mesh.get_rid().get_id()]
+			if not _tree_batches.has(key):
+				_tree_batches[key] = {"mesh": mesh, "xf": [], "shadow": mi.cast_shadow}
+			var b: Dictionary = _tree_batches[key]
+			b["xf"].append(node.transform * _rel_transform(mi, node))
+			refs.append([key, b["xf"].size() - 1])
+			mi.visible = false
+		t["batch"] = refs
+	for key in _tree_batches:
+		var b: Dictionary = _tree_batches[key]
+		var mm := MultiMesh.new()
+		mm.transform_format = MultiMesh.TRANSFORM_3D
+		mm.mesh = b["mesh"]
+		mm.instance_count = b["xf"].size()
+		b["on"] = PackedByteArray()
+		b["on"].resize(mm.instance_count)          # what each instance shows (the headless renderer keeps no MultiMesh data)
+		for i in mm.instance_count:
+			mm.set_instance_transform(i, Transform3D(Basis().scaled(Vector3.ZERO), b["xf"][i].origin))   # hidden until explored
+		var mmi := MultiMeshInstance3D.new()
+		mmi.name = "TreeBatch_" + key.get_slice("|", 0)
+		mmi.multimesh = mm
+		mmi.cast_shadow = b["shadow"]
+		props_container.add_child(mmi)
+		b["mmi"] = mmi
+		# culling box: the whole chunk (with a margin for crowns hanging over its edge) from below the ground to
+		# above the highest hill + a tree, so no instance is ever culled while on screen (they start zero-scaled,
+		# so the MultiMesh's own box would be empty)
+		var cx := int(key.get_slice("|", 0).get_slice("_", 0))
+		var cz := int(key.get_slice("|", 0).get_slice("_", 1))
+		var x0 := cx * TREE_CHUNK * TILE_SIZE - 4.0
+		var z0 := cz * TREE_CHUNK * TILE_SIZE - 4.0
+		mmi.custom_aabb = AABB(Vector3(x0, -5.0, z0), Vector3(TREE_CHUNK * TILE_SIZE + 8.0, max_terrain_h + 20.0, TREE_CHUNK * TILE_SIZE + 8.0))
+
+func _tree_batch_show(t: Dictionary, on: bool) -> void:
+	for r in t.get("batch", []):
+		var b = _tree_batches.get(r[0])
+		if b == null or not is_instance_valid(b.get("mmi")):
+			continue
+		var xf: Transform3D = b["xf"][r[1]]
+		b["mmi"].multimesh.set_instance_transform(r[1], xf if on else Transform3D(Basis().scaled(Vector3.ZERO), xf.origin))
+		b["on"][r[1]] = 1 if on else 0
+
+func _rel_transform(n: Node3D, ancestor: Node3D) -> Transform3D:
+	var xf := Transform3D.IDENTITY
+	var cur: Node = n
+	while cur != null and cur != ancestor:
+		if cur is Node3D:
+			xf = (cur as Node3D).transform * xf
+		cur = cur.get_parent()
+	return xf
+
+func _tree_mesh_with_overrides(mi: MeshInstance3D) -> Mesh:
+	var key := str(mi.mesh.get_rid().get_id())
+	var any := false
+	for i in mi.mesh.get_surface_count():
+		var o = mi.get_surface_override_material(i)
+		key += "|" + (str(o.get_rid().get_id()) if o != null else "-")
+		any = any or o != null
+	if mi.material_override != null:
+		key += "|mo" + str(mi.material_override.get_rid().get_id())
+	if not any and mi.material_override == null:
+		return mi.mesh
+	if not _tree_mesh_cache.has(key):
+		var m := mi.mesh.duplicate() as Mesh
+		for i in m.get_surface_count():
+			var o = mi.material_override if mi.material_override != null else mi.get_surface_override_material(i)
+			if o != null:
+				(m as ArrayMesh).surface_set_material(i, o)
+		_tree_mesh_cache[key] = m
+	return _tree_mesh_cache[key]
 
 func _reveal_into(vis: PackedByteArray, center: Vector2i, radius: int) -> void:
 	var offs: PackedInt32Array = _reveal_offsets.get(radius, PackedInt32Array())
@@ -1292,6 +1394,8 @@ func harvest_tree(cell: Vector2i, amount: int) -> int:
 	t["hp"] = cur
 	t["amount"] = cur
 	if cur <= 0:
+		if t.has("batch"):
+			_tree_batch_show(t, false)
 		if is_instance_valid(t.get("node", null)):
 			t["node"].queue_free()
 		trees.erase(cell)
