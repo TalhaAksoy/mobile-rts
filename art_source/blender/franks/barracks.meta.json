@@ -1,18 +1,18 @@
 {
-  "tris": 813,
-  "verts": 1379,
+  "tris": 431,
+  "verts": 709,
   "materials": [
     "PE_Dirt",
-    "PE_StoneGrey",
     "PE_StoneWarm",
     "PE_Window",
     "PE_WoodDark",
+    "PE_StoneGrey",
     "TEAM_Trim",
     "PE_RoofSlate",
     "PE_Banner_franks",
     "PE_Gold",
     "PE_Iron",
-    "PE_Felt"
+    "PE_Thatch"
   ],
   "bounds_min": [
     -2.645,
@@ -22,14 +22,14 @@
   "bounds_max": [
     2.694,
     2.698,
-    4.53
+    4.18
   ],
   "asset_id": "barracks",
   "civ": "franks",
   "kind": "buildings",
   "blend": "art_source/blender/franks/barracks.blend",
   "glb": "res://assets/3d/buildings/franks/barracks.glb",
-  "glb_bytes": 62116,
+  "glb_bytes": 37972,
   "grid": [
     3,
     3

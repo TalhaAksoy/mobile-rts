@@ -70,4 +70,16 @@ return function(M)
     M.door(K, s, 0, 1.3, 0.55, 1.3, "arch_pointed")
     A.banner(K, 0, 1.3, 2.9, 0.36, 0.9, s.emblem, s.ec)
   end
+
+  -- barracks: long Brick Gothic dormitory hall, red tile roof, a row of small lancets, gate arch with the cross
+  SP.brick_dormitory = function(K, s)
+    M.ground(K, s, 3)
+    M.block(K, s, -2.8, 2.6, 2.1, 2.4, 2.4, { roof = "gable", rise = 1.6 })
+    for i = 0, 6 do A.window(K, -2.45 + i * 0.8, 2.1, 1.3, 0.18, 0.55, "arch_pointed", { frame = s.frame_c }) end
+    M.block(K, s, -0.7, 0.7, 1.7, 0.6, 3.0, { roof = "stepped", rise = 1.2 })      -- gate house with stepped gable
+    M.door(K, s, 0, 1.7, 0.9, 1.9, "arch_pointed")
+    M.banners(K, s, { 0 }, 1.7, 2.9, 0.4, 0.8)
+    M.props(K, s, { { "rack", 2.0, 1.0 }, { "dummy", -1.9, 0.9 }, { "barrel", -2.5, 1.5 } })
+    M.flag(K, s, 2.75, 1.5, 4.6)
+  end
 end

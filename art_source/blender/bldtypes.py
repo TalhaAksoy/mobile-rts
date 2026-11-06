@@ -5,6 +5,7 @@ import pe_kit, parts
 import civstyle as cs
 import castles
 import towers
+import barracks
 from pe_kit import Builder
 
 
@@ -18,6 +19,9 @@ def build_barracks(civ):
     b = Builder("%s_barracks" % civ)
     pe_kit.ground_pad(b, 2.7, 2.7, seed=_seed(civ, 3))
     z0 = 0.08
+    if civ in barracks.BUILDERS:              # the civ's own barracks type (barracks.py)
+        barracks.BUILDERS[civ](b, z0)
+        return b.finalize()
     if civ == "mongols":
         top = cs.ger(b, 0.45, 0.75, z0, 1.3, wall_h=0.95)
         cs.ger(b, -1.65, 1.25, z0, 0.78, team=False)

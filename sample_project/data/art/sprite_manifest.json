@@ -47,41 +47,41 @@
      "1": {
       "anchor": [
        94.5,
-       196
+       189
       ],
-      "h": 197,
+      "h": 190,
       "plane_z": 3,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/britons/barracks_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/britons/barracks_a1_t1.png",
       "view": "oblique",
-      "w": 204
+      "w": 191
      },
      "3": {
       "anchor": [
-       105.5,
-       196
+       94.5,
+       189
       ],
-      "h": 197,
+      "h": 190,
       "plane_z": 3,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/britons/barracks_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/britons/barracks_a3_t1.png",
       "view": "oblique",
-      "w": 215
+      "w": 191
      }
     },
     "anchor": [
-     105.5,
-     196
+     94.5,
+     189
     ],
-    "h": 197,
+    "h": 190,
     "plane_z": 3,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/britons/barracks_t0.png",
     "t1": "res://assets/sprites_px/buildings/britons/barracks_t1.png",
     "view": "oblique",
-    "w": 215
+    "w": 191
    },
    "blacksmith": {
     "ages": {
@@ -486,42 +486,42 @@
     "ages": {
      "1": {
       "anchor": [
-       94.5,
-       190
+       97.5,
+       197
       ],
-      "h": 191,
+      "h": 198,
       "plane_z": 3,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/byzantines/barracks_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/byzantines/barracks_a1_t1.png",
       "view": "oblique",
-      "w": 204
+      "w": 212
      },
      "3": {
       "anchor": [
-       105.5,
-       190
+       97.5,
+       197
       ],
-      "h": 191,
+      "h": 198,
       "plane_z": 3,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/byzantines/barracks_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/byzantines/barracks_a3_t1.png",
       "view": "oblique",
-      "w": 215
+      "w": 212
      }
     },
     "anchor": [
-     105.5,
-     190
+     97.5,
+     197
     ],
-    "h": 191,
+    "h": 198,
     "plane_z": 3,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/byzantines/barracks_t0.png",
     "t1": "res://assets/sprites_px/buildings/byzantines/barracks_t1.png",
     "view": "oblique",
-    "w": 215
+    "w": 212
    },
    "blacksmith": {
     "ages": {
@@ -926,42 +926,42 @@
     "ages": {
      "1": {
       "anchor": [
-       100.5,
-       191
+       108.5,
+       189
       ],
-      "h": 192,
+      "h": 190,
       "plane_z": 3,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/chinese/barracks_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/chinese/barracks_a1_t1.png",
       "view": "oblique",
-      "w": 210
+      "w": 223
      },
      "3": {
       "anchor": [
-       105.5,
-       191
+       108.5,
+       189
       ],
-      "h": 192,
+      "h": 190,
       "plane_z": 3,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/chinese/barracks_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/chinese/barracks_a3_t1.png",
       "view": "oblique",
-      "w": 215
+      "w": 223
      }
     },
     "anchor": [
-     105.5,
-     191
+     108.5,
+     189
     ],
-    "h": 192,
+    "h": 190,
     "plane_z": 3,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/chinese/barracks_t0.png",
     "t1": "res://assets/sprites_px/buildings/chinese/barracks_t1.png",
     "view": "oblique",
-    "w": 215
+    "w": 223
    },
    "blacksmith": {
     "ages": {
@@ -1367,41 +1367,41 @@
      "1": {
       "anchor": [
        94.5,
-       213
+       197
       ],
-      "h": 214,
+      "h": 198,
       "plane_z": 3,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/franks/barracks_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/franks/barracks_a1_t1.png",
       "view": "oblique",
-      "w": 204
+      "w": 207
      },
      "3": {
       "anchor": [
-       104.5,
-       213
+       94.5,
+       197
       ],
-      "h": 214,
+      "h": 198,
       "plane_z": 3,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/franks/barracks_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/franks/barracks_a3_t1.png",
       "view": "oblique",
-      "w": 214
+      "w": 207
      }
     },
     "anchor": [
-     104.5,
-     213
+     94.5,
+     197
     ],
-    "h": 214,
+    "h": 198,
     "plane_z": 3,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/franks/barracks_t0.png",
     "t1": "res://assets/sprites_px/buildings/franks/barracks_t1.png",
     "view": "oblique",
-    "w": 214
+    "w": 207
    },
    "blacksmith": {
     "ages": {
@@ -1806,42 +1806,42 @@
     "ages": {
      "1": {
       "anchor": [
-       100.5,
-       195
+       112.5,
+       189
       ],
-      "h": 196,
+      "h": 190,
       "plane_z": 3,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/japanese/barracks_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/japanese/barracks_a1_t1.png",
       "view": "oblique",
-      "w": 210
+      "w": 231
      },
      "3": {
       "anchor": [
-       105.5,
-       195
+       112.5,
+       189
       ],
-      "h": 196,
+      "h": 190,
       "plane_z": 3,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/japanese/barracks_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/japanese/barracks_a3_t1.png",
       "view": "oblique",
-      "w": 215
+      "w": 231
      }
     },
     "anchor": [
-     105.5,
-     195
+     112.5,
+     189
     ],
-    "h": 196,
+    "h": 190,
     "plane_z": 3,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/japanese/barracks_t0.png",
     "t1": "res://assets/sprites_px/buildings/japanese/barracks_t1.png",
     "view": "oblique",
-    "w": 215
+    "w": 231
    },
    "blacksmith": {
     "ages": {
@@ -3127,41 +3127,41 @@
      "1": {
       "anchor": [
        94.5,
-       189
+       211
       ],
-      "h": 190,
+      "h": 212,
       "plane_z": 3,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/saracens/barracks_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/saracens/barracks_a1_t1.png",
       "view": "oblique",
-      "w": 204
+      "w": 211
      },
      "3": {
       "anchor": [
-       103.5,
-       189
+       94.5,
+       211
       ],
-      "h": 190,
+      "h": 212,
       "plane_z": 3,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/saracens/barracks_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/saracens/barracks_a3_t1.png",
       "view": "oblique",
-      "w": 213
+      "w": 211
      }
     },
     "anchor": [
-     103.5,
-     189
+     94.5,
+     211
     ],
-    "h": 190,
+    "h": 212,
     "plane_z": 3,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/saracens/barracks_t0.png",
     "t1": "res://assets/sprites_px/buildings/saracens/barracks_t1.png",
     "view": "oblique",
-    "w": 213
+    "w": 211
    },
    "blacksmith": {
     "ages": {
@@ -3566,23 +3566,23 @@
     "ages": {
      "1": {
       "anchor": [
-       94.5,
-       211
+       100.5,
+       189
       ],
-      "h": 212,
+      "h": 190,
       "plane_z": 3,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/teutons/barracks_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/teutons/barracks_a1_t1.png",
       "view": "oblique",
-      "w": 204
+      "w": 215
      },
      "3": {
       "anchor": [
-       105.5,
-       211
+       100.5,
+       189
       ],
-      "h": 212,
+      "h": 190,
       "plane_z": 3,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/teutons/barracks_a3_t0.png",
@@ -3592,10 +3592,10 @@
      }
     },
     "anchor": [
-     105.5,
-     211
+     100.5,
+     189
     ],
-    "h": 212,
+    "h": 190,
     "plane_z": 3,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/teutons/barracks_t0.png",
@@ -4006,42 +4006,42 @@
     "ages": {
      "1": {
       "anchor": [
-       95.5,
-       221
+       99.5,
+       189
       ],
-      "h": 222,
+      "h": 190,
       "plane_z": 3,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/vikings/barracks_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/vikings/barracks_a1_t1.png",
       "view": "oblique",
-      "w": 205
+      "w": 212
      },
      "3": {
       "anchor": [
-       95.5,
-       221
+       99.5,
+       189
       ],
-      "h": 222,
+      "h": 190,
       "plane_z": 3,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/vikings/barracks_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/vikings/barracks_a3_t1.png",
       "view": "oblique",
-      "w": 205
+      "w": 212
      }
     },
     "anchor": [
-     95.5,
-     221
+     99.5,
+     189
     ],
-    "h": 222,
+    "h": 190,
     "plane_z": 3,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/vikings/barracks_t0.png",
     "t1": "res://assets/sprites_px/buildings/vikings/barracks_t1.png",
     "view": "oblique",
-    "w": 205
+    "w": 212
    },
    "blacksmith": {
     "ages": {

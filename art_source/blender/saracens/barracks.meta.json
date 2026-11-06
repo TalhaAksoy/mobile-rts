@@ -1,16 +1,17 @@
 {
-  "tris": 1186,
-  "verts": 2182,
+  "tris": 679,
+  "verts": 993,
   "materials": [
     "PE_Dirt",
     "PE_Sandstone",
-    "PE_TileTeal",
     "PE_Window",
-    "PE_WoodDark",
+    "PE_TileTeal",
     "TEAM_Trim",
-    "PE_Banner_saracens",
+    "PE_WoodDark",
     "PE_Gold",
-    "PE_Felt"
+    "PE_Banner_saracens",
+    "PE_WoodLight",
+    "PE_Iron"
   ],
   "bounds_min": [
     -2.693,
@@ -20,14 +21,14 @@
   "bounds_max": [
     2.693,
     2.591,
-    2.925
+    3.82
   ],
   "asset_id": "barracks",
   "civ": "saracens",
   "kind": "buildings",
   "blend": "art_source/blender/saracens/barracks.blend",
   "glb": "res://assets/3d/buildings/saracens/barracks.glb",
-  "glb_bytes": 88476,
+  "glb_bytes": 52476,
   "grid": [
     3,
     3

@@ -123,4 +123,15 @@ return function(M)
     A.banner(K, 0, 1.3, 3.0, 0.36, 0.9, s.emblem, s.ec)
     M.flag(K, s, 0.45, 2.3, 8.0)
   end
+
+  -- barracks: tibaq of the Cairo citadel, a tall plain stone block of three storeys with small windows, an arcade
+  -- at the base and the yellow sultanic banner
+  SP.tibaq = function(K, s)
+    M.ground(K, s, 3)
+    M.block(K, s, -2.4, 2.4, 2.1, 2.6, 4.6, { flat = true, merlons = false })
+    for i = 0, 3 do A.door(K, -1.8 + i * 1.2, 2.1, 0.8, 1.5, "arch_pointed", "#2a2234", { frame = s.frame_c }) end
+    for row = 0, 1 do M.windows(K, s, -2.2, 2.2, 2.1, 2.3 + row * 1.15, 6, 0.2, 0.42) end
+    A.standard(K, -2.7, 1.5, 4.4, { form = "alam", field = "#D6A62B", field2 = "#F3EFE6", ec = "#2a2234" })
+    M.props(K, s, { { "rack", 2.4, 1.1 }, { "jar", -1.8, 0.8 }, { "palm", 2.6, 0.4 } })
+  end
 end

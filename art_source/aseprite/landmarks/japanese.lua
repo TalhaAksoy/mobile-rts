@@ -66,4 +66,17 @@ return function(M)
     P.use(K, "structure")
     A.flag(K, 0.9, 1.4, 7.4, 6, s.emblem, s.ec)
   end
+
+  -- barracks: nagaya, a long low timber row house under a tile roof, yari racks and nobori banners in the yard
+  SP.nagaya = function(K, s)
+    M.ground(K, s, 3)
+    M.block(K, s, -2.8, 2.8, 2.6, 2.4, 1.9, { roof = "curved", rise = 0.9 })
+    for i = 0, 5 do
+      local x = -2.35 + i * 0.94
+      if i % 2 == 0 then A.door(K, x, 2.6, 0.7, 1.4, "rect", s.door_c, { frame = s.frame_c })
+      else A.window(K, x, 2.6, 0.9, 0.6, 0.5, "shoji", { frame = s.frame_c }) end
+    end
+    for _, x in ipairs({ -2.4, -1.5, 1.5, 2.4 }) do A.standard(K, x, 1.2, 3.6, { form = "nobori", field = "#F0EEE8", ec = "#1D1A19", emblem = s.emblem }) end
+    M.props(K, s, { { "rack", -0.6, 1.0 }, { "rack", 0.6, 1.0 }, { "stone_lantern", 2.1, 0.6 } })
+  end
 end

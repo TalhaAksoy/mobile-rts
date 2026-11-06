@@ -33,6 +33,6 @@ S._buildings = {
   window = "lattice", castle_wall = "ashlar", castle_wall_c = PAL.brick, merlon = "rect", keep_flat = false,
   keep_roof = "curved", tower_round = false, tower_roof = "curved", tower_top = "none", stable_roof = "curved",
   paving_c = "#C8C2B4", sail_c = PAL.hemp, mill = "watermill", props = { "lion", "bamboo", "stone_lantern" },
-  kit_post = "lantern", watch = "beacon_pavilion", tc = "yamen", castle = "chenglou", house = "courtyard_house", 
+  kit_post = "lantern", watch = "beacon_pavilion", barracks = "bing_ying", tc = "yamen", castle = "chenglou", house = "courtyard_house", 
 }
 return S

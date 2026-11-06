@@ -87,4 +87,15 @@ return function(M)
     M.props(K, s, { { "sacks", 1.2, 0.5 }, { "cart", 0.2, 0.3 } })
     M.flag(K, s, 1.85, 0.4, 3.0)
   end
+
+  -- barracks: long two-storey block banded in brick and stone, an arcade of round arches below, shield rack
+  SP.byz_barracks = function(K, s)
+    M.ground(K, s, 3)
+    M.block(K, s, -2.7, 2.6, 2.0, 2.6, 2.3, { upper = { h = 1.7, wall = s.wall, c = s.wall_c }, roof = "hip", rise = 1.0 })
+    for i = 0, 4 do A.door(K, -2.15 + i * 1.07, 2.0, 0.72, 1.6, "arch_round", (i == 2) and s.door_c or "#2a2234", { frame = s.frame_c }) end
+    M.windows(K, s, -2.4, 2.3, 2.0, 2.8, 5, 0.3, 0.6)
+    M.banners(K, s, { -1.6, 1.6 }, 2.0, 3.9, 0.42, 1.0)
+    M.props(K, s, { { "rack", 1.9, 1.0 }, { "rack", -1.9, 1.0 }, { "dummy", 0.6, 0.7 } })
+    M.flag(K, s, 2.75, 1.3, 4.6)
+  end
 end

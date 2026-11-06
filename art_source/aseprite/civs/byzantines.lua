@@ -35,6 +35,6 @@ S._buildings = {
   arch = "arch_round", window = "arch_round", merlon = "rect", base_c = PAL.stone, paving_c = PAL.stone,
   castle_wall = "brick_banded", castle_wall_c = PAL.brick, castle_tower_top = "crenel", keep_flat = true,
   sails = 4, sail_c = PAL.linen, mill_roof_c = PAL.tile, mill_roof_mat = "tiles", props = { "jar", "well", "cart" },
-  tc = "byz_church", castle = "theodosian", mill = "watermill", house = "byz_house", watch = "beacon_tower",
+  barracks = "byz_barracks", tc = "byz_church", castle = "theodosian", mill = "watermill", house = "byz_house", watch = "beacon_tower",
 }
 return S

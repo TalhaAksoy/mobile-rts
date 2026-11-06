@@ -102,4 +102,24 @@ return function(M)
     M.door(K, s, 0, 1.2, 0.5, 1.2, "arch_pointed")
     M.flag(K, s, 0.95, 1.4, 4.8)
   end
+
+  -- barracks: tall limestone hall with stepped buttresses and pointed lancets under a steep slate roof
+  SP.buttress_hall = function(K, s)
+    M.ground(K, s, 3)
+    local b = M.block(K, s, -2.5, 2.3, 2.1, 2.6, 3.0, { roof = "gable", rise = 2.0 })
+    local f = b.facade
+    P.use(K, "structure")
+    for _, x in ipairs({ -2.5, -1.3, 1.1, 2.3 }) do                  -- buttresses: lit face + shadow side
+      local bx = A.px(x)
+      for y = f.yt + 6, f.yb do
+        local w = (y < f.yt + 20) and 2 or 3
+        for xx = bx - w, bx + w do P.put(K, xx, y, tone(col(s.wall_c), (xx < bx) and 2 or 4)) end
+      end
+    end
+    M.door(K, s, -0.1, 2.1, 1.0, 1.9, "arch_pointed")
+    M.windows(K, s, -2.3, 2.1, 2.1, 1.6, 4, 0.22, 0.9)
+    M.banners(K, s, { -0.1 }, 2.1, 3.2, 0.45, 1.0)
+    M.props(K, s, { { "rack", 1.9, 1.0 }, { "rack", -1.9, 1.0 }, { "dummy", 0.8, 0.6 } })
+    M.flag(K, s, 2.7, 1.4, 4.8)
+  end
 end

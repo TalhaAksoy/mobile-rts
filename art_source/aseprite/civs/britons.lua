@@ -36,7 +36,7 @@ S._buildings = {
   window = "arch_round", merlon = "rect", keep_flat = true, paving_c = "#B8B2A4", castle_tower_top = "crenel",
   stable_roof = "gable", sails = 4, sail_c = PAL.daub, props = { "hay", "well", "barrel" },
   watch = "hoarding_tower",
-  tc = "norman_keep", house = "cruck_cottage", castle = "concentric", mill = "post_mill", archery = "butts",
+  barracks = "timber_hall", tc = "norman_keep", house = "cruck_cottage", castle = "concentric", mill = "post_mill", archery = "butts",
   stable = "thatch_stable",
 }
 return S

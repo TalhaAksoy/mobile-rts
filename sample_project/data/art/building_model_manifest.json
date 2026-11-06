@@ -291,17 +291,17 @@
         "source": "art_source/blender/japanese/barracks.blend",
         "build_script": "art_source/blender/buildings/japanese_barracks.py",
         "reference": "res://art/buildings/japanese/barracks.png",
-        "tris": 946,
-        "materials": 12,
+        "tris": 494,
+        "materials": 10,
         "bounds_min": [
-          -2.645,
+          -2.85,
           -2.689,
           0.0
         ],
         "bounds_max": [
-          2.694,
+          2.85,
           2.698,
-          2.874
+          2.32
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -735,8 +735,8 @@
         "source": "art_source/blender/britons/barracks.blend",
         "build_script": "art_source/blender/buildings/britons_barracks.py",
         "reference": "res://art/buildings/britons/barracks.png",
-        "tris": 981,
-        "materials": 12,
+        "tris": 489,
+        "materials": 10,
         "bounds_min": [
           -2.627,
           -2.646,
@@ -745,7 +745,7 @@
         "bounds_max": [
           2.577,
           2.634,
-          3.73
+          3.43
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -957,8 +957,8 @@
         "source": "art_source/blender/byzantines/barracks.blend",
         "build_script": "art_source/blender/buildings/byzantines_barracks.py",
         "reference": "res://art/buildings/byzantines/barracks.png",
-        "tris": 908,
-        "materials": 11,
+        "tris": 622,
+        "materials": 12,
         "bounds_min": [
           -2.684,
           -2.631,
@@ -967,7 +967,7 @@
         "bounds_max": [
           2.639,
           2.687,
-          3.075
+          3.43
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -1179,17 +1179,17 @@
         "source": "art_source/blender/chinese/barracks.blend",
         "build_script": "art_source/blender/buildings/chinese_barracks.py",
         "reference": "res://art/buildings/chinese/barracks.png",
-        "tris": 778,
+        "tris": 382,
         "materials": 10,
         "bounds_min": [
-          -2.556,
+          -2.7,
           -2.587,
           0.0
         ],
         "bounds_max": [
-          2.59,
-          2.597,
-          3.112
+          2.7,
+          2.6,
+          2.73
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -1401,7 +1401,7 @@
         "source": "art_source/blender/franks/barracks.blend",
         "build_script": "art_source/blender/buildings/franks_barracks.py",
         "reference": "res://art/buildings/franks/barracks.png",
-        "tris": 813,
+        "tris": 431,
         "materials": 11,
         "bounds_min": [
           -2.645,
@@ -1411,7 +1411,7 @@
         "bounds_max": [
           2.694,
           2.698,
-          4.53
+          4.18
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -1623,8 +1623,8 @@
         "source": "art_source/blender/saracens/barracks.blend",
         "build_script": "art_source/blender/buildings/saracens_barracks.py",
         "reference": "res://art/buildings/saracens/barracks.png",
-        "tris": 1186,
-        "materials": 9,
+        "tris": 679,
+        "materials": 10,
         "bounds_min": [
           -2.693,
           -2.688,
@@ -1633,7 +1633,7 @@
         "bounds_max": [
           2.693,
           2.591,
-          2.925
+          3.82
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -1845,17 +1845,17 @@
         "source": "art_source/blender/teutons/barracks.blend",
         "build_script": "art_source/blender/buildings/teutons_barracks.py",
         "reference": "res://art/buildings/teutons/barracks.png",
-        "tris": 1036,
-        "materials": 10,
+        "tris": 544,
+        "materials": 13,
         "bounds_min": [
           -2.664,
           -2.623,
           0.0
         ],
         "bounds_max": [
-          2.583,
+          2.94,
           2.617,
-          4.28
+          3.59
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -2067,17 +2067,17 @@
         "source": "art_source/blender/vikings/barracks.blend",
         "build_script": "art_source/blender/buildings/vikings_barracks.py",
         "reference": "res://art/buildings/vikings/barracks.png",
-        "tris": 1033,
-        "materials": 12,
+        "tris": 515,
+        "materials": 9,
         "bounds_min": [
-          -2.585,
+          -2.7,
           -2.602,
           0.0
         ],
         "bounds_max": [
-          2.634,
-          2.63,
-          3.403
+          2.7,
+          2.7,
+          2.83
         ],
         "enabled": true,
         "status": "IMPORTED"

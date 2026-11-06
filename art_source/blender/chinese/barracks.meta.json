@@ -1,34 +1,34 @@
 {
-  "tris": 778,
-  "verts": 1428,
+  "tris": 382,
+  "verts": 636,
   "materials": [
     "PE_Dirt",
     "PE_StoneGrey",
+    "PE_PlasterWhite",
     "PE_LacquerRed",
     "PE_Lattice",
-    "PE_WoodDark",
     "TEAM_Trim",
-    "PE_RoofTeal",
-    "PE_Gold",
-    "PE_Banner_chinese",
-    "PE_Thatch"
+    "PE_RoofDark",
+    "PE_WoodDark",
+    "PE_ClothRed",
+    "PE_Iron"
   ],
   "bounds_min": [
-    -2.556,
+    -2.7,
     -2.587,
     0.0
   ],
   "bounds_max": [
-    2.59,
-    2.597,
-    3.112
+    2.7,
+    2.6,
+    2.73
   ],
   "asset_id": "barracks",
   "civ": "chinese",
   "kind": "buildings",
   "blend": "art_source/blender/chinese/barracks.blend",
   "glb": "res://assets/3d/buildings/chinese/barracks.glb",
-  "glb_bytes": 62296,
+  "glb_bytes": 33648,
   "grid": [
     3,
     3

@@ -81,4 +81,20 @@ return function(M)
       P.use(K, "structure")
     end
   end
+
+  -- barracks: long timber hall under a grey tile roof with up-swept eaves, halberd racks, red character banners and
+  -- a war drum on its stand
+  SP.bing_ying = function(K, s)
+    M.ground(K, s, 3)
+    M.block(K, s, -2.7, 2.7, 2.3, 2.4, 2.3, { roof = "curved", rise = 1.0 })
+    M.door(K, s, 0, 2.3, 1.0, 1.7, "rect")
+    M.windows(K, s, -2.5, 2.5, 2.3, 1.1, 4, 0.5, 0.6)
+    for _, x in ipairs({ -2.5, 2.5 }) do A.standard(K, x, 1.2, 3.8, { form = "qi", field = "#C8382F", ec = "#1D1A19", emblem = "hanzi" }) end
+    M.props(K, s, { { "rack", -1.4, 1.0 }, { "rack", 1.4, 1.0 } })
+    local dx, dy = A.px(0), A.vy(0.8, 0)                            -- drum on an A-frame stand
+    P.use(K, "props")
+    P.line(K, dx - 9, dy, dx - 4, dy - 18, C.wood_dark, 1); P.line(K, dx + 9, dy, dx + 4, dy - 18, C.wood_dark, 1)
+    P.ellipse(K, dx, dy - 18, 8, 7, C.lacquer_red); P.ellipse(K, dx, dy - 18, 6, 5, C.straw)
+    P.use(K, "structure")
+  end
 end

@@ -95,4 +95,26 @@ return function(M)
     P.use(K, "props"); P.ellipse(K, px, py - 4, 7, 3, C.stone_grey); P.ellipse(K, px, py - 7, 6, 2, P.shade(C.stone_grey, 1.15)); P.use(K, "structure")
     M.flag(K, s, 1.85, 0.4, 3.0)
   end
+
+  -- barracks: Trelleborg hall, a long plank hall with bowed walls, a row of sloping outer posts propping the eaves,
+  -- shingle roof, round shields hung along the wall
+  SP.trelleborg_hall = function(K, s)
+    M.ground(K, s, 3)
+    local b = M.block(K, s, -2.7, 2.7, 2.2, 2.6, 1.9, { roof = "gable", rise = 1.7 })
+    local f = b.facade
+    P.use(K, "props")
+    for i = 0, 7 do                                                  -- sloping outer posts
+      local x = A.px(-2.55 + i * 0.73)
+      P.line(K, x - 6, f.yb + 6, x, f.yt - 2, C.wood_dark, 2)
+    end
+    for i = 0, 4 do                                                  -- shields on the wall: team field, iron boss
+      local cx, cy = A.px(-2.0 + i * 1.0), f.yt + 12
+      P.use(K, "team"); P.ellipse(K, cx, cy, 5, 5, C.TEAM_D); P.ellipse(K, cx, cy, 4, 4, C.TEAM)
+      P.use(K, "props"); P.ellipse(K, cx, cy, 1, 1, C.iron)
+    end
+    P.use(K, "structure")
+    M.door(K, s, 0, 2.2, 0.8, 1.4, "rect")
+    M.props(K, s, { { "rack", 2.0, 0.9 }, { "runestone", -2.2, 0.8 }, { "barrel", -1.4, 0.6 } })
+    M.flag(K, s, 2.7, 1.4, 4.2)
+  end
 end

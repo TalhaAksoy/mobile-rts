@@ -1,18 +1,19 @@
 {
-  "tris": 908,
-  "verts": 1612,
+  "tris": 622,
+  "verts": 1032,
   "materials": [
     "PE_Dirt",
-    "PE_StoneBrick",
     "PE_StoneWarm",
+    "PE_StoneBrick",
     "PE_Window",
-    "PE_WoodDark",
     "TEAM_Trim",
     "PE_RoofRed",
+    "PE_WoodDark",
     "PE_Banner_byzantines",
     "PE_Gold",
     "PE_Iron",
-    "PE_Felt"
+    "PE_Thatch",
+    "PE_ClothRed"
   ],
   "bounds_min": [
     -2.684,
@@ -22,14 +23,14 @@
   "bounds_max": [
     2.639,
     2.687,
-    3.075
+    3.43
   ],
   "asset_id": "barracks",
   "civ": "byzantines",
   "kind": "buildings",
   "blend": "art_source/blender/byzantines/barracks.blend",
   "glb": "res://assets/3d/buildings/byzantines/barracks.glb",
-  "glb_bytes": 70616,
+  "glb_bytes": 50628,
   "grid": [
     3,
     3

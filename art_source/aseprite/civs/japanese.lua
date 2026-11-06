@@ -38,6 +38,6 @@ S._buildings = {
   tower_round = false, tower_roof = "curved", tower_top = "none", merlon = false, castle_wall = "plaster",
   castle_wall_c = PAL.plaster, keep_roof = "curved", stable_roof = "curved", paving_c = "#C0B8A8", sail_c = PAL.plaster,
   props = { "stone_lantern", "bamboo", "stone_lantern" }, kit_post = "lantern",
-  tc = "buke_yakata", castle = "yamajiro", house = "minka", watch = "yagura", mill = "watermill",
+  barracks = "nagaya", tc = "buke_yakata", castle = "yamajiro", house = "minka", watch = "yagura", mill = "watermill",
 }
 return S

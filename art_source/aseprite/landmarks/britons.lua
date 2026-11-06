@@ -96,4 +96,15 @@ return function(M)
       rise = 0.75, roof_mat = "shingle", roof_c = "#6A4A30", base = false, timber = false, posts = false })
     A.banner(K, 0, 1.3, 4.6, 0.36, 0.9, s.emblem, s.ec)
   end
+
+  -- barracks: stone-footed timber hall (oak frame, daub) under a slate roof, a weapon rack and the St George banner
+  SP.timber_hall = function(K, s)
+    M.ground(K, s, 3)
+    M.block(K, s, -2.6, 2.4, 2.0, 2.8, 2.6, { wall = "plaster", wall_c = s.plaster_c, timber = s.timber_c or "wood_dark",
+      braces = true, base = s.base_c, base_h = 0.6, roof = "gable", rise = 1.5 })
+    M.door(K, s, -0.2, 2.0, 1.1, 1.8, "arch_round")
+    M.windows(K, s, -2.3, 2.1, 2.0, 1.3, 4, 0.3, 0.5)
+    A.standard(K, 1.3, 1.6, 3.6, { form = "pennon", field = "#B3282D", field2 = "#F2EFE6" })
+    M.props(K, s, { { "rack", 2.1, 1.0 }, { "dummy", -1.9, 0.9 }, { "dummy", -1.2, 0.5 }, { "hay", -2.4, 1.6 } })
+  end
 end
