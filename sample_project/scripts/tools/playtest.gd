@@ -111,11 +111,12 @@ func _run() -> void:
 	var last_age := 1
 	while _clock < minutes * 60.0:
 		await process_frame
-		var d := root.get_process_delta_time()        # real seconds
-		t_real += d
-		_clock += d * Engine.time_scale
+		var d := root.get_process_delta_time()        # game seconds (already scaled by Engine.time_scale)
+		var real_d := d / maxf(Engine.time_scale, 0.001)
+		t_real += real_d
+		_clock += d
 		frames += 1
-		worst = maxf(worst, d * 1000.0)
+		worst = maxf(worst, real_d * 1000.0)
 		if not game.is_game_active:
 			_log("match ended (game over screen)")
 			await _shot("99_game_over")
