@@ -80,6 +80,7 @@ var building_sprite: Sprite3D
 ## 2D sprite mode: the Blender-rendered sprite set (FactionArtManager.make_sprite_node); building_sprite
 ## then points at its Sprite3D. The old hand-drawn sprites stay as the last fallback.
 var sprite_visual: Node3D = null
+var oblique_top_z: float = 0.0          # 2D style: z of the sprite's top edge (relative), for the hp bar
 var sprite_is_rendered := false
 ## 3D model instance (Blender GLB) when the art manifest provides one; null -> sprite/procedural path.
 var building_model: Node3D = null
@@ -98,6 +99,10 @@ var sails_node: Node3D = null
 ## civilisation's upgrade dressing (banners, plinth, ornaments) around the building.
 var upgrade_level: int = 1
 var upgrade_node: Node3D = null
+## Age look (1 Köy / 2 Hisar / 3 İmparatorluk): set by the game before setup_building and on age-up
+## (set_age_look). 2 = the base art, used by tools and tests that build a building on its own.
+var age_look: int = 2
+var age_dressing: Node3D = null
 
 func _ready() -> void:
 	rally_point = (global_position if is_inside_tree() else position) + Vector3(0, 0, grid_size.y * MapGenerator3D.TILE_SIZE * 0.5 + 2.0)
@@ -340,12 +345,14 @@ func _build_3d_structure() -> void:
 		building_model = FactionArtManager.instantiate_field_model(map_gen.map_type, team) if map_gen != null else null
 	else:
 		building_model = FactionArtManager.instantiate_building_model(civ_type, building_type, team)
+		if building_model != null and age_look != 2:
+			FactionArtManager.apply_building_age(building_model, age_look, team, FactionArtManager.get_faction_id_from_civ(civ_type))
 	# 3b. 2D sprite mode: sprite rendered in Blender from the same model (same look, flat)
 	if building_model == null:
 		if building_type == BuildingType.FARM:
 			sprite_visual = FactionArtManager.instantiate_field_sprite(map_gen.map_type, team) if map_gen != null else null
 		else:
-			sprite_visual = FactionArtManager.instantiate_building_sprite(civ_type, building_type, team)
+			sprite_visual = FactionArtManager.instantiate_building_sprite(civ_type, building_type, team, age_look)
 	# 3c. Last fallback: the original hand-drawn HD-2D building art
 	var b_tex = null if (building_model != null or sprite_visual != null) else FactionArtManager.get_building_texture(civ_type, building_type)
 	if sprite_visual != null:
@@ -354,6 +361,11 @@ func _build_3d_structure() -> void:
 		sprite_is_rendered = true
 		var top: float = building_sprite.position.y + building_sprite.texture.get_height() * 0.5 * building_sprite.pixel_size
 		model_height = top / cos(deg_to_rad(45.0))
+		if FactionArtManager.top_down():
+			# flat oblique sprite: the drawn height runs north on screen; the hp bar goes above its top edge
+			model_height = 3.0
+			var plane := sprite_visual.get_node("SpritePlane") as Node3D
+			oblique_top_z = plane.position.z - (building_sprite.position.y + building_sprite.texture.get_height() * 0.5 * building_sprite.pixel_size)
 		v_height = clamp(model_height * 0.82, 1.4, 7.0)
 		if building_type != BuildingType.FARM:
 			scaffold_node.queue_free()
@@ -363,6 +375,7 @@ func _build_3d_structure() -> void:
 		_update_construction_visual()
 	elif building_model != null:
 		model_root.add_child(building_model)
+		_refresh_age_dressing()
 		sails_node = _find_named(building_model, "Sails")
 		var aabb := FactionArtManager.compute_visual_aabb(building_model)
 		model_height = aabb.end.y
@@ -855,6 +868,11 @@ func _build_3d_hp_bar(height_y: float) -> void:
 	hp_bar_holder.add_child(hp_fill_mesh)
 
 	hp_bar_holder.rotation_degrees = Vector3(-56, 0, 0)
+	if FactionArtManager.top_down():
+		# seen from straight above: flat, just above (north of) the top edge of the oblique sprite
+		hp_bar_holder.rotation_degrees = Vector3(-90, 0, 0)
+		var north_z: float = oblique_top_z if oblique_top_z < 0.0 else -(grid_size.y * MapGenerator3D.TILE_SIZE * 0.5 + 0.5)
+		hp_bar_holder.position = Vector3(0, 11.0, north_z - 0.35)
 	hp_bar_holder.visible = false
 
 func _process(delta: float) -> void:
@@ -1203,6 +1221,41 @@ static func _find_named(n: Node, prefix: String) -> Node3D:
 		if deep != null:
 			return deep
 	return null
+
+## Age-up: the building switches to its new age look in place (2D: the age sprite; 3D: materials + dressing).
+func set_age_look(age: int) -> void:
+	if age == age_look:
+		return
+	age_look = age
+	if building_type == BuildingType.FARM or model_root == null:
+		return
+	if sprite_visual != null and is_instance_valid(sprite_visual):
+		var nv := FactionArtManager.instantiate_building_sprite(civ_type, building_type, team, age)
+		if nv == null:
+			return
+		var idx := sprite_visual.get_index()
+		model_root.remove_child(sprite_visual)
+		sprite_visual.queue_free()
+		sprite_visual = nv
+		model_root.add_child(nv)
+		model_root.move_child(nv, idx)
+		building_sprite = nv.get_node("SpritePlane/Sprite") as Sprite3D
+		if FactionArtManager.top_down():
+			var plane := nv.get_node("SpritePlane") as Node3D
+			oblique_top_z = plane.position.z - (building_sprite.position.y + building_sprite.texture.get_height() * 0.5 * building_sprite.pixel_size)
+		_update_construction_visual()
+	elif building_model != null and is_instance_valid(building_model):
+		FactionArtManager.apply_building_age(building_model, age, team, FactionArtManager.get_faction_id_from_civ(civ_type))
+		_refresh_age_dressing()
+
+func _refresh_age_dressing() -> void:
+	if is_instance_valid(age_dressing):
+		age_dressing.queue_free()
+	age_dressing = null
+	if age_look >= 3 and building_model != null and building_type != BuildingType.FARM:
+		var t := MapGenerator3D.TILE_SIZE
+		age_dressing = FactionArtManager.make_age_dressing(grid_size.x * t, grid_size.y * t, team, FactionArtManager.get_faction_id_from_civ(civ_type))
+		model_root.add_child(age_dressing)
 
 func set_upgrade_level(level: int) -> void:
 	if level == upgrade_level and is_instance_valid(upgrade_node):

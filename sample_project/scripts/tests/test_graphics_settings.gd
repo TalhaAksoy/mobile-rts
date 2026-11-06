@@ -50,7 +50,8 @@ func _run() -> void:
 	await process_frame
 	var vp := root.get_viewport()
 	var light := scene.get_node("DirectionalLight3D") as DirectionalLight3D
-	_check(is_equal_approx(vp.scaling_3d_scale, 0.6) and vp.msaa_3d == Viewport.MSAA_DISABLED and not light.shadow_enabled and Engine.max_fps == 30,
+	# Low uses the 2D sprite style, which always renders at 100% (pixel art); the stored scale stays 60
+	_check(is_equal_approx(vp.scaling_3d_scale, 1.0) and GraphicsSettings.values["scale"] == 60 and vp.msaa_3d == Viewport.MSAA_DISABLED and not light.shadow_enabled and Engine.max_fps == 30,
 		"game start applies Low (scale %.2f, msaa %d, shadows %s, fps %d)" % [vp.scaling_3d_scale, vp.msaa_3d, light.shadow_enabled, Engine.max_fps])
 
 	var menu = scene.get_node("UIManager3D/MenuRoot")

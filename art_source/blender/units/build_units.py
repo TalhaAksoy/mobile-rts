@@ -1,6 +1,6 @@
 """Builds 3D unit characters (rig + body + actions) and exports them to Godot.
 
-    blender -b --factory-startup --python art_source/blender/units/build_units.py -- [civ/role ...] [--preview]
+    blender -b --factory-startup --python art_source/blender/units/build_units.py -- [civ/role ...] [--preview] [--ages=1,3]
 
 No arguments = every civ/role in unitstyle.STYLES. Writes
     sample_project/assets/3d/units/<civ>/<role>.glb
@@ -32,9 +32,10 @@ def _pin_import(png):
                 f.write("%s=%s\n" % (k, v))
 
 
-def build_one(civ, role, palette_img, preview=False):
+def build_one(civ, role, palette_img, preview=False, age=2):
     charkit.reset()
-    style = unitstyle.get(civ, role)
+    style = unitstyle.get(civ, role, age)
+    name = role if age == 2 else "%s_a%d" % (role, age)
     mats = charkit.get_materials(palette_img)
     mount = style.get("mount")
     props = []
@@ -55,23 +56,23 @@ def build_one(civ, role, palette_img, preview=False):
         charkit.make_mount_actions(arm, style.get("attack", "slash"))
     else:
         charkit.make_actions(arm, style.get("attack", "slash"))
-    out = os.path.join(GODOT, "assets", "3d", "units", civ, role + ".glb")
+    out = os.path.join(GODOT, "assets", "3d", "units", civ, name + ".glb")
     charkit.export_glb(out)
     zs = [(ob.matrix_world @ v.co).z for v in ob.data.vertices]
     meta = {"civ": civ, "role": role, "tris": tris, "bones": len(arm.data.bones), "height": round(max(zs), 3),
             "actions": sorted(a.name for a in bpy.data.actions), "props": props, "attack": style.get("attack", "slash"),
-            "mount": mount or "", "model": "res://assets/3d/units/%s/%s.glb" % (civ, role)}
+            "mount": mount or "", "model": "res://assets/3d/units/%s/%s.glb" % (civ, name), "age": age}
     md = os.path.join(HERE, "meta")
     os.makedirs(md, exist_ok=True)
-    with open(os.path.join(md, "%s_%s.json" % (civ, role)), "w") as f:
+    with open(os.path.join(md, "%s_%s%s.json" % (civ, role, "" if age == 2 else "@a%d" % age)), "w") as f:
         json.dump(meta, f, indent=1)
     blend_dir = os.path.join(HERE, "blend", civ)
     os.makedirs(blend_dir, exist_ok=True)
-    bpy.ops.wm.save_as_mainfile(filepath=os.path.join(blend_dir, role + ".blend"), copy=True)
+    bpy.ops.wm.save_as_mainfile(filepath=os.path.join(blend_dir, name + ".blend"), copy=True)
     if preview:
-        render_preview(arm, os.path.join(REPO, "docs", "art", "previews", "units", "%s_%s.png" % (civ, role)),
+        render_preview(arm, os.path.join(REPO, "docs", "art", "previews", "units", "%s_%s.png" % (civ, name)),
                        scale=3.4 if mount else 2.6)
-    print("BUILT %s/%s tris=%d height=%.2f mount=%s" % (civ, role, tris, meta["height"], mount or "-"))
+    print("BUILT %s/%s tris=%d height=%.2f mount=%s" % (civ, name, tris, meta["height"], mount or "-"))
     return meta
 
 
@@ -106,6 +107,11 @@ def render_preview(arm, path, action=None, frame=1, scale=2.6):
 def main():
     argv = sys.argv[sys.argv.index("--") + 1:] if "--" in sys.argv else []
     preview = "--preview" in argv
+    # --ages=1,3 : build these age looks (default: 2 = the base models); villagers have one look
+    ages = [2]
+    for a in argv:
+        if a.startswith("--ages="):
+            ages = [int(x) for x in a[7:].split(",") if x]
     targets = [a for a in argv if "/" in a]
     if not targets:
         targets = ["%s/%s" % (c, r) for c in unitstyle.STYLES for r in unitstyle.STYLES[c]]
@@ -115,7 +121,10 @@ def main():
     _pin_import(PALETTE_PNG)
     for t in targets:
         civ, role = t.split("/")
-        build_one(civ, role, pal, preview)
+        for age in ages:
+            if age != 2 and role == "villager":
+                continue
+            build_one(civ, role, pal, preview, age)
 
 
 if __name__ == "__main__":

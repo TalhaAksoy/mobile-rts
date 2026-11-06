@@ -113,6 +113,10 @@ static func apply(viewport: Viewport, light: DirectionalLight3D = null) -> void:
 	if viewport != null:
 		viewport.scaling_3d_mode = Viewport.SCALING_3D_MODE_BILINEAR
 		viewport.scaling_3d_scale = values["scale"] / 100.0
+		if int(values.get("style", 0)) == 1:
+			# 2D style: pixel art must be rendered at full resolution (a reduced 3D scale blurs it and drops
+			# pixel rows); flat sprites + one terrain mesh are cheap, the other LOW savings still apply
+			viewport.scaling_3d_scale = 1.0
 		match int(values["msaa"]):
 			2: viewport.msaa_3d = Viewport.MSAA_2X
 			4: viewport.msaa_3d = Viewport.MSAA_4X

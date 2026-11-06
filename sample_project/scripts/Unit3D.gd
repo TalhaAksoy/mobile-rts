@@ -44,6 +44,17 @@ enum State {
 	RETURNING_RESOURCES
 }
 
+## Army orders (SALDIR / SAVUN buttons). NONE = plain behaviour: a move ignores enemies, an idle soldier
+## attacks what comes close. ATTACK_MOVE: walk to order_pos and fight everything met on the way and there.
+## DEFEND: hold order_pos, fight enemies that come within DEFEND_RADIUS of it, walk back after the fight.
+enum Order { NONE, ATTACK_MOVE, DEFEND }
+var order: int = Order.NONE
+var order_pos: Vector3 = Vector3.ZERO
+var _order_scan_t: float = 0.0
+const DEFEND_RADIUS := 9.0          # enemies this close to the post are engaged
+const DEFEND_LEASH := 13.0          # a chase further than this from the post is given up
+const ORDER_ARRIVE := 1.6
+
 @export var unit_type: UnitType = UnitType.VILLAGER
 @export var team: int = 0
 @export var civ_type: CivData.CivType = CivData.CivType.OTTOMANS
@@ -133,9 +144,25 @@ var basket_wood: Node3D
 var basket_gold: Node3D
 var basket_food: Node3D
 
+## Age look (1 Köy / 2 Hisar / 3 İmparatorluk): set by the game before setup_unit and on age-up (set_age_look).
+## 2 = the base art, used by tools and tests that make a unit on its own. Villagers look the same in every age.
+var age_look: int = 2
+
 func _ready() -> void:
 	_init_stats()
 	_build_3d_model()
+
+## Age-up: soldiers on the field change into the new age's kit (the whole visual is rebuilt in place).
+func set_age_look(age: int) -> void:
+	if age == age_look:
+		return
+	age_look = age
+	if unit_type == UnitType.VILLAGER or hp <= 0.0 or not is_inside_tree():
+		return
+	var was_selected := is_selected
+	_build_3d_model()
+	if was_selected:
+		set_selected(true)
 
 func setup_unit(u_type: UnitType, t: int, civ: CivData.CivType, map: MapGenerator3D, game: Node) -> void:
 	unit_type = u_type
@@ -293,7 +320,7 @@ func _build_3d_model() -> void:
 	add_child(model_root)
 
 	# 0. Rigged 3D character when the visual style is 3D and this civ/role has one
-	unit_model = FactionArtManager.instantiate_unit_model(civ_type, unit_type, team)
+	unit_model = FactionArtManager.instantiate_unit_model(civ_type, unit_type, team, age_look)
 	unit_anim = null
 	_cargo_props.clear()
 	_anim_name = ""
@@ -314,7 +341,7 @@ func _build_3d_model() -> void:
 func _build_unit_sprite() -> void:
 	# 1. Authentic Faction Art Billboard Sprite (Shaded HD-2D)
 	unit_sprite = Sprite3D.new()
-	sheet = FactionArtManager.get_unit_sheet_entry(civ_type, unit_type) if not FactionArtManager.use_3d_building_models else {}
+	sheet = FactionArtManager.get_unit_sheet_entry(civ_type, unit_type, age_look) if not FactionArtManager.use_3d_building_models else {}
 	if not sheet.is_empty() and ResourceLoader.exists(sheet.get("t%d" % clampi(team, 0, 1), "")):
 		_setup_sheet_sprite()
 		return
@@ -339,10 +366,14 @@ func _build_unit_sprite() -> void:
 	_add_sprite_silhouette()
 
 ## Billboard showing one frame of the unit's sprite sheet, feet (sheet anchor) on the ground.
+## Oblique sheets ("view": "oblique", 2D style seen from straight above) lie flat instead, see below.
 func _setup_sheet_sprite() -> void:
 	unit_sprite.texture = load(sheet["t%d" % clampi(team, 0, 1)])
 	unit_sprite.hframes = int(sheet["hframes"])
 	unit_sprite.vframes = int(sheet["vframes"])
+	if sheet.get("view", "") == "oblique":
+		_setup_oblique_sheet_sprite()
+		return
 	unit_sprite.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 	unit_sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
 	unit_sprite.shaded = false
@@ -357,6 +388,63 @@ func _setup_sheet_sprite() -> void:
 	_add_sprite_silhouette()
 	_anim_name = ""
 	_set_sheet_anim("idle")
+
+## 2D style seen from straight above: the 3/4-view frame lies flat (image-up = north) with the feet (sheet
+## anchor) on the unit's position. It does not turn with the unit (the sheet faces front-left and is mirrored
+## when walking right) and sits at its painter's-order height every frame (FactionArtManager.oblique_sort_y).
+## No X-ray silhouette: the sort order already draws a unit in front of what is north of it.
+func _setup_oblique_sheet_sprite() -> void:
+	unit_sprite.billboard = BaseMaterial3D.BILLBOARD_DISABLED
+	unit_sprite.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+	unit_sprite.shaded = false
+	unit_sprite.pixel_size = UNIT_VISUAL_SCALE / float(sheet.get("px_per_m", 20))
+	var w: float = sheet["w"]
+	var h: float = sheet["h"]
+	var anchor: Array = sheet["anchor"]
+	unit_sprite.offset = Vector2(w * 0.5 - float(anchor[0]), float(anchor[1]) - h * 0.5)
+	unit_sprite.alpha_cut = Sprite3D.ALPHA_CUT_DISCARD
+	unit_sprite.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	model_root.add_child(unit_sprite)
+	_anim_name = ""
+	_set_sheet_anim("idle")
+	_place_oblique_visuals()
+
+## Every frame: flat, unrotated sprite at the sort height; hp bar, status label and badge float above the head
+## (north on screen), flat to the camera.
+func _place_oblique_visuals() -> void:
+	if not is_inside_tree() or not is_instance_valid(unit_sprite):
+		return
+	var gp := global_position
+	unit_sprite.global_rotation = Vector3(-PI * 0.5, 0, 0)
+	unit_sprite.global_position = Vector3(gp.x, FactionArtManager.oblique_sort_y(gp.z), gp.z)
+	var head_north: float = float(sheet["anchor"][1]) / float(sheet.get("px_per_m", 20)) * UNIT_VISUAL_SCALE
+	var holder: Node3D = hp_bar_mesh.get_parent() as Node3D if is_instance_valid(hp_bar_mesh) else null
+	for n in [holder, status_label, badge]:
+		if n == null or not is_instance_valid(n):
+			continue
+		if not n.top_level:
+			n.top_level = true
+			n.set_meta("td_y", n.position.y)
+		# keep the 3D stacking order on screen: higher in 3D -> further north here
+		var north: float = head_north + 0.25 + maxf(0.0, float(n.get_meta("td_y")) - 2.7) * 0.5
+		n.global_position = Vector3(gp.x, 11.0, gp.z - north)
+	if holder != null and is_instance_valid(holder):
+		holder.global_rotation = Vector3(-PI * 0.5, 0, 0)
+	# selection ring on the ground under the feet: below every unit sprite, above fields and ground decals
+	if is_instance_valid(selection_ring):
+		if not selection_ring.top_level:
+			selection_ring.top_level = true
+			var m := selection_ring.material_override as StandardMaterial3D
+			if m != null:
+				m.no_depth_test = false
+				m.render_priority = 0
+			var tm := selection_ring.mesh as TorusMesh
+			if tm != null:                       # thinner flat ring in pixel-art scale
+				var r := get_body_radius() * 0.6 + 0.3
+				tm.outer_radius = r
+				tm.inner_radius = r - 0.12
+		selection_ring.global_position = Vector3(gp.x, FactionArtManager.OBLIQUE_SORT_BASE - 0.3, gp.z)
+		selection_ring.global_rotation = Vector3.ZERO
 
 ## Stencil X-Ray for billboards (the built-in STENCIL_MODE_XRAY pass ignores the texture alpha and would tint the
 ## whole quad): the sprite marks only its opaque pixels in the stencil buffer, the next pass draws the sprite
@@ -741,6 +829,7 @@ func _physics_process(delta: float) -> void:
 	else:
 		_update_hd2d_sprite_animation(delta)
 
+	_update_order(delta)
 	match state:
 		State.IDLE:
 			_handle_idle_scanning()
@@ -756,6 +845,8 @@ func _physics_process(delta: float) -> void:
 			_process_return_resources(delta)
 
 	_snap_to_ground()
+	if sheet.get("view", "") == "oblique":
+		_place_oblique_visuals()
 
 	if is_selected:
 		_update_status_label()
@@ -826,13 +917,14 @@ func _snap_to_ground() -> void:
 		global_position.y = map_gen.get_height_at(global_position)
 
 func _handle_idle_scanning() -> void:
-	if unit_type == UnitType.VILLAGER:
-		return
+	if unit_type == UnitType.VILLAGER or order != Order.NONE:
+		return                             # ordered soldiers scan in _update_order()
 	var scan_range = 6.5 if not is_ranged() else attack_range + 2.0
 	var enemy = _find_closest_enemy(scan_range)
 	if enemy:
 		command_attack(enemy)
 
+const WAYPOINT_SLACK := 0.7
 func _process_path_movement(delta: float) -> void:
 	if current_path.is_empty() or path_idx >= current_path.size():
 		if state == State.MOVING:
@@ -858,10 +950,15 @@ func _process_path_movement(delta: float) -> void:
 			rotation.y = lerp_angle(rotation.y, target_rot, delta * 12.0)
 
 	var move_dist = move_speed * delta
+	if dist > move_dist and dist < WAYPOINT_SLACK and path_idx < current_path.size() - 1:
+		path_idx += 1                              # close enough to a corner: spacing may keep it from the exact point
+		return
 	if dist <= move_dist:
 		global_position = target_pt
 		path_idx += 1
 		if path_idx >= current_path.size():
+			if state == State.MOVING:
+				crowd_goal = target_pt
 			current_path.clear()
 			if state == State.MOVING:
 				state = State.IDLE
@@ -1223,6 +1320,7 @@ func _find_next_resource(type: String = "") -> void:
 			velocity = Vector3.ZERO
 
 func _calculate_path(target_pos: Vector3) -> void:
+	crowd_goal = Vector3.INF
 	if map_gen != null:
 		current_path = map_gen.get_path_to_target(global_position, target_pos)
 		path_idx = 0
@@ -1234,8 +1332,115 @@ func _find_closest_enemy(max_dist: float) -> Node3D:
 		return null
 	return main_game.get_closest_enemy_entity(global_position, team, max_dist)
 
+## Body radius used to keep units from standing inside each other (GameController3D._separate_units):
+## two units may overlap by up to half of it, never more.
+func get_body_radius() -> float:
+	return 1.1 if is_cavalry() else 0.6
+
+## ---- army orders ------------------------------------------------------------------------------
+func command_attack_move(dest: Vector3) -> void:
+	command_move(dest)
+	order = Order.ATTACK_MOVE
+	order_pos = dest
+	_order_scan_t = 0.0
+
+func command_defend(pos: Vector3) -> void:
+	command_move(pos)
+	order = Order.DEFEND
+	order_pos = pos
+	_order_scan_t = 0.0
+
+## Attack this target, then keep fighting around where it stood (like an attack-move ending there).
+func command_attack_order(entity: Node3D) -> void:
+	if not is_instance_valid(entity):
+		return
+	command_attack(entity)
+	order = Order.ATTACK_MOVE
+	order_pos = entity.global_position
+	_order_scan_t = 0.0
+
+func _update_order(delta: float) -> void:
+	if order == Order.NONE or unit_type == UnitType.VILLAGER or hp <= 0.0:
+		return
+	_order_scan_t -= delta
+	match state:
+		State.MOVING:
+			if _order_scan_t <= 0.0:
+				_order_scan_t = 0.25
+				var e := _order_enemy()
+				if e != null:
+					command_attack(e)                  # keeps the order: resumed when the fight ends
+		State.ATTACKING:
+			if order == Order.DEFEND and is_instance_valid(target_entity) \
+					and _hdist(target_entity.global_position, order_pos) > DEFEND_LEASH:
+				_resume_order()                        # do not chase away from the post
+		State.IDLE:
+			if _order_scan_t <= 0.0:
+				_order_scan_t = 0.25
+				var e := _order_enemy()
+				if e != null:
+					command_attack(e)
+				elif _hdist(global_position, order_pos) > ORDER_ARRIVE + 0.5:
+					_resume_order()
+				elif order == Order.ATTACK_MOVE:
+					order = Order.NONE                 # arrived and nothing left to fight
+
+## The enemy this ordered soldier should fight now, or null.
+func _order_enemy() -> Node3D:
+	var r: float = (attack_range + 2.0) if is_ranged() else 6.5
+	if order == Order.DEFEND:
+		r = maxf(r, 8.0)
+	var e := _find_closest_enemy(r)
+	if e != null and order == Order.DEFEND and _hdist(e.global_position, order_pos) > DEFEND_RADIUS:
+		return null
+	return e
+
+func _resume_order() -> void:
+	_reset_approach()
+	target_entity = null
+	state = State.MOVING
+	_calculate_path(order_pos)
+	if current_path.is_empty() and _hdist(global_position, order_pos) > ORDER_ARRIVE + 0.5:
+		order = Order.NONE                         # the spot cannot be reached (water, walls): drop the order
+		state = State.IDLE
+
+## Separation hook: walking to a spot, blocked near it by a unit that already stands there -> count as arrived.
+## Plain moves only: army orders (SALDIR / SAVUN, AI attack waves) keep their own logic and formation spots.
+## Only a blocker that already arrived at (about) the same goal counts, so a unit never stops short beside a
+## stranger that just happens to stand near its destination.
+const CROWD_ARRIVE := 3.5
+const CROWD_CORE := 1.2
+const CROWD_MAX := 8.0
+var crowd_goal := Vector3.INF                   # the goal this unit arrived at (INF while walking / other work)
+func stop_if_crowded_near_goal(blocker: Unit3D) -> void:
+	if state != State.MOVING or current_path.is_empty() or blocker.team != team or order != Order.NONE:
+		return
+	var goal: Vector3 = current_path[current_path.size() - 1]
+	var my_d := _hdist(global_position, goal)
+	if blocker.crowd_goal != Vector3.INF:
+		if _hdist(blocker.crowd_goal, goal) > 1.0:
+			return                                 # blocker stands at a different spot
+		# the crowd grows outward: just outside an arrived unit counts as arrived too (up to CROWD_MAX)
+		var reach := maxf(CROWD_ARRIVE, _hdist(blocker.global_position, goal) + 1.5)
+		if my_d > minf(reach, CROWD_MAX):
+			return
+	elif blocker.state == State.MOVING and not blocker.current_path.is_empty():
+		# both still walking to the same spot and already jostling at its centre: the inner one has arrived
+		if my_d > CROWD_CORE or _hdist(blocker.current_path[blocker.current_path.size() - 1], goal) > 1.0:
+			return
+	else:
+		return
+	current_path.clear()
+	crowd_goal = goal
+	state = State.IDLE
+	velocity = Vector3.ZERO
+	walk_timer = 0.0
+	if is_instance_valid(model_root):
+		model_root.position.y = 0.0
+
 # Commands
 func command_move(dest: Vector3) -> void:
+	order = Order.NONE
 	_reset_approach()
 	state = State.MOVING
 	target_entity = null
@@ -1251,6 +1456,7 @@ func command_attack(entity: Node3D) -> void:
 	_calculate_path(entity.global_position)
 
 func command_gather(cell: Vector2i, type: String) -> void:
+	order = Order.NONE
 	_reset_approach()
 	state = State.GATHERING
 	target_cell = cell
@@ -1265,12 +1471,14 @@ func _field_work_pos(origin: Vector2i) -> Vector3:
 	return Vector3((origin.x + 1.0) * MapGenerator3D.TILE_SIZE, global_position.y, (origin.y + 1.0) * MapGenerator3D.TILE_SIZE)
 
 func command_build(building: Node3D) -> void:
+	order = Order.NONE
 	_reset_approach()
 	state = State.BUILDING
 	target_entity = building
 	_calculate_path(building.global_position)
 
 func command_return_resources(dropoff: Node3D = null) -> void:
+	order = Order.NONE
 	_reset_approach()
 	state = State.RETURNING_RESOURCES
 	current_path.clear()
@@ -1288,6 +1496,7 @@ func command_return_resources(dropoff: Node3D = null) -> void:
 			velocity = Vector3.ZERO
 
 func command_stop() -> void:
+	order = Order.NONE
 	_reset_approach()
 	state = State.IDLE
 	target_entity = null

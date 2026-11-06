@@ -209,7 +209,8 @@ func test_art_preview_gallery_integration() -> void:
 
 	preview._switch_mode("units")
 	assert_true(preview.current_view_mode == "units", "Gallery switched back to Units mode")
-	assert_true(preview.unit_cards_container.get_child_count() == 5, "Gallery shows 5 unit cards")
+	var want_units: int = preview.catalog["factions"][preview.current_faction_idx].get("unit_ids", []).size() if "current_faction_idx" in preview else 5
+	assert_true(want_units >= 5 and preview.unit_cards_container.get_child_count() == want_units, "Gallery shows one card per unit (%d)" % want_units)
 	preview.queue_free()
 
 func test_ui_manager_portrait_integration(game: GameController3D) -> void:

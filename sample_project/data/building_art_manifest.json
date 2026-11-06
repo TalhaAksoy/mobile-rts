@@ -1,9 +1,9 @@
 {
   "schema_version": 2,
-  "pack_name": "Pocket Empires HD-2D Buildings Atlas-Exact v2",
-  "atlas_crops_not_repainted": true,
+  "pack_name": "Pocket Empires Pixel-Art Buildings (Aseprite, art_source/aseprite)",
+  "atlas_crops_not_repainted": false,
   "engine": "Godot 4.x",
-  "source_perspective": "3/4 isometric concept art",
+  "source_perspective": "45 degree oblique pixel art, same as the in-game 2D sprites",
   "buildings_per_faction": 13,
   "factions": {
     "ottomans": {
@@ -13,8 +13,8 @@
         "town_center": {
           "path": "art/buildings/ottomans/town_center.png",
           "size_px": [
-            113,
-            167
+            196,
+            300
           ],
           "pivot_normalized": [
             0.5,
@@ -28,8 +28,8 @@
         "house": {
           "path": "art/buildings/ottomans/house.png",
           "size_px": [
-            82,
-            129
+            256,
+            310
           ],
           "pivot_normalized": [
             0.5,
@@ -43,8 +43,8 @@
         "barracks": {
           "path": "art/buildings/ottomans/barracks.png",
           "size_px": [
-            92,
-            139
+            187,
+            188
           ],
           "pivot_normalized": [
             0.5,
@@ -58,8 +58,8 @@
         "archery_range": {
           "path": "art/buildings/ottomans/archery_range.png",
           "size_px": [
-            81,
-            136
+            202,
+            188
           ],
           "pivot_normalized": [
             0.5,
@@ -73,8 +73,8 @@
         "stable": {
           "path": "art/buildings/ottomans/stable.png",
           "size_px": [
-            79,
-            131
+            206,
+            188
           ],
           "pivot_normalized": [
             0.5,
@@ -88,8 +88,8 @@
         "blacksmith": {
           "path": "art/buildings/ottomans/blacksmith.png",
           "size_px": [
-            92,
-            135
+            268,
+            346
           ],
           "pivot_normalized": [
             0.5,
@@ -103,8 +103,8 @@
         "market": {
           "path": "art/buildings/ottomans/market.png",
           "size_px": [
-            96,
-            133
+            187,
+            188
           ],
           "pivot_normalized": [
             0.5,
@@ -118,8 +118,8 @@
         "watch_tower": {
           "path": "art/buildings/ottomans/watch_tower.png",
           "size_px": [
-            90,
-            161
+            123,
+            226
           ],
           "pivot_normalized": [
             0.5,
@@ -133,8 +133,8 @@
         "stone_wall": {
           "path": "art/buildings/ottomans/stone_wall.png",
           "size_px": [
-            97,
-            123
+            248,
+            248
           ],
           "pivot_normalized": [
             0.5,
@@ -148,8 +148,8 @@
         "lumber_camp": {
           "path": "art/buildings/ottomans/lumber_camp.png",
           "size_px": [
-            106,
-            153
+            294,
+            260
           ],
           "pivot_normalized": [
             0.5,
@@ -163,8 +163,8 @@
         "mining_camp": {
           "path": "art/buildings/ottomans/mining_camp.png",
           "size_px": [
-            110,
-            133
+            266,
+            260
           ],
           "pivot_normalized": [
             0.5,
@@ -178,8 +178,8 @@
         "mill": {
           "path": "art/buildings/ottomans/mill.png",
           "size_px": [
-            92,
-            143
+            292,
+            316
           ],
           "pivot_normalized": [
             0.5,
@@ -193,8 +193,8 @@
         "castle": {
           "path": "art/buildings/ottomans/castle.png",
           "size_px": [
-            174,
-            169
+            278,
+            309
           ],
           "pivot_normalized": [
             0.5,
@@ -214,8 +214,8 @@
         "town_center": {
           "path": "art/buildings/byzantines/town_center.png",
           "size_px": [
-            113,
-            170
+            197,
+            224
           ],
           "pivot_normalized": [
             0.5,
@@ -229,8 +229,8 @@
         "house": {
           "path": "art/buildings/byzantines/house.png",
           "size_px": [
-            82,
-            123
+            252,
+            304
           ],
           "pivot_normalized": [
             0.5,
@@ -244,8 +244,8 @@
         "barracks": {
           "path": "art/buildings/byzantines/barracks.png",
           "size_px": [
-            92,
-            138
+            206,
+            190
           ],
           "pivot_normalized": [
             0.5,
@@ -259,8 +259,8 @@
         "archery_range": {
           "path": "art/buildings/byzantines/archery_range.png",
           "size_px": [
-            81,
-            137
+            201,
+            188
           ],
           "pivot_normalized": [
             0.5,
@@ -274,8 +274,8 @@
         "stable": {
           "path": "art/buildings/byzantines/stable.png",
           "size_px": [
-            79,
-            133
+            206,
+            188
           ],
           "pivot_normalized": [
             0.5,
@@ -289,8 +289,8 @@
         "blacksmith": {
           "path": "art/buildings/byzantines/blacksmith.png",
           "size_px": [
-            92,
-            138
+            268,
+            346
           ],
           "pivot_normalized": [
             0.5,
@@ -304,8 +304,8 @@
         "market": {
           "path": "art/buildings/byzantines/market.png",
           "size_px": [
-            96,
-            134
+            187,
+            188
           ],
           "pivot_normalized": [
             0.5,
@@ -319,8 +319,8 @@
         "watch_tower": {
           "path": "art/buildings/byzantines/watch_tower.png",
           "size_px": [
-            90,
-            169
+            123,
+            214
           ],
           "pivot_normalized": [
             0.5,
@@ -334,8 +334,8 @@
         "stone_wall": {
           "path": "art/buildings/byzantines/stone_wall.png",
           "size_px": [
-            97,
-            134
+            248,
+            248
           ],
           "pivot_normalized": [
             0.5,
@@ -349,8 +349,8 @@
         "lumber_camp": {
           "path": "art/buildings/byzantines/lumber_camp.png",
           "size_px": [
-            106,
-            142
+            294,
+            260
           ],
           "pivot_normalized": [
             0.5,
@@ -364,8 +364,8 @@
         "mining_camp": {
           "path": "art/buildings/byzantines/mining_camp.png",
           "size_px": [
-            110,
-            134
+            266,
+            260
           ],
           "pivot_normalized": [
             0.5,
@@ -379,8 +379,8 @@
         "mill": {
           "path": "art/buildings/byzantines/mill.png",
           "size_px": [
-            92,
-            147
+            308,
+            286
           ],
           "pivot_normalized": [
             0.5,
@@ -394,8 +394,8 @@
         "castle": {
           "path": "art/buildings/byzantines/castle.png",
           "size_px": [
-            174,
-            176
+            251,
+            304
           ],
           "pivot_normalized": [
             0.5,
@@ -415,8 +415,8 @@
         "town_center": {
           "path": "art/buildings/britons/town_center.png",
           "size_px": [
-            113,
-            170
+            194,
+            263
           ],
           "pivot_normalized": [
             0.5,
@@ -430,8 +430,8 @@
         "house": {
           "path": "art/buildings/britons/house.png",
           "size_px": [
-            82,
-            135
+            272,
+            256
           ],
           "pivot_normalized": [
             0.5,
@@ -445,8 +445,8 @@
         "barracks": {
           "path": "art/buildings/britons/barracks.png",
           "size_px": [
-            92,
-            150
+            206,
+            196
           ],
           "pivot_normalized": [
             0.5,
@@ -460,8 +460,8 @@
         "archery_range": {
           "path": "art/buildings/britons/archery_range.png",
           "size_px": [
-            81,
-            129
+            194,
+            188
           ],
           "pivot_normalized": [
             0.5,
@@ -475,8 +475,8 @@
         "stable": {
           "path": "art/buildings/britons/stable.png",
           "size_px": [
-            79,
-            132
+            211,
+            188
           ],
           "pivot_normalized": [
             0.5,
@@ -490,8 +490,8 @@
         "blacksmith": {
           "path": "art/buildings/britons/blacksmith.png",
           "size_px": [
-            92,
-            137
+            268,
+            346
           ],
           "pivot_normalized": [
             0.5,
@@ -505,8 +505,8 @@
         "market": {
           "path": "art/buildings/britons/market.png",
           "size_px": [
-            96,
-            132
+            187,
+            191
           ],
           "pivot_normalized": [
             0.5,
@@ -520,8 +520,8 @@
         "watch_tower": {
           "path": "art/buildings/britons/watch_tower.png",
           "size_px": [
-            90,
-            166
+            123,
+            223
           ],
           "pivot_normalized": [
             0.5,
@@ -535,8 +535,8 @@
         "stone_wall": {
           "path": "art/buildings/britons/stone_wall.png",
           "size_px": [
-            97,
-            120
+            248,
+            248
           ],
           "pivot_normalized": [
             0.5,
@@ -550,8 +550,8 @@
         "lumber_camp": {
           "path": "art/buildings/britons/lumber_camp.png",
           "size_px": [
-            106,
-            137
+            294,
+            260
           ],
           "pivot_normalized": [
             0.5,
@@ -565,8 +565,8 @@
         "mining_camp": {
           "path": "art/buildings/britons/mining_camp.png",
           "size_px": [
-            110,
-            140
+            266,
+            260
           ],
           "pivot_normalized": [
             0.5,
@@ -580,8 +580,8 @@
         "mill": {
           "path": "art/buildings/britons/mill.png",
           "size_px": [
-            92,
-            161
+            280,
+            344
           ],
           "pivot_normalized": [
             0.5,
@@ -595,8 +595,8 @@
         "castle": {
           "path": "art/buildings/britons/castle.png",
           "size_px": [
-            174,
-            172
+            278,
+            265
           ],
           "pivot_normalized": [
             0.5,
@@ -616,8 +616,8 @@
         "town_center": {
           "path": "art/buildings/franks/town_center.png",
           "size_px": [
-            113,
-            192
+            210,
+            287
           ],
           "pivot_normalized": [
             0.5,
@@ -631,8 +631,8 @@
         "house": {
           "path": "art/buildings/franks/house.png",
           "size_px": [
-            82,
-            139
+            125,
+            193
           ],
           "pivot_normalized": [
             0.5,
@@ -646,8 +646,8 @@
         "barracks": {
           "path": "art/buildings/franks/barracks.png",
           "size_px": [
-            92,
-            155
+            205,
+            213
           ],
           "pivot_normalized": [
             0.5,
@@ -661,8 +661,8 @@
         "archery_range": {
           "path": "art/buildings/franks/archery_range.png",
           "size_px": [
-            81,
-            150
+            203,
+            193
           ],
           "pivot_normalized": [
             0.5,
@@ -676,8 +676,8 @@
         "stable": {
           "path": "art/buildings/franks/stable.png",
           "size_px": [
-            79,
-            151
+            208,
+            203
           ],
           "pivot_normalized": [
             0.5,
@@ -691,8 +691,8 @@
         "blacksmith": {
           "path": "art/buildings/franks/blacksmith.png",
           "size_px": [
-            92,
-            140
+            268,
+            346
           ],
           "pivot_normalized": [
             0.5,
@@ -706,8 +706,8 @@
         "market": {
           "path": "art/buildings/franks/market.png",
           "size_px": [
-            96,
-            144
+            187,
+            204
           ],
           "pivot_normalized": [
             0.5,
@@ -721,8 +721,8 @@
         "watch_tower": {
           "path": "art/buildings/franks/watch_tower.png",
           "size_px": [
-            90,
-            184
+            123,
+            239
           ],
           "pivot_normalized": [
             0.5,
@@ -736,8 +736,8 @@
         "stone_wall": {
           "path": "art/buildings/franks/stone_wall.png",
           "size_px": [
-            97,
-            133
+            248,
+            248
           ],
           "pivot_normalized": [
             0.5,
@@ -751,8 +751,8 @@
         "lumber_camp": {
           "path": "art/buildings/franks/lumber_camp.png",
           "size_px": [
-            106,
-            141
+            294,
+            260
           ],
           "pivot_normalized": [
             0.5,
@@ -766,8 +766,8 @@
         "mining_camp": {
           "path": "art/buildings/franks/mining_camp.png",
           "size_px": [
-            110,
-            151
+            266,
+            260
           ],
           "pivot_normalized": [
             0.5,
@@ -781,8 +781,8 @@
         "mill": {
           "path": "art/buildings/franks/mill.png",
           "size_px": [
-            92,
-            154
+            280,
+            344
           ],
           "pivot_normalized": [
             0.5,
@@ -796,8 +796,8 @@
         "castle": {
           "path": "art/buildings/franks/castle.png",
           "size_px": [
-            174,
-            193
+            272,
+            313
           ],
           "pivot_normalized": [
             0.5,
@@ -817,8 +817,8 @@
         "town_center": {
           "path": "art/buildings/mongols/town_center.png",
           "size_px": [
-            113,
-            214
+            209,
+            188
           ],
           "pivot_normalized": [
             0.5,
@@ -832,8 +832,8 @@
         "house": {
           "path": "art/buildings/mongols/house.png",
           "size_px": [
-            82,
-            170
+            270,
+            248
           ],
           "pivot_normalized": [
             0.5,
@@ -847,8 +847,8 @@
         "barracks": {
           "path": "art/buildings/mongols/barracks.png",
           "size_px": [
-            92,
-            180
+            187,
+            188
           ],
           "pivot_normalized": [
             0.5,
@@ -862,8 +862,8 @@
         "archery_range": {
           "path": "art/buildings/mongols/archery_range.png",
           "size_px": [
-            81,
-            172
+            188,
+            188
           ],
           "pivot_normalized": [
             0.5,
@@ -877,8 +877,8 @@
         "stable": {
           "path": "art/buildings/mongols/stable.png",
           "size_px": [
-            79,
-            164
+            188,
+            188
           ],
           "pivot_normalized": [
             0.5,
@@ -892,8 +892,8 @@
         "blacksmith": {
           "path": "art/buildings/mongols/blacksmith.png",
           "size_px": [
-            92,
-            167
+            256,
+            248
           ],
           "pivot_normalized": [
             0.5,
@@ -907,8 +907,8 @@
         "market": {
           "path": "art/buildings/mongols/market.png",
           "size_px": [
-            96,
-            167
+            196,
+            188
           ],
           "pivot_normalized": [
             0.5,
@@ -922,8 +922,8 @@
         "watch_tower": {
           "path": "art/buildings/mongols/watch_tower.png",
           "size_px": [
-            90,
-            197
+            123,
+            226
           ],
           "pivot_normalized": [
             0.5,
@@ -937,8 +937,8 @@
         "stone_wall": {
           "path": "art/buildings/mongols/stone_wall.png",
           "size_px": [
-            97,
-            147
+            248,
+            248
           ],
           "pivot_normalized": [
             0.5,
@@ -952,8 +952,8 @@
         "lumber_camp": {
           "path": "art/buildings/mongols/lumber_camp.png",
           "size_px": [
-            106,
-            174
+            254,
+            248
           ],
           "pivot_normalized": [
             0.5,
@@ -967,8 +967,8 @@
         "mining_camp": {
           "path": "art/buildings/mongols/mining_camp.png",
           "size_px": [
-            110,
-            173
+            258,
+            248
           ],
           "pivot_normalized": [
             0.5,
@@ -982,8 +982,8 @@
         "mill": {
           "path": "art/buildings/mongols/mill.png",
           "size_px": [
-            92,
-            176
+            260,
+            248
           ],
           "pivot_normalized": [
             0.5,
@@ -997,8 +997,8 @@
         "castle": {
           "path": "art/buildings/mongols/castle.png",
           "size_px": [
-            174,
-            226
+            251,
+            252
           ],
           "pivot_normalized": [
             0.5,
@@ -1018,8 +1018,8 @@
         "town_center": {
           "path": "art/buildings/teutons/town_center.png",
           "size_px": [
-            113,
-            184
+            195,
+            286
           ],
           "pivot_normalized": [
             0.5,
@@ -1033,8 +1033,8 @@
         "house": {
           "path": "art/buildings/teutons/house.png",
           "size_px": [
-            82,
-            133
+            135,
+            194
           ],
           "pivot_normalized": [
             0.5,
@@ -1048,8 +1048,8 @@
         "barracks": {
           "path": "art/buildings/teutons/barracks.png",
           "size_px": [
-            92,
-            157
+            206,
+            211
           ],
           "pivot_normalized": [
             0.5,
@@ -1063,8 +1063,8 @@
         "archery_range": {
           "path": "art/buildings/teutons/archery_range.png",
           "size_px": [
-            81,
-            137
+            201,
+            188
           ],
           "pivot_normalized": [
             0.5,
@@ -1078,8 +1078,8 @@
         "stable": {
           "path": "art/buildings/teutons/stable.png",
           "size_px": [
-            79,
-            140
+            206,
+            200
           ],
           "pivot_normalized": [
             0.5,
@@ -1093,8 +1093,8 @@
         "blacksmith": {
           "path": "art/buildings/teutons/blacksmith.png",
           "size_px": [
-            92,
-            146
+            268,
+            346
           ],
           "pivot_normalized": [
             0.5,
@@ -1108,8 +1108,8 @@
         "market": {
           "path": "art/buildings/teutons/market.png",
           "size_px": [
-            96,
-            142
+            187,
+            200
           ],
           "pivot_normalized": [
             0.5,
@@ -1123,8 +1123,8 @@
         "watch_tower": {
           "path": "art/buildings/teutons/watch_tower.png",
           "size_px": [
-            90,
-            177
+            123,
+            236
           ],
           "pivot_normalized": [
             0.5,
@@ -1138,8 +1138,8 @@
         "stone_wall": {
           "path": "art/buildings/teutons/stone_wall.png",
           "size_px": [
-            97,
-            128
+            248,
+            248
           ],
           "pivot_normalized": [
             0.5,
@@ -1153,8 +1153,8 @@
         "lumber_camp": {
           "path": "art/buildings/teutons/lumber_camp.png",
           "size_px": [
-            106,
-            149
+            294,
+            260
           ],
           "pivot_normalized": [
             0.5,
@@ -1168,8 +1168,8 @@
         "mining_camp": {
           "path": "art/buildings/teutons/mining_camp.png",
           "size_px": [
-            110,
-            150
+            266,
+            260
           ],
           "pivot_normalized": [
             0.5,
@@ -1183,8 +1183,8 @@
         "mill": {
           "path": "art/buildings/teutons/mill.png",
           "size_px": [
-            92,
-            159
+            308,
+            312
           ],
           "pivot_normalized": [
             0.5,
@@ -1198,8 +1198,8 @@
         "castle": {
           "path": "art/buildings/teutons/castle.png",
           "size_px": [
-            174,
-            184
+            252,
+            348
           ],
           "pivot_normalized": [
             0.5,
@@ -1219,8 +1219,8 @@
         "town_center": {
           "path": "art/buildings/japanese/town_center.png",
           "size_px": [
-            113,
-            187
+            225,
+            195
           ],
           "pivot_normalized": [
             0.5,
@@ -1234,8 +1234,8 @@
         "house": {
           "path": "art/buildings/japanese/house.png",
           "size_px": [
-            82,
-            122
+            276,
+            292
           ],
           "pivot_normalized": [
             0.5,
@@ -1249,8 +1249,8 @@
         "barracks": {
           "path": "art/buildings/japanese/barracks.png",
           "size_px": [
-            92,
-            162
+            206,
+            195
           ],
           "pivot_normalized": [
             0.5,
@@ -1264,8 +1264,8 @@
         "archery_range": {
           "path": "art/buildings/japanese/archery_range.png",
           "size_px": [
-            81,
-            133
+            209,
+            188
           ],
           "pivot_normalized": [
             0.5,
@@ -1279,8 +1279,8 @@
         "stable": {
           "path": "art/buildings/japanese/stable.png",
           "size_px": [
-            79,
-            145
+            225,
+            188
           ],
           "pivot_normalized": [
             0.5,
@@ -1294,8 +1294,8 @@
         "blacksmith": {
           "path": "art/buildings/japanese/blacksmith.png",
           "size_px": [
-            92,
-            153
+            292,
+            346
           ],
           "pivot_normalized": [
             0.5,
@@ -1309,8 +1309,8 @@
         "market": {
           "path": "art/buildings/japanese/market.png",
           "size_px": [
-            96,
-            142
+            187,
+            193
           ],
           "pivot_normalized": [
             0.5,
@@ -1324,8 +1324,8 @@
         "watch_tower": {
           "path": "art/buildings/japanese/watch_tower.png",
           "size_px": [
-            90,
-            182
+            123,
+            206
           ],
           "pivot_normalized": [
             0.5,
@@ -1339,8 +1339,8 @@
         "stone_wall": {
           "path": "art/buildings/japanese/stone_wall.png",
           "size_px": [
-            97,
-            133
+            248,
+            248
           ],
           "pivot_normalized": [
             0.5,
@@ -1354,8 +1354,8 @@
         "lumber_camp": {
           "path": "art/buildings/japanese/lumber_camp.png",
           "size_px": [
-            106,
-            148
+            308,
+            260
           ],
           "pivot_normalized": [
             0.5,
@@ -1369,8 +1369,8 @@
         "mining_camp": {
           "path": "art/buildings/japanese/mining_camp.png",
           "size_px": [
-            110,
-            142
+            280,
+            260
           ],
           "pivot_normalized": [
             0.5,
@@ -1384,8 +1384,8 @@
         "mill": {
           "path": "art/buildings/japanese/mill.png",
           "size_px": [
-            92,
-            166
+            316,
+            294
           ],
           "pivot_normalized": [
             0.5,
@@ -1399,8 +1399,8 @@
         "castle": {
           "path": "art/buildings/japanese/castle.png",
           "size_px": [
-            174,
-            190
+            263,
+            311
           ],
           "pivot_normalized": [
             0.5,
@@ -1420,8 +1420,8 @@
         "town_center": {
           "path": "art/buildings/saracens/town_center.png",
           "size_px": [
-            113,
-            183
+            207,
+            291
           ],
           "pivot_normalized": [
             0.5,
@@ -1435,8 +1435,8 @@
         "house": {
           "path": "art/buildings/saracens/house.png",
           "size_px": [
-            82,
-            144
+            298,
+            314
           ],
           "pivot_normalized": [
             0.5,
@@ -1450,8 +1450,8 @@
         "barracks": {
           "path": "art/buildings/saracens/barracks.png",
           "size_px": [
-            92,
-            174
+            204,
+            189
           ],
           "pivot_normalized": [
             0.5,
@@ -1465,8 +1465,8 @@
         "archery_range": {
           "path": "art/buildings/saracens/archery_range.png",
           "size_px": [
-            81,
-            140
+            210,
+            193
           ],
           "pivot_normalized": [
             0.5,
@@ -1480,8 +1480,8 @@
         "stable": {
           "path": "art/buildings/saracens/stable.png",
           "size_px": [
-            79,
-            153
+            199,
+            188
           ],
           "pivot_normalized": [
             0.5,
@@ -1495,8 +1495,8 @@
         "blacksmith": {
           "path": "art/buildings/saracens/blacksmith.png",
           "size_px": [
-            92,
-            140
+            258,
+            346
           ],
           "pivot_normalized": [
             0.5,
@@ -1510,8 +1510,8 @@
         "market": {
           "path": "art/buildings/saracens/market.png",
           "size_px": [
-            96,
-            149
+            187,
+            188
           ],
           "pivot_normalized": [
             0.5,
@@ -1525,8 +1525,8 @@
         "watch_tower": {
           "path": "art/buildings/saracens/watch_tower.png",
           "size_px": [
-            90,
-            176
+            123,
+            186
           ],
           "pivot_normalized": [
             0.5,
@@ -1540,8 +1540,8 @@
         "stone_wall": {
           "path": "art/buildings/saracens/stone_wall.png",
           "size_px": [
-            97,
-            150
+            248,
+            248
           ],
           "pivot_normalized": [
             0.5,
@@ -1555,8 +1555,8 @@
         "lumber_camp": {
           "path": "art/buildings/saracens/lumber_camp.png",
           "size_px": [
-            106,
-            145
+            278,
+            264
           ],
           "pivot_normalized": [
             0.5,
@@ -1570,8 +1570,8 @@
         "mining_camp": {
           "path": "art/buildings/saracens/mining_camp.png",
           "size_px": [
-            110,
-            151
+            250,
+            264
           ],
           "pivot_normalized": [
             0.5,
@@ -1585,8 +1585,8 @@
         "mill": {
           "path": "art/buildings/saracens/mill.png",
           "size_px": [
-            92,
-            163
+            328,
+            264
           ],
           "pivot_normalized": [
             0.5,
@@ -1600,8 +1600,8 @@
         "castle": {
           "path": "art/buildings/saracens/castle.png",
           "size_px": [
-            174,
-            190
+            280,
+            297
           ],
           "pivot_normalized": [
             0.5,
@@ -1621,8 +1621,8 @@
         "town_center": {
           "path": "art/buildings/vikings/town_center.png",
           "size_px": [
-            113,
-            183
+            217,
+            188
           ],
           "pivot_normalized": [
             0.5,
@@ -1636,8 +1636,8 @@
         "house": {
           "path": "art/buildings/vikings/house.png",
           "size_px": [
-            82,
-            139
+            254,
+            248
           ],
           "pivot_normalized": [
             0.5,
@@ -1651,8 +1651,8 @@
         "barracks": {
           "path": "art/buildings/vikings/barracks.png",
           "size_px": [
-            92,
-            160
+            196,
+            221
           ],
           "pivot_normalized": [
             0.5,
@@ -1666,8 +1666,8 @@
         "archery_range": {
           "path": "art/buildings/vikings/archery_range.png",
           "size_px": [
-            81,
-            140
+            203,
+            194
           ],
           "pivot_normalized": [
             0.5,
@@ -1681,8 +1681,8 @@
         "stable": {
           "path": "art/buildings/vikings/stable.png",
           "size_px": [
-            79,
-            146
+            208,
+            208
           ],
           "pivot_normalized": [
             0.5,
@@ -1696,8 +1696,8 @@
         "blacksmith": {
           "path": "art/buildings/vikings/blacksmith.png",
           "size_px": [
-            92,
-            146
+            272,
+            346
           ],
           "pivot_normalized": [
             0.5,
@@ -1711,8 +1711,8 @@
         "market": {
           "path": "art/buildings/vikings/market.png",
           "size_px": [
-            96,
-            148
+            187,
+            207
           ],
           "pivot_normalized": [
             0.5,
@@ -1726,8 +1726,8 @@
         "watch_tower": {
           "path": "art/buildings/vikings/watch_tower.png",
           "size_px": [
-            90,
-            181
+            123,
+            202
           ],
           "pivot_normalized": [
             0.5,
@@ -1741,8 +1741,8 @@
         "stone_wall": {
           "path": "art/buildings/vikings/stone_wall.png",
           "size_px": [
-            97,
-            149
+            248,
+            248
           ],
           "pivot_normalized": [
             0.5,
@@ -1756,8 +1756,8 @@
         "lumber_camp": {
           "path": "art/buildings/vikings/lumber_camp.png",
           "size_px": [
-            106,
-            151
+            298,
+            260
           ],
           "pivot_normalized": [
             0.5,
@@ -1771,8 +1771,8 @@
         "mining_camp": {
           "path": "art/buildings/vikings/mining_camp.png",
           "size_px": [
-            110,
-            146
+            270,
+            260
           ],
           "pivot_normalized": [
             0.5,
@@ -1786,8 +1786,8 @@
         "mill": {
           "path": "art/buildings/vikings/mill.png",
           "size_px": [
-            92,
-            160
+            276,
+            248
           ],
           "pivot_normalized": [
             0.5,
@@ -1801,8 +1801,8 @@
         "castle": {
           "path": "art/buildings/vikings/castle.png",
           "size_px": [
-            174,
-            183
+            251,
+            252
           ],
           "pivot_normalized": [
             0.5,
@@ -1822,8 +1822,8 @@
         "town_center": {
           "path": "art/buildings/chinese/town_center.png",
           "size_px": [
-            113,
-            188
+            199,
+            222
           ],
           "pivot_normalized": [
             0.5,
@@ -1837,8 +1837,8 @@
         "house": {
           "path": "art/buildings/chinese/house.png",
           "size_px": [
-            82,
-            141
+            310,
+            296
           ],
           "pivot_normalized": [
             0.5,
@@ -1852,8 +1852,8 @@
         "barracks": {
           "path": "art/buildings/chinese/barracks.png",
           "size_px": [
-            92,
-            160
+            206,
+            191
           ],
           "pivot_normalized": [
             0.5,
@@ -1867,8 +1867,8 @@
         "archery_range": {
           "path": "art/buildings/chinese/archery_range.png",
           "size_px": [
-            81,
-            142
+            209,
+            188
           ],
           "pivot_normalized": [
             0.5,
@@ -1882,8 +1882,8 @@
         "stable": {
           "path": "art/buildings/chinese/stable.png",
           "size_px": [
-            79,
-            162
+            225,
+            188
           ],
           "pivot_normalized": [
             0.5,
@@ -1897,8 +1897,8 @@
         "blacksmith": {
           "path": "art/buildings/chinese/blacksmith.png",
           "size_px": [
-            92,
-            142
+            292,
+            346
           ],
           "pivot_normalized": [
             0.5,
@@ -1912,8 +1912,8 @@
         "market": {
           "path": "art/buildings/chinese/market.png",
           "size_px": [
-            96,
-            148
+            187,
+            189
           ],
           "pivot_normalized": [
             0.5,
@@ -1927,8 +1927,8 @@
         "watch_tower": {
           "path": "art/buildings/chinese/watch_tower.png",
           "size_px": [
-            90,
-            187
+            123,
+            214
           ],
           "pivot_normalized": [
             0.5,
@@ -1942,8 +1942,8 @@
         "stone_wall": {
           "path": "art/buildings/chinese/stone_wall.png",
           "size_px": [
-            97,
-            133
+            248,
+            248
           ],
           "pivot_normalized": [
             0.5,
@@ -1957,8 +1957,8 @@
         "lumber_camp": {
           "path": "art/buildings/chinese/lumber_camp.png",
           "size_px": [
-            106,
-            156
+            308,
+            260
           ],
           "pivot_normalized": [
             0.5,
@@ -1972,8 +1972,8 @@
         "mining_camp": {
           "path": "art/buildings/chinese/mining_camp.png",
           "size_px": [
-            110,
-            161
+            280,
+            260
           ],
           "pivot_normalized": [
             0.5,
@@ -1987,8 +1987,8 @@
         "mill": {
           "path": "art/buildings/chinese/mill.png",
           "size_px": [
-            92,
-            172
+            316,
+            288
           ],
           "pivot_normalized": [
             0.5,
@@ -2002,8 +2002,8 @@
         "castle": {
           "path": "art/buildings/chinese/castle.png",
           "size_px": [
-            174,
-            204
+            251,
+            279
           ],
           "pivot_normalized": [
             0.5,

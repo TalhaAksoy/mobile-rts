@@ -21,8 +21,10 @@ func _init() -> void:
 	if not _expect(factions_count == 10, "Expected 10 factions in catalog, got %d" % factions_count): return
 	for i in range(10):
 		preview_inst._show_faction(i)
-		if not _expect(preview_inst.unit_cards_container.get_child_count() == 5, "Faction %d should render 5 unit cards" % i): return
-	print("[2/3] All 10 factions verified in gallery (5 cards per faction = 50 unit cards rendered).")
+		var want_cards: int = preview_inst.catalog["factions"][i].get("unit_ids", []).size()
+		if not _expect(want_cards >= 5 and preview_inst.unit_cards_container.get_child_count() == want_cards,
+				"Faction %d should render %d unit cards" % [i, want_cards]): return
+	print("[2/3] All 10 factions verified in gallery (one card per unit in the manifest).")
 
 	# 3. Test MenuRoot civ unit preview roster
 	var main_scene = load("res://scenes/Main3D.tscn")

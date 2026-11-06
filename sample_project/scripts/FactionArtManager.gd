@@ -194,7 +194,7 @@ static func get_building_texture_by_id(faction_id: String, building_id: String) 
 const MODEL_MANIFEST_PATH: String = "res://data/art/building_model_manifest.json"
 const MATERIAL_LIB_DIR: String = "res://assets/3d/materials/"
 ## Team colours: 0 = the player (blue), 1..5 = bots (red, yellow, green, purple, teal).
-## art_source/blender/render_sprites.py and units/render_unit_sprites.py render the first two (2D sheets).
+## The 2D pixel-art sheets (art_source/aseprite) exist in the first two (t0 / t1).
 const TEAM_COLORS: Array[Color] = [Color(0.18, 0.52, 0.95), Color(0.92, 0.22, 0.22), Color(0.96, 0.78, 0.12),
 	Color(0.22, 0.72, 0.28), Color(0.62, 0.32, 0.86), Color(0.10, 0.76, 0.72)]
 const TEAM_COLOR_NAMES: Array[String] = ["Mavi", "Kırmızı", "Sarı", "Yeşil", "Mor", "Turkuaz"]
@@ -210,6 +210,18 @@ static func team_xray_color(team: int) -> Color:
 
 ## Global switch: false -> every building uses the HD-2D sprite path (reversible fallback).
 static var use_3d_building_models: bool = true
+
+## The 2D sprite style is played from straight above (orthographic, 90 deg) with sprites drawn in a 3/4 "oblique"
+## view lying flat on the ground, like a classic 2D RTS; the 3D style keeps the 45 deg perspective camera.
+static func top_down() -> bool:
+	return not use_3d_building_models
+
+## Painter's order for the flat oblique sprites: height grows to the south (see ObliqueSort.gd). Kept well above
+## the highest hill and below the lowest camera (12 m) on the largest map (192 m deep).
+const OBLIQUE_SORT_BASE := 3.5
+const OBLIQUE_SORT_K := 0.03
+static func oblique_sort_y(z: float) -> float:
+	return OBLIQUE_SORT_BASE + z * OBLIQUE_SORT_K
 
 static var _model_manifest: Dictionary = {}
 static var _model_manifest_loaded: bool = false
@@ -311,6 +323,260 @@ static func _apply_library_materials(node: Node, team: int) -> void:
 	for c in node.get_children():
 		_apply_library_materials(c, team)
 
+## 3D buildings by age (the Blender models are the Age II look): Age I swaps the masonry and the tiled / slate
+## roofs for the village materials (plaster, thatch, plain wood instead of gilding); Age III adds tall team
+## standards at the front corners (see add_age_dressing). Mongol felt, domes, lacquer and banners stay as they are.
+const AGE1_MATERIALS := {
+	"PE_StoneWarm": "PE_PlasterCream", "PE_StoneGrey": "PE_PlasterCream", "PE_StoneBrick": "PE_PlasterCream",
+	"PE_Sandstone": "PE_Soil", "PE_SlateDark": "PE_WoodDark",
+	"PE_RoofRed": "PE_Thatch", "PE_RoofSlate": "PE_Thatch", "PE_RoofDark": "PE_Thatch", "PE_RoofTeal": "PE_Thatch",
+	"PE_TileTeal": "PE_Thatch", "PE_Shingle": "PE_Thatch", "PE_Gold": "PE_WoodDark",
+}
+## Per-civ Age I overrides on top of AGE1_MATERIALS: thatch is not the village roof everywhere. Byzantine villages
+## kept clay tiles; Anatolian and Saracen villages are mud brick under earthen roofs; Norse farmsteads are turf-roofed.
+const AGE1_CIV_MATERIALS := {
+	# Anatolian village: mud-brick walls under earthen roofs (as the 2D Age I look), timber instead of ashlar
+	"ottomans": {"PE_RoofRed": "PE_MudRoof", "PE_RoofTeal": "PE_MudRoof", "PE_TileTeal": "PE_MudRoof", "PE_RoofDark": "PE_MudRoof",
+		"PE_RoofSlate": "PE_MudRoof", "PE_StoneWarm": "PE_MudBrick", "PE_StoneGrey": "PE_MudBrick", "PE_StoneBrick": "PE_MudBrick",
+		"PE_PlasterWhite": "PE_MudBrick", "PE_Sandstone": "PE_MudBrick"},
+	"byzantines": {"PE_RoofRed": "PE_RoofRed", "PE_RoofTeal": "PE_RoofRed", "PE_TileTeal": "PE_RoofRed", "PE_RoofDark": "PE_RoofRed",
+		"PE_RoofSlate": "PE_RoofRed"},
+	"saracens": {"PE_RoofRed": "PE_MudRoof", "PE_RoofTeal": "PE_MudRoof", "PE_TileTeal": "PE_MudRoof", "PE_RoofDark": "PE_MudRoof",
+		"PE_RoofSlate": "PE_MudRoof", "PE_Shingle": "PE_MudRoof", "PE_StoneWarm": "PE_MudBrick", "PE_StoneGrey": "PE_MudBrick",
+		"PE_StoneBrick": "PE_MudBrick", "PE_Sandstone": "PE_MudBrick", "PE_PlasterWhite": "PE_MudBrick", "PE_PlasterCream": "PE_MudBrick",
+		"PE_ClothRed": "PE_SailCloth"},
+	"vikings": {"PE_Shingle": "PE_Grass", "PE_RoofDark": "PE_Grass", "PE_RoofSlate": "PE_Grass", "PE_RoofRed": "PE_Grass"},
+}
+static func apply_building_age(node: Node, age: int, team: int, civ: String = "") -> void:
+	if node is MeshInstance3D:
+		var mi := node as MeshInstance3D
+		for i in mi.mesh.get_surface_count():
+			var src = mi.mesh.surface_get_material(i)
+			var mat_name: String = src.resource_name if src != null else ""
+			if mat_name == "" or mat_name.begins_with("TEAM_"):
+				continue
+			var want: String = mat_name
+			if age == 1:
+				var per: Dictionary = AGE1_CIV_MATERIALS.get(civ, {})
+				want = per[mat_name] if per.has(mat_name) else AGE1_MATERIALS.get(mat_name, mat_name)
+			var lib = get_library_material(want)
+			if lib != null:
+				mi.set_surface_override_material(i, lib)
+	for c in node.get_children():
+		apply_building_age(c, age, team, civ)
+
+## Age III dressing for a 3D building: two tall standards (pole, team-coloured banner, gilded finial) on the front
+## corners of the footprint (w x l metres, front = +z). Returned node is named "AgeDressing".
+static func make_age_dressing(w: float, l: float, team: int, civ: String = "") -> Node3D:
+	var root := Node3D.new()
+	root.name = "AgeDressing"
+	var specs: Array = AGE3_STANDARDS.get(civ, [{"form": "flag", "field": "TEAM"}, {"form": "flag", "field": "TEAM"}])
+	# one standard on small footprints (houses, camps), two on the big ones; height follows the footprint
+	var small := w <= 4.5
+	var h := 2.8 if small else 3.4
+	var sides: Array = [-1.0] if small else [-1.0, 1.0]
+	for k in sides.size():
+		var sx: float = sides[k]
+		var spec: Dictionary = specs[min(k, specs.size() - 1)]
+		var std := _make_standard(spec, h, team)
+		std.position = Vector3(sx * (w * 0.5 - 0.3), 0.0, l * 0.5 - 0.3)
+		root.add_child(std)
+	return root
+
+## Civ war standards for the Age III dressing (mirrors DRESS3 in art_source/aseprite/ages.lua). Historical standards,
+## not modern national flags; every one keeps one team-coloured part (tassels, header, hoist or tails).
+const AGE3_STANDARDS := {
+	"ottomans": [{"form": "sancak", "field": "#B3202A", "ec": "#F3EFE6"}, {"form": "sancak", "field": "#3D6B3A", "ec": "#F3EFE6"}],
+	"byzantines": [{"form": "labarum", "field": "#A7262B", "ec": "#E3B341", "emblem": "chirho"}, {"form": "labarum", "field": "#6E2A6A", "ec": "#E3B341", "emblem": "cross"}],
+	"saracens": [{"form": "alam", "field": "#D6A62B", "field2": "#F3EFE6", "ec": "#2A2234"}],
+	"mongols": [{"form": "sulde", "field": "#2B2622"}, {"form": "sulde", "field": "#EDE6D6"}],
+	"chinese": [{"form": "qi", "field": "#C8382F", "ec": "#1D1A19"}],
+	"japanese": [{"form": "nobori", "field": "#F0EEE8", "ec": "#1D1A19"}],
+	"franks": [{"form": "oriflamme", "field": "#A33B2E"}, {"form": "gonfanon", "field": "#3E5486", "ec": "#E1B53B", "emblem": "fleur"}],
+	"britons": [{"form": "pennon", "field": "#F2EFE6", "ec": "#B3282D"}, {"form": "gonfanon", "field": "#B3282D", "ec": "#E2B437", "emblem": "lions"}],
+	"teutons": [{"form": "gonfanon", "field": "#F0EEE8", "ec": "#1D1A19", "emblem": "cross"}, {"form": "gonfanon", "field": "#E2B437", "ec": "#1D1A19", "emblem": "eagle"}],
+	"vikings": [{"form": "raven", "field": "#F0EEE8", "ec": "#1D1A19"}, {"form": "raven", "field": "#E2C04A", "ec": "#1D1A19"}],
+}
+
+static var _cloth_cache := {}
+static func _cloth(hex: String) -> Material:
+	if not _cloth_cache.has(hex):
+		var m := StandardMaterial3D.new()
+		m.albedo_color = Color(hex)
+		m.roughness = 0.9
+		m.cull_mode = BaseMaterial3D.CULL_DISABLED
+		_cloth_cache[hex] = m
+	return _cloth_cache[hex]
+
+static func _box(parent: Node3D, size: Vector3, pos: Vector3, mat: Material, rot_z: float = 0.0) -> MeshInstance3D:
+	var mi := MeshInstance3D.new()
+	var bm := BoxMesh.new()
+	bm.size = size
+	mi.mesh = bm
+	mi.material_override = mat
+	mi.position = pos
+	mi.rotation.z = rot_z
+	parent.add_child(mi)
+	return mi
+
+static func _make_standard(spec: Dictionary, h: float, team: int) -> Node3D:
+	var n := Node3D.new()
+	var wood = get_library_material("PE_WoodDark")
+	var gold = get_library_material("PE_Gold")
+	var tm = get_team_trim_material(team)
+	var form: String = spec.get("form", "flag")
+	var field: Material = tm if spec.get("field", "TEAM") == "TEAM" else _cloth(spec["field"])
+	var ec: Material = _cloth(spec.get("ec", "#F3EFE6"))
+	var f2: Material = _cloth(spec.get("field2", "#F3EFE6"))
+	var pole := MeshInstance3D.new()
+	var cm := CylinderMesh.new()
+	cm.top_radius = 0.04; cm.bottom_radius = 0.055; cm.height = h; cm.radial_segments = 6
+	pole.mesh = cm
+	pole.material_override = wood
+	pole.position.y = h * 0.5
+	n.add_child(pole)
+	var top := h
+	var D := 0.04                                                      # cloth thickness; cloth faces south (+z)
+	match form:
+		"sulde":
+			var tip := MeshInstance3D.new()
+			var cone := CylinderMesh.new()
+			cone.top_radius = 0.0; cone.bottom_radius = 0.07; cone.height = 0.35; cone.radial_segments = 6
+			tip.mesh = cone; tip.material_override = _cloth("#B8C0CC")
+			tip.position.y = top + 0.17
+			n.add_child(tip)
+			var hair := MeshInstance3D.new()
+			var hm := CylinderMesh.new()
+			hm.top_radius = 0.12; hm.bottom_radius = 0.32; hm.height = 0.8; hm.radial_segments = 10
+			hair.mesh = hm; hair.material_override = field
+			hair.position.y = top - 0.45
+			n.add_child(hair)
+			_box(n, Vector3(0.05, 0.45, 0.05), Vector3(0.1, top - 1.05, 0.05), tm)
+			_box(n, Vector3(0.05, 0.38, 0.05), Vector3(-0.1, top - 1.0, 0.05), tm)
+		"sancak":
+			_ball(n, gold, top + 0.08, 0.1)
+			var tail := MeshInstance3D.new()
+			var tc := CylinderMesh.new()
+			tc.top_radius = 0.07; tc.bottom_radius = 0.16; tc.height = 0.45; tc.radial_segments = 8
+			tail.mesh = tc; tail.material_override = _cloth("#2A2026"); tail.position.y = top - 0.25
+			n.add_child(tail)
+			var fy := top - 0.85
+			_box(n, Vector3(0.8, 0.55, D), Vector3(0.45, fy, 0), field)
+			_box(n, Vector3(0.28, 0.2, D), Vector3(0.95, fy + 0.15, 0), field, 0.25)        # swallowtail
+			_box(n, Vector3(0.28, 0.2, D), Vector3(0.95, fy - 0.15, 0), field, -0.25)
+			_disc(n, ec, Vector3(0.38, fy, D), 0.17)                                         # crescent: two discs
+			_disc(n, field, Vector3(0.44, fy + 0.03, D * 1.6), 0.14)
+			_box(n, Vector3(0.06, 0.55, D * 1.2), Vector3(0.07, fy, 0), tm)                   # team hoist
+		"labarum", "gonfanon":
+			_ball(n, gold, top + 0.06, 0.08)
+			_box(n, Vector3(0.85, 0.05, 0.05), Vector3(0, top - 0.12, 0.05), wood)
+			var cy := top - 0.62
+			var cloth_m: Material = field
+			_box(n, Vector3(0.72, 0.85, D), Vector3(0, cy, 0.08), cloth_m)
+			_emblem(n, spec.get("emblem", "cross"), ec, Vector3(0, cy + 0.04, 0.08 + D))
+			if form == "labarum":
+				_box(n, Vector3(0.72, 0.05, D * 1.2), Vector3(0, cy + 0.36, 0.08), gold)
+				for t in 5:
+					_box(n, Vector3(0.06, 0.14, D), Vector3(-0.3 + t * 0.15, cy - 0.5, 0.08), tm)
+			else:
+				for t in 3:
+					_box(n, Vector3(0.14, 0.32 - (t % 2) * 0.08, D), Vector3(-0.26 + t * 0.26, cy - 0.55, 0.08), tm)
+		"nobori":
+			_box(n, Vector3(0.5, 0.04, 0.04), Vector3(0.25, top - 0.05, 0), wood)
+			var cy2 := top - 0.95
+			_box(n, Vector3(0.42, 1.7, D), Vector3(0.28, cy2, 0), field)
+			_box(n, Vector3(0.42, 0.22, D * 1.2), Vector3(0.28, top - 0.2, 0), tm)              # team header
+			_disc(n, ec, Vector3(0.28, top - 0.55, D), 0.15)                                    # mon
+			_disc(n, field, Vector3(0.28, top - 0.55, D * 1.6), 0.07)
+		"qi":
+			_ball(n, gold, top + 0.06, 0.08)
+			var cy3 := top - 0.62
+			_box(n, Vector3(0.62, 1.05, D), Vector3(0.36, cy3, 0), field)
+			_box(n, Vector3(0.24, 0.06, D * 1.3), Vector3(0.36, cy3 + 0.2, 0), ec)              # the character
+			_box(n, Vector3(0.06, 0.5, D * 1.3), Vector3(0.36, cy3, 0), ec)
+			_box(n, Vector3(0.3, 0.06, D * 1.3), Vector3(0.36, cy3 - 0.12, 0), ec)
+			_box(n, Vector3(0.08, 1.05, D * 1.2), Vector3(0.7, cy3, 0), tm)                     # team flame border
+			_box(n, Vector3(0.62, 0.08, D * 1.2), Vector3(0.36, cy3 - 0.55, 0), tm)
+		"oriflamme":
+			_ball(n, gold, top + 0.06, 0.07)
+			var cy4 := top - 0.35
+			_box(n, Vector3(0.5, 0.5, D), Vector3(0.3, cy4, 0), field)
+			for t in 3:
+				_box(n, Vector3(0.55, 0.11, D), Vector3(0.78, cy4 + 0.18 - t * 0.18, 0), field, -0.08 * (t - 1))
+			_box(n, Vector3(0.07, 0.5, D * 1.2), Vector3(0.07, cy4, 0), tm)
+		"pennon":
+			_ball(n, gold, top + 0.05, 0.06)
+			var cy5 := top - 0.3
+			_box(n, Vector3(0.6, 0.45, D), Vector3(0.34, cy5, 0), field)
+			_box(n, Vector3(0.6, 0.09, D * 1.3), Vector3(0.34, cy5, 0), ec)
+			_box(n, Vector3(0.09, 0.45, D * 1.3), Vector3(0.28, cy5, 0), ec)
+			_box(n, Vector3(0.35, 0.14, D), Vector3(0.8, cy5 + 0.12, 0), tm, 0.25)             # team swallowtail
+			_box(n, Vector3(0.35, 0.14, D), Vector3(0.8, cy5 - 0.12, 0), tm, -0.25)
+		"raven":
+			var cy6 := top - 0.45
+			var pr := MeshInstance3D.new()
+			var pm := PrismMesh.new()
+			pm.size = Vector3(0.8, 0.8, D); pm.left_to_right = 0.0
+			pr.mesh = pm; pr.material_override = f2 if spec.has("field2") else field
+			pr.rotation.z = PI                                                                   # right angle at the top hoist
+			pr.position = Vector3(0.42, cy6, 0)
+			n.add_child(pr)
+			_box(n, Vector3(0.22, 0.12, D * 1.4), Vector3(0.24, cy6 + 0.22, 0), ec)            # raven
+			_box(n, Vector3(0.1, 0.07, D * 1.4), Vector3(0.38, cy6 + 0.26, 0), ec)
+			_box(n, Vector3(0.95, 0.06, D * 1.2), Vector3(0.42, cy6, 0), tm, -PI / 4)           # team fringe on the curved edge
+		"alam":
+			_ball(n, gold, top + 0.06, 0.08)
+			var cy7 := top - 0.4
+			_box(n, Vector3(0.8, 0.62, D), Vector3(0.46, cy7, 0), field)
+			_box(n, Vector3(0.8, 0.16, D * 1.3), Vector3(0.46, cy7 + 0.05, 0), f2)              # tiraz inscription band
+			for t in 5:
+				_box(n, Vector3(0.07, 0.06, D * 1.6), Vector3(0.18 + t * 0.14, cy7 + 0.05, 0), ec)
+			_box(n, Vector3(0.07, 0.62, D * 1.2), Vector3(0.07, cy7, 0), tm)
+		_:
+			_ball(n, gold, top + 0.06, 0.08)
+			_box(n, Vector3(0.7, 0.5, D), Vector3(0.38, top - 0.35, 0), field)
+	return n
+
+static func _ball(parent: Node3D, mat: Material, y: float, r: float) -> void:
+	var mi := MeshInstance3D.new()
+	var sm := SphereMesh.new()
+	sm.radius = r; sm.height = r * 2; sm.radial_segments = 8; sm.rings = 4
+	mi.mesh = sm; mi.material_override = mat; mi.position.y = y
+	parent.add_child(mi)
+
+static func _disc(parent: Node3D, mat: Material, pos: Vector3, r: float) -> void:
+	var mi := MeshInstance3D.new()
+	var c := CylinderMesh.new()
+	c.top_radius = r; c.bottom_radius = r; c.height = 0.02; c.radial_segments = 12
+	mi.mesh = c; mi.material_override = mat
+	mi.rotation.x = PI / 2
+	mi.position = pos
+	parent.add_child(mi)
+
+static func _emblem(parent: Node3D, kind: String, mat: Material, pos: Vector3) -> void:
+	var z := Vector3(0, 0, 0.0)
+	match kind:
+		"cross", "chirho":
+			_box(parent, Vector3(0.09, 0.5, 0.03), pos, mat)
+			_box(parent, Vector3(0.38, 0.09, 0.03), pos + Vector3(0, 0.08, 0), mat)
+			if kind == "chirho":
+				_disc(parent, mat, pos + Vector3(0.08, 0.2, 0), 0.07)
+		"fleur":
+			_box(parent, Vector3(0.08, 0.36, 0.03), pos, mat)
+			_box(parent, Vector3(0.1, 0.22, 0.03), pos + Vector3(-0.1, 0.02, 0), mat, 0.5)
+			_box(parent, Vector3(0.1, 0.22, 0.03), pos + Vector3(0.1, 0.02, 0), mat, -0.5)
+			_box(parent, Vector3(0.3, 0.06, 0.03), pos + Vector3(0, -0.06, 0), mat)
+		"lions":
+			for t in 3:
+				_box(parent, Vector3(0.36, 0.1, 0.03), pos + Vector3(0, 0.22 - t * 0.22, 0), mat)
+				_box(parent, Vector3(0.08, 0.06, 0.03), pos + Vector3(0.18, 0.27 - t * 0.22, 0), mat)
+		"eagle":
+			_box(parent, Vector3(0.12, 0.34, 0.03), pos, mat)
+			_box(parent, Vector3(0.44, 0.1, 0.03), pos + Vector3(0, 0.05, 0), mat)
+			_box(parent, Vector3(0.12, 0.1, 0.03), pos + Vector3(0, 0.22, 0), mat)
+		_:
+			_disc(parent, mat, pos, 0.14)
+
 ## Union of all mesh AABBs under `node`, in `node`'s local space (works outside the tree).
 static func compute_visual_aabb(node: Node3D) -> AABB:
 	var acc := {"aabb": AABB(), "first": true}
@@ -388,7 +654,7 @@ static func instantiate_field_model(map_type: int, team: int) -> Node3D:
 
 
 # =====================================================================================
-# 2D sprite mode: sprites rendered in Blender from the SAME models (art_source/blender/render_sprites.py)
+# 2D sprite mode: pixel-art sprites generated in Aseprite (art_source/aseprite, assets/sprites_px/)
 # Used when use_3d_building_models is false (Ayarlar > Görünüm: 2D Sprite).
 # =====================================================================================
 const SPRITE_MANIFEST_PATH: String = "res://data/art/sprite_manifest.json"
@@ -443,6 +709,8 @@ static func make_sprite_node(entry: Dictionary, team: int = -1, flip: bool = fal
 		ax = w - ax
 	var root := Node3D.new()
 	root.name = "SpriteVisual"
+	if entry.get("view", "") == "oblique":
+		return _make_oblique_sprite(root, tex, entry, p, w, h, ax, ay, flip)
 	var plane := Node3D.new()
 	plane.name = "SpritePlane"
 	plane.position = Vector3(0, 0, float(entry.get("plane_z", 0.0)))
@@ -464,8 +732,51 @@ static func make_sprite_node(entry: Dictionary, team: int = -1, flip: bool = fal
 	plane.add_child(s)
 	return root
 
-static func instantiate_building_sprite(civ_type: CivData.CivType, b_type: Building3D.BuildingType, team: int) -> Node3D:
-	return make_sprite_node(get_sprite_entry("buildings", "%s/%s" % [get_faction_id_from_civ(civ_type), get_building_id_from_type(b_type)]), team)
+## Oblique sprite (2D style): the 3/4-view image lies flat (image-up = north) with its anchor - the front centre
+## of the footprint, a unit's feet, a tree's foot - on the ground point plane_z metres in front of the node origin,
+## so the drawn front face and roof extend northwards over the footprint like in a 2D game. ObliqueSort lifts it
+## to its painter's-order height. Same node names as the upright sprite ("SpritePlane/Sprite").
+const ObliqueSortScript = preload("res://scripts/ObliqueSort.gd")
+static func _make_oblique_sprite(root: Node3D, tex: Texture2D, entry: Dictionary, p: float, w: float, h: float,
+		ax: float, ay: float, flip: bool) -> Node3D:
+	var plane: Node3D = ObliqueSortScript.new()
+	plane.name = "SpritePlane"
+	plane.position = Vector3(0, 0, float(entry.get("plane_z", 0.0)))
+	plane.rotation_degrees = Vector3(-90, 0, 0)
+	if entry.get("ground", false):
+		plane.set_meta("ground", true)              # fields: under everything that stands on them
+	root.add_child(plane)
+	var s := Sprite3D.new()
+	s.name = "Sprite"
+	s.texture = tex
+	s.pixel_size = p
+	s.flip_h = flip
+	s.centered = true
+	s.billboard = BaseMaterial3D.BILLBOARD_DISABLED
+	s.shaded = false
+	s.double_sided = false
+	s.texture_filter = BaseMaterial3D.TEXTURE_FILTER_NEAREST
+	s.alpha_cut = SpriteBase3D.ALPHA_CUT_DISCARD
+	s.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+	s.position = Vector3((w * 0.5 - ax) * p, (ay - h * 0.5) * p, 0)
+	plane.add_child(s)
+	return root
+
+## Age looks (art_source/aseprite/ages.lua): an entry may carry "ages": {"1": {...}, "3": {...}} with the fields
+## that differ (texture paths, size, anchor). Age II is the base entry itself; a missing age falls back to it.
+static func for_age(entry: Dictionary, age: int) -> Dictionary:
+	var ages: Dictionary = entry.get("ages", {})
+	var key := str(age)
+	if age == 2 or not ages.has(key):
+		return entry
+	var e := entry.duplicate()
+	e.merge(ages[key], true)
+	e.erase("ages")
+	return e
+
+static func instantiate_building_sprite(civ_type: CivData.CivType, b_type: Building3D.BuildingType, team: int, age: int = 2) -> Node3D:
+	var e := get_sprite_entry("buildings", "%s/%s" % [get_faction_id_from_civ(civ_type), get_building_id_from_type(b_type)])
+	return make_sprite_node(for_age(e, age), team)
 
 static func instantiate_environment_sprite(asset_id: String, flip: bool = false) -> Node3D:
 	var e := get_sprite_entry("environment", asset_id)
@@ -540,10 +851,10 @@ static func get_unit_model_entry(civ_type: CivData.CivType, unit_type: Unit3D.Un
 		return {}
 	return e
 
-static func instantiate_unit_model(civ_type: CivData.CivType, unit_type: Unit3D.UnitType, team: int) -> Node3D:
+static func instantiate_unit_model(civ_type: CivData.CivType, unit_type: Unit3D.UnitType, team: int, age: int = 2) -> Node3D:
 	if not use_3d_building_models:
 		return null
-	var e := get_unit_model_entry(civ_type, unit_type)
+	var e := for_age(get_unit_model_entry(civ_type, unit_type), age)
 	if e.is_empty():
 		return null
 	var path: String = e["model"]
@@ -585,14 +896,14 @@ static func _apply_unit_materials(node: Node, team: int) -> void:
 		_apply_unit_materials(c, team)
 
 
-# ---- 2D units: sprite sheets rendered from the 3D units (render_unit_sprites.py) ----------------
+# ---- 2D units: pixel-art sprite sheets from Aseprite (art_source/aseprite/units.lua) -------------
 const UNIT_SPRITE_MANIFEST_PATH: String = "res://data/art/unit_sprite_manifest.json"
 static var _unit_sprite_manifest: Dictionary = {}
 static var _unit_sprite_manifest_loaded := false
 
 ## Sheet entry for this civ's unit (same swordsman fallback as the models): w, h, anchor, hframes,
 ## vframes, anims {name: {row, frames, fps, loop}}, t0 / t1 texture paths. {} -> the old gallery sprite.
-static func get_unit_sheet_entry(civ_type: CivData.CivType, unit_type: Unit3D.UnitType) -> Dictionary:
+static func get_unit_sheet_entry(civ_type: CivData.CivType, unit_type: Unit3D.UnitType, age: int = 2) -> Dictionary:
 	if not _unit_sprite_manifest_loaded:
 		_unit_sprite_manifest_loaded = true
 		if FileAccess.file_exists(UNIT_SPRITE_MANIFEST_PATH):
@@ -600,4 +911,4 @@ static func get_unit_sheet_entry(civ_type: CivData.CivType, unit_type: Unit3D.Un
 			if typeof(parsed) == TYPE_DICTIONARY:
 				_unit_sprite_manifest = parsed.get("units", {})
 	var faction_id = get_faction_id_from_civ(civ_type)
-	return _pick_unit_role(_unit_sprite_manifest.get(faction_id, {}), unit_type, faction_id)
+	return for_age(_pick_unit_role(_unit_sprite_manifest.get(faction_id, {}), unit_type, faction_id), age)

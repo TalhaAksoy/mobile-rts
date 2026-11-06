@@ -1,28 +1,28 @@
 {
-  "tris": 214,
-  "verts": 314,
+  "tris": 398,
+  "verts": 576,
   "materials": [
     "PE_WoodDark",
     "PE_Felt",
     "PE_Gold",
-    "PE_Banner_mongols",
-    "TEAM_Trim"
+    "TEAM_Trim",
+    "PE_Banner_mongols"
   ],
   "bounds_min": [
     -1.828,
-    -1.881,
+    -1.971,
     0.0
   ],
   "bounds_max": [
     1.84,
     1.837,
-    1.96
+    2.38
   ],
   "asset_id": "upgrade_kit",
   "civ": "mongols",
   "kind": "upgrade_kits",
   "blend": "art_source/blender/mongols/upgrade_kit.blend",
   "glb": "res://assets/3d/upgrade_kits/mongols/upgrade_kit.glb",
-  "glb_bytes": 17124,
+  "glb_bytes": 27420,
   "build_script": "art_source/blender/environment/upgrade_kit.py"
 }

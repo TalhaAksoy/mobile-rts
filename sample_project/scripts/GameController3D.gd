@@ -20,6 +20,7 @@ var team_resources: Dictionary = {
 }
 
 var team_age: Dictionary = {0: 1, 1: 1}
+signal age_changed(team: int, age: int)     # after every building / unit of the team took its new age look
 var team_techs: Dictionary = {
 	0: {"iron_weapons": false, "scale_armor": false, "bodkin_arrows": false, "wheelbarrow": false},
 	1: {"iron_weapons": false, "scale_armor": false, "bodkin_arrows": false, "wheelbarrow": false}
@@ -29,6 +30,8 @@ var units: Array[Unit3D] = []
 var buildings: Array[Building3D] = []
 
 var selected_units: Array[Unit3D] = []
+## "attack" / "defend" after the SALDIR / SAVUN button: the next map tap becomes that order ("" = normal taps)
+var pending_army_command: String = ""
 var selected_building: Building3D = null
 
 var is_game_active: bool = false
@@ -95,6 +98,7 @@ func _ready() -> void:
 	# Escape / Android Back first leave building placement, then open the pause menu
 	ui_manager.pause_menu.back_handler = cancel_building_placement
 	ui_manager.select_all_military_requested.connect(_on_select_all_military)
+	ui_manager.army_command_requested.connect(_on_army_command)
 	ui_manager.jump_to_base_requested.connect(_on_jump_to_base)
 	ui_manager.find_idle_villager_requested.connect(_on_find_idle_villager)
 	ui_manager.clear_selection_requested.connect(_on_clear_selection_requested)
@@ -299,6 +303,8 @@ func _update_hud() -> void:
 	var pop = get_team_population(0)
 	var max_pop = get_team_max_population(0)
 	ui_manager.update_resources(res["food"], res["wood"], res["gold"], res.get("stone", 0), pop, max_pop)
+	if ui_manager.has_method("set_age"):
+		ui_manager.set_age(int(team_age.get(0, 1)))
 
 	var idle_vills = 0
 	for u in units:
@@ -381,6 +387,12 @@ func _unhandled_input(event: InputEvent) -> void:
 func _handle_3d_click(screen_pos: Vector2, ground_pos: Vector3) -> void:
 	var clicked_entity = _get_entity_at_position(screen_pos, ground_pos)
 	var cell = map_gen.world_to_cell(ground_pos)
+
+	# 0. Armed army order (SALDIR / SAVUN button, then this tap)
+	if pending_army_command != "" and selected_units.size() > 0:
+		_issue_army_command(pending_army_command, clicked_entity, ground_pos)
+		pending_army_command = ""
+		return
 
 	if selected_units.size() > 0:
 		# 1. Attack enemy entity (Unit or Building)
@@ -571,6 +583,7 @@ func _handle_3d_click(screen_pos: Vector2, ground_pos: Vector3) -> void:
 			ui_manager.set_selected_entity(null)
 
 func _clear_selection() -> void:
+	pending_army_command = ""
 	for u in selected_units:
 		if is_instance_valid(u):
 			u.set_selected(false)
@@ -819,6 +832,7 @@ func _select_units_in_screen_rect(rect: Rect2) -> void:
 func spawn_unit(u_type: Unit3D.UnitType, team: int, pos: Vector3) -> Unit3D:
 	var civ = civ_of(team)
 	var unit = Unit3D.new()
+	unit.age_look = int(team_age.get(team, 1))
 	add_child(unit)
 	unit.global_position = Vector3(pos.x, map_gen.get_height_at(pos) if map_gen != null else pos.y, pos.z)
 	unit.setup_unit(u_type, team, civ, map_gen, self)
@@ -833,6 +847,7 @@ func spawn_unit(u_type: Unit3D.UnitType, team: int, pos: Vector3) -> Unit3D:
 func place_building(b_type: Building3D.BuildingType, team: int, cell: Vector2i, under_construction: bool = false) -> Building3D:
 	var civ = civ_of(team)
 	var b = Building3D.new()
+	b.age_look = int(team_age.get(team, 1))
 	var b_size = _get_building_size(b_type)
 	# buildings stand on the lowest ground (their walls hide the rise); a flat field on the highest,
 	# with a soil bank under its low side (Building3D), so it never sinks into a slope
@@ -1396,6 +1411,7 @@ func _on_building_research_completed(tech_id: String, team: int) -> void:
 		match e["type"]:
 			"age":
 				team_age[team] = int(e["to"])
+				_apply_age_looks(team, int(e["to"]))
 			"unit":
 				for u in units:
 					if is_instance_valid(u) and u.team == team:
@@ -1411,11 +1427,66 @@ func _on_building_research_completed(tech_id: String, team: int) -> void:
 	if team == 0:
 		SoundManager.play_sound("horn")
 		if tech_id.begins_with("AGE_"):
-			ui_manager.notify_banner("%s ULAŞILDI!" % TechData.age_name(team_age[team]).to_upper(), Color(0.2, 0.95, 0.4))
+			pass                                     # _apply_age_looks -> ui_manager.show_age_up (card + flash)
 		else:
 			ui_manager.notify_banner("%s GELİŞTİRİLDİ!" % String(t["name"]).to_upper(), Color(0.95, 0.85, 0.3))
 	if selected_building != null and is_instance_valid(selected_building):
 		ui_manager.set_selected_entity(selected_building)
+
+## Age-up: every building and soldier of the team switches to the new age look, each with a short dust-and-
+## sparkle burst; for the player also a gold screen flash and the age chip in the top bar (UIManager3D).
+func _apply_age_looks(team: int, age: int) -> void:
+	for b in buildings:
+		if is_instance_valid(b) and b.team == team and b.building_type != Building3D.BuildingType.FARM:
+			b.set_age_look(age)
+			if team == 0:
+				_age_burst(b.global_position, maxf(b.grid_size.x, b.grid_size.y) * MapGenerator3D.TILE_SIZE * 0.5)
+	for u in units:
+		if is_instance_valid(u) and u.team == team and u.hp > 0:
+			u.set_age_look(age)
+			if team == 0 and u.unit_type != Unit3D.UnitType.VILLAGER:
+				_age_burst(u.global_position, 0.8)
+	if team == 0 and ui_manager.has_method("show_age_up"):
+		ui_manager.show_age_up(age)
+	age_changed.emit(team, age)
+
+func _age_burst(pos: Vector3, radius: float) -> void:
+	var p := CPUParticles3D.new()
+	p.one_shot = true
+	p.emitting = false
+	p.amount = 18 if radius > 1.0 else 8
+	p.lifetime = 1.1
+	p.explosiveness = 0.85
+	p.emission_shape = CPUParticles3D.EMISSION_SHAPE_SPHERE
+	p.emission_sphere_radius = radius
+	p.direction = Vector3.UP
+	p.spread = 35.0
+	p.initial_velocity_min = 2.0
+	p.initial_velocity_max = 4.5
+	p.gravity = Vector3(0, -3.0, 0)
+	p.scale_amount_min = 0.6
+	p.scale_amount_max = 1.0
+	var dot := SphereMesh.new()                    # small round gold sparks
+	dot.radius = 0.07
+	dot.height = 0.14
+	dot.radial_segments = 6
+	dot.rings = 3
+	var m := StandardMaterial3D.new()
+	m.shading_mode = BaseMaterial3D.SHADING_MODE_UNSHADED
+	m.vertex_color_use_as_albedo = true
+	m.transparency = BaseMaterial3D.TRANSPARENCY_ALPHA
+	m.no_depth_test = true
+	m.render_priority = 10
+	dot.material = m
+	p.mesh = dot
+	var g := Gradient.new()
+	g.set_color(0, Color(1.0, 0.92, 0.45, 1.0))
+	g.set_color(1, Color(1.0, 0.75, 0.25, 0.0))
+	p.color_ramp = g
+	add_child(p)
+	p.global_position = Vector3(pos.x, FactionArtManager.oblique_sort_y(pos.z) + 1.0, pos.z) if FactionArtManager.top_down() else pos + Vector3(0, 1.2, 0)
+	p.emitting = true
+	get_tree().create_timer(1.6).timeout.connect(p.queue_free)
 
 func _apply_unit_effect(u: Unit3D, e: Dictionary) -> void:
 	if not TechData.unit_matches(u, e["filter"]):
@@ -1628,6 +1699,121 @@ func _game_over(victory: bool) -> void:
 		"trained": trained_count,
 		"gathered": gathered_count
 	})
+
+## SALDIR / SAVUN arm the next map tap; DUR stops every selected unit at once.
+func _on_army_command(mode: String) -> void:
+	if mode == "stop":
+		pending_army_command = ""
+		for u in selected_units:
+			if is_instance_valid(u):
+				u.command_stop()
+		SoundManager.play_sound("click")
+		return
+	if selected_units.is_empty():
+		return
+	if pending_army_command == mode:
+		pending_army_command = ""                   # second press cancels
+		ui_manager.notify_banner("Emir iptal edildi", Color(0.9, 0.85, 0.7))
+		return
+	pending_army_command = mode
+	if mode == "attack":
+		ui_manager.notify_banner("SALDIR: bir yere ya da düşmana dokun", Color(1.0, 0.5, 0.4))
+	else:
+		ui_manager.notify_banner("SAVUN: savunulacak yere dokun", Color(0.5, 0.8, 1.0))
+	SoundManager.play_sound("click")
+
+## Ring formation around the ordered point so a group does not stack on one spot.
+func _formation_offset(i: int, n: int) -> Vector3:
+	if n <= 1:
+		return Vector3.ZERO
+	var ring := 0 if i == 0 else int(floor(sqrt(float(i))))
+	var angle := i * 2.399963                       # golden angle: even spread for any group size
+	return Vector3(cos(angle), 0, sin(angle)) * (1.3 * ring + (0.0 if i == 0 else 1.0))
+
+func _issue_army_command(mode: String, clicked_entity: Node3D, ground_pos: Vector3) -> void:
+	var soldiers: Array = selected_units.filter(func(u): return is_instance_valid(u) and u.unit_type != Unit3D.UnitType.VILLAGER)
+	var others: Array = selected_units.filter(func(u): return is_instance_valid(u) and u.unit_type == Unit3D.UnitType.VILLAGER)
+	var target_enemy: Node3D = clicked_entity if (clicked_entity != null and clicked_entity.team != 0 and clicked_entity.hp > 0) else null
+	var where: Vector3 = ground_pos
+	if clicked_entity != null and target_enemy == null:
+		where = clicked_entity.global_position         # defend / attack-move around a friendly building
+	if mode == "attack":
+		_spawn_click_marker(target_enemy.global_position if target_enemy != null else where, "attack")
+		for i in soldiers.size():
+			var u: Unit3D = soldiers[i]
+			if target_enemy != null:
+				u.command_attack_order(target_enemy)
+			else:
+				u.command_attack_move(where + _formation_offset(i, soldiers.size()))
+		SoundManager.play_sound("attack")
+	else:
+		_spawn_click_marker(where, "move")
+		for i in soldiers.size():
+			(soldiers[i] as Unit3D).command_defend(where + _formation_offset(i, soldiers.size()))
+		SoundManager.play_sound("click")
+	for i in others.size():                              # villagers in the group just walk along
+		(others[i] as Unit3D).command_move(where + _formation_offset(soldiers.size() + i, soldiers.size() + others.size()))
+
+## Unit spacing: two units may overlap by up to half their body radius, never more. Pairs that are closer are
+## pushed apart (each half the way), never onto an unwalkable cell. Spatial hash with 2 m buckets.
+const SEPARATION_CELL := 2.0
+const SEPARATION_PASSES := 2
+var separation_enabled := true   # debug / capture comparison switch only
+func _separate_units() -> void:
+	var grid := {}
+	var live: Array = []
+	for u in units:
+		if is_instance_valid(u) and u.hp > 0 and u.is_inside_tree():
+			live.append(u)
+			var k := Vector2i(int(floor(u.global_position.x / SEPARATION_CELL)), int(floor(u.global_position.z / SEPARATION_CELL)))
+			if not grid.has(k):
+				grid[k] = []
+			grid[k].append(u)
+	for u in live:
+		var p: Vector3 = u.global_position
+		var k := Vector2i(int(floor(p.x / SEPARATION_CELL)), int(floor(p.z / SEPARATION_CELL)))
+		var ru: float = u.get_body_radius()
+		for dy in range(-1, 2):
+			for dx in range(-1, 2):
+				var bucket = grid.get(k + Vector2i(dx, dy))
+				if bucket == null:
+					continue
+				for o in bucket:
+					if o == u or o.get_instance_id() < u.get_instance_id():
+						continue                         # each pair once
+					var d := Vector2(o.global_position.x - u.global_position.x, o.global_position.z - u.global_position.z)
+					var min_d: float = 0.5 * (ru + o.get_body_radius())
+					var dist := d.length()
+					if dist >= min_d:
+						continue
+					# crowd arrival: a unit walking to a spot that bumps into one already standing there stops
+					# (otherwise everyone sent to one point keeps pressing into the middle)
+					u.stop_if_crowded_near_goal(o)
+					o.stop_if_crowded_near_goal(u)
+					var dir := d / dist if dist > 0.001 else Vector2(cos(u.get_instance_id() * 0.7), sin(u.get_instance_id() * 0.7))
+					var push := (min_d - dist) * 0.5
+					var u_ok := _nudge(u, -dir * push)
+					var o_ok := _nudge(o, dir * push)
+					if not u_ok:
+						_nudge(o, dir * push)            # u is against a wall: o takes the whole push
+					elif not o_ok:
+						_nudge(u, -dir * push)
+
+## Push a unit; never onto an unwalkable cell. Against a wall it slides along it (x-only, then z-only).
+func _nudge(u: Node3D, d: Vector2) -> bool:
+	for step in [d, Vector2(d.x, 0.0), Vector2(0.0, d.y)]:
+		if step.length_squared() < 0.000001:
+			continue
+		var np: Vector3 = u.global_position + Vector3(step.x, 0, step.y)
+		if map_gen.is_cell_walkable(map_gen.world_to_cell(np)):
+			u.global_position = np
+			return true
+	return false
+
+func _physics_process(_delta: float) -> void:
+	if is_game_active and separation_enabled:
+		for _i in SEPARATION_PASSES:
+			_separate_units()
 
 func _on_select_all_military() -> void:
 	_clear_selection()

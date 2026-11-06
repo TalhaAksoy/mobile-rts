@@ -1,0 +1,20 @@
+{
+ "civ": "byzantines",
+ "role": "cataphract",
+ "tris": 1464,
+ "bones": 31,
+ "height": 3.49,
+ "actions": [
+  "attack",
+  "build-loop",
+  "death",
+  "gather-loop",
+  "idle-loop",
+  "walk-loop"
+ ],
+ "props": [],
+ "attack": "thrust",
+ "mount": "horse",
+ "model": "res://assets/3d/units/byzantines/cataphract_a3.glb",
+ "age": 3
+}

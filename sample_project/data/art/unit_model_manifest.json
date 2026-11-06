@@ -10,6 +10,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 1.78,
+      "model": "res://assets/3d/units/britons/archer_a1.glb",
+      "tris": 958
+     },
+     "3": {
+      "height": 1.82,
+      "model": "res://assets/3d/units/britons/archer_a3.glb",
+      "tris": 882
+     }
+    },
     "attack": "bow",
     "enabled": true,
     "height": 1.78,
@@ -27,6 +39,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 2.48,
+      "model": "res://assets/3d/units/britons/cavalry_a1.glb",
+      "tris": 1410
+     },
+     "3": {
+      "height": 2.52,
+      "model": "res://assets/3d/units/britons/cavalry_a3.glb",
+      "tris": 1440
+     }
+    },
     "attack": "slash",
     "enabled": true,
     "height": 2.52,
@@ -44,6 +68,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 1.919,
+      "model": "res://assets/3d/units/britons/longbowman_a1.glb",
+      "tris": 994
+     },
+     "3": {
+      "height": 1.919,
+      "model": "res://assets/3d/units/britons/longbowman_a3.glb",
+      "tris": 906
+     }
+    },
     "attack": "bow",
     "enabled": true,
     "height": 1.919,
@@ -61,6 +97,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 2.25,
+      "model": "res://assets/3d/units/britons/spearman_a1.glb",
+      "tris": 768
+     },
+     "3": {
+      "height": 2.25,
+      "model": "res://assets/3d/units/britons/spearman_a3.glb",
+      "tris": 798
+     }
+    },
     "attack": "thrust",
     "enabled": true,
     "height": 2.25,
@@ -78,6 +126,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 1.78,
+      "model": "res://assets/3d/units/britons/swordsman_a1.glb",
+      "tris": 790
+     },
+     "3": {
+      "height": 1.82,
+      "model": "res://assets/3d/units/britons/swordsman_a3.glb",
+      "tris": 820
+     }
+    },
     "attack": "slash",
     "enabled": true,
     "height": 1.82,
@@ -116,6 +176,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 1.78,
+      "model": "res://assets/3d/units/byzantines/archer_a1.glb",
+      "tris": 934
+     },
+     "3": {
+      "height": 2.0,
+      "model": "res://assets/3d/units/byzantines/archer_a3.glb",
+      "tris": 970
+     }
+    },
     "attack": "bow",
     "enabled": true,
     "height": 1.93,
@@ -133,6 +205,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 3.49,
+      "model": "res://assets/3d/units/byzantines/cataphract_a1.glb",
+      "tris": 1316
+     },
+     "3": {
+      "height": 3.49,
+      "model": "res://assets/3d/units/byzantines/cataphract_a3.glb",
+      "tris": 1464
+     }
+    },
     "attack": "thrust",
     "enabled": true,
     "height": 3.49,
@@ -150,6 +234,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 2.25,
+      "model": "res://assets/3d/units/byzantines/spearman_a1.glb",
+      "tris": 724
+     },
+     "3": {
+      "height": 2.25,
+      "model": "res://assets/3d/units/byzantines/spearman_a3.glb",
+      "tris": 796
+     }
+    },
     "attack": "thrust",
     "enabled": true,
     "height": 2.25,
@@ -167,6 +263,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 1.78,
+      "model": "res://assets/3d/units/byzantines/swordsman_a1.glb",
+      "tris": 762
+     },
+     "3": {
+      "height": 2.0,
+      "model": "res://assets/3d/units/byzantines/swordsman_a3.glb",
+      "tris": 834
+     }
+    },
     "attack": "slash",
     "enabled": true,
     "height": 2.0,
@@ -205,6 +313,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 1.72,
+      "model": "res://assets/3d/units/chinese/archer_a1.glb",
+      "tris": 852
+     },
+     "3": {
+      "height": 2.08,
+      "model": "res://assets/3d/units/chinese/archer_a3.glb",
+      "tris": 990
+     }
+    },
     "attack": "bow",
     "enabled": true,
     "height": 2.08,
@@ -222,6 +342,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 2.42,
+      "model": "res://assets/3d/units/chinese/cavalry_a1.glb",
+      "tris": 1280
+     },
+     "3": {
+      "height": 2.78,
+      "model": "res://assets/3d/units/chinese/cavalry_a3.glb",
+      "tris": 1454
+     }
+    },
     "attack": "slash",
     "enabled": true,
     "height": 2.78,
@@ -239,6 +371,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 1.72,
+      "model": "res://assets/3d/units/chinese/chu_ko_nu_a1.glb",
+      "tris": 816
+     },
+     "3": {
+      "height": 2.08,
+      "model": "res://assets/3d/units/chinese/chu_ko_nu_a3.glb",
+      "tris": 954
+     }
+    },
     "attack": "gun",
     "enabled": true,
     "height": 2.08,
@@ -256,6 +400,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 2.25,
+      "model": "res://assets/3d/units/chinese/spearman_a1.glb",
+      "tris": 802
+     },
+     "3": {
+      "height": 2.25,
+      "model": "res://assets/3d/units/chinese/spearman_a3.glb",
+      "tris": 1008
+     }
+    },
     "attack": "thrust",
     "enabled": true,
     "height": 2.25,
@@ -273,6 +429,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 1.72,
+      "model": "res://assets/3d/units/chinese/swordsman_a1.glb",
+      "tris": 684
+     },
+     "3": {
+      "height": 2.08,
+      "model": "res://assets/3d/units/chinese/swordsman_a3.glb",
+      "tris": 890
+     }
+    },
     "attack": "slash",
     "enabled": true,
     "height": 2.08,
@@ -311,6 +479,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 1.78,
+      "model": "res://assets/3d/units/franks/archer_a1.glb",
+      "tris": 958
+     },
+     "3": {
+      "height": 1.9,
+      "model": "res://assets/3d/units/franks/archer_a3.glb",
+      "tris": 938
+     }
+    },
     "attack": "bow",
     "enabled": true,
     "height": 1.78,
@@ -328,6 +508,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 3.49,
+      "model": "res://assets/3d/units/franks/knight_a1.glb",
+      "tris": 1352
+     },
+     "3": {
+      "height": 3.49,
+      "model": "res://assets/3d/units/franks/knight_a3.glb",
+      "tris": 1504
+     }
+    },
     "attack": "thrust",
     "enabled": true,
     "height": 3.49,
@@ -345,6 +537,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 2.25,
+      "model": "res://assets/3d/units/franks/spearman_a1.glb",
+      "tris": 752
+     },
+     "3": {
+      "height": 2.25,
+      "model": "res://assets/3d/units/franks/spearman_a3.glb",
+      "tris": 744
+     }
+    },
     "attack": "thrust",
     "enabled": true,
     "height": 2.25,
@@ -362,6 +566,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 1.78,
+      "model": "res://assets/3d/units/franks/swordsman_a1.glb",
+      "tris": 790
+     },
+     "3": {
+      "height": 1.9,
+      "model": "res://assets/3d/units/franks/swordsman_a3.glb",
+      "tris": 782
+     }
+    },
     "attack": "slash",
     "enabled": true,
     "height": 1.93,
@@ -400,6 +616,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 2.078,
+      "model": "res://assets/3d/units/japanese/archer_a1.glb",
+      "tris": 986
+     },
+     "3": {
+      "height": 2.1,
+      "model": "res://assets/3d/units/japanese/archer_a3.glb",
+      "tris": 1224
+     }
+    },
     "attack": "bow",
     "enabled": true,
     "height": 2.078,
@@ -417,6 +645,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 2.5,
+      "model": "res://assets/3d/units/japanese/cavalry_a1.glb",
+      "tris": 1196
+     },
+     "3": {
+      "height": 2.8,
+      "model": "res://assets/3d/units/japanese/cavalry_a3.glb",
+      "tris": 1470
+     }
+    },
     "attack": "slash",
     "enabled": true,
     "height": 2.8,
@@ -434,6 +674,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 1.8,
+      "model": "res://assets/3d/units/japanese/samurai_a1.glb",
+      "tris": 588
+     },
+     "3": {
+      "height": 2.1,
+      "model": "res://assets/3d/units/japanese/samurai_a3.glb",
+      "tris": 918
+     }
+    },
     "attack": "slash",
     "enabled": true,
     "height": 2.1,
@@ -451,6 +703,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 2.3,
+      "model": "res://assets/3d/units/japanese/spearman_a1.glb",
+      "tris": 604
+     },
+     "3": {
+      "height": 2.3,
+      "model": "res://assets/3d/units/japanese/spearman_a3.glb",
+      "tris": 910
+     }
+    },
     "attack": "thrust",
     "enabled": true,
     "height": 2.3,
@@ -468,6 +732,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 1.83,
+      "model": "res://assets/3d/units/japanese/swordsman_a1.glb",
+      "tris": 798
+     },
+     "3": {
+      "height": 2.1,
+      "model": "res://assets/3d/units/japanese/swordsman_a3.glb",
+      "tris": 1104
+     }
+    },
     "attack": "slash",
     "enabled": true,
     "height": 1.83,
@@ -506,6 +782,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 1.86,
+      "model": "res://assets/3d/units/mongols/archer_a1.glb",
+      "tris": 1154
+     },
+     "3": {
+      "height": 2.089,
+      "model": "res://assets/3d/units/mongols/archer_a3.glb",
+      "tris": 1238
+     }
+    },
     "attack": "bow",
     "enabled": true,
     "height": 2.089,
@@ -523,6 +811,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 2.56,
+      "model": "res://assets/3d/units/mongols/horse_archer_a1.glb",
+      "tris": 1762
+     },
+     "3": {
+      "height": 2.789,
+      "model": "res://assets/3d/units/mongols/horse_archer_a3.glb",
+      "tris": 1846
+     }
+    },
     "attack": "bow",
     "enabled": true,
     "height": 2.789,
@@ -540,6 +840,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 2.25,
+      "model": "res://assets/3d/units/mongols/spearman_a1.glb",
+      "tris": 1092
+     },
+     "3": {
+      "height": 2.25,
+      "model": "res://assets/3d/units/mongols/spearman_a3.glb",
+      "tris": 1224
+     }
+    },
     "attack": "thrust",
     "enabled": true,
     "height": 2.25,
@@ -557,6 +869,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 1.86,
+      "model": "res://assets/3d/units/mongols/swordsman_a1.glb",
+      "tris": 1138
+     },
+     "3": {
+      "height": 2.089,
+      "model": "res://assets/3d/units/mongols/swordsman_a3.glb",
+      "tris": 1270
+     }
+    },
     "attack": "slash",
     "enabled": true,
     "height": 2.089,
@@ -595,6 +919,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 1.86,
+      "model": "res://assets/3d/units/ottomans/archer_a1.glb",
+      "tris": 1302
+     },
+     "3": {
+      "height": 2.089,
+      "model": "res://assets/3d/units/ottomans/archer_a3.glb",
+      "tris": 1134
+     }
+    },
     "attack": "bow",
     "enabled": true,
     "height": 1.86,
@@ -612,6 +948,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 2.56,
+      "model": "res://assets/3d/units/ottomans/cavalry_a1.glb",
+      "tris": 1790
+     },
+     "3": {
+      "height": 2.789,
+      "model": "res://assets/3d/units/ottomans/cavalry_a3.glb",
+      "tris": 1726
+     }
+    },
     "attack": "slash",
     "enabled": true,
     "height": 2.56,
@@ -629,6 +977,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 1.86,
+      "model": "res://assets/3d/units/ottomans/janissary_a1.glb",
+      "tris": 1082
+     },
+     "3": {
+      "height": 2.1,
+      "model": "res://assets/3d/units/ottomans/janissary_a3.glb",
+      "tris": 728
+     }
+    },
     "attack": "gun",
     "enabled": true,
     "height": 2.1,
@@ -646,6 +1006,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 2.25,
+      "model": "res://assets/3d/units/ottomans/spearman_a1.glb",
+      "tris": 1240
+     },
+     "3": {
+      "height": 2.25,
+      "model": "res://assets/3d/units/ottomans/spearman_a3.glb",
+      "tris": 1072
+     }
+    },
     "attack": "thrust",
     "enabled": true,
     "height": 2.25,
@@ -663,6 +1035,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 1.86,
+      "model": "res://assets/3d/units/ottomans/swordsman_a1.glb",
+      "tris": 1410
+     },
+     "3": {
+      "height": 2.089,
+      "model": "res://assets/3d/units/ottomans/swordsman_a3.glb",
+      "tris": 1118
+     }
+    },
     "attack": "slash",
     "enabled": true,
     "height": 1.86,
@@ -701,6 +1085,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 1.86,
+      "model": "res://assets/3d/units/saracens/archer_a1.glb",
+      "tris": 1206
+     },
+     "3": {
+      "height": 1.86,
+      "model": "res://assets/3d/units/saracens/archer_a3.glb",
+      "tris": 1230
+     }
+    },
     "attack": "bow",
     "enabled": true,
     "height": 1.86,
@@ -718,6 +1114,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 2.91,
+      "model": "res://assets/3d/units/saracens/mamluk_a1.glb",
+      "tris": 1634
+     },
+     "3": {
+      "height": 2.91,
+      "model": "res://assets/3d/units/saracens/mamluk_a3.glb",
+      "tris": 1694
+     }
+    },
     "attack": "slash",
     "enabled": true,
     "height": 2.91,
@@ -735,6 +1143,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 2.25,
+      "model": "res://assets/3d/units/saracens/spearman_a1.glb",
+      "tris": 1320
+     },
+     "3": {
+      "height": 2.25,
+      "model": "res://assets/3d/units/saracens/spearman_a3.glb",
+      "tris": 1368
+     }
+    },
     "attack": "thrust",
     "enabled": true,
     "height": 2.25,
@@ -752,6 +1172,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 1.86,
+      "model": "res://assets/3d/units/saracens/swordsman_a1.glb",
+      "tris": 1378
+     },
+     "3": {
+      "height": 1.86,
+      "model": "res://assets/3d/units/saracens/swordsman_a3.glb",
+      "tris": 1426
+     }
+    },
     "attack": "slash",
     "enabled": true,
     "height": 1.86,
@@ -790,6 +1222,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 1.78,
+      "model": "res://assets/3d/units/teutons/archer_a1.glb",
+      "tris": 958
+     },
+     "3": {
+      "height": 1.9,
+      "model": "res://assets/3d/units/teutons/archer_a3.glb",
+      "tris": 962
+     }
+    },
     "attack": "bow",
     "enabled": true,
     "height": 1.78,
@@ -807,6 +1251,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 2.48,
+      "model": "res://assets/3d/units/teutons/cavalry_a1.glb",
+      "tris": 1434
+     },
+     "3": {
+      "height": 2.6,
+      "model": "res://assets/3d/units/teutons/cavalry_a3.glb",
+      "tris": 1450
+     }
+    },
     "attack": "slash",
     "enabled": true,
     "height": 2.63,
@@ -824,6 +1280,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 2.25,
+      "model": "res://assets/3d/units/teutons/spearman_a1.glb",
+      "tris": 800
+     },
+     "3": {
+      "height": 2.25,
+      "model": "res://assets/3d/units/teutons/spearman_a3.glb",
+      "tris": 840
+     }
+    },
     "attack": "thrust",
     "enabled": true,
     "height": 2.25,
@@ -841,6 +1309,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 1.78,
+      "model": "res://assets/3d/units/teutons/swordsman_a1.glb",
+      "tris": 838
+     },
+     "3": {
+      "height": 1.9,
+      "model": "res://assets/3d/units/teutons/swordsman_a3.glb",
+      "tris": 878
+     }
+    },
     "attack": "slash",
     "enabled": true,
     "height": 1.93,
@@ -858,6 +1338,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 1.78,
+      "model": "res://assets/3d/units/teutons/teutonic_knight_a1.glb",
+      "tris": 766
+     },
+     "3": {
+      "height": 1.9,
+      "model": "res://assets/3d/units/teutons/teutonic_knight_a3.glb",
+      "tris": 806
+     }
+    },
     "attack": "slash",
     "enabled": true,
     "height": 1.9,
@@ -896,6 +1388,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 1.74,
+      "model": "res://assets/3d/units/vikings/archer_a1.glb",
+      "tris": 1026
+     },
+     "3": {
+      "height": 1.82,
+      "model": "res://assets/3d/units/vikings/archer_a3.glb",
+      "tris": 1356
+     }
+    },
     "attack": "bow",
     "enabled": true,
     "height": 1.74,
@@ -913,6 +1417,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 1.72,
+      "model": "res://assets/3d/units/vikings/berserker_a1.glb",
+      "tris": 688
+     },
+     "3": {
+      "height": 1.89,
+      "model": "res://assets/3d/units/vikings/berserker_a3.glb",
+      "tris": 982
+     }
+    },
     "attack": "slash",
     "enabled": true,
     "height": 1.89,
@@ -930,6 +1446,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 2.42,
+      "model": "res://assets/3d/units/vikings/cavalry_a1.glb",
+      "tris": 1384
+     },
+     "3": {
+      "height": 2.52,
+      "model": "res://assets/3d/units/vikings/cavalry_a3.glb",
+      "tris": 1842
+     }
+    },
     "attack": "slash",
     "enabled": true,
     "height": 2.52,
@@ -947,6 +1475,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 2.25,
+      "model": "res://assets/3d/units/vikings/spearman_a1.glb",
+      "tris": 802
+     },
+     "3": {
+      "height": 2.25,
+      "model": "res://assets/3d/units/vikings/spearman_a3.glb",
+      "tris": 1260
+     }
+    },
     "attack": "thrust",
     "enabled": true,
     "height": 2.25,
@@ -964,6 +1504,18 @@
      "idle-loop",
      "walk-loop"
     ],
+    "ages": {
+     "1": {
+      "height": 1.72,
+      "model": "res://assets/3d/units/vikings/swordsman_a1.glb",
+      "tris": 860
+     },
+     "3": {
+      "height": 1.82,
+      "model": "res://assets/3d/units/vikings/swordsman_a3.glb",
+      "tris": 1318
+     }
+    },
     "attack": "slash",
     "enabled": true,
     "height": 1.82,

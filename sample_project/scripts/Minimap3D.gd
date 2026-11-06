@@ -109,7 +109,7 @@ func _draw() -> void:
 		var total_w = map_gen.MAP_WIDTH * MapGenerator3D.TILE_SIZE
 		var total_h = map_gen.MAP_HEIGHT * MapGenerator3D.TILE_SIZE
 		var cam_cx = (camera.position.x / total_w) * size.x
-		var cam_cz = ((camera.position.z - camera.position.y * 0.65) / total_h) * size.y
+		var cam_cz = ((camera.position.z - (0.0 if camera.top_down else camera.position.y * 0.65)) / total_h) * size.y
 		var box_w = (camera.position.y / total_w) * size.x * 0.9
 		var box_h = (camera.position.y / total_h) * size.y * 1.1
 		var cam_rect = Rect2(cam_cx - box_w * 0.5, cam_cz - box_h * 0.5, box_w, box_h)

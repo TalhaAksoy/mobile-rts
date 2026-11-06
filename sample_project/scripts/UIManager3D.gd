@@ -12,6 +12,7 @@ signal cancel_placement_requested
 signal add_builder_requested
 signal cancel_construction_requested
 signal select_all_military_requested
+signal army_command_requested(mode: String)     # "attack" / "defend" (arm the next tap) or "stop"
 signal jump_to_base_requested
 signal find_idle_villager_requested
 signal clear_selection_requested
@@ -251,11 +252,85 @@ func _setup_build_grid() -> void:
 func set_player_civ(c_type: CivData.CivType) -> void:
 	player_civ_type = c_type
 	var cfg = CivData.get_civ(c_type)
-	if civ_label:
-		civ_label.text = cfg.get("name", "Osmanlılar")
+	_player_age = 1
+	_refresh_civ_label()
 	if civ_flag_rect:
 		civ_flag_rect.texture = PixelArtTextures.get_civ_flag_texture(c_type)
 	_setup_build_grid()
+
+## Top bar: civilisation name + the current age ("Osmanlılar · Köy Çağı").
+var _player_age := 1
+func _refresh_civ_label() -> void:
+	if civ_label:
+		civ_label.text = "%s · %s" % [CivData.get_civ(player_civ_type).get("name", "Osmanlılar"), TechData.age_name(_player_age)]
+
+func set_age(age: int) -> void:
+	if age != _player_age:
+		_player_age = age
+		_refresh_civ_label()
+
+## Age-up feedback: gold flash over the screen, a centred card naming the new age and what changed, and the
+## age chip in the top bar pulsing. The buildings and soldiers swap to their new look at the same moment.
+func show_age_up(age: int) -> void:
+	set_age(age)
+	var flash := ColorRect.new()
+	flash.color = Color(1.0, 0.85, 0.35, 0.0)
+	flash.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	flash.set_anchors_preset(Control.PRESET_FULL_RECT)
+	hud_root.add_child(flash)
+	var ft := flash.create_tween()
+	ft.tween_property(flash, "color:a", 0.38, 0.15)
+	ft.tween_property(flash, "color:a", 0.0, 0.9)
+	ft.tween_callback(flash.queue_free)
+
+	var card := PanelContainer.new()
+	card.name = "AgeUpCard"
+	card.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = Color(0.16, 0.11, 0.07, 0.92)
+	sb.border_color = Color(0.95, 0.78, 0.32)
+	sb.set_border_width_all(3)
+	sb.set_corner_radius_all(8)
+	sb.content_margin_left = 22; sb.content_margin_right = 22; sb.content_margin_top = 12; sb.content_margin_bottom = 12
+	card.add_theme_stylebox_override("panel", sb)
+	var vb := VBoxContainer.new()
+	vb.alignment = BoxContainer.ALIGNMENT_CENTER
+	card.add_child(vb)
+	var title := Label.new()
+	title.text = "★ %s ★" % TechData.age_name(age).to_upper()
+	title.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_font_override("font", ParchmentTheme.get_serif_font(26, true))
+	title.add_theme_color_override("font_color", Color(1.0, 0.86, 0.4))
+	title.add_theme_color_override("font_outline_color", Color(0.05, 0.03, 0.02))
+	title.add_theme_constant_override("outline_size", 5)
+	vb.add_child(title)
+	var sub := Label.new()
+	sub.text = "Binaların ve askerlerin gelişti!" if age < 3 else "İmparatorluk ihtişamı: ağır zırhlar, sancaklar!"
+	sub.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	sub.add_theme_font_override("font", ParchmentTheme.get_serif_font(14, false))
+	sub.add_theme_color_override("font_color", Color(0.96, 0.92, 0.82))
+	vb.add_child(sub)
+	hud_root.add_child(card)
+	card.reset_size()
+	card.position = Vector2((hud_root.size.x - card.size.x) * 0.5, hud_root.size.y * 0.30)
+	card.pivot_offset = card.size * 0.5
+	card.scale = Vector2(0.6, 0.6)
+	card.modulate.a = 0.0
+	var ct := card.create_tween()
+	ct.set_parallel(true)
+	ct.tween_property(card, "scale", Vector2.ONE, 0.35).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
+	ct.tween_property(card, "modulate:a", 1.0, 0.25)
+	ct.chain().tween_interval(2.4)
+	ct.chain().tween_property(card, "modulate:a", 0.0, 0.6)
+	ct.chain().tween_callback(card.queue_free)
+
+	if civ_label:
+		var lt := civ_label.create_tween()
+		civ_label.pivot_offset = civ_label.size * 0.5
+		lt.tween_property(civ_label, "modulate", Color(1.0, 0.85, 0.3), 0.2)
+		lt.tween_property(civ_label, "modulate", Color.WHITE, 0.2)
+		lt.tween_property(civ_label, "modulate", Color(1.0, 0.85, 0.3), 0.2)
+		lt.tween_property(civ_label, "modulate", Color.WHITE, 0.4)
 
 func update_resources(food: int, wood: int, gold: int, stone: int, pop: int, max_pop: int) -> void:
 	if food_label: food_label.text = "🌾 %d" % food
@@ -370,7 +445,15 @@ func _process(_delta: float) -> void:
 	if queue_bar != null:
 		queue_bar.offset_bottom = bottom_bar.offset_top - 6.0
 		queue_bar.offset_top = queue_bar.offset_bottom - queue_bar.get_combined_minimum_size().y
-	if is_instance_valid(selected_entity):
+	# a group selection: one summary in the panel, no per-soldier status labels over the crowd
+	var grp := _group_summary() if is_instance_valid(selected_entity) and selected_entity is Unit3D and selected_entity.team == 0 else {}
+	if game_controller != null and "selected_units" in game_controller:
+		for su in game_controller.selected_units:
+			if is_instance_valid(su) and is_instance_valid(su.status_label):
+				su.status_label.visible = su.is_selected and grp.is_empty()
+	if not grp.is_empty():
+		_apply_group_summary(grp)
+	elif is_instance_valid(selected_entity):
 		if selected_entity is Unit3D:
 			entity_hp_bar.value = selected_entity.hp
 			entity_hp_label.text = "%d / %d CAN" % [int(selected_entity.hp), int(selected_entity.max_hp)]
@@ -422,22 +505,69 @@ func _process(_delta: float) -> void:
 				entity_hp_label.text = "Kalan: %d / %d" % [amt, r_max]
 				entity_stats_label.text = "Doğal Kaynak • Bir köylü seçip dokunarak toplatabilirsiniz."
 
+func _unit_type_name(unit: Unit3D) -> String:
+	match unit.unit_type:
+		Unit3D.UnitType.VILLAGER: return "İşçi (Köylü)"
+		Unit3D.UnitType.SWORDSMAN: return "Kılıçlı Asker"
+		Unit3D.UnitType.ARCHER: return "Okçu"
+		Unit3D.UnitType.SPEARMAN: return "Mızrakçı"
+		Unit3D.UnitType.CAVALRY: return "Akıncı Süvari"
+	return CivData.get_civ(unit.civ_type).get("unique_unit_name", "Elit Asker")
+
+const GROUP_SHORT := {"İşçi (Köylü)": "Köylü", "Kılıçlı Asker": "Kılıçlı", "Akıncı Süvari": "Süvari"}
+
+## Several units selected: one summary instead of the first unit's card ("12 Birim", total hp, the make-up and
+## what they are doing). Empty when one unit (or none) is selected.
+func _group_summary() -> Dictionary:
+	if game_controller == null or not ("selected_units" in game_controller):
+		return {}
+	var live: Array = game_controller.selected_units.filter(func(u): return is_instance_valid(u) and u.hp > 0)
+	if live.size() <= 1:
+		return {}
+	var kinds := {}
+	var kind_order: Array = []
+	var hp := 0.0
+	var hp_max := 0.0
+	var idle := 0
+	var fighting := 0
+	var moving := 0
+	for u in live:
+		var n: String = _unit_type_name(u)
+		n = GROUP_SHORT.get(n, n)
+		if not kinds.has(n):
+			kinds[n] = 0
+			kind_order.append(n)
+		kinds[n] += 1
+		hp += u.hp
+		hp_max += u.max_hp
+		match u.state:
+			Unit3D.State.IDLE: idle += 1
+			Unit3D.State.ATTACKING: fighting += 1
+			Unit3D.State.MOVING: moving += 1
+	var parts: Array = []
+	for n in kind_order:
+		parts.append("%d %s" % [kinds[n], n])
+	var doing: Array = []
+	if fighting > 0: doing.append("%d savaşta" % fighting)
+	if moving > 0: doing.append("%d yürüyor" % moving)
+	if idle > 0: doing.append("%d boşta" % idle)
+	var rest: int = live.size() - fighting - moving - idle
+	if rest > 0: doing.append("%d çalışıyor" % rest)
+	return {"count": live.size(), "hp": hp, "hp_max": hp_max, "makeup": " · ".join(parts), "doing": ", ".join(doing)}
+
+func _apply_group_summary(g: Dictionary) -> void:
+	entity_name_label.text = "%d Birim Seçili [Dost]" % g["count"]
+	entity_hp_bar.max_value = g["hp_max"]
+	entity_hp_bar.value = g["hp"]
+	entity_hp_label.text = "%d / %d CAN (toplam)" % [int(g["hp"]), int(g["hp_max"])]
+	entity_stats_label.text = "%s\n%s" % [g["makeup"], g["doing"]]
+
 func _display_unit_ui(unit: Unit3D) -> void:
 	if entity_portrait_rect != null:
 		entity_portrait_rect.texture = FactionArtManager.get_unit_texture(unit.civ_type, unit.unit_type, "pose_01")
 		entity_portrait_rect.visible = true
 
-	var type_name = "Birim"
-	match unit.unit_type:
-		Unit3D.UnitType.VILLAGER: type_name = "İşçi (Köylü)"
-		Unit3D.UnitType.SWORDSMAN: type_name = "Kılıçlı Asker"
-		Unit3D.UnitType.ARCHER: type_name = "Okçu"
-		Unit3D.UnitType.SPEARMAN: type_name = "Mızrakçı"
-		Unit3D.UnitType.CAVALRY: type_name = "Akıncı Süvari"
-		_:
-			var civ_cfg = CivData.get_civ(unit.civ_type)
-			type_name = civ_cfg.get("unique_unit_name", "Elit Asker")
-
+	var type_name := _unit_type_name(unit)
 	entity_name_label.text = "%s [%s]" % [type_name, "Dost" if unit.team == 0 else "Düşman"]
 	entity_hp_bar.max_value = unit.max_hp
 	entity_hp_bar.value = unit.hp
@@ -448,13 +578,31 @@ func _display_unit_ui(unit: Unit3D) -> void:
 		int(unit.armor),
 		int(unit.move_speed)
 	]
+	var grp := _group_summary()
+	if not grp.is_empty() and unit.team == 0:
+		_apply_group_summary(grp)
 
 	if unit.team == 0:
+		# Army orders (Age of Empires style) when the selection holds soldiers: SALDIR / SAVUN arm the next tap
+		var has_soldiers := unit.unit_type != Unit3D.UnitType.VILLAGER
+		if game_controller != null and "selected_units" in game_controller:
+			for su in game_controller.selected_units:
+				if is_instance_valid(su) and su.unit_type != Unit3D.UnitType.VILLAGER:
+					has_soldiers = true
+		if has_soldiers:
+			for cmd in [["⚔ SALDIR", "attack"], ["🛡 SAVUN", "defend"]]:
+				var b := Button.new()
+				b.text = cmd[0]
+				b.custom_minimum_size = Vector2(120, 48)
+				ParchmentTheme.apply_parchment_button(b, 13)
+				var mode: String = cmd[1]
+				b.pressed.connect(func(): army_command_requested.emit(mode))
+				action_flow.add_child(b)
 		var stop_btn = Button.new()
-		stop_btn.text = "⏹ DURDUR"
-		stop_btn.custom_minimum_size = Vector2(110, 48)
+		stop_btn.text = "⏹ DUR"
+		stop_btn.custom_minimum_size = Vector2(100, 48)
 		ParchmentTheme.apply_parchment_button(stop_btn, 13)
-		stop_btn.pressed.connect(func(): unit.command_stop())
+		stop_btn.pressed.connect(func(): army_command_requested.emit("stop"))
 		action_flow.add_child(stop_btn)
 
 		if unit.unit_type == Unit3D.UnitType.VILLAGER:

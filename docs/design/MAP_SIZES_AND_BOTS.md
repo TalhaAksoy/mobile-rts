@@ -84,8 +84,8 @@ These colours appear on:
 - the swatches on the new-game screen.
 
 **Known limit:** in **2D sprite** style the sheets exist only in the first two colours, so every bot uses the red
-sheet. Telling bots apart in 2D needs sheets rendered in the other four colours: `render_sprites.py` and
-`units/render_unit_sprites.py` with more `TEAM_COLORS`.
+sheet. Telling bots apart in 2D needs sheets in the other four colours: add them to `C.TEAMS` in
+`art_source/aseprite/palette.lua` (the team ramp is swapped at export) and lift the `clampi(team, 0, 1)` in the loaders.
 
 ## Saving
 

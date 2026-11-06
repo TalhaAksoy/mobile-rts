@@ -1,0 +1,20 @@
+{
+ "civ": "saracens",
+ "role": "swordsman",
+ "tris": 1426,
+ "bones": 18,
+ "height": 1.86,
+ "actions": [
+  "attack",
+  "build-loop",
+  "death",
+  "gather-loop",
+  "idle-loop",
+  "walk-loop"
+ ],
+ "props": [],
+ "attack": "slash",
+ "mount": "",
+ "model": "res://assets/3d/units/saracens/swordsman_a3.glb",
+ "age": 3
+}

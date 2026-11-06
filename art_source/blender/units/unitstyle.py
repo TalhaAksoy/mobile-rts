@@ -368,5 +368,94 @@ STYLES = {
 }
 
 
-def get(civ, role):
-    return {k: v for k, v in STYLES[civ][role].items() if v is not None}
+# ---------------------------------------------------------------------------------------------------------------
+# Age looks (same plan as the 2D set, art_source/aseprite/ages.lua): Age II = STYLES above.
+#   Age I  : village-age kit, no metal armour, cloth hats / hoods / turbans, unarmoured horses.
+#   Age III: the civ's heaviest kit: helmet + plume, armour, cape in the team colour, gilded trim, barded horses.
+# ---------------------------------------------------------------------------------------------------------------
+_METAL = ("pat:mail", "pat:scale", "pat:lamellar", "pat:plates", "steel", "iron")
+_HELMS = ("helm_byz", "helm_chinese", "helm_great", "helm_kettle", "helm_mongol", "helm_nasal", "helm_spangen",
+          "kabuto", "coif")
+_DROP1 = ("cuirass", "cuirass_trim", "armor_skirt", "tassets", "shoulders", "shoulder_kind", "greaves", "plume",
+          "cape", "cape_trim", "cape_cross", "barding", "barding_emblem", "barding_trim", "chanfron", "neck_guard",
+          "shikoro", "sashimono", "coif", "veil")
+_D = object()                      # marker: delete the key
+AGE_UNIT = {
+    "ottomans": {1: {"all": dict(hat="turban", hat_cap="red", hat_color="cream"), "cavalry": dict(hat="fur_hat", hat_color="fur_brown")},
+                 3: {"all": dict(hat="helm_mongol", hat_color="steel", armor="pat:scale_iron", sleeve="pat:mail_steel",
+                                 plume="white", cape=_D, shield_color="red", emblem="ottomans",
+                                 emblem_shape=_D, trim="gold"),
+                     "janissary": dict(hat="bork", hat_color="white", armor=_D, sleeve="red", plume="white")}},
+    "byzantines": {1: {"all": dict(hat="hood", hat_color="red_dark")},
+                   3: {"all": dict(hat="helm_byz", hat_color="steel", armor="pat:lamellar_gold", plume="purple", cape="purple",
+                                   cape_trim="gold", trim="gold", shield_color="red", emblem="byzantines", shield_rim="gold")}},
+    "saracens": {1: {"all": dict(hat="turban", hat_color="white")},
+                 3: {"all": dict(armor="pat:mail_steel", cuirass="steel", cuirass_trim="gold", cape=_D, helm_band="yellow",
+                                 hat_band="yellow", chest_emblem="saracens", trim="yellow",
+                                 shield_color="yellow", emblem="saracens")}},
+    "mongols": {1: {"all": dict(hat="fur_hat", hat_color="fur_brown")},
+                3: {"all": dict(hat="helm_mongol", hat_color="steel", armor="pat:lamellar_red", plume="red", cape=_D,
+                                fur="pat:fur_brown", tassel="red",
+                                shoulders="black_lacquer", coat="pat:brocade_red", collar="pat:fur_brown")}},
+    "chinese": {1: {"all": dict(hat="hachimaki", hat_color="red")},
+                3: {"all": dict(hat="helm_chinese", hat_color="steel", armor="pat:scale_iron", plume="red",
+                                chest_emblem="chinese", trim="red", cape="red", cape_trim="gold",
+                                shoulders="steel")}},
+    "franks": {1: {"all": dict(hat="hood", hat_color="brown_light", armor="pat:quilt_cream")},
+               3: {"all": dict(hat="helm_great", hat_color="steel", armor="pat:mail_steel", cuirass="steel", gloves="steel",
+                               chest_emblem="franks", shield_color="royal", emblem="franks", shield_rim="gold", cape=_D)}},
+    "britons": {1: {"all": dict(hat="hood", hat_color="green_dark", armor="pat:quilt_cream")},
+                3: {"all": dict(hat="helm_kettle", hat_color="steel", armor="pat:mail_steel", cuirass="steel", plume="TEAM",
+                                chest_emblem="britons", shield_color="red", emblem="britons", cape=_D)}},
+    "teutons": {1: {"all": dict(hat="hood", hat_color="grey_cloth", armor="pat:quilt_cream")},
+                3: {"all": dict(hat="helm_great", hat_color="steel", armor="pat:mail_steel", cuirass="steel", gloves="steel",
+                                cape="white", cape_cross="black_cloth", tunic="white", chest_cross="black_cloth",
+                                shield_color="white", emblem="teutons")}},
+    "japanese": {1: {"all": dict(hat="straw_hat", hat_color="straw")},
+                 3: {"all": dict(hat="kabuto", hat_color="black_lacquer", armor="pat:plates_black", shoulders="black_lacquer",
+                                 shoulder_kind="sode", sashimono="japanese")}},
+    "vikings": {1: {"all": dict(hat=_D)},
+                3: {"all": dict(hat="helm_spangen", hat_color="iron", armor="pat:mail_iron", cape="fur_dark",
+                                shield_color="yellow", emblem="vikings"),
+                    "berserker": dict(hat="wolf_pelt", armor=_D, cape=_D)}},
+}
+
+
+def _age_style(st, civ, role, age):
+    if age == 2 or role == "villager":
+        return st
+    o = dict(st)
+    if age == 1:
+        if str(o.get("armor", "")).startswith(_METAL):
+            o.pop("armor", None)
+        if str(o.get("sleeve", "")).startswith(_METAL):
+            o["sleeve"] = o.get("shirt", "linen")
+        if str(o.get("trousers", "")).startswith(_METAL):
+            o["trousers"] = "brown"
+        for k in _DROP1:
+            o.pop(k, None)
+        if o.get("gloves") in ("steel", "iron"):
+            o.pop("gloves")
+        if o.get("hat") in _HELMS:
+            o["hat"] = "hood"; o["hat_color"] = "brown_light"
+        if o.get("mount"):
+            o["blanket"] = "brown"
+    else:
+        # Age III: no shared kit (gold trim + team cape everywhere made the civs look alike); per civ in AGE_UNIT
+        if o.get("mount") and civ in ("franks", "britons", "teutons", "byzantines"):
+            o.setdefault("chanfron", "steel")
+    per = AGE_UNIT.get(civ, {}).get(age, {})
+    for part in (per.get("all"), per.get(role)):
+        for k, v in (part or {}).items():
+            if v is _D:
+                o.pop(k, None)
+            else:
+                o[k] = v
+    if age == 3 and o.get("weapon") in ("bow", "crossbow", "chukonu") and role != "cavalry":
+        o.pop("cuirass", None); o.pop("gloves", None)       # archers stay lighter
+    return o
+
+
+def get(civ, role, age=2):
+    st = {k: v for k, v in STYLES[civ][role].items() if v is not None}
+    return _age_style(st, civ, role, age)

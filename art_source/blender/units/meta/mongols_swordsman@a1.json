@@ -1,0 +1,20 @@
+{
+ "civ": "mongols",
+ "role": "swordsman",
+ "tris": 1138,
+ "bones": 18,
+ "height": 1.86,
+ "actions": [
+  "attack",
+  "build-loop",
+  "death",
+  "gather-loop",
+  "idle-loop",
+  "walk-loop"
+ ],
+ "props": [],
+ "attack": "slash",
+ "mount": "",
+ "model": "res://assets/3d/units/mongols/swordsman_a1.glb",
+ "age": 1
+}

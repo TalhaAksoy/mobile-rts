@@ -2693,7 +2693,7 @@
       "model": "res://assets/3d/upgrade_kits/britons/upgrade_kit.glb",
       "source": "art_source/blender/britons/upgrade_kit.blend",
       "build_script": "art_source/blender/environment/upgrade_kit.py",
-      "tris": 198,
+      "tris": 292,
       "materials": 6,
       "enabled": true,
       "status": "IMPORTED"
@@ -2702,7 +2702,7 @@
       "model": "res://assets/3d/upgrade_kits/byzantines/upgrade_kit.glb",
       "source": "art_source/blender/byzantines/upgrade_kit.blend",
       "build_script": "art_source/blender/environment/upgrade_kit.py",
-      "tris": 270,
+      "tris": 364,
       "materials": 6,
       "enabled": true,
       "status": "IMPORTED"
@@ -2711,7 +2711,7 @@
       "model": "res://assets/3d/upgrade_kits/chinese/upgrade_kit.glb",
       "source": "art_source/blender/chinese/upgrade_kit.blend",
       "build_script": "art_source/blender/environment/upgrade_kit.py",
-      "tris": 358,
+      "tris": 452,
       "materials": 8,
       "enabled": true,
       "status": "IMPORTED"
@@ -2720,7 +2720,7 @@
       "model": "res://assets/3d/upgrade_kits/franks/upgrade_kit.glb",
       "source": "art_source/blender/franks/upgrade_kit.blend",
       "build_script": "art_source/blender/environment/upgrade_kit.py",
-      "tris": 238,
+      "tris": 332,
       "materials": 6,
       "enabled": true,
       "status": "IMPORTED"
@@ -2729,8 +2729,8 @@
       "model": "res://assets/3d/upgrade_kits/japanese/upgrade_kit.glb",
       "source": "art_source/blender/japanese/upgrade_kit.blend",
       "build_script": "art_source/blender/environment/upgrade_kit.py",
-      "tris": 300,
-      "materials": 6,
+      "tris": 360,
+      "materials": 5,
       "enabled": true,
       "status": "IMPORTED"
     },
@@ -2738,7 +2738,7 @@
       "model": "res://assets/3d/upgrade_kits/mongols/upgrade_kit.glb",
       "source": "art_source/blender/mongols/upgrade_kit.blend",
       "build_script": "art_source/blender/environment/upgrade_kit.py",
-      "tris": 214,
+      "tris": 398,
       "materials": 5,
       "enabled": true,
       "status": "IMPORTED"
@@ -2747,7 +2747,7 @@
       "model": "res://assets/3d/upgrade_kits/ottomans/upgrade_kit.glb",
       "source": "art_source/blender/ottomans/upgrade_kit.blend",
       "build_script": "art_source/blender/environment/upgrade_kit.py",
-      "tris": 246,
+      "tris": 340,
       "materials": 6,
       "enabled": true,
       "status": "IMPORTED"
@@ -2756,7 +2756,7 @@
       "model": "res://assets/3d/upgrade_kits/saracens/upgrade_kit.glb",
       "source": "art_source/blender/saracens/upgrade_kit.blend",
       "build_script": "art_source/blender/environment/upgrade_kit.py",
-      "tris": 310,
+      "tris": 404,
       "materials": 6,
       "enabled": true,
       "status": "IMPORTED"
@@ -2765,7 +2765,7 @@
       "model": "res://assets/3d/upgrade_kits/teutons/upgrade_kit.glb",
       "source": "art_source/blender/teutons/upgrade_kit.blend",
       "build_script": "art_source/blender/environment/upgrade_kit.py",
-      "tris": 198,
+      "tris": 292,
       "materials": 6,
       "enabled": true,
       "status": "IMPORTED"
@@ -2774,7 +2774,7 @@
       "model": "res://assets/3d/upgrade_kits/vikings/upgrade_kit.glb",
       "source": "art_source/blender/vikings/upgrade_kit.blend",
       "build_script": "art_source/blender/environment/upgrade_kit.py",
-      "tris": 254,
+      "tris": 348,
       "materials": 6,
       "enabled": true,
       "status": "IMPORTED"

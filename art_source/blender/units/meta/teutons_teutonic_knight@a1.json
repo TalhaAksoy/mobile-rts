@@ -1,0 +1,20 @@
+{
+ "civ": "teutons",
+ "role": "teutonic_knight",
+ "tris": 766,
+ "bones": 18,
+ "height": 1.78,
+ "actions": [
+  "attack",
+  "build-loop",
+  "death",
+  "gather-loop",
+  "idle-loop",
+  "walk-loop"
+ ],
+ "props": [],
+ "attack": "slash",
+ "mount": "",
+ "model": "res://assets/3d/units/teutons/teutonic_knight_a1.glb",
+ "age": 1
+}

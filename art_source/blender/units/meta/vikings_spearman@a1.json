@@ -1,0 +1,20 @@
+{
+ "civ": "vikings",
+ "role": "spearman",
+ "tris": 802,
+ "bones": 18,
+ "height": 2.25,
+ "actions": [
+  "attack",
+  "build-loop",
+  "death",
+  "gather-loop",
+  "idle-loop",
+  "walk-loop"
+ ],
+ "props": [],
+ "attack": "thrust",
+ "mount": "",
+ "model": "res://assets/3d/units/vikings/spearman_a1.glb",
+ "age": 1
+}

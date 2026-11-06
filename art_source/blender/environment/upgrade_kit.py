@@ -1,8 +1,8 @@
 """Civilisation 'upgraded building' dressing. Attached by Building3D.set_upgrade_level(2) around ANY
 building whose own technology was researched (TechData "level" effect). Modelled for a 3.6 m (2x2)
 footprint (corners at +-1.8 m) and scaled in Godot to bigger footprints. It stays at the EDGES:
-a low civ-masonry kerb, four civ corner pieces and two front standards with the civ banner and a
-team-coloured pennant, so the building itself stays readable. Culture per civ:
+a low civ-masonry wall with a gate gap in front, four civ corner pieces and two tall front standards
+with TEAM-coloured banners and a gilt civ plaque, so the building itself stays readable. Culture per civ:
   ottomans: lead-capped stone bollards     byzantines: brick piers with terracotta domelets
   britons:  timber posts, thatch caps      franks: stone pillars, slate spirelets, gilt finials
   mongols:  horse-tail standards (no kerb) teutons: dark buttress blocks with slate caps
@@ -64,15 +64,26 @@ def corner(b, civ, x, y):
 
 
 def standard(b, civ, x, y):
+    """Tall standard with a TEAM-coloured banner (readable from far away) and a gilt civ plaque."""
     pole_mat = "PE_LacquerRed" if civ == "chinese" else "PE_WoodDark"
-    h = 1.9 if civ != "japanese" else 2.1
-    b.cylinder((x, y, 0.0), 0.035, h, pole_mat, segs=5)
-    b.cylinder((x, y, h), 0.05, 0.06, "PE_Gold", segs=5)
+    h = 2.3 if civ != "japanese" else 2.5
+    b.cylinder((x, y, 0.0), 0.04, h, pole_mat, segs=5)
+    b.cylinder((x, y, h), 0.06, 0.08, "PE_Gold", segs=5)
     if civ == "japanese":           # nobori: tall narrow banner on an L-pole
-        b.banner((x + 0.02, y - 0.04, h - 0.1), (0, -1, 0), 0.22, 0.95, civ, tail=False)
+        # cloth as a thin box: the team material is single-sided, a plain quad would vanish from behind
+        b.box((x + 0.15, y - 0.07, h - 0.1 - 0.575), (0.26, 0.03, 1.15), "TEAM_Trim")
+        b.box((x + 0.15, y, h - 0.08), (0.34, 0.03, 0.03), "PE_WoodDark")                    # L-pole arm
+        b.box((x + 0.15, y - 0.1, h - 0.45), (0.12, 0.02, 0.12), "PE_PlasterWhite")          # white mon disc
     else:
-        b.banner((x, y - 0.04, h - 0.1), (0, -1, 0), 0.3, 0.6, civ)
-    b.box((x, y - 0.03, h - 0.85), (0.2, 0.02, 0.12), "TEAM_Trim")            # team pennant board
+        # cloth as a thin box: the team material is single-sided, a plain quad would vanish from behind
+        b.box((x, y - 0.07, h - 0.12 - 0.4), (0.42, 0.03, 0.8), "TEAM_Trim")
+        b.box((x, y - 0.07, h - 0.95), (0.2, 0.03, 0.12), "TEAM_Trim")                      # tail
+        b.cylinder_between((x - 0.27, y - 0.07, h - 0.1), (x + 0.27, y - 0.07, h - 0.1), 0.03, "PE_Gold", segs=4)
+        b.box((x, y - 0.1, h - 0.45), (0.18, 0.02, 0.22), "PE_Gold")                       # civ plaque
+        b.banner((x, y - 0.11, h - 0.36), (0, -1, 0), 0.12, 0.16, civ, tail=False)        # emblem on it
+
+
+WALL_H, WALL_T, GATE = 0.34, 0.18, 0.75   # low enclosure wall; gap in front of the door
 
 
 def build(civ="ottomans"):
@@ -80,13 +91,28 @@ def build(civ="ottomans"):
     b = Builder("upgrade_kit_" + civ)
     k = KERB[civ]
     if k:
-        for (cx, cy, sx, sy) in ((0, -E, 2 * E, 0.16), (0, E, 2 * E, 0.16), (-E, 0, 0.16, 2 * E), (E, 0, 0.16, 2 * E)):
-            b.box((cx, cy, 0.06), (sx, sy, 0.12), k)
+        z = WALL_H / 2
+        b.box((0, E, z), (2 * E, WALL_T, WALL_H), k)                                   # back
+        b.box((-E, 0, z), (WALL_T, 2 * E, WALL_H), k)                                  # sides
+        b.box((E, 0, z), (WALL_T, 2 * E, WALL_H), k)
+        seg = E - GATE                                                                  # front, with a gate
+        b.box((-(GATE + seg / 2), -E, z), (seg, WALL_T, WALL_H), k)
+        b.box(((GATE + seg / 2), -E, z), (seg, WALL_T, WALL_H), k)
+        b.box((0, E, WALL_H + 0.03), (2 * E + 0.06, WALL_T + 0.06, 0.06), k)          # coping
+        for sx in (-1, 1):
+            b.box((sx * GATE, -E, WALL_H / 2 + 0.12), (0.24, 0.24, WALL_H + 0.24), k)  # gate piers
+    else:   # nomads: rope fence between short stakes
+        for x in [-E + i * (2 * E / 6) for i in range(7)]:
+            for y in (-E, E):
+                if abs(x) > GATE or y > 0:
+                    b.cylinder((x, y, 0.0), 0.03, 0.5, "PE_WoodDark", segs=4)
+        for y in (-E, E):
+            b.box((0, y, 0.42), (2 * E, 0.03, 0.03), "PE_Felt")
     for x in (-E, E):
         for y in (-E, E):
             corner(b, civ, x, y)
-    for x in (-0.95, 0.95):
-        standard(b, civ, x, -E - 0.02)
+    for x in (-GATE - 0.25, GATE + 0.25):
+        standard(b, civ, x, -E - 0.04)
     return b.finalize()
 
 

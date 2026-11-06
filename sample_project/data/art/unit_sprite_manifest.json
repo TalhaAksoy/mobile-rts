@@ -2,9 +2,115 @@
  "units": {
   "britons": {
    "archer": {
+    "ages": {
+     "1": {
+      "anchor": [
+       29.5,
+       58
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 64,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/britons/archer_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/britons/archer_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 81
+     },
+     "3": {
+      "anchor": [
+       29.5,
+       59
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 65,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/britons/archer_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/britons/archer_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 82
+     }
+    },
     "anchor": [
-     42.94604301452637,
-     59.32925111055374
+     29.5,
+     58
     ],
     "anims": {
      "attack": {
@@ -44,18 +150,125 @@
       "row": 1
      }
     },
-    "h": 67,
+    "h": 64,
     "hframes": 8,
     "px_per_m": 32,
-    "t0": "res://assets/sprites/units/britons/archer_t0.png",
-    "t1": "res://assets/sprites/units/britons/archer_t1.png",
+    "t0": "res://assets/sprites_px/units/britons/archer_t0.png",
+    "t1": "res://assets/sprites_px/units/britons/archer_t1.png",
     "vframes": 6,
-    "w": 72
+    "view": "oblique",
+    "w": 81
    },
    "cavalry": {
+    "ages": {
+     "1": {
+      "anchor": [
+       53.5,
+       104
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 122,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/britons/cavalry_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/britons/cavalry_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 140
+     },
+     "3": {
+      "anchor": [
+       53.5,
+       104
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 122,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/britons/cavalry_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/britons/cavalry_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 140
+     }
+    },
     "anchor": [
-     75.3110899925232,
-     70.68706119060516
+     53.5,
+     104
     ],
     "anims": {
      "attack": {
@@ -95,18 +308,493 @@
       "row": 1
      }
     },
-    "h": 109,
+    "h": 122,
     "hframes": 8,
     "px_per_m": 32,
-    "t0": "res://assets/sprites/units/britons/cavalry_t0.png",
-    "t1": "res://assets/sprites/units/britons/cavalry_t1.png",
+    "t0": "res://assets/sprites_px/units/britons/cavalry_t0.png",
+    "t1": "res://assets/sprites_px/units/britons/cavalry_t1.png",
     "vframes": 6,
-    "w": 106
+    "view": "oblique",
+    "w": 140
    },
    "longbowman": {
+    "ages": {
+     "1": {
+      "anchor": [
+       29.5,
+       67
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 73,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/britons/longbowman_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/britons/longbowman_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 86
+     },
+     "3": {
+      "anchor": [
+       29.5,
+       67
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 73,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/britons/longbowman_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/britons/longbowman_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 86
+     }
+    },
     "anchor": [
-     45.13824653625488,
-     61.32925111055374
+     29.5,
+     67
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 73,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/britons/longbowman_t0.png",
+    "t1": "res://assets/sprites_px/units/britons/longbowman_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 86
+   },
+   "spearman": {
+    "ages": {
+     "1": {
+      "anchor": [
+       55.5,
+       81
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 88,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/britons/spearman_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/britons/spearman_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 119
+     },
+     "3": {
+      "anchor": [
+       55.5,
+       81
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 88,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/britons/spearman_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/britons/spearman_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 119
+     }
+    },
+    "anchor": [
+     55.5,
+     81
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 88,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/britons/spearman_t0.png",
+    "t1": "res://assets/sprites_px/units/britons/spearman_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 119
+   },
+   "swordsman": {
+    "ages": {
+     "1": {
+      "anchor": [
+       45.5,
+       73
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 81,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/britons/swordsman_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/britons/swordsman_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 102
+     },
+     "3": {
+      "anchor": [
+       45.5,
+       73
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 81,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/britons/swordsman_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/britons/swordsman_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 107
+     }
+    },
+    "anchor": [
+     45.5,
+     73
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 81,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/britons/swordsman_t0.png",
+    "t1": "res://assets/sprites_px/units/britons/swordsman_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 102
+   },
+   "villager": {
+    "anchor": [
+     34.5,
+     64
     ],
     "anims": {
      "attack": {
@@ -149,374 +837,124 @@
     "h": 69,
     "hframes": 8,
     "px_per_m": 32,
-    "t0": "res://assets/sprites/units/britons/longbowman_t0.png",
-    "t1": "res://assets/sprites/units/britons/longbowman_t1.png",
+    "t0": "res://assets/sprites_px/units/britons/villager_t0.png",
+    "t1": "res://assets/sprites_px/units/britons/villager_t1.png",
     "vframes": 6,
-    "w": 75
-   },
-   "spearman": {
-    "anchor": [
-     52.49039173126221,
-     63.39233899116516
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 73,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/britons/spearman_t0.png",
-    "t1": "res://assets/sprites/units/britons/spearman_t1.png",
-    "vframes": 6,
-    "w": 78
-   },
-   "swordsman": {
-    "anchor": [
-     34.78685188293457,
-     62.06351399421692
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 70,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/britons/swordsman_t0.png",
-    "t1": "res://assets/sprites/units/britons/swordsman_t1.png",
-    "vframes": 6,
-    "w": 61
-   },
-   "villager": {
-    "anchor": [
-     33.50827693939209,
-     58.32925111055374
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 66,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/britons/villager_t0.png",
-    "t1": "res://assets/sprites/units/britons/villager_t1.png",
-    "vframes": 6,
-    "w": 54
+    "view": "oblique",
+    "w": 86
    }
   },
   "byzantines": {
    "archer": {
-    "anchor": [
-     42.94604301452637,
-     59.32925111055374
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
+    "ages": {
+     "1": {
+      "anchor": [
+       29.5,
+       62
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 68,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/byzantines/archer_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/byzantines/archer_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 85
      },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
+     "3": {
+      "anchor": [
+       29.5,
+       64
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 70,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/byzantines/archer_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/byzantines/archer_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 87
      }
     },
-    "h": 67,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/byzantines/archer_t0.png",
-    "t1": "res://assets/sprites/units/byzantines/archer_t1.png",
-    "vframes": 6,
-    "w": 72
-   },
-   "cataphract": {
     "anchor": [
-     81.10935878753662,
-     86.52189064025879
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 161,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/byzantines/cataphract_t0.png",
-    "t1": "res://assets/sprites/units/byzantines/cataphract_t1.png",
-    "vframes": 6,
-    "w": 112
-   },
-   "spearman": {
-    "anchor": [
-     52.49039173126221,
-     63.39233899116516
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 73,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/byzantines/spearman_t0.png",
-    "t1": "res://assets/sprites/units/byzantines/spearman_t1.png",
-    "vframes": 6,
-    "w": 78
-   },
-   "swordsman": {
-    "anchor": [
-     38.118629455566406,
-     62.06351399421692
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 70,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/byzantines/swordsman_t0.png",
-    "t1": "res://assets/sprites/units/byzantines/swordsman_t1.png",
-    "vframes": 6,
-    "w": 64
-   },
-   "villager": {
-    "anchor": [
-     36.21638298034668,
-     58.32925111055374
+     29.5,
+     60
     ],
     "anims": {
      "attack": {
@@ -559,2071 +997,650 @@
     "h": 66,
     "hframes": 8,
     "px_per_m": 32,
-    "t0": "res://assets/sprites/units/byzantines/villager_t0.png",
-    "t1": "res://assets/sprites/units/byzantines/villager_t1.png",
+    "t0": "res://assets/sprites_px/units/byzantines/archer_t0.png",
+    "t1": "res://assets/sprites_px/units/byzantines/archer_t1.png",
     "vframes": 6,
-    "w": 57
+    "view": "oblique",
+    "w": 83
+   },
+   "cataphract": {
+    "ages": {
+     "1": {
+      "anchor": [
+       53.5,
+       104
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 122,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/byzantines/cataphract_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/byzantines/cataphract_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 140
+     },
+     "3": {
+      "anchor": [
+       53.5,
+       104
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 122,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/byzantines/cataphract_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/byzantines/cataphract_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 140
+     }
+    },
+    "anchor": [
+     53.5,
+     104
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 122,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/byzantines/cataphract_t0.png",
+    "t1": "res://assets/sprites_px/units/byzantines/cataphract_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 140
+   },
+   "spearman": {
+    "ages": {
+     "1": {
+      "anchor": [
+       55.5,
+       82
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 91,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/byzantines/spearman_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/byzantines/spearman_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 120
+     },
+     "3": {
+      "anchor": [
+       55.5,
+       82
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 91,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/byzantines/spearman_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/byzantines/spearman_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 120
+     }
+    },
+    "anchor": [
+     55.5,
+     82
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 91,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/byzantines/spearman_t0.png",
+    "t1": "res://assets/sprites_px/units/byzantines/spearman_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 120
+   },
+   "swordsman": {
+    "ages": {
+     "1": {
+      "anchor": [
+       45.5,
+       73
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 81,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/byzantines/swordsman_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/byzantines/swordsman_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 102
+     },
+     "3": {
+      "anchor": [
+       45.5,
+       73
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 81,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/byzantines/swordsman_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/byzantines/swordsman_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 103
+     }
+    },
+    "anchor": [
+     45.5,
+     73
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 81,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/byzantines/swordsman_t0.png",
+    "t1": "res://assets/sprites_px/units/byzantines/swordsman_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 105
+   },
+   "villager": {
+    "anchor": [
+     34.5,
+     64
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 69,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/byzantines/villager_t0.png",
+    "t1": "res://assets/sprites_px/units/byzantines/villager_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 86
    }
   },
   "chinese": {
    "archer": {
-    "anchor": [
-     42.94604301452637,
-     64.32925111055374
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
+    "ages": {
+     "1": {
+      "anchor": [
+       29.5,
+       59
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 65,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/chinese/archer_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/chinese/archer_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 78
      },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
+     "3": {
+      "anchor": [
+       29.5,
+       67
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 73,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/chinese/archer_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/chinese/archer_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 90
      }
     },
-    "h": 72,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/chinese/archer_t0.png",
-    "t1": "res://assets/sprites/units/chinese/archer_t1.png",
-    "vframes": 6,
-    "w": 72
-   },
-   "cavalry": {
     "anchor": [
-     83.69569110870361,
-     77.68706119060516
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 116,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/chinese/cavalry_t0.png",
-    "t1": "res://assets/sprites/units/chinese/cavalry_t1.png",
-    "vframes": 6,
-    "w": 114
-   },
-   "chu_ko_nu": {
-    "anchor": [
-     40.03790855407715,
-     64.32925111055374
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 72,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/chinese/chu_ko_nu_t0.png",
-    "t1": "res://assets/sprites/units/chinese/chu_ko_nu_t1.png",
-    "vframes": 6,
-    "w": 61
-   },
-   "spearman": {
-    "anchor": [
-     52.49039173126221,
-     64.39233899116516
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 74,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/chinese/spearman_t0.png",
-    "t1": "res://assets/sprites/units/chinese/spearman_t1.png",
-    "vframes": 6,
-    "w": 82
-   },
-   "swordsman": {
-    "anchor": [
-     40.03790855407715,
-     64.32925111055374
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 72,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/chinese/swordsman_t0.png",
-    "t1": "res://assets/sprites/units/chinese/swordsman_t1.png",
-    "vframes": 6,
-    "w": 63
-   },
-   "villager": {
-    "anchor": [
-     37.87585735321045,
-     58.32925111055374
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 66,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/chinese/villager_t0.png",
-    "t1": "res://assets/sprites/units/chinese/villager_t1.png",
-    "vframes": 6,
-    "w": 62
-   }
-  },
-  "franks": {
-   "archer": {
-    "anchor": [
-     42.94604301452637,
-     59.32925111055374
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 67,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/franks/archer_t0.png",
-    "t1": "res://assets/sprites/units/franks/archer_t1.png",
-    "vframes": 6,
-    "w": 72
-   },
-   "knight": {
-    "anchor": [
-     83.6120252609253,
-     86.52189064025879
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 161,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/franks/knight_t0.png",
-    "t1": "res://assets/sprites/units/franks/knight_t1.png",
-    "vframes": 6,
-    "w": 114
-   },
-   "spearman": {
-    "anchor": [
-     52.49039173126221,
-     63.39233899116516
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 73,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/franks/spearman_t0.png",
-    "t1": "res://assets/sprites/units/franks/spearman_t1.png",
-    "vframes": 6,
-    "w": 78
-   },
-   "swordsman": {
-    "anchor": [
-     35.52828550338745,
-     62.06351399421692
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 70,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/franks/swordsman_t0.png",
-    "t1": "res://assets/sprites/units/franks/swordsman_t1.png",
-    "vframes": 6,
-    "w": 61
-   },
-   "villager": {
-    "anchor": [
-     33.50827693939209,
-     58.32925111055374
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 66,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/franks/villager_t0.png",
-    "t1": "res://assets/sprites/units/franks/villager_t1.png",
-    "vframes": 6,
-    "w": 54
-   }
-  },
-  "japanese": {
-   "archer": {
-    "anchor": [
-     45.126020431518555,
-     64.32925111055374
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 72,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/japanese/archer_t0.png",
-    "t1": "res://assets/sprites/units/japanese/archer_t1.png",
-    "vframes": 6,
-    "w": 75
-   },
-   "cavalry": {
-    "anchor": [
-     84.28568458557129,
-     80.68706119060516
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 119,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/japanese/cavalry_t0.png",
-    "t1": "res://assets/sprites/units/japanese/cavalry_t1.png",
-    "vframes": 6,
-    "w": 115
-   },
-   "samurai": {
-    "anchor": [
-     44.49114513397217,
-     68.19492626190186
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 78,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/japanese/samurai_t0.png",
-    "t1": "res://assets/sprites/units/japanese/samurai_t1.png",
-    "vframes": 6,
-    "w": 72
-   },
-   "spearman": {
-    "anchor": [
-     53.78957653045654,
-     65.8996901512146
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 76,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/japanese/spearman_t0.png",
-    "t1": "res://assets/sprites/units/japanese/spearman_t1.png",
-    "vframes": 6,
-    "w": 78
-   },
-   "swordsman": {
-    "anchor": [
-     34.20356369018555,
-     64.19492626190186
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 74,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/japanese/swordsman_t0.png",
-    "t1": "res://assets/sprites/units/japanese/swordsman_t1.png",
-    "vframes": 6,
-    "w": 59
-   },
-   "villager": {
-    "anchor": [
-     37.87585735321045,
-     58.32925111055374
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 66,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/japanese/villager_t0.png",
-    "t1": "res://assets/sprites/units/japanese/villager_t1.png",
-    "vframes": 6,
-    "w": 62
-   }
-  },
-  "mongols": {
-   "archer": {
-    "anchor": [
-     42.94604301452637,
-     64.32925111055374
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 72,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/mongols/archer_t0.png",
-    "t1": "res://assets/sprites/units/mongols/archer_t1.png",
-    "vframes": 6,
-    "w": 72
-   },
-   "horse_archer": {
-    "anchor": [
-     83.95811939239502,
-     77.50886237621307
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 116,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/mongols/horse_archer_t0.png",
-    "t1": "res://assets/sprites/units/mongols/horse_archer_t1.png",
-    "vframes": 6,
-    "w": 114
-   },
-   "spearman": {
-    "anchor": [
-     52.49039173126221,
-     64.39233899116516
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 74,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/mongols/spearman_t0.png",
-    "t1": "res://assets/sprites/units/mongols/spearman_t1.png",
-    "vframes": 6,
-    "w": 82
-   },
-   "swordsman": {
-    "anchor": [
-     39.08062553405762,
-     64.32925111055374
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 72,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/mongols/swordsman_t0.png",
-    "t1": "res://assets/sprites/units/mongols/swordsman_t1.png",
-    "vframes": 6,
-    "w": 68
-   },
-   "villager": {
-    "anchor": [
-     34.67543315887451,
-     58.32925111055374
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 66,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/mongols/villager_t0.png",
-    "t1": "res://assets/sprites/units/mongols/villager_t1.png",
-    "vframes": 6,
-    "w": 56
-   }
-  },
-  "ottomans": {
-   "archer": {
-    "anchor": [
-     42.94604301452637,
-     59.32925111055374
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 67,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/ottomans/archer_t0.png",
-    "t1": "res://assets/sprites/units/ottomans/archer_t1.png",
-    "vframes": 6,
-    "w": 72
-   },
-   "cavalry": {
-    "anchor": [
-     76.61575269699097,
-     71.68706119060516
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 110,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/ottomans/cavalry_t0.png",
-    "t1": "res://assets/sprites/units/ottomans/cavalry_t1.png",
-    "vframes": 6,
-    "w": 107
-   },
-   "janissary": {
-    "anchor": [
-     43.22590637207031,
-     65.82094097137451
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 75,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/ottomans/janissary_t0.png",
-    "t1": "res://assets/sprites/units/ottomans/janissary_t1.png",
-    "vframes": 6,
-    "w": 64
-   },
-   "spearman": {
-    "anchor": [
-     52.49039173126221,
-     63.39233899116516
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 73,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/ottomans/spearman_t0.png",
-    "t1": "res://assets/sprites/units/ottomans/spearman_t1.png",
-    "vframes": 6,
-    "w": 82
-   },
-   "swordsman": {
-    "anchor": [
-     36.21638298034668,
-     62.32925111055374
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 70,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/ottomans/swordsman_t0.png",
-    "t1": "res://assets/sprites/units/ottomans/swordsman_t1.png",
-    "vframes": 6,
-    "w": 65
-   },
-   "villager": {
-    "anchor": [
-     36.21638298034668,
-     58.32925111055374
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 66,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/ottomans/villager_t0.png",
-    "t1": "res://assets/sprites/units/ottomans/villager_t1.png",
-    "vframes": 6,
-    "w": 57
-   }
-  },
-  "saracens": {
-   "archer": {
-    "anchor": [
-     42.94604301452637,
-     59.32925111055374
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 67,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/saracens/archer_t0.png",
-    "t1": "res://assets/sprites/units/saracens/archer_t1.png",
-    "vframes": 6,
-    "w": 72
-   },
-   "mamluk": {
-    "anchor": [
-     86.30933332443237,
-     81.79862540960312
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 123,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/saracens/mamluk_t0.png",
-    "t1": "res://assets/sprites/units/saracens/mamluk_t1.png",
-    "vframes": 6,
-    "w": 121
-   },
-   "spearman": {
-    "anchor": [
-     52.49039173126221,
-     63.39233899116516
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 73,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/saracens/spearman_t0.png",
-    "t1": "res://assets/sprites/units/saracens/spearman_t1.png",
-    "vframes": 6,
-    "w": 82
-   },
-   "swordsman": {
-    "anchor": [
-     36.21638298034668,
-     62.32925111055374
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 70,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/saracens/swordsman_t0.png",
-    "t1": "res://assets/sprites/units/saracens/swordsman_t1.png",
-    "vframes": 6,
-    "w": 65
-   },
-   "villager": {
-    "anchor": [
-     36.21638298034668,
-     58.32925111055374
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 66,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/saracens/villager_t0.png",
-    "t1": "res://assets/sprites/units/saracens/villager_t1.png",
-    "vframes": 6,
-    "w": 57
-   }
-  },
-  "teutons": {
-   "archer": {
-    "anchor": [
-     42.94604301452637,
-     59.32925111055374
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 67,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/teutons/archer_t0.png",
-    "t1": "res://assets/sprites/units/teutons/archer_t1.png",
-    "vframes": 6,
-    "w": 72
-   },
-   "cavalry": {
-    "anchor": [
-     78.82947874069214,
-     71.68706119060516
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 110,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/teutons/cavalry_t0.png",
-    "t1": "res://assets/sprites/units/teutons/cavalry_t1.png",
-    "vframes": 6,
-    "w": 109
-   },
-   "spearman": {
-    "anchor": [
-     52.49039173126221,
-     63.39233899116516
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 73,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/teutons/spearman_t0.png",
-    "t1": "res://assets/sprites/units/teutons/spearman_t1.png",
-    "vframes": 6,
-    "w": 78
-   },
-   "swordsman": {
-    "anchor": [
-     35.52828550338745,
-     62.06351399421692
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 70,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/teutons/swordsman_t0.png",
-    "t1": "res://assets/sprites/units/teutons/swordsman_t1.png",
-    "vframes": 6,
-    "w": 61
-   },
-   "teutonic_knight": {
-    "anchor": [
-     38.31454849243164,
-     62.06351399421692
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 70,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/teutons/teutonic_knight_t0.png",
-    "t1": "res://assets/sprites/units/teutons/teutonic_knight_t1.png",
-    "vframes": 6,
-    "w": 64
-   },
-   "villager": {
-    "anchor": [
-     33.50827693939209,
-     58.32925111055374
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 66,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/teutons/villager_t0.png",
-    "t1": "res://assets/sprites/units/teutons/villager_t1.png",
-    "vframes": 6,
-    "w": 54
-   }
-  },
-  "vikings": {
-   "archer": {
-    "anchor": [
-     42.94604301452637,
-     59.32925111055374
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
-     },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
-     }
-    },
-    "h": 67,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/vikings/archer_t0.png",
-    "t1": "res://assets/sprites/units/vikings/archer_t1.png",
-    "vframes": 6,
-    "w": 72
-   },
-   "berserker": {
-    "anchor": [
-     40.51808547973633,
-     60.32925111055374
+     29.5,
+     62
     ],
     "anims": {
      "attack": {
@@ -2666,15 +1683,122 @@
     "h": 68,
     "hframes": 8,
     "px_per_m": 32,
-    "t0": "res://assets/sprites/units/vikings/berserker_t0.png",
-    "t1": "res://assets/sprites/units/vikings/berserker_t1.png",
+    "t0": "res://assets/sprites_px/units/chinese/archer_t0.png",
+    "t1": "res://assets/sprites_px/units/chinese/archer_t1.png",
     "vframes": 6,
-    "w": 68
+    "view": "oblique",
+    "w": 85
    },
    "cavalry": {
+    "ages": {
+     "1": {
+      "anchor": [
+       53.5,
+       104
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 122,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/chinese/cavalry_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/chinese/cavalry_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 140
+     },
+     "3": {
+      "anchor": [
+       53.5,
+       104
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 122,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/chinese/cavalry_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/chinese/cavalry_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 140
+     }
+    },
     "anchor": [
-     75.3110899925232,
-     71.68706119060516
+     53.5,
+     104
     ],
     "anims": {
      "attack": {
@@ -2714,18 +1838,493 @@
       "row": 1
      }
     },
-    "h": 110,
+    "h": 122,
     "hframes": 8,
     "px_per_m": 32,
-    "t0": "res://assets/sprites/units/vikings/cavalry_t0.png",
-    "t1": "res://assets/sprites/units/vikings/cavalry_t1.png",
+    "t0": "res://assets/sprites_px/units/chinese/cavalry_t0.png",
+    "t1": "res://assets/sprites_px/units/chinese/cavalry_t1.png",
     "vframes": 6,
-    "w": 106
+    "view": "oblique",
+    "w": 140
+   },
+   "chu_ko_nu": {
+    "ages": {
+     "1": {
+      "anchor": [
+       36.5,
+       57
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 63,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/chinese/chu_ko_nu_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/chinese/chu_ko_nu_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 85
+     },
+     "3": {
+      "anchor": [
+       36.5,
+       67
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 73,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/chinese/chu_ko_nu_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/chinese/chu_ko_nu_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 97
+     }
+    },
+    "anchor": [
+     36.5,
+     58
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 64,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/chinese/chu_ko_nu_t0.png",
+    "t1": "res://assets/sprites_px/units/chinese/chu_ko_nu_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 88
    },
    "spearman": {
+    "ages": {
+     "1": {
+      "anchor": [
+       55.5,
+       82
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 87,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/chinese/spearman_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/chinese/spearman_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 120
+     },
+     "3": {
+      "anchor": [
+       55.5,
+       82
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 88,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/chinese/spearman_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/chinese/spearman_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 120
+     }
+    },
     "anchor": [
-     52.49039173126221,
-     63.39233899116516
+     55.5,
+     82
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 87,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/chinese/spearman_t0.png",
+    "t1": "res://assets/sprites_px/units/chinese/spearman_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 120
+   },
+   "swordsman": {
+    "ages": {
+     "1": {
+      "anchor": [
+       41.5,
+       70
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 78,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/chinese/swordsman_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/chinese/swordsman_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 92
+     },
+     "3": {
+      "anchor": [
+       41.5,
+       70
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 78,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/chinese/swordsman_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/chinese/swordsman_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 102
+     }
+    },
+    "anchor": [
+     41.5,
+     70
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 78,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/chinese/swordsman_t0.png",
+    "t1": "res://assets/sprites_px/units/chinese/swordsman_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 102
+   },
+   "villager": {
+    "anchor": [
+     34.5,
+     64
     ],
     "anims": {
      "attack": {
@@ -2768,66 +2367,124 @@
     "h": 73,
     "hframes": 8,
     "px_per_m": 32,
-    "t0": "res://assets/sprites/units/vikings/spearman_t0.png",
-    "t1": "res://assets/sprites/units/vikings/spearman_t1.png",
+    "t0": "res://assets/sprites_px/units/chinese/villager_t0.png",
+    "t1": "res://assets/sprites_px/units/chinese/villager_t1.png",
     "vframes": 6,
-    "w": 82
-   },
-   "swordsman": {
-    "anchor": [
-     36.617679595947266,
-     62.06351399421692
-    ],
-    "anims": {
-     "attack": {
-      "fps": 8,
-      "frames": 6,
-      "loop": false,
-      "row": 2
+    "view": "oblique",
+    "w": 87
+   }
+  },
+  "franks": {
+   "archer": {
+    "ages": {
+     "1": {
+      "anchor": [
+       36.5,
+       58
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 68,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/franks/archer_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/franks/archer_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 88
      },
-     "build": {
-      "fps": 8,
-      "frames": 4,
-      "loop": true,
-      "row": 4
-     },
-     "death": {
-      "fps": 7,
-      "frames": 6,
-      "loop": false,
-      "row": 5
-     },
-     "gather": {
-      "fps": 7,
-      "frames": 6,
-      "loop": true,
-      "row": 3
-     },
-     "idle": {
-      "fps": 4,
-      "frames": 4,
-      "loop": true,
-      "row": 0
-     },
-     "walk": {
-      "fps": 10,
-      "frames": 8,
-      "loop": true,
-      "row": 1
+     "3": {
+      "anchor": [
+       36.5,
+       59
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 69,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/franks/archer_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/franks/archer_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 89
      }
     },
-    "h": 70,
-    "hframes": 8,
-    "px_per_m": 32,
-    "t0": "res://assets/sprites/units/vikings/swordsman_t0.png",
-    "t1": "res://assets/sprites/units/vikings/swordsman_t1.png",
-    "vframes": 6,
-    "w": 66
-   },
-   "villager": {
     "anchor": [
-     34.20356369018555,
-     58.32925111055374
+     36.5,
+     56
     ],
     "anims": {
      "attack": {
@@ -2870,10 +2527,5285 @@
     "h": 66,
     "hframes": 8,
     "px_per_m": 32,
-    "t0": "res://assets/sprites/units/vikings/villager_t0.png",
-    "t1": "res://assets/sprites/units/vikings/villager_t1.png",
+    "t0": "res://assets/sprites_px/units/franks/archer_t0.png",
+    "t1": "res://assets/sprites_px/units/franks/archer_t1.png",
     "vframes": 6,
-    "w": 55
+    "view": "oblique",
+    "w": 86
+   },
+   "knight": {
+    "ages": {
+     "1": {
+      "anchor": [
+       53.5,
+       104
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 122,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/franks/knight_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/franks/knight_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 140
+     },
+     "3": {
+      "anchor": [
+       53.5,
+       104
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 122,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/franks/knight_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/franks/knight_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 140
+     }
+    },
+    "anchor": [
+     53.5,
+     104
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 122,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/franks/knight_t0.png",
+    "t1": "res://assets/sprites_px/units/franks/knight_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 140
+   },
+   "spearman": {
+    "ages": {
+     "1": {
+      "anchor": [
+       55.5,
+       82
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 90,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/franks/spearman_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/franks/spearman_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 120
+     },
+     "3": {
+      "anchor": [
+       55.5,
+       82
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 90,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/franks/spearman_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/franks/spearman_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 120
+     }
+    },
+    "anchor": [
+     55.5,
+     82
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 90,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/franks/spearman_t0.png",
+    "t1": "res://assets/sprites_px/units/franks/spearman_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 120
+   },
+   "swordsman": {
+    "ages": {
+     "1": {
+      "anchor": [
+       45.5,
+       73
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 81,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/franks/swordsman_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/franks/swordsman_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 102
+     },
+     "3": {
+      "anchor": [
+       45.5,
+       73
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 81,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/franks/swordsman_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/franks/swordsman_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 102
+     }
+    },
+    "anchor": [
+     45.5,
+     73
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 81,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/franks/swordsman_t0.png",
+    "t1": "res://assets/sprites_px/units/franks/swordsman_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 102
+   },
+   "villager": {
+    "anchor": [
+     34.5,
+     64
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 69,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/franks/villager_t0.png",
+    "t1": "res://assets/sprites_px/units/franks/villager_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 86
+   }
+  },
+  "japanese": {
+   "archer": {
+    "ages": {
+     "1": {
+      "anchor": [
+       29.5,
+       73
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 82,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/japanese/archer_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/japanese/archer_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 92
+     },
+     "3": {
+      "anchor": [
+       29.5,
+       73
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 86,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/japanese/archer_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/japanese/archer_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 97
+     }
+    },
+    "anchor": [
+     29.5,
+     73
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 86,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/japanese/archer_t0.png",
+    "t1": "res://assets/sprites_px/units/japanese/archer_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 97
+   },
+   "cavalry": {
+    "ages": {
+     "1": {
+      "anchor": [
+       53.5,
+       101
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 119,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/japanese/cavalry_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/japanese/cavalry_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 137
+     },
+     "3": {
+      "anchor": [
+       53.5,
+       101
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 119,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/japanese/cavalry_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/japanese/cavalry_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 139
+     }
+    },
+    "anchor": [
+     53.5,
+     101
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 119,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/japanese/cavalry_t0.png",
+    "t1": "res://assets/sprites_px/units/japanese/cavalry_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 137
+   },
+   "samurai": {
+    "ages": {
+     "1": {
+      "anchor": [
+       45.5,
+       72
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 81,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/japanese/samurai_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/japanese/samurai_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 100
+     },
+     "3": {
+      "anchor": [
+       45.5,
+       72
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 85,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/japanese/samurai_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/japanese/samurai_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 113
+     }
+    },
+    "anchor": [
+     45.5,
+     72
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 79,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/japanese/samurai_t0.png",
+    "t1": "res://assets/sprites_px/units/japanese/samurai_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 103
+   },
+   "spearman": {
+    "ages": {
+     "1": {
+      "anchor": [
+       55.5,
+       82
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 91,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/japanese/spearman_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/japanese/spearman_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 120
+     },
+     "3": {
+      "anchor": [
+       55.5,
+       82
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 95,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/japanese/spearman_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/japanese/spearman_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 123
+     }
+    },
+    "anchor": [
+     55.5,
+     82
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 95,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/japanese/spearman_t0.png",
+    "t1": "res://assets/sprites_px/units/japanese/spearman_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 123
+   },
+   "swordsman": {
+    "ages": {
+     "1": {
+      "anchor": [
+       45.5,
+       72
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 81,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/japanese/swordsman_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/japanese/swordsman_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 100
+     },
+     "3": {
+      "anchor": [
+       45.5,
+       72
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 85,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/japanese/swordsman_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/japanese/swordsman_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 113
+     }
+    },
+    "anchor": [
+     45.5,
+     72
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 77,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/japanese/swordsman_t0.png",
+    "t1": "res://assets/sprites_px/units/japanese/swordsman_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 100
+   },
+   "villager": {
+    "anchor": [
+     34.5,
+     64
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 73,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/japanese/villager_t0.png",
+    "t1": "res://assets/sprites_px/units/japanese/villager_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 87
+   }
+  },
+  "mongols": {
+   "archer": {
+    "ages": {
+     "1": {
+      "anchor": [
+       29.5,
+       65
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 72,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/mongols/archer_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/mongols/archer_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 88
+     },
+     "3": {
+      "anchor": [
+       29.5,
+       72
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 79,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/mongols/archer_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/mongols/archer_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 95
+     }
+    },
+    "anchor": [
+     29.5,
+     65
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 72,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/mongols/archer_t0.png",
+    "t1": "res://assets/sprites_px/units/mongols/archer_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 88
+   },
+   "horse_archer": {
+    "ages": {
+     "1": {
+      "anchor": [
+       31.5,
+       79
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 97,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/mongols/horse_archer_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/mongols/horse_archer_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 104
+     },
+     "3": {
+      "anchor": [
+       31.5,
+       91
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 109,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/mongols/horse_archer_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/mongols/horse_archer_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 116
+     }
+    },
+    "anchor": [
+     31.5,
+     91
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 109,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/mongols/horse_archer_t0.png",
+    "t1": "res://assets/sprites_px/units/mongols/horse_archer_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 116
+   },
+   "spearman": {
+    "ages": {
+     "1": {
+      "anchor": [
+       55.5,
+       82
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 87,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/mongols/spearman_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/mongols/spearman_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 120
+     },
+     "3": {
+      "anchor": [
+       55.5,
+       82
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 87,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/mongols/spearman_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/mongols/spearman_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 121
+     }
+    },
+    "anchor": [
+     55.5,
+     82
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 87,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/mongols/spearman_t0.png",
+    "t1": "res://assets/sprites_px/units/mongols/spearman_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 121
+   },
+   "swordsman": {
+    "ages": {
+     "1": {
+      "anchor": [
+       41.5,
+       70
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 77,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/mongols/swordsman_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/mongols/swordsman_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 95
+     },
+     "3": {
+      "anchor": [
+       41.5,
+       72
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 79,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/mongols/swordsman_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/mongols/swordsman_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 107
+     }
+    },
+    "anchor": [
+     41.5,
+     72
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 79,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/mongols/swordsman_t0.png",
+    "t1": "res://assets/sprites_px/units/mongols/swordsman_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 107
+   },
+   "villager": {
+    "anchor": [
+     34.5,
+     65
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 70,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/mongols/villager_t0.png",
+    "t1": "res://assets/sprites_px/units/mongols/villager_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 93
+   }
+  },
+  "ottomans": {
+   "archer": {
+    "ages": {
+     "1": {
+      "anchor": [
+       29.5,
+       59
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 66,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/ottomans/archer_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/ottomans/archer_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 81
+     },
+     "3": {
+      "anchor": [
+       29.5,
+       65
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 72,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/ottomans/archer_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/ottomans/archer_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 88
+     }
+    },
+    "anchor": [
+     29.5,
+     60
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 67,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/ottomans/archer_t0.png",
+    "t1": "res://assets/sprites_px/units/ottomans/archer_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 83
+   },
+   "cavalry": {
+    "ages": {
+     "1": {
+      "anchor": [
+       53.5,
+       104
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 122,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/ottomans/cavalry_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/ottomans/cavalry_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 140
+     },
+     "3": {
+      "anchor": [
+       53.5,
+       104
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 122,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/ottomans/cavalry_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/ottomans/cavalry_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 140
+     }
+    },
+    "anchor": [
+     53.5,
+     104
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 122,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/ottomans/cavalry_t0.png",
+    "t1": "res://assets/sprites_px/units/ottomans/cavalry_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 140
+   },
+   "janissary": {
+    "ages": {
+     "1": {
+      "anchor": [
+       55.5,
+       71
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 76,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/ottomans/janissary_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/ottomans/janissary_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 118
+     },
+     "3": {
+      "anchor": [
+       55.5,
+       76
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 81,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/ottomans/janissary_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/ottomans/janissary_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 125
+     }
+    },
+    "anchor": [
+     55.5,
+     71
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 76,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/ottomans/janissary_t0.png",
+    "t1": "res://assets/sprites_px/units/ottomans/janissary_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 118
+   },
+   "spearman": {
+    "ages": {
+     "1": {
+      "anchor": [
+       55.5,
+       82
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 89,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/ottomans/spearman_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/ottomans/spearman_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 120
+     },
+     "3": {
+      "anchor": [
+       55.5,
+       82
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 89,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/ottomans/spearman_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/ottomans/spearman_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 120
+     }
+    },
+    "anchor": [
+     55.5,
+     82
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 89,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/ottomans/spearman_t0.png",
+    "t1": "res://assets/sprites_px/units/ottomans/spearman_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 120
+   },
+   "swordsman": {
+    "ages": {
+     "1": {
+      "anchor": [
+       41.5,
+       70
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 79,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/ottomans/swordsman_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/ottomans/swordsman_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 93
+     },
+     "3": {
+      "anchor": [
+       41.5,
+       70
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 79,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/ottomans/swordsman_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/ottomans/swordsman_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 100
+     }
+    },
+    "anchor": [
+     41.5,
+     70
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 79,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/ottomans/swordsman_t0.png",
+    "t1": "res://assets/sprites_px/units/ottomans/swordsman_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 100
+   },
+   "villager": {
+    "anchor": [
+     34.5,
+     64
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 69,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/ottomans/villager_t0.png",
+    "t1": "res://assets/sprites_px/units/ottomans/villager_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 88
+   }
+  },
+  "saracens": {
+   "archer": {
+    "ages": {
+     "1": {
+      "anchor": [
+       29.5,
+       60
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 67,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/saracens/archer_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/saracens/archer_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 83
+     },
+     "3": {
+      "anchor": [
+       29.5,
+       65
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 72,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/saracens/archer_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/saracens/archer_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 88
+     }
+    },
+    "anchor": [
+     29.5,
+     60
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 67,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/saracens/archer_t0.png",
+    "t1": "res://assets/sprites_px/units/saracens/archer_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 83
+   },
+   "mamluk": {
+    "ages": {
+     "1": {
+      "anchor": [
+       53.5,
+       119
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 137,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/saracens/mamluk_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/saracens/mamluk_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 141
+     },
+     "3": {
+      "anchor": [
+       53.5,
+       119
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 137,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/saracens/mamluk_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/saracens/mamluk_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 141
+     }
+    },
+    "anchor": [
+     53.5,
+     119
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 137,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/saracens/mamluk_t0.png",
+    "t1": "res://assets/sprites_px/units/saracens/mamluk_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 141
+   },
+   "spearman": {
+    "ages": {
+     "1": {
+      "anchor": [
+       55.5,
+       82
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 91,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/saracens/spearman_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/saracens/spearman_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 120
+     },
+     "3": {
+      "anchor": [
+       55.5,
+       82
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 91,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/saracens/spearman_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/saracens/spearman_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 120
+     }
+    },
+    "anchor": [
+     55.5,
+     82
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 91,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/saracens/spearman_t0.png",
+    "t1": "res://assets/sprites_px/units/saracens/spearman_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 120
+   },
+   "swordsman": {
+    "ages": {
+     "1": {
+      "anchor": [
+       41.5,
+       70
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 77,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/saracens/swordsman_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/saracens/swordsman_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 95
+     },
+     "3": {
+      "anchor": [
+       41.5,
+       70
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 77,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/saracens/swordsman_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/saracens/swordsman_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 100
+     }
+    },
+    "anchor": [
+     41.5,
+     70
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 77,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/saracens/swordsman_t0.png",
+    "t1": "res://assets/sprites_px/units/saracens/swordsman_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 100
+   },
+   "villager": {
+    "anchor": [
+     34.5,
+     64
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 69,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/saracens/villager_t0.png",
+    "t1": "res://assets/sprites_px/units/saracens/villager_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 88
+   }
+  },
+  "teutons": {
+   "archer": {
+    "ages": {
+     "1": {
+      "anchor": [
+       36.5,
+       58
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 64,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/teutons/archer_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/teutons/archer_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 88
+     },
+     "3": {
+      "anchor": [
+       36.5,
+       59
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 65,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/teutons/archer_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/teutons/archer_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 89
+     }
+    },
+    "anchor": [
+     36.5,
+     58
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 64,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/teutons/archer_t0.png",
+    "t1": "res://assets/sprites_px/units/teutons/archer_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 88
+   },
+   "cavalry": {
+    "ages": {
+     "1": {
+      "anchor": [
+       53.5,
+       104
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 122,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/teutons/cavalry_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/teutons/cavalry_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 140
+     },
+     "3": {
+      "anchor": [
+       53.5,
+       104
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 122,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/teutons/cavalry_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/teutons/cavalry_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 140
+     }
+    },
+    "anchor": [
+     53.5,
+     104
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 122,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/teutons/cavalry_t0.png",
+    "t1": "res://assets/sprites_px/units/teutons/cavalry_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 140
+   },
+   "spearman": {
+    "ages": {
+     "1": {
+      "anchor": [
+       55.5,
+       81
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 85,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/teutons/spearman_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/teutons/spearman_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 119
+     },
+     "3": {
+      "anchor": [
+       55.5,
+       81
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 87,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/teutons/spearman_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/teutons/spearman_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 119
+     }
+    },
+    "anchor": [
+     55.5,
+     81
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 86,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/teutons/spearman_t0.png",
+    "t1": "res://assets/sprites_px/units/teutons/spearman_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 119
+   },
+   "swordsman": {
+    "ages": {
+     "1": {
+      "anchor": [
+       42.5,
+       70
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 78,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/teutons/swordsman_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/teutons/swordsman_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 95
+     },
+     "3": {
+      "anchor": [
+       42.5,
+       70
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 78,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/teutons/swordsman_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/teutons/swordsman_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 98
+     }
+    },
+    "anchor": [
+     42.5,
+     70
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 78,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/teutons/swordsman_t0.png",
+    "t1": "res://assets/sprites_px/units/teutons/swordsman_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 95
+   },
+   "teutonic_knight": {
+    "ages": {
+     "1": {
+      "anchor": [
+       49.5,
+       77
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 85,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/teutons/teutonic_knight_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/teutons/teutonic_knight_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 109
+     },
+     "3": {
+      "anchor": [
+       49.5,
+       77
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 85,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/teutons/teutonic_knight_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/teutons/teutonic_knight_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 109
+     }
+    },
+    "anchor": [
+     49.5,
+     77
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 85,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/teutons/teutonic_knight_t0.png",
+    "t1": "res://assets/sprites_px/units/teutons/teutonic_knight_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 109
+   },
+   "villager": {
+    "anchor": [
+     34.5,
+     64
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 69,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/teutons/villager_t0.png",
+    "t1": "res://assets/sprites_px/units/teutons/villager_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 86
+   }
+  },
+  "vikings": {
+   "archer": {
+    "ages": {
+     "1": {
+      "anchor": [
+       29.5,
+       67
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 73,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/vikings/archer_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/vikings/archer_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 86
+     },
+     "3": {
+      "anchor": [
+       29.5,
+       67
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 73,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/vikings/archer_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/vikings/archer_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 86
+     }
+    },
+    "anchor": [
+     29.5,
+     67
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 73,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/vikings/archer_t0.png",
+    "t1": "res://assets/sprites_px/units/vikings/archer_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 86
+   },
+   "berserker": {
+    "ages": {
+     "1": {
+      "anchor": [
+       45.5,
+       76
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 80,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/vikings/berserker_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/vikings/berserker_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 107
+     },
+     "3": {
+      "anchor": [
+       45.5,
+       76
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 80,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/vikings/berserker_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/vikings/berserker_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 107
+     }
+    },
+    "anchor": [
+     45.5,
+     76
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 80,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/vikings/berserker_t0.png",
+    "t1": "res://assets/sprites_px/units/vikings/berserker_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 107
+   },
+   "cavalry": {
+    "ages": {
+     "1": {
+      "anchor": [
+       53.5,
+       101
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 119,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/vikings/cavalry_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/vikings/cavalry_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 137
+     },
+     "3": {
+      "anchor": [
+       53.5,
+       101
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 119,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/vikings/cavalry_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/vikings/cavalry_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 137
+     }
+    },
+    "anchor": [
+     53.5,
+     101
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 119,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/vikings/cavalry_t0.png",
+    "t1": "res://assets/sprites_px/units/vikings/cavalry_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 137
+   },
+   "spearman": {
+    "ages": {
+     "1": {
+      "anchor": [
+       55.5,
+       82
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 91,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/vikings/spearman_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/vikings/spearman_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 120
+     },
+     "3": {
+      "anchor": [
+       55.5,
+       82
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 91,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/vikings/spearman_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/vikings/spearman_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 120
+     }
+    },
+    "anchor": [
+     55.5,
+     82
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 91,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/vikings/spearman_t0.png",
+    "t1": "res://assets/sprites_px/units/vikings/spearman_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 120
+   },
+   "swordsman": {
+    "ages": {
+     "1": {
+      "anchor": [
+       45.5,
+       73
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 82,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/vikings/swordsman_a1_t0.png",
+      "t1": "res://assets/sprites_px/units/vikings/swordsman_a1_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 102
+     },
+     "3": {
+      "anchor": [
+       45.5,
+       73
+      ],
+      "anims": {
+       "attack": {
+        "fps": 8,
+        "frames": 6,
+        "loop": false,
+        "row": 2
+       },
+       "build": {
+        "fps": 8,
+        "frames": 4,
+        "loop": true,
+        "row": 4
+       },
+       "death": {
+        "fps": 7,
+        "frames": 6,
+        "loop": false,
+        "row": 5
+       },
+       "gather": {
+        "fps": 7,
+        "frames": 6,
+        "loop": true,
+        "row": 3
+       },
+       "idle": {
+        "fps": 4,
+        "frames": 4,
+        "loop": true,
+        "row": 0
+       },
+       "walk": {
+        "fps": 10,
+        "frames": 8,
+        "loop": true,
+        "row": 1
+       }
+      },
+      "h": 82,
+      "hframes": 8,
+      "px_per_m": 32,
+      "t0": "res://assets/sprites_px/units/vikings/swordsman_a3_t0.png",
+      "t1": "res://assets/sprites_px/units/vikings/swordsman_a3_t1.png",
+      "vframes": 6,
+      "view": "oblique",
+      "w": 102
+     }
+    },
+    "anchor": [
+     45.5,
+     73
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 82,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/vikings/swordsman_t0.png",
+    "t1": "res://assets/sprites_px/units/vikings/swordsman_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 102
+   },
+   "villager": {
+    "anchor": [
+     34.5,
+     64
+    ],
+    "anims": {
+     "attack": {
+      "fps": 8,
+      "frames": 6,
+      "loop": false,
+      "row": 2
+     },
+     "build": {
+      "fps": 8,
+      "frames": 4,
+      "loop": true,
+      "row": 4
+     },
+     "death": {
+      "fps": 7,
+      "frames": 6,
+      "loop": false,
+      "row": 5
+     },
+     "gather": {
+      "fps": 7,
+      "frames": 6,
+      "loop": true,
+      "row": 3
+     },
+     "idle": {
+      "fps": 4,
+      "frames": 4,
+      "loop": true,
+      "row": 0
+     },
+     "walk": {
+      "fps": 10,
+      "frames": 8,
+      "loop": true,
+      "row": 1
+     }
+    },
+    "h": 69,
+    "hframes": 8,
+    "px_per_m": 32,
+    "t0": "res://assets/sprites_px/units/vikings/villager_t0.png",
+    "t1": "res://assets/sprites_px/units/vikings/villager_t1.png",
+    "vframes": 6,
+    "view": "oblique",
+    "w": 86
    }
   }
  },

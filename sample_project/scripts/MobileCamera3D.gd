@@ -21,10 +21,25 @@ func zoom_in(step: float = 3.5) -> void:
 func zoom_out(step: float = 3.5) -> void:
 	_set_target_height(target_height + step)
 
+## 3D style: perspective, 45 deg diorama angle. 2D sprite style: orthographic, straight down (top-down),
+## position.y stays the zoom value (minimap, pan speed and the capture tool read it).
+const TOP_DOWN_SIZE_PER_HEIGHT := 1.53       # same view coverage as the 75 deg perspective at that height
+var top_down: bool = false
+
 func _ready() -> void:
-	# Classic 2.5D / HD-2D Diorama angle (45 degrees)
-	rotation_degrees = Vector3(-45, 0, 0)
+	_apply_view_mode()
 	position.y = target_height
+
+func _apply_view_mode() -> void:
+	top_down = FactionArtManager.top_down()
+	if top_down:
+		projection = PROJECTION_ORTHOGONAL
+		rotation_degrees = Vector3(-90, 0, 0)
+		size = position.y * TOP_DOWN_SIZE_PER_HEIGHT if position.y > 0.1 else target_height * TOP_DOWN_SIZE_PER_HEIGHT
+	else:
+		projection = PROJECTION_PERSPECTIVE
+		# Classic 2.5D / HD-2D Diorama angle (45 degrees)
+		rotation_degrees = Vector3(-45, 0, 0)
 
 func setup_bounds(width: float, height: float) -> void:
 	map_bounds_min = Vector2(4, 4)
@@ -34,14 +49,14 @@ func setup_bounds(width: float, height: float) -> void:
 func pan_by_screen_delta(delta_pixels: Vector2) -> void:
 	var factor = (position.y / 800.0) * 1.6
 	position.x += delta_pixels.x * factor
-	position.z += delta_pixels.y * factor * 1.4
+	position.z += delta_pixels.y * factor * (1.0 if top_down else 1.4)
 	_clamp_camera()
 
 func pan_to_drag(drag_start_screen: Vector2, current_screen: Vector2, drag_start_cam: Vector3) -> void:
 	var delta_pixels = drag_start_screen - current_screen
 	var factor = (position.y / 800.0) * 1.6
 	position.x = drag_start_cam.x + delta_pixels.x * factor
-	position.z = drag_start_cam.z + delta_pixels.y * factor * 1.4
+	position.z = drag_start_cam.z + delta_pixels.y * factor * (1.0 if top_down else 1.4)
 	_clamp_camera()
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -79,16 +94,21 @@ func _unhandled_input(event: InputEvent) -> void:
 			zoom_out()
 
 func _process(delta: float) -> void:
+	if top_down != FactionArtManager.top_down():
+		_apply_view_mode()
+		_clamp_camera()
 	if abs(position.y - target_height) > 0.05:
 		position.y = lerp(position.y, target_height, delta * 10.0)
 		_clamp_camera()
+	if top_down:
+		size = position.y * TOP_DOWN_SIZE_PER_HEIGHT
 
 func _set_target_height(val: float) -> void:
 	target_height = clamp(val, min_height, max_height)
 
 func jump_to(target_pos: Vector3, smooth: bool = true) -> void:
-	# Camera is offset behind target for 45 deg tilt (tan 45 = 1.0)
-	var offset_z = position.y * 1.0
+	# Camera is offset behind target for 45 deg tilt (tan 45 = 1.0); straight above it in top-down
+	var offset_z = 0.0 if top_down else position.y * 1.0
 	var dest = Vector3(target_pos.x, position.y, target_pos.z + offset_z)
 
 	if smooth:
@@ -101,6 +121,11 @@ func jump_to(target_pos: Vector3, smooth: bool = true) -> void:
 	_clamp_camera()
 
 func _clamp_camera() -> void:
+	if top_down:
+		# orthographic, straight down: keep the view centre inside the map
+		position.x = clamp(position.x, map_bounds_min.x + 4.0, map_bounds_max.x - 4.0)
+		position.z = clamp(position.z, map_bounds_min.y + 4.0, max(map_bounds_min.y + 4.0, map_bounds_max.y - 4.0))
+		return
 	var offset_z = position.y * 1.0
 	var bottom_view_offset = position.y / tan(deg_to_rad(45.0 + fov * 0.5))
 	position.x = clamp(position.x, map_bounds_min.x + 4.0, map_bounds_max.x - 4.0)

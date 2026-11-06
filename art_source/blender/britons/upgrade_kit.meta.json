@@ -1,29 +1,29 @@
 {
-  "tris": 198,
-  "verts": 362,
+  "tris": 292,
+  "verts": 532,
   "materials": [
     "PE_StoneGrey",
     "PE_WoodDark",
     "PE_Thatch",
     "PE_Gold",
-    "PE_Banner_britons",
-    "TEAM_Trim"
+    "TEAM_Trim",
+    "PE_Banner_britons"
   ],
   "bounds_min": [
     -1.88,
-    -1.881,
+    -1.971,
     0.0
   ],
   "bounds_max": [
     1.88,
     1.859,
-    1.96
+    2.38
   ],
   "asset_id": "upgrade_kit",
   "civ": "britons",
   "kind": "upgrade_kits",
   "blend": "art_source/blender/britons/upgrade_kit.blend",
   "glb": "res://assets/3d/upgrade_kits/britons/upgrade_kit.glb",
-  "glb_bytes": 18972,
+  "glb_bytes": 25108,
   "build_script": "art_source/blender/environment/upgrade_kit.py"
 }

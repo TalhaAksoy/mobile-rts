@@ -14,7 +14,7 @@
 GODOT_BIN ?= godot
 PROJECT_PATH ?= sample_project
 
-.PHONY: run test test-commands test-phase1 test-art help
+.PHONY: run test test-commands test-phase1 test-art sprites-px help
 
 run:
 	$(GODOT_BIN) --path $(PROJECT_PATH)
@@ -34,6 +34,13 @@ test-phase1:
 test-art:
 	$(GODOT_BIN) --headless --path $(PROJECT_PATH) --script res://scripts/tests/test_building_art_integration.gd
 
+# 2D pixel-art sprites (Aseprite). Optional: CIVS=franks,teutons KINDS=units,buildings
+ASEPRITE_BIN ?= aseprite
+sprites-px:
+	$(ASEPRITE_BIN) -b --script-param root=$(CURDIR) --script-param civs=$(CIVS) --script-param kinds=$(KINDS) --script art_source/aseprite/cli.lua
+	python3 art_source/aseprite/update_manifest.py
+	$(GODOT_BIN) --headless --path $(PROJECT_PATH) --import
+
 help:
 	@echo "Pocket Empires 3D Makefile"
 	@echo "  make run           - Oyunu başlatır (Örn: make run GODOT_BIN=...)"
@@ -41,3 +48,4 @@ help:
 	@echo "  make test-commands - Birim seçimi ve komut testlerini çalıştırır"
 	@echo "  make test-phase1   - Phase 1 doğrulama testlerini çalıştırır"
 	@echo "  make test-art      - Bina görsel entegrasyon testlerini çalıştırır"
+	@echo "  make sprites-px    - 2D piksel-art sprite'ları Aseprite ile yeniden üretir"

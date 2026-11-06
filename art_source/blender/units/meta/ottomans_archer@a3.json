@@ -1,0 +1,20 @@
+{
+ "civ": "ottomans",
+ "role": "archer",
+ "tris": 1134,
+ "bones": 18,
+ "height": 2.089,
+ "actions": [
+  "attack",
+  "build-loop",
+  "death",
+  "gather-loop",
+  "idle-loop",
+  "walk-loop"
+ ],
+ "props": [],
+ "attack": "bow",
+ "mount": "",
+ "model": "res://assets/3d/units/ottomans/archer_a3.glb",
+ "age": 3
+}

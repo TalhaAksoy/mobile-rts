@@ -1,0 +1,20 @@
+{
+ "civ": "vikings",
+ "role": "archer",
+ "tris": 1026,
+ "bones": 18,
+ "height": 1.74,
+ "actions": [
+  "attack",
+  "build-loop",
+  "death",
+  "gather-loop",
+  "idle-loop",
+  "walk-loop"
+ ],
+ "props": [],
+ "attack": "bow",
+ "mount": "",
+ "model": "res://assets/3d/units/vikings/archer_a1.glb",
+ "age": 1
+}

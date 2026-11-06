@@ -125,7 +125,9 @@ func _process(delta: float) -> void:
 		if is_instance_valid(g_mat):
 			g_mat.emission_energy_multiplier = gold_pulse
 			
-	# 3. Gentle wind sway on trees
+	# 3. Gentle wind sway on trees (3D models only: a flat 2D sprite would just spin in place)
+	if FactionArtManager.top_down():
+		return
 	for tree_data in trees.values():
 		var t_node = tree_data.get("node") as Node3D
 		if is_instance_valid(t_node):
@@ -988,6 +990,9 @@ func _update_deposit_visual(entry: Dictionary, remaining: int) -> void:
 	var frac: float = clamp(float(remaining) / float(max(1, entry.get("max_amount", 1))), 0.0, 1.0)
 	var s: float = float(vis.get_meta("base_scale", 1.0)) * lerp(0.55, 1.0, frac)
 	vis.scale = Vector3(s, s, s)
+	var sort_plane = vis.get_node_or_null("SpritePlane")
+	if sort_plane != null and sort_plane.has_method("apply"):
+		sort_plane.apply()                 # 2D style: keep the painter's-order height after rescaling
 
 func _spawn_3d_tree(cell: Vector2i) -> void:
 	var tree_node = Node3D.new()

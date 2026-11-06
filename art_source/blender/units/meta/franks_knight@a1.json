@@ -1,0 +1,20 @@
+{
+ "civ": "franks",
+ "role": "knight",
+ "tris": 1352,
+ "bones": 31,
+ "height": 3.49,
+ "actions": [
+  "attack",
+  "build-loop",
+  "death",
+  "gather-loop",
+  "idle-loop",
+  "walk-loop"
+ ],
+ "props": [],
+ "attack": "thrust",
+ "mount": "horse",
+ "model": "res://assets/3d/units/franks/knight_a1.glb",
+ "age": 1
+}

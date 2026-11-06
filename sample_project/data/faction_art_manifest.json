@@ -22,7 +22,8 @@
         "swordsman",
         "spearman",
         "archer",
-        "janissary"
+        "janissary",
+        "cavalry"
       ],
       "units": {
         "villager": {
@@ -88,6 +89,19 @@
             "pose_02": "art/units/ottomans/janissary/pose_02.png",
             "rear_reference": "art/units/ottomans/janissary/rear_reference.png",
             "action_reference": "art/units/ottomans/janissary/action_reference.png"
+          }
+        },
+        "cavalry": {
+          "display_name_tr": "Süvari",
+          "display_name_en": "Cavalry",
+          "role": "cavalry",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/ottomans/cavalry/pose_01.png",
+            "pose_02": "art/units/ottomans/cavalry/pose_02.png",
+            "rear_reference": "art/units/ottomans/cavalry/rear_reference.png",
+            "action_reference": "art/units/ottomans/cavalry/action_reference.png"
           }
         }
       }
@@ -182,7 +196,8 @@
         "swordsman",
         "spearman",
         "archer",
-        "longbowman"
+        "longbowman",
+        "cavalry"
       ],
       "units": {
         "villager": {
@@ -248,6 +263,19 @@
             "pose_02": "art/units/britons/longbowman/pose_02.png",
             "rear_reference": "art/units/britons/longbowman/rear_reference.png",
             "action_reference": "art/units/britons/longbowman/action_reference.png"
+          }
+        },
+        "cavalry": {
+          "display_name_tr": "Süvari",
+          "display_name_en": "Cavalry",
+          "role": "cavalry",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/britons/cavalry/pose_01.png",
+            "pose_02": "art/units/britons/cavalry/pose_02.png",
+            "rear_reference": "art/units/britons/cavalry/rear_reference.png",
+            "action_reference": "art/units/britons/cavalry/action_reference.png"
           }
         }
       }
@@ -422,7 +450,8 @@
         "swordsman",
         "spearman",
         "archer",
-        "teutonic_knight"
+        "teutonic_knight",
+        "cavalry"
       ],
       "units": {
         "villager": {
@@ -489,6 +518,19 @@
             "rear_reference": "art/units/teutons/teutonic_knight/rear_reference.png",
             "action_reference": "art/units/teutons/teutonic_knight/action_reference.png"
           }
+        },
+        "cavalry": {
+          "display_name_tr": "Süvari",
+          "display_name_en": "Cavalry",
+          "role": "cavalry",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/teutons/cavalry/pose_01.png",
+            "pose_02": "art/units/teutons/cavalry/pose_02.png",
+            "rear_reference": "art/units/teutons/cavalry/rear_reference.png",
+            "action_reference": "art/units/teutons/cavalry/action_reference.png"
+          }
         }
       }
     },
@@ -502,7 +544,8 @@
         "swordsman",
         "spearman",
         "archer",
-        "samurai"
+        "samurai",
+        "cavalry"
       ],
       "units": {
         "villager": {
@@ -568,6 +611,19 @@
             "pose_02": "art/units/japanese/samurai/pose_02.png",
             "rear_reference": "art/units/japanese/samurai/rear_reference.png",
             "action_reference": "art/units/japanese/samurai/action_reference.png"
+          }
+        },
+        "cavalry": {
+          "display_name_tr": "Süvari",
+          "display_name_en": "Cavalry",
+          "role": "cavalry",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/japanese/cavalry/pose_01.png",
+            "pose_02": "art/units/japanese/cavalry/pose_02.png",
+            "rear_reference": "art/units/japanese/cavalry/rear_reference.png",
+            "action_reference": "art/units/japanese/cavalry/action_reference.png"
           }
         }
       }
@@ -662,7 +718,8 @@
         "swordsman",
         "spearman",
         "archer",
-        "berserker"
+        "berserker",
+        "cavalry"
       ],
       "units": {
         "villager": {
@@ -729,6 +786,19 @@
             "rear_reference": "art/units/vikings/berserker/rear_reference.png",
             "action_reference": "art/units/vikings/berserker/action_reference.png"
           }
+        },
+        "cavalry": {
+          "display_name_tr": "Süvari",
+          "display_name_en": "Cavalry",
+          "role": "cavalry",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/vikings/cavalry/pose_01.png",
+            "pose_02": "art/units/vikings/cavalry/pose_02.png",
+            "rear_reference": "art/units/vikings/cavalry/rear_reference.png",
+            "action_reference": "art/units/vikings/cavalry/action_reference.png"
+          }
         }
       }
     },
@@ -742,7 +812,8 @@
         "swordsman",
         "spearman",
         "archer",
-        "chu_ko_nu"
+        "chu_ko_nu",
+        "cavalry"
       ],
       "units": {
         "villager": {
@@ -808,6 +879,19 @@
             "pose_02": "art/units/chinese/chu_ko_nu/pose_02.png",
             "rear_reference": "art/units/chinese/chu_ko_nu/rear_reference.png",
             "action_reference": "art/units/chinese/chu_ko_nu/action_reference.png"
+          }
+        },
+        "cavalry": {
+          "display_name_tr": "Süvari",
+          "display_name_en": "Cavalry",
+          "role": "cavalry",
+          "is_animated": false,
+          "anchor": "bottom_center",
+          "poses": {
+            "pose_01": "art/units/chinese/cavalry/pose_01.png",
+            "pose_02": "art/units/chinese/cavalry/pose_02.png",
+            "rear_reference": "art/units/chinese/cavalry/rear_reference.png",
+            "action_reference": "art/units/chinese/cavalry/action_reference.png"
           }
         }
       }

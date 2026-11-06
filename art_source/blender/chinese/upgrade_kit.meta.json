@@ -1,6 +1,6 @@
 {
-  "tris": 358,
-  "verts": 706,
+  "tris": 452,
+  "verts": 876,
   "materials": [
     "PE_StoneGrey",
     "PE_LacquerRed",
@@ -8,24 +8,24 @@
     "PE_RoofTeal",
     "PE_WoodDark",
     "PE_Gold",
-    "PE_Banner_chinese",
-    "TEAM_Trim"
+    "TEAM_Trim",
+    "PE_Banner_chinese"
   ],
   "bounds_min": [
     -1.86,
-    -1.881,
+    -1.971,
     0.0
   ],
   "bounds_max": [
     1.86,
     1.86,
-    1.96
+    2.38
   ],
   "asset_id": "upgrade_kit",
   "civ": "chinese",
   "kind": "upgrade_kits",
   "blend": "art_source/blender/chinese/upgrade_kit.blend",
   "glb": "res://assets/3d/upgrade_kits/chinese/upgrade_kit.glb",
-  "glb_bytes": 32492,
+  "glb_bytes": 38624,
   "build_script": "art_source/blender/environment/upgrade_kit.py"
 }

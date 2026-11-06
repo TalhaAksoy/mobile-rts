@@ -2,8 +2,8 @@ extends SceneTree
 ## Visual style (Ayarlar > Görünüm):
 ##  * 3D mode: on all five maps every tree, mine and bush is a 3D model (no sprite anywhere); every
 ##    civ x building type x team is its 3D model; fields are 3D on every biome.
-##  * 2D mode: the same objects use the sprites RENDERED IN BLENDER from those models
-##    (res://assets/sprites/...), never the old hand-drawn art; team colours per team; construction
+##  * 2D mode: the same objects use the Aseprite pixel-art sprites (res://assets/sprites_px/...),
+##    never the old hand-drawn art; team colours per team; construction
 ##    reveals the sprite from the ground up; upgrades add the kit as back + front sprites.
 ##  * every model in the model manifest has its sprite (and the PNG exists).
 const GameController3D = preload("res://scripts/GameController3D.gd")
@@ -43,7 +43,7 @@ func _check_props(game, mode: String) -> void:
 				ok = _sprites_in(node).is_empty() and not _meshes_in(vis).is_empty()
 			elif ok:
 				var sp: Array = _sprites_in(vis)
-				ok = sp.size() == 1 and String(sp[0].texture.resource_path).begins_with("res://assets/sprites/environment/")
+				ok = sp.size() == 1 and String(sp[0].texture.resource_path).begins_with("res://assets/sprites_px/environment/")
 			if not ok and bad.size() < 5:
 				bad.append("%s %s" % [dict[cell].get("name", "?"), str(cell)])
 			if not ok:
@@ -114,7 +114,9 @@ func _run() -> void:
 						_check(is_instance_valid(b.building_model) and not is_instance_valid(b.building_sprite), tag + ": 3D model, no sprite")
 					else:
 						var path: String = b.building_sprite.texture.resource_path if is_instance_valid(b.building_sprite) else ""
-						_check(b.sprite_is_rendered and not is_instance_valid(b.building_model) and path == "res://assets/sprites/buildings/%s/%s_t%d.png" % [civ_id, b_id, team],
+						var want: String = FactionArtManager.get_sprite_entry("buildings", "%s/%s" % [civ_id, b_id]).get("t%d" % team, "")
+						_check(b.sprite_is_rendered and not is_instance_valid(b.building_model) and want != "" and path == want
+							and path.begins_with("res://assets/sprites_px/"),
 							tag + ": rendered sprite (%s)" % path)
 						if b.sprite_is_rendered:
 							var full: int = b.building_sprite.texture.get_height()

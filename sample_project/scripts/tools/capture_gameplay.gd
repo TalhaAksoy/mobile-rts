@@ -26,6 +26,10 @@ var upgrade_all := false               # --upgrade=1: grant every building upgra
 var n_fields := 0                      # --fields=N: with --showcase=mill, add N finished fields + farmers
 var map_type := -1                     # --map=0 forest valley, 1 desert oasis
 var style := ""                        # --style=2d / --style=3d: building + prop look (default: settings)
+var crowd := 0                         # --crowd=N: spawn N soldiers on one spot, all sent to the same point
+var no_sep := false                    # --nosep=1: switch unit separation off (before/after comparison)
+var select_army := false               # --select=1: select every soldier (army order buttons) before the shots
+var age := 1                           # --age=2/3: the player reaches that age (age-up looks + feedback) at the start
 
 func _init() -> void:
 	for a in OS.get_cmdline_user_args():
@@ -41,6 +45,10 @@ func _init() -> void:
 		elif a.begins_with("--fields="): n_fields = int(a.substr(9))
 		elif a.begins_with("--upgrade="): upgrade_all = a.substr(10) == "1"
 		elif a.begins_with("--style="): style = a.substr(8)
+		elif a.begins_with("--crowd="): crowd = int(a.substr(8))
+		elif a.begins_with("--nosep="): no_sep = a.substr(8) == "1"
+		elif a.begins_with("--select="): select_army = a.substr(9) == "1"
+		elif a.begins_with("--age="): age = int(a.substr(6))
 	call_deferred("_run")
 
 func _wait(sec: float) -> void:
@@ -111,8 +119,49 @@ func _run() -> void:
 					game._on_building_research_completed(id, 0)
 					break
 
+	if age >= 2:
+		game._on_building_research_completed("AGE_2", 0)
+	if age >= 3:
+		await _wait(1.0)
+		game._on_building_research_completed("AGE_3", 0)
+	if age >= 2:                                   # the age-up moment: flash, card, swapped looks, sparkles
+		game.camera.jump_to(game.map_gen.player_start_pos, false)
+		await _wait(0.45)
+		await _shot("ageup")
+	var crowd_pos = null
+	if crowd > 0:
+		game.separation_enabled = not no_sep
+		var start: Vector3 = game.map_gen.player_start_pos
+		var dest := start + Vector3(9, 0, 9)
+		var c = _find_free_area(game, game.map_gen.world_to_cell(dest), Vector2i(4, 4))
+		if c != null:
+			dest = game.map_gen.cell_to_world(c + Vector2i(2, 2))
+		var kinds := [Unit3D.UnitType.SWORDSMAN, Unit3D.UnitType.SPEARMAN, Unit3D.UnitType.ARCHER, Unit3D.UnitType.CAVALRY]
+		var crowd_units: Array = []
+		for i in crowd:
+			var u = game.spawn_unit(kinds[i % kinds.size()], 0, dest + Vector3(randf_range(-3, 3), 0, randf_range(-3, 3)))
+			crowd_units.append(u)
+		await process_frame
+		for u in crowd_units:
+			u.command_move(dest)          # everyone to the exact same point
+		crowd_pos = dest
+		await _wait(seconds)
+		var worst := 99.0
+		var bad := 0
+		for i in crowd_units.size():
+			for j in range(i + 1, crowd_units.size()):
+				var a: Unit3D = crowd_units[i]
+				var b: Unit3D = crowd_units[j]
+				var d := Vector2(a.global_position.x - b.global_position.x, a.global_position.z - b.global_position.z).length()
+				var ratio := d / (a.get_body_radius() + b.get_body_radius())
+				worst = min(worst, ratio)
+				if ratio < 0.5 - 0.02:
+					bad += 1
+		print("[capture] crowd=%d sep=%s closest_pair=%.2f x(r1+r2) pairs_over_limit=%d" % [crowd, str(not no_sep), worst, bad])
+
 	# Let the match simulate (villagers gather, AI starts).
-	await _wait(seconds)
+	if crowd_pos == null:
+		await _wait(seconds)
 
 	# FPS sample over 3 seconds at default zoom
 	var frames := 0
@@ -134,12 +183,27 @@ func _run() -> void:
 	var base_pos = game.map_gen.player_start_pos
 	if look_at != "" and placed.has(look_at):
 		base_pos = placed[look_at].global_position
+	if crowd_pos != null:
+		base_pos = crowd_pos
 	for view in [["default", 24.0], ["close", cam.min_height], ["far", cam.max_height]]:
 		cam.target_height = view[1]
 		cam.position.y = view[1]
 		cam.jump_to(base_pos, false)
+		if select_army and view[0] == "default":
+			game._on_select_all_military()
 		await _wait(0.6)
 		await _shot(view[0])
+	if select_army:
+		# the SALDIR button armed: the banner asks for the target tap
+		cam.target_height = 24.0
+		cam.position.y = 24.0
+		cam.jump_to(base_pos, false)
+		game.ui_manager.army_command_requested.emit("attack")
+		await _wait(0.4)
+		await _shot("armed_attack")
+		game.ui_manager.army_command_requested.emit("defend")
+		await _wait(0.4)
+		await _shot("armed_defend")
 	quit(0)
 
 

@@ -1,0 +1,20 @@
+{
+ "civ": "japanese",
+ "role": "spearman",
+ "tris": 604,
+ "bones": 18,
+ "height": 2.3,
+ "actions": [
+  "attack",
+  "build-loop",
+  "death",
+  "gather-loop",
+  "idle-loop",
+  "walk-loop"
+ ],
+ "props": [],
+ "attack": "thrust",
+ "mount": "",
+ "model": "res://assets/3d/units/japanese/spearman_a1.glb",
+ "age": 1
+}

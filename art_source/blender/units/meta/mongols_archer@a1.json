@@ -1,0 +1,20 @@
+{
+ "civ": "mongols",
+ "role": "archer",
+ "tris": 1154,
+ "bones": 18,
+ "height": 1.86,
+ "actions": [
+  "attack",
+  "build-loop",
+  "death",
+  "gather-loop",
+  "idle-loop",
+  "walk-loop"
+ ],
+ "props": [],
+ "attack": "bow",
+ "mount": "",
+ "model": "res://assets/3d/units/mongols/archer_a1.glb",
+ "age": 1
+}

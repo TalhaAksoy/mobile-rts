@@ -1,0 +1,20 @@
+{
+ "civ": "vikings",
+ "role": "cavalry",
+ "tris": 1384,
+ "bones": 31,
+ "height": 2.42,
+ "actions": [
+  "attack",
+  "build-loop",
+  "death",
+  "gather-loop",
+  "idle-loop",
+  "walk-loop"
+ ],
+ "props": [],
+ "attack": "slash",
+ "mount": "horse",
+ "model": "res://assets/3d/units/vikings/cavalry_a1.glb",
+ "age": 1
+}

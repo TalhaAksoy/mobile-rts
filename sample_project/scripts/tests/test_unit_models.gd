@@ -190,17 +190,15 @@ func _run() -> void:
 	var e2: Dictionary = FactionArtManager.get_unit_sheet_entry(CivData.CivType.OTTOMANS, Unit3D.UnitType.VILLAGER)
 	_check(v2.unit_model == null and not v2.sheet.is_empty() and String(v2.unit_sprite.texture.resource_path) == e2["t0"], "2D: villager shows its sheet (team 0)")
 	var s1: Unit3D = game.spawn_unit(Unit3D.UnitType.SWORDSMAN, 1, _villager_spot() + Vector3(3, 0, 3))
-	_check(String(s1.unit_sprite.texture.resource_path).ends_with("swordsman_t1.png"), "2D: enemy uses the team-1 sheet")
-	# occlusion tint: only behind other geometry (inverted depth) and never over a unit sprite (stencil),
-	# drawn with the sheet's alpha - an always-on-top copy used to tint every visible sprite
-	var sm := v2.unit_sprite.material_override as StandardMaterial3D
-	var xr := (sm.next_pass as StandardMaterial3D) if sm != null else null
-	_check(sm != null and sm.stencil_flags & BaseMaterial3D.STENCIL_FLAG_WRITE != 0 and sm.albedo_texture == v2.unit_sprite.texture
-		and xr != null and xr.depth_test == BaseMaterial3D.DEPTH_TEST_INVERTED and xr.stencil_compare == BaseMaterial3D.STENCIL_COMPARE_NOT_EQUAL
-		and xr.stencil_reference == sm.stencil_reference and xr.albedo_texture == v2.unit_sprite.texture
-		and xr.albedo_color.b > xr.albedo_color.r, "2D: occlusion tint only behind buildings, team-blue, sprite-shaped")
-	var xr1 := (s1.unit_sprite.material_override as StandardMaterial3D).next_pass as StandardMaterial3D
-	_check(xr1.albedo_color.r > xr1.albedo_color.b, "2D: enemy occlusion tint is red")
+	_check(String(s1.unit_sprite.texture.resource_path).get_file().begins_with("swordsman") and String(s1.unit_sprite.texture.resource_path).ends_with("_t1.png"), "2D: enemy uses the team-1 sheet")
+	# 2D style is seen from straight above with painter's-order sorting: nothing stands in front of a unit, so the
+	# sheet lies flat, unrotated, at its sort height, with no X-ray occlusion pass
+	var flat_ok: bool = v2.sheet.get("view", "") == "oblique" and v2.unit_sprite.material_override == null \
+		and v2.unit_sprite.billboard == BaseMaterial3D.BILLBOARD_DISABLED
+	await physics_frame
+	_check(flat_ok and absf(v2.unit_sprite.global_position.y - FactionArtManager.oblique_sort_y(v2.global_position.z)) < 0.01,
+		"2D: flat oblique sheet at its painter's-order height, no occlusion pass")
+	_check(s1.unit_sprite.material_override == null, "2D: enemy sheet has no occlusion pass either")
 	v2.command_move(v2.global_position + Vector3(7, 0, 0))
 	var frames := {}
 	for k in 40:

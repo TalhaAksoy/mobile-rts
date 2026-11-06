@@ -88,6 +88,11 @@ func _process(delta: float) -> void:
 
 	global_position = current_ground + Vector3(0, arc_y, 0)
 	var next_pos = next_ground + Vector3(0, next_arc_y, 0)
+	if FactionArtManager.top_down():
+		# 2D style from straight above: the arc is drawn northwards on screen (like a 2D game) and the arrow
+		# flies above every flat sprite (they sit below 9 m, see FactionArtManager.oblique_sort_y)
+		global_position = Vector3(current_ground.x, 10.0, current_ground.z - arc_y)
+		next_pos = Vector3(next_ground.x, 10.0, next_ground.z - next_arc_y)
 
 	if (next_pos - global_position).length_squared() > 0.001:
 		look_at(next_pos, Vector3.UP)

@@ -1,0 +1,20 @@
+{
+ "civ": "chinese",
+ "role": "cavalry",
+ "tris": 1454,
+ "bones": 31,
+ "height": 2.78,
+ "actions": [
+  "attack",
+  "build-loop",
+  "death",
+  "gather-loop",
+  "idle-loop",
+  "walk-loop"
+ ],
+ "props": [],
+ "attack": "slash",
+ "mount": "horse",
+ "model": "res://assets/3d/units/chinese/cavalry_a3.glb",
+ "age": 3
+}

@@ -1,6 +1,6 @@
 {
-  "tris": 254,
-  "verts": 410,
+  "tris": 348,
+  "verts": 580,
   "materials": [
     "PE_WoodDark",
     "PE_WoodLight",
@@ -11,19 +11,19 @@
   ],
   "bounds_min": [
     -1.85,
-    -1.881,
+    -1.971,
     0.0
   ],
   "bounds_max": [
     1.85,
     1.88,
-    1.96
+    2.38
   ],
   "asset_id": "upgrade_kit",
   "civ": "vikings",
   "kind": "upgrade_kits",
   "blend": "art_source/blender/vikings/upgrade_kit.blend",
   "glb": "res://assets/3d/upgrade_kits/vikings/upgrade_kit.glb",
-  "glb_bytes": 21164,
+  "glb_bytes": 27296,
   "build_script": "art_source/blender/environment/upgrade_kit.py"
 }
