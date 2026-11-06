@@ -44,13 +44,23 @@ func _restore(path: String, text: Variant) -> void:
 ## Runs a match against a passive player for `secs` game seconds. Returns the time the first enemy
 ## soldier came within 16 m of the player's TC, the most at once, the largest enemy army and whether
 ## the TC is still standing.
-func _passive_match(game, diff: int, secs: float) -> Dictionary:
+## Each match gets a fresh Main3D, and runs 8x fast with the real game's physics step (1/60 s): more physics
+## ticks, not longer ones. At 8x with 60 ticks a step was 0.133 s; that coarse step skewed the fights and made
+## the result swing run to run (Zor took the TC at 280-310 s and failed "before minute 5" about 1 run in 4).
+## With the real step it is 254-257 s every run.
+func _passive_match(_unused, diff: int, secs: float) -> Dictionary:
+	var scene = load("res://scenes/Main3D.tscn").instantiate()
+	root.add_child(scene)
+	await _frames(3)
+	var game = scene
 	seed(910)
 	game.ai_difficulty = diff
 	game._on_start_game_requested(0, 1, CivData.MapType.HIGHLAND_PLAINS)
 	if game.tutorial_mgr != null and game.tutorial_mgr.has_method("stop_tutorial"):
 		game.tutorial_mgr.stop_tutorial()
 	Engine.time_scale = 8.0
+	Engine.physics_ticks_per_second = 480
+	Engine.max_physics_steps_per_frame = 64
 	var base: Vector3 = game.map_gen.player_start_pos
 	var res := {"first": -1.0, "max_near": 0, "max_army": 0, "tc_alive": true, "tc_lost_at": -1.0}
 	while game.enemy_ai.ai_clock < secs and game.is_game_active:
@@ -74,6 +84,10 @@ func _passive_match(game, diff: int, secs: float) -> Dictionary:
 			tc_alive = true
 	res["tc_alive"] = tc_alive and game.is_game_active
 	Engine.time_scale = 1.0
+	Engine.physics_ticks_per_second = 60
+	Engine.max_physics_steps_per_frame = 8
+	scene.queue_free()
+	await _frames(3)
 	return res
 
 func _run() -> void:

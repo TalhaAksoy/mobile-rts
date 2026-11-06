@@ -52,6 +52,21 @@ These rows are with one-at-a-time gathering and villagers walking right up to th
 player's Town Center only at 299 s, against its "before minute 5" promise. Its villager cap went from 20 to 26 to fix
 that: now 281 s.
 
+**Real physics step (2026-11).** The rows above ran at 8× with Godot's 60 physics ticks, so every physics step was
+0.133 s instead of the game's 1/60 s. That coarse step skewed the fights and made the result swing from run to run:
+Zor took the Town Center anywhere between 280 and 310 s, and the test's "before minute 5" check failed about one run in
+four. The test now runs 8× with 480 ticks (the real 1/60 s step) and a fresh scene per difficulty. Same seed, 5 runs:
+
+| | first soldier at the base | most at the base at once | largest army | Town Center |
+|---|---|---|---|---|
+| Kolay | 489 s | 4 | 8 | standing at 600 s (end of run) |
+| Orta | 309 s | 9 | 14 | standing at 330 s (end of run) |
+| Zor | 188 s | 17 | 21–23 | lost at 255–258 s |
+
+The spread between runs is now a few seconds, and every limit has room: Kolay 39 s, Orta 29 s, Zor's Town Center
+~43 s inside "before minute 5". The bot itself did not change. `scripts/tools/zor_probe.gd` repeats the Zor match
+(`--fixed_step=1`, `--chain=1` for the test's Kolay → Orta → Zor order) to check the spread.
+
 Covered by `scripts/tests/test_ai_difficulty.gd`. It uses fixed time and size limits taken from the on-screen
 hints, not the profile values, so a profile edit that makes a level harsher fails the test.
 
