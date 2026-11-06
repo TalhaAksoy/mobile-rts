@@ -41,7 +41,11 @@ func start_tutorial(game_ctrl: GameController3D) -> void:
 func _show_current_step() -> void:
 	if game != null and is_instance_valid(game.ui_manager):
 		var text = TUTORIAL_TEXTS.get(current_step, "")
-		game.ui_manager.notify_banner(text, Color(1.0, 0.9, 0.4))
+		if current_step == Step.COMPLETED:
+			game.ui_manager.hide_hint()
+			game.ui_manager.notify_banner(text, Color(1.0, 0.9, 0.4))
+		else:
+			game.ui_manager.show_hint(text)        # stays on screen until the step is done
 
 func check_progress() -> void:
 	if game == null or not game.is_game_active:

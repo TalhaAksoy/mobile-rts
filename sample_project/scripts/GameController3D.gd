@@ -36,6 +36,7 @@ var selected_building: Building3D = null
 
 var is_game_active: bool = false
 var game_start_time: float = 0.0
+var match_time: float = 0.0          # game seconds played (follows the speed button and pause, unlike the wall clock)
 var kills_count: int = 0
 var trained_count: int = 0
 var gathered_count: int = 0
@@ -283,6 +284,7 @@ func _process(delta: float) -> void:
 	if not is_game_active:
 		return
 
+	match_time += delta
 	_update_hud()
 
 	if tutorial_mgr != null:
@@ -1723,7 +1725,7 @@ func bots_alive() -> int:
 
 func _game_over(victory: bool) -> void:
 	is_game_active = false
-	var dur_sec = int((Time.get_ticks_msec() / 1000.0) - game_start_time)
+	var dur_sec = int(match_time)
 	var dur_str = "%02d:%02d" % [int(float(dur_sec) / 60.0), dur_sec % 60]
 	ui_manager.show_game_over(victory, {
 		"duration": dur_str,
@@ -1747,11 +1749,7 @@ func _on_army_command(mode: String) -> void:
 		pending_army_command = ""                   # second press cancels
 		ui_manager.notify_banner("Emir iptal edildi", Color(0.9, 0.85, 0.7))
 		return
-	pending_army_command = mode
-	if mode == "attack":
-		ui_manager.notify_banner("SALDIR: bir yere ya da düşmana dokun", Color(1.0, 0.5, 0.4))
-	else:
-		ui_manager.notify_banner("SAVUN: savunulacak yere dokun", Color(0.5, 0.8, 1.0))
+	pending_army_command = mode                     # the order card stays up until the tap (UIManager3D)
 	SoundManager.play_sound("click")
 
 ## Ring formation around the ordered point so a group does not stack on one spot.
@@ -1899,6 +1897,9 @@ func _on_toggle_speed() -> void:
 
 ## Removes the match's units and buildings and leaves any placement / pause state.
 func _clear_match() -> void:
+	if is_instance_valid(ui_manager) and ui_manager.has_method("hide_hint"):
+		ui_manager.hide_hint()
+	match_time = 0.0
 	if get_tree() != null:
 		get_tree().paused = false
 	if ui_manager != null and ui_manager.pause_menu != null:

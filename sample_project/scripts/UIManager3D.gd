@@ -168,6 +168,12 @@ func _ready() -> void:
 	_reset_context_deck()
 	_build_match_menu(p_theme)
 	_build_queue_bar()
+	_build_message_stack()
+	# top-bar buttons: thumb-sized (44 px high) on the portrait screen
+	speed_btn.custom_minimum_size = Vector2(72, 44)
+	menu_btn.custom_minimum_size = Vector2(72, 44)
+	ParchmentTheme.apply_parchment_button(speed_btn, 15)
+	ParchmentTheme.apply_parchment_button(menu_btn, 15)
 
 func _build_queue_bar() -> void:
 	queue_bar = ProductionQueueBar.new()
@@ -439,6 +445,18 @@ func _update_bottom_bar_height(expanded: bool) -> void:
 		build_panel.offset_bottom = target_top - 6.0
 
 func _process(_delta: float) -> void:
+	_update_message_stack()
+	var tb := hud_root.get_node_or_null("TopBar") as Control
+	var mm := hud_root.get_node_or_null("Minimap") as Control
+	var zb := hud_root.get_node_or_null("ZoomBox") as Control
+	if tb != null and mm != null:
+		var top := tb.position.y + tb.size.y + 8.0
+		if absf(mm.offset_top - top) > 0.5:
+			mm.offset_bottom = top + (mm.offset_bottom - mm.offset_top)
+			mm.offset_top = top
+			if zb != null:
+				zb.offset_bottom = mm.offset_bottom + 8.0 + (zb.offset_bottom - zb.offset_top)
+				zb.offset_top = mm.offset_bottom + 8.0
 	if placement_bar != null and placement_bar.visible:
 		placement_bar.offset_bottom = bottom_bar.offset_top - 6.0
 		placement_bar.offset_top = placement_bar.offset_bottom - 56.0
@@ -907,23 +925,121 @@ func hide_drag_box() -> void:
 	if drag_box_panel != null:
 		drag_box_panel.visible = false
 
+## ---- messages ----------------------------------------------------------------------------------------
+## One stack under the top bar, left of the minimap, so nothing runs off the portrait screen or overlaps:
+##   hint card   - the tutorial step (stays until the step changes)
+##   order card  - "SALDIR / SAVUN: tap a spot" while an army order is armed (stays until it is used)
+##   toast       - short notices (one at a time, the newest replaces the old one, fades after ~3 s)
+var msg_stack: VBoxContainer = null
+var hint_card: PanelContainer = null
+var hint_title: Label = null
+var hint_body: Label = null
+var order_card: PanelContainer = null
+var order_label: Label = null
+var toast_card: PanelContainer = null
+var toast_label: Label = null
+var _toast_tween: Tween = null
+
+func _msg_panel(bg: Color, border: Color) -> PanelContainer:
+	var p := PanelContainer.new()
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = bg
+	sb.border_color = border
+	sb.set_border_width_all(2)
+	sb.set_corner_radius_all(8)
+	sb.content_margin_left = 10; sb.content_margin_right = 10
+	sb.content_margin_top = 6; sb.content_margin_bottom = 6
+	p.add_theme_stylebox_override("panel", sb)
+	p.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	p.visible = false
+	return p
+
+func _msg_label(size: int, col: Color) -> Label:
+	var l := Label.new()
+	l.add_theme_font_override("font", ParchmentTheme.get_medieval_font())
+	l.add_theme_font_size_override("font_size", size)
+	l.add_theme_color_override("font_color", col)
+	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	l.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	return l
+
+func _build_message_stack() -> void:
+	if msg_stack != null:
+		return
+	msg_stack = VBoxContainer.new()
+	msg_stack.name = "MessageStack"
+	msg_stack.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	msg_stack.add_theme_constant_override("separation", 6)
+	msg_stack.anchor_left = 0.0; msg_stack.anchor_right = 1.0
+	msg_stack.offset_left = 10; msg_stack.offset_right = -128      # the minimap column stays clear
+	msg_stack.offset_top = 80
+	hud_root.add_child(msg_stack)
+	hint_card = _msg_panel(Color(0.16, 0.11, 0.06, 0.88), Color(0.86, 0.66, 0.30))
+	hint_card.name = "HintCard"
+	var hv := VBoxContainer.new()
+	hv.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	hv.add_theme_constant_override("separation", 2)
+	hint_title = _msg_label(15, Color(1.0, 0.86, 0.45))
+	hint_body = _msg_label(13, Color(0.95, 0.90, 0.80))
+	hv.add_child(hint_title)
+	hv.add_child(hint_body)
+	hint_card.add_child(hv)
+	msg_stack.add_child(hint_card)
+	order_card = _msg_panel(Color(0.30, 0.06, 0.05, 0.90), Color(1.0, 0.55, 0.45))
+	order_card.name = "OrderCard"
+	order_label = _msg_label(15, Color(1.0, 0.93, 0.88))
+	order_card.add_child(order_label)
+	msg_stack.add_child(order_card)
+	toast_card = _msg_panel(Color(0.08, 0.07, 0.06, 0.85), Color(0.55, 0.45, 0.30))
+	toast_card.name = "ToastCard"
+	toast_label = _msg_label(14, Color.WHITE)
+	toast_card.add_child(toast_label)
+	msg_stack.add_child(toast_card)
+
+## Short notice; the newest replaces the one on screen.
 func notify_banner(message: String, col: Color = Color.WHITE) -> void:
-	var banner = Label.new()
-	banner.text = message
-	banner.add_theme_font_override("font", ParchmentTheme.get_serif_font(18, true))
-	banner.add_theme_color_override("font_color", col)
-	banner.add_theme_color_override("font_outline_color", Color(0.05, 0.05, 0.05, 0.95))
-	banner.add_theme_constant_override("outline_size", 4)
-	banner.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
-	banner.position = Vector2(hud_root.size.x * 0.5 - 200, 70)
-	banner.size = Vector2(400, 40)
-	hud_root.add_child(banner)
-	
-	var tween = banner.create_tween()
-	tween.tween_property(banner, "position:y", 50.0, 0.4).set_trans(Tween.TRANS_BACK).set_ease(Tween.EASE_OUT)
-	tween.tween_interval(2.5)
-	tween.tween_property(banner, "modulate:a", 0.0, 0.6)
-	tween.tween_callback(banner.queue_free)
+	_build_message_stack()
+	toast_label.text = message
+	toast_label.add_theme_color_override("font_color", col)
+	toast_card.visible = true
+	toast_card.modulate.a = 1.0
+	if _toast_tween != null and _toast_tween.is_valid():
+		_toast_tween.kill()
+	_toast_tween = toast_card.create_tween()
+	_toast_tween.tween_interval(2.6)
+	_toast_tween.tween_property(toast_card, "modulate:a", 0.0, 0.5)
+	_toast_tween.tween_callback(func(): toast_card.visible = false)
+
+## Persistent hint card (tutorial step). The first line is the title, the rest the body. Empty hides it.
+func show_hint(text: String) -> void:
+	_build_message_stack()
+	if text == "":
+		hint_card.visible = false
+		return
+	var parts := text.split("\n", true, 1)
+	hint_title.text = parts[0]
+	hint_body.text = parts[1] if parts.size() > 1 else ""
+	hint_body.visible = hint_body.text != ""
+	hint_card.visible = true
+
+func hide_hint() -> void:
+	if hint_card != null:
+		hint_card.visible = false
+
+func _update_message_stack() -> void:
+	if msg_stack == null:
+		return
+	var tb := hud_root.get_node_or_null("TopBar") as Control
+	if tb != null:
+		msg_stack.offset_top = tb.position.y + tb.size.y + 6
+	var mode := ""
+	if game_controller != null and "pending_army_command" in game_controller:
+		mode = game_controller.pending_army_command
+	order_card.visible = mode != ""
+	if mode == "attack":
+		order_label.text = "SALDIR: bir yere ya da bir düşmana dokun"
+	elif mode == "defend":
+		order_label.text = "SAVUN: savunulacak yere dokun"
 
 func show_game_over(victory: bool, stats: Dictionary) -> void:
 	game_over_modal.visible = true
