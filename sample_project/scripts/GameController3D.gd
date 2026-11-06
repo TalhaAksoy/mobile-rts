@@ -1598,16 +1598,48 @@ func get_closest_dropoff(from_pos: Vector3, team: int, res_type: String = "") ->
 				best_b = b
 	return best_b
 
+## Closest living enemy unit or building of `team` within `max_range`. Units come from a spatial grid rebuilt at most
+## once per physics tick (every idle soldier, ordered soldier and tower asks this; a full scan of all units per
+## asker made the cost grow with the square of the army size).
+const ENEMY_GRID_CELL := 4.0
+var _enemy_grid := {}
+var _enemy_grid_tick := -1
+
+func _enemy_grid_cell(p: Vector3) -> Vector2i:
+	return Vector2i(int(floor(p.x / ENEMY_GRID_CELL)), int(floor(p.z / ENEMY_GRID_CELL)))
+
+func _rebuild_enemy_grid() -> void:
+	var tick := Engine.get_physics_frames()
+	if tick == _enemy_grid_tick:
+		return
+	_enemy_grid_tick = tick
+	_enemy_grid.clear()
+	for u in units:
+		if is_instance_valid(u) and u.hp > 0:
+			var k := _enemy_grid_cell(u.global_position)
+			var bucket = _enemy_grid.get(k)
+			if bucket == null:
+				bucket = []
+				_enemy_grid[k] = bucket
+			bucket.append(u)
+
 func get_closest_enemy_entity(from_pos: Vector3, team: int, max_range: float) -> Node3D:
+	_rebuild_enemy_grid()
 	var best_node = null
 	var min_dist = max_range * max_range
-
-	for u in units:
-		if is_instance_valid(u) and u.team != team and u.hp > 0:
-			var d = from_pos.distance_squared_to(u.global_position)
-			if d < min_dist:
-				min_dist = d
-				best_node = u
+	var c := _enemy_grid_cell(from_pos)
+	var r := int(ceil(max_range / ENEMY_GRID_CELL))
+	for dy in range(-r, r + 1):
+		for dx in range(-r, r + 1):
+			var bucket = _enemy_grid.get(c + Vector2i(dx, dy))
+			if bucket == null:
+				continue
+			for u in bucket:
+				if is_instance_valid(u) and u.team != team and u.hp > 0:
+					var d = from_pos.distance_squared_to(u.global_position)
+					if d < min_dist:
+						min_dist = d
+						best_node = u
 
 	for b in buildings:
 		if is_instance_valid(b) and b.team != team and b.hp > 0:

@@ -260,6 +260,7 @@ func _init_fog_of_war() -> void:
 		col.fill(FogState.UNEXPLORED)
 		fog_grid.append(col)
 
+	_fog_state = PackedByteArray()                # rebuilt on the next update_fog_of_war
 	fog_image = Image.create(MAP_WIDTH, MAP_HEIGHT, false, Image.FORMAT_RGBA8)
 	fog_image.fill(Color(0.04, 0.04, 0.06, 0.98))
 	fog_texture = ImageTexture.create_from_image(fog_image)
@@ -299,115 +300,115 @@ func get_fog_state(cell: Vector2i) -> FogState:
 		return fog_grid[cell.x][cell.y]
 	return FogState.UNEXPLORED
 
+## Fog of war, every 0.2 s. Visibility is rebuilt into a flat byte grid, then only the cells whose state changed
+## touch the fog texture, the fog_grid mirror and the resources / bridges standing on them (the old version rewrote
+## every pixel with set_pixel and walked every tree on the map each update: 3-6 ms per update on desktop).
+var _fog_state := PackedByteArray()          # index y * MAP_WIDTH + x, FogState values
+var _fog_pixels := PackedByteArray()         # RGBA8 of the fog texture, same layout
+var _fog_full_refresh := true
+var _fog_cell_nodes := {}                    # Vector2i -> [water / bridge nodes on that cell]
+var _reveal_offsets := {}                    # radius -> PackedInt32Array of dx, dy pairs
+const FOG_RGBA := [[10, 10, 15, 245], [13, 13, 20, 140], [0, 0, 0, 0]]   # UNEXPLORED, EXPLORED, VISIBLE
+
 func update_fog_of_war(player_units: Array, player_buildings: Array, enemy_units: Array, enemy_buildings: Array) -> void:
 	if fog_grid.is_empty() or fog_image == null or fog_texture == null:
 		return
+	var W := MAP_WIDTH
+	var H := MAP_HEIGHT
+	if _fog_state.size() != W * H:
+		_fog_state.resize(W * H)
+		_fog_state.fill(FogState.UNEXPLORED)
+		_fog_pixels.resize(W * H * 4)
+		for k in W * H:
+			_fog_pixels[k * 4] = FOG_RGBA[0][0]; _fog_pixels[k * 4 + 1] = FOG_RGBA[0][1]
+			_fog_pixels[k * 4 + 2] = FOG_RGBA[0][2]; _fog_pixels[k * 4 + 3] = FOG_RGBA[0][3]
+		_fog_full_refresh = true
+		_fog_cell_nodes.clear()
+		for wi in water_mesh_instances + bridge_mesh_instances:
+			if is_instance_valid(wi):
+				var wc: Vector2i = wi.get_meta("cell", Vector2i(-1, -1))
+				if wc != Vector2i(-1, -1):
+					if not _fog_cell_nodes.has(wc):
+						_fog_cell_nodes[wc] = []
+					_fog_cell_nodes[wc].append(wi)
 
-	# 1. Decay current visible cells to explored
-	for x in range(MAP_WIDTH):
-		for y in range(MAP_HEIGHT):
-			if fog_grid[x][y] == FogState.VISIBLE:
-				fog_grid[x][y] = FogState.EXPLORED
-
-	# 2. Reveal around player units
+	# 1. what the player sees now
+	var vis := PackedByteArray()
+	vis.resize(W * H)
 	for u in player_units:
 		if is_instance_valid(u) and u.hp > 0:
-			var center = world_to_cell(u.global_position)
-			var r = 9 if u.is_cavalry() else 6
-			_reveal_circle(center, r)
-
-	# 3. Reveal around player buildings
+			_reveal_into(vis, world_to_cell(u.global_position), 9 if u.is_cavalry() else 6)
 	for b in player_buildings:
 		if is_instance_valid(b) and b.hp > 0:
 			var center = b.origin_cell + Vector2i(int(b.grid_size.x * 0.5), int(b.grid_size.y * 0.5))
 			var r = 12 if b.building_type == Building3D.BuildingType.TOWN_CENTER else (10 if b.building_type in [Building3D.BuildingType.TOWER, Building3D.BuildingType.CASTLE] else 7)
-			_reveal_circle(center, r)
+			_reveal_into(vis, center, r)
 
-	# 4. Render to fog texture
-	for x in range(MAP_WIDTH):
-		for y in range(MAP_HEIGHT):
-			var st = fog_grid[x][y]
-			if st == FogState.VISIBLE:
-				fog_image.set_pixel(x, y, Color(0, 0, 0, 0.0))
-			elif st == FogState.EXPLORED:
-				fog_image.set_pixel(x, y, Color(0.05, 0.05, 0.08, 0.55))
-			else:
-				fog_image.set_pixel(x, y, Color(0.04, 0.04, 0.06, 0.96))
+	# 2. new states; only changed cells go further
+	var changed: Array[Vector2i] = []
+	var full := _fog_full_refresh
+	_fog_full_refresh = false
+	for k in W * H:
+		var old := _fog_state[k]
+		var nw := FogState.VISIBLE if vis[k] == 1 else (FogState.EXPLORED if old != FogState.UNEXPLORED else FogState.UNEXPLORED)
+		if nw != old or full:
+			_fog_state[k] = nw
+			var x := k % W
+			var y := k / W
+			fog_grid[x][y] = nw
+			var c: Array = FOG_RGBA[nw]
+			_fog_pixels[k * 4] = c[0]; _fog_pixels[k * 4 + 1] = c[1]; _fog_pixels[k * 4 + 2] = c[2]; _fog_pixels[k * 4 + 3] = c[3]
+			changed.append(Vector2i(x, y))
+	if not changed.is_empty():
+		fog_image.set_data(W, H, false, Image.FORMAT_RGBA8, _fog_pixels)
+		fog_texture.update(fog_image)
 
-	fog_texture.update(fog_image)
-
-	# 5. Hide/show enemy entities based on line of sight
+	# 3. enemies: units only in sight, buildings once explored
 	for eu in enemy_units:
 		if is_instance_valid(eu):
 			var c = world_to_cell(eu.global_position)
 			eu.visible = (get_fog_state(c) == FogState.VISIBLE)
-
 	for eb in enemy_buildings:
 		if is_instance_valid(eb):
-			var c = eb.origin_cell
-			eb.visible = (get_fog_state(c) >= FogState.EXPLORED)
+			eb.visible = (get_fog_state(eb.origin_cell) >= FogState.EXPLORED)
 
-	# 6. Hide resources in UNEXPLORED fog, shroud in EXPLORED fog
-	for cell in trees:
-		var t_data = trees[cell]
-		var t_raw = t_data.get("node")
-		if is_instance_valid(t_raw) and t_raw is Node3D:
-			var t_node = t_raw as Node3D
-			var st = get_fog_state(cell)
-			t_node.visible = (st >= FogState.EXPLORED)
-			if t_node.visible and t_node.get_child_count() > 0:
-				var spr = t_node.get_child(0)
-				if is_instance_valid(spr) and spr is Sprite3D:
-					spr.modulate = Color(1.0, 1.0, 1.0, 1.0) if st == FogState.VISIBLE else Color(0.68, 0.68, 0.74, 1.0)
+	# 4. resources (hidden while unexplored, shaded while only explored) and bridges, on changed cells only
+	for cell in changed:
+		var st := get_fog_state(cell)
+		for dict in [trees, gold_mines, stone_mines, berry_bushes]:
+			var data = dict.get(cell)
+			if data == null:
+				continue
+			var raw = data.get("node")
+			if is_instance_valid(raw) and raw is Node3D:
+				var nd := raw as Node3D
+				nd.visible = (st >= FogState.EXPLORED)
+				if nd.visible and nd.get_child_count() > 0:
+					var spr = nd.get_child(0)
+					if is_instance_valid(spr) and spr is Sprite3D:
+						spr.modulate = Color(1.0, 1.0, 1.0, 1.0) if st == FogState.VISIBLE else Color(0.68, 0.68, 0.74, 1.0)
+		var nodes = _fog_cell_nodes.get(cell)
+		if nodes != null:
+			for wi in nodes:
+				if is_instance_valid(wi):
+					wi.visible = (st >= FogState.EXPLORED)
 
-	for cell in gold_mines:
-		var g_data = gold_mines[cell]
-		var g_raw = g_data.get("node")
-		if is_instance_valid(g_raw) and g_raw is Node3D:
-			var g_node = g_raw as Node3D
-			var st = get_fog_state(cell)
-			g_node.visible = (st >= FogState.EXPLORED)
-			if g_node.visible and g_node.get_child_count() > 0:
-				var spr = g_node.get_child(0)
-				if is_instance_valid(spr) and spr is Sprite3D:
-					spr.modulate = Color(1.0, 1.0, 1.0, 1.0) if st == FogState.VISIBLE else Color(0.68, 0.68, 0.74, 1.0)
-
-	for cell in stone_mines:
-		var s_data = stone_mines[cell]
-		var s_raw = s_data.get("node")
-		if is_instance_valid(s_raw) and s_raw is Node3D:
-			var s_node = s_raw as Node3D
-			var st = get_fog_state(cell)
-			s_node.visible = (st >= FogState.EXPLORED)
-			if s_node.visible and s_node.get_child_count() > 0:
-				var spr = s_node.get_child(0)
-				if is_instance_valid(spr) and spr is Sprite3D:
-					spr.modulate = Color(1.0, 1.0, 1.0, 1.0) if st == FogState.VISIBLE else Color(0.68, 0.68, 0.74, 1.0)
-
-	for cell in berry_bushes:
-		var b_data = berry_bushes[cell]
-		var b_raw = b_data.get("node")
-		if is_instance_valid(b_raw) and b_raw is Node3D:
-			var b_node = b_raw as Node3D
-			var st = get_fog_state(cell)
-			b_node.visible = (st >= FogState.EXPLORED)
-			if b_node.visible and b_node.get_child_count() > 0:
-				var spr = b_node.get_child(0)
-				if is_instance_valid(spr) and spr is Sprite3D:
-					spr.modulate = Color(1.0, 1.0, 1.0, 1.0) if st == FogState.VISIBLE else Color(0.68, 0.68, 0.74, 1.0)
-
-	# 7. Hide bridges in UNEXPLORED fog (the single water surface stays; the fog overlay covers it)
-	for wi in water_mesh_instances:
-		if is_instance_valid(wi):
-			var cell = wi.get_meta("cell", Vector2i(-1, -1))
-			if cell != Vector2i(-1, -1):
-				wi.visible = (get_fog_state(cell) >= FogState.EXPLORED)
-
-	for bi in bridge_mesh_instances:
-		if is_instance_valid(bi):
-			var cell = bi.get_meta("cell", Vector2i(-1, -1))
-			if cell != Vector2i(-1, -1):
-				bi.visible = (get_fog_state(cell) >= FogState.EXPLORED)
+func _reveal_into(vis: PackedByteArray, center: Vector2i, radius: int) -> void:
+	var offs: PackedInt32Array = _reveal_offsets.get(radius, PackedInt32Array())
+	if offs.is_empty():
+		var r2 := radius * radius
+		for dx in range(-radius, radius + 1):
+			for dy in range(-radius, radius + 1):
+				if dx * dx + dy * dy <= r2:
+					offs.append(dx); offs.append(dy)
+		_reveal_offsets[radius] = offs
+	var W := MAP_WIDTH
+	var H := MAP_HEIGHT
+	for i in range(0, offs.size(), 2):
+		var cx := center.x + offs[i]
+		var cy := center.y + offs[i + 1]
+		if cx >= 0 and cy >= 0 and cx < W and cy < H:
+			vis[cy * W + cx] = 1
 
 func _reveal_circle(center: Vector2i, radius: int) -> void:
 	var r2 = radius * radius

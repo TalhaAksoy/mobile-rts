@@ -916,9 +916,19 @@ func _snap_to_ground() -> void:
 	if map_gen != null and is_instance_valid(map_gen):
 		global_position.y = map_gen.get_height_at(global_position)
 
+## Idle soldiers look for enemies 4x a second (staggered per unit), not every physics tick.
+const IDLE_SCAN_INTERVAL := 0.25
+var _idle_scan_t: float = -1.0
+
 func _handle_idle_scanning() -> void:
 	if unit_type == UnitType.VILLAGER or order != Order.NONE:
 		return                             # ordered soldiers scan in _update_order()
+	if _idle_scan_t < 0.0:
+		_idle_scan_t = fmod(float(get_instance_id() % 997) * 0.013, IDLE_SCAN_INTERVAL)
+	_idle_scan_t -= get_physics_process_delta_time()
+	if _idle_scan_t > 0.0:
+		return
+	_idle_scan_t += IDLE_SCAN_INTERVAL
 	var scan_range = 6.5 if not is_ranged() else attack_range + 2.0
 	var enemy = _find_closest_enemy(scan_range)
 	if enemy:
