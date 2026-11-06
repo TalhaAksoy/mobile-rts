@@ -120,4 +120,34 @@ return function(M)
     P.use(K, "structure")
     A.standard(K, 2.75, 0.6, 3.6, { form = "qi", field = "#C8382F", ec = "#1D1A19", emblem = "hanzi" })
   end
+
+  -- blacksmith: a brick workshop with an open front, the double-acting box bellows and a brick forge, crossbow racks
+  SP.box_bellows_forge = function(K, s)
+    M.ground(K, s, 2)
+    M.open_shed(K, s, -1.85, 1.85, 2.2, 1.6, 2.1, { wall = s.castle_wall or "ashlar", wall_c = s.castle_wall_c or s.wall_c,
+      roof = "curved", rise = 0.7, bay = 1.2 })
+    M.props(K, s, { { "forge", -0.6, 2.4 }, { "bellows", 0.6, 2.4 }, { "anvil", 0.4, 0.8 }, { "rack", -1.3, 0.8 } })
+    Pr.chimney(K, -0.6, 3.6, 2.6, 3.9, "stone_grey")
+  end
+
+  -- lumber camp: a bamboo-and-timber shed, log stacks, the two-man frame saw
+  SP.bamboo_shed = function(K, s)
+    M.ground(K, s, 2)
+    M.open_shed(K, s, -1.85, 0.4, 2.6, 1.2, 1.8, { roof = "curved", rise = 0.5, bay = 0.75, post_c = "#8A9A4A" })
+    M.props(K, s, { { "logs", -1.6, 1.0, 1.2, 3 }, { "sawhorse", 0.9, 0.7 }, { "bamboo", 1.6, 2.9 }, { "logs", 0.9, 1.7, 0.8, 2 } })
+  end
+
+  -- mining camp: a timber adit into the hillside, baskets on carrying poles, an ore crusher
+  SP.timber_adit = function(K, s)
+    M.ground(K, s, 2)
+    Pr.adit(K, -0.4, 2.7, "#8A7A60")
+    M.props(K, s, { { "basket", -1.4, 0.7, "gold" }, { "basket", -0.9, 0.7, "gold" }, { "ore", 1.2, 1.2, "stone_grey", 8 } })
+    local px, py = A.px(-1.15), A.vy(0.7, 0)                                                -- carrying pole between the baskets
+    P.use(K, "props"); P.line(K, px - 10, py - 12, px + 10, py - 12, C.wood, 1); P.use(K, "structure")
+    local cx, cy = A.px(1.4), A.vy(0.4, 0)                                                  -- trip-hammer ore crusher
+    P.use(K, "props")
+    P.rect(K, cx - 8, cy - 4, cx + 8, cy, P.hex("#9A968C")); P.line(K, cx - 10, cy - 12, cx + 8, cy - 6, C.wood_dark, 2)
+    P.rect(K, cx + 5, cy - 9, cx + 9, cy - 4, C.wood); P.vline(K, cx - 6, cy - 14, cy - 4, C.wood_dark)
+    P.use(K, "structure")
+  end
 end

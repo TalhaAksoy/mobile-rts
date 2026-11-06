@@ -53,7 +53,7 @@ S._buildings = {
   tower_top = "cone_lead", tower_c = PAL.lead, timber_c = PAL.timber, door_c = PAL.timber,
   arch = "arch_pointed", window = "lattice", muqarnas_c = PAL.limestone, frame_c = "#8a7a62", sail_c = "#F1EDE3",
   props = { "cypress", "carpet", "copper_pot", "tug" }, base_c = "#B8AC94", paving_c = "#D8CCB4", merlon = "rect",
-  stable = "ottoman_stable", tc = "kulliye", house = "konak", castle = "rumelihisari", mill = "aegean_windmill", watch = "square_gallery",
+  stable = "ottoman_stable", smith = "ottoman_smithy", lumber = "ottoman_lumber", mine = "ottoman_mine", tc = "kulliye", house = "konak", castle = "rumelihisari", mill = "aegean_windmill", watch = "square_gallery",
   barracks = "oda", archery = "nisan_tasi", market = "bedesten",
 }
 return S

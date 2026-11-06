@@ -1,16 +1,17 @@
 {
-  "tris": 709,
-  "verts": 1307,
+  "tris": 551,
+  "verts": 873,
   "materials": [
     "PE_Dirt",
     "PE_WoodDark",
-    "TEAM_Trim",
-    "PE_RoofSlate",
+    "PE_WoodLight",
+    "PE_Felt",
+    "PE_Window",
+    "PE_Iron",
     "PE_StoneGrey",
     "PE_Gold",
-    "PE_Iron",
-    "PE_WoodLight",
-    "PE_Banner_franks"
+    "PE_Banner_franks",
+    "TEAM_Trim"
   ],
   "bounds_min": [
     -1.743,
@@ -20,14 +21,14 @@
   "bounds_max": [
     1.714,
     1.785,
-    1.78
+    2.297
   ],
   "asset_id": "mining_camp",
   "civ": "franks",
   "kind": "buildings",
   "blend": "art_source/blender/franks/mining_camp.blend",
   "glb": "res://assets/3d/buildings/franks/mining_camp.glb",
-  "glb_bytes": 58556,
+  "glb_bytes": 45036,
   "grid": [
     2,
     2

@@ -1,16 +1,17 @@
 {
-  "tris": 717,
-  "verts": 1307,
+  "tris": 369,
+  "verts": 631,
   "materials": [
     "PE_Dirt",
-    "PE_WoodDark",
-    "TEAM_Trim",
-    "PE_Thatch",
     "PE_StoneGrey",
-    "PE_Gold",
-    "PE_Iron",
+    "PE_RoofSlate",
+    "PE_WoodDark",
+    "PE_Window",
     "PE_WoodLight",
-    "PE_Banner_britons"
+    "PE_Iron",
+    "PE_Gold",
+    "PE_Banner_britons",
+    "TEAM_Trim"
   ],
   "bounds_min": [
     -1.725,
@@ -20,14 +21,14 @@
   "bounds_max": [
     1.745,
     1.767,
-    1.777
+    1.76
   ],
   "asset_id": "mining_camp",
   "civ": "britons",
   "kind": "buildings",
   "blend": "art_source/blender/britons/mining_camp.blend",
   "glb": "res://assets/3d/buildings/britons/mining_camp.glb",
-  "glb_bytes": 58648,
+  "glb_bytes": 33796,
   "grid": [
     2,
     2

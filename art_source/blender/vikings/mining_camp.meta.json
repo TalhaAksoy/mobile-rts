@@ -1,17 +1,16 @@
 {
-  "tris": 789,
-  "verts": 1419,
+  "tris": 315,
+  "verts": 557,
   "materials": [
     "PE_Dirt",
-    "PE_WoodLight",
-    "PE_WoodDark",
-    "TEAM_Trim",
-    "PE_Shingle",
-    "PE_LacquerRed",
-    "PE_StoneGrey",
+    "PE_Soil",
+    "PE_Window",
     "PE_Gold",
     "PE_Iron",
-    "PE_Banner_vikings"
+    "PE_Thatch",
+    "PE_WoodDark",
+    "PE_Banner_vikings",
+    "TEAM_Trim"
   ],
   "bounds_min": [
     -1.727,
@@ -21,14 +20,14 @@
   "bounds_max": [
     1.765,
     1.8,
-    2.25
+    1.76
   ],
   "asset_id": "mining_camp",
   "civ": "vikings",
   "kind": "buildings",
   "blend": "art_source/blender/vikings/mining_camp.blend",
   "glb": "res://assets/3d/buildings/vikings/mining_camp.glb",
-  "glb_bytes": 64276,
+  "glb_bytes": 30788,
   "grid": [
     2,
     2

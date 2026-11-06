@@ -129,7 +129,7 @@
         "source": "art_source/blender/ottomans/blacksmith.blend",
         "build_script": "art_source/blender/buildings/ottomans_blacksmith.py",
         "reference": "res://art/buildings/ottomans/blacksmith.png",
-        "tris": 507,
+        "tris": 340,
         "materials": 11,
         "bounds_min": [
           -1.752,
@@ -139,7 +139,7 @@
         "bounds_max": [
           1.791,
           1.73,
-          2.4
+          2.46
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -169,8 +169,8 @@
         "source": "art_source/blender/ottomans/mining_camp.blend",
         "build_script": "art_source/blender/buildings/ottomans_mining_camp.py",
         "reference": "res://art/buildings/ottomans/mining_camp.png",
-        "tris": 709,
-        "materials": 9,
+        "tris": 475,
+        "materials": 12,
         "bounds_min": [
           -1.79,
           -1.755,
@@ -179,7 +179,7 @@
         "bounds_max": [
           1.783,
           1.741,
-          1.58
+          2.197
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -331,8 +331,8 @@
         "source": "art_source/blender/japanese/blacksmith.blend",
         "build_script": "art_source/blender/buildings/japanese_blacksmith.py",
         "reference": "res://art/buildings/japanese/blacksmith.png",
-        "tris": 724,
-        "materials": 10,
+        "tris": 306,
+        "materials": 9,
         "bounds_min": [
           -1.798,
           -1.776,
@@ -341,7 +341,7 @@
         "bounds_max": [
           1.792,
           1.789,
-          2.4
+          1.88
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -371,17 +371,17 @@
         "source": "art_source/blender/japanese/lumber_camp.blend",
         "build_script": "art_source/blender/buildings/japanese_lumber_camp.py",
         "reference": "res://art/buildings/japanese/lumber_camp.png",
-        "tris": 563,
-        "materials": 10,
+        "tris": 334,
+        "materials": 7,
         "bounds_min": [
-          -1.78,
+          -1.85,
           -1.77,
           0.0
         ],
         "bounds_max": [
           1.743,
           1.799,
-          1.881
+          1.68
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -391,17 +391,17 @@
         "source": "art_source/blender/japanese/mining_camp.blend",
         "build_script": "art_source/blender/buildings/japanese_mining_camp.py",
         "reference": "res://art/buildings/japanese/mining_camp.png",
-        "tris": 763,
-        "materials": 10,
+        "tris": 358,
+        "materials": 8,
         "bounds_min": [
-          -1.743,
+          -1.85,
           -1.735,
           0.0
         ],
         "bounds_max": [
           1.714,
           1.785,
-          1.834
+          1.58
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -775,8 +775,8 @@
         "source": "art_source/blender/britons/blacksmith.blend",
         "build_script": "art_source/blender/buildings/britons_blacksmith.py",
         "reference": "res://art/buildings/britons/blacksmith.png",
-        "tris": 663,
-        "materials": 11,
+        "tris": 341,
+        "materials": 10,
         "bounds_min": [
           -1.771,
           -1.763,
@@ -785,7 +785,7 @@
         "bounds_max": [
           1.744,
           1.762,
-          2.4
+          2.41
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -815,7 +815,7 @@
         "source": "art_source/blender/britons/lumber_camp.blend",
         "build_script": "art_source/blender/buildings/britons_lumber_camp.py",
         "reference": "res://art/buildings/britons/lumber_camp.png",
-        "tris": 517,
+        "tris": 401,
         "materials": 9,
         "bounds_min": [
           -1.779,
@@ -823,9 +823,9 @@
           0.0
         ],
         "bounds_max": [
-          1.757,
+          1.94,
           1.769,
-          1.819
+          1.76
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -835,8 +835,8 @@
         "source": "art_source/blender/britons/mining_camp.blend",
         "build_script": "art_source/blender/buildings/britons_mining_camp.py",
         "reference": "res://art/buildings/britons/mining_camp.png",
-        "tris": 717,
-        "materials": 9,
+        "tris": 369,
+        "materials": 10,
         "bounds_min": [
           -1.725,
           -1.728,
@@ -845,7 +845,7 @@
         "bounds_max": [
           1.745,
           1.767,
-          1.777
+          1.76
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -997,7 +997,7 @@
         "source": "art_source/blender/byzantines/blacksmith.blend",
         "build_script": "art_source/blender/buildings/byzantines_blacksmith.py",
         "reference": "res://art/buildings/byzantines/blacksmith.png",
-        "tris": 543,
+        "tris": 400,
         "materials": 11,
         "bounds_min": [
           -1.742,
@@ -1007,7 +1007,7 @@
         "bounds_max": [
           1.741,
           1.755,
-          2.4
+          2.46
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -1037,17 +1037,17 @@
         "source": "art_source/blender/byzantines/lumber_camp.blend",
         "build_script": "art_source/blender/buildings/byzantines_lumber_camp.py",
         "reference": "res://art/buildings/byzantines/lumber_camp.png",
-        "tris": 517,
-        "materials": 9,
+        "tris": 465,
+        "materials": 8,
         "bounds_min": [
           -1.749,
           -1.758,
           0.0
         ],
         "bounds_max": [
-          1.75,
+          1.94,
           1.717,
-          1.58
+          1.92
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -1057,8 +1057,8 @@
         "source": "art_source/blender/byzantines/mining_camp.blend",
         "build_script": "art_source/blender/buildings/byzantines_mining_camp.py",
         "reference": "res://art/buildings/byzantines/mining_camp.png",
-        "tris": 717,
-        "materials": 9,
+        "tris": 451,
+        "materials": 10,
         "bounds_min": [
           -1.764,
           -1.749,
@@ -1066,8 +1066,8 @@
         ],
         "bounds_max": [
           1.796,
-          1.763,
-          1.58
+          1.9,
+          2.38
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -1219,7 +1219,7 @@
         "source": "art_source/blender/chinese/blacksmith.blend",
         "build_script": "art_source/blender/buildings/chinese_blacksmith.py",
         "reference": "res://art/buildings/chinese/blacksmith.png",
-        "tris": 596,
+        "tris": 318,
         "materials": 10,
         "bounds_min": [
           -1.749,
@@ -1229,7 +1229,7 @@
         "bounds_max": [
           1.75,
           1.717,
-          2.4
+          2.36
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -1259,8 +1259,8 @@
         "source": "art_source/blender/chinese/lumber_camp.blend",
         "build_script": "art_source/blender/buildings/chinese_lumber_camp.py",
         "reference": "res://art/buildings/chinese/lumber_camp.png",
-        "tris": 549,
-        "materials": 10,
+        "tris": 382,
+        "materials": 8,
         "bounds_min": [
           -1.764,
           -1.749,
@@ -1269,7 +1269,7 @@
         "bounds_max": [
           1.796,
           1.763,
-          1.883
+          1.84
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -1279,7 +1279,7 @@
         "source": "art_source/blender/chinese/mining_camp.blend",
         "build_script": "art_source/blender/buildings/chinese_mining_camp.py",
         "reference": "res://art/buildings/chinese/mining_camp.png",
-        "tris": 749,
+        "tris": 317,
         "materials": 10,
         "bounds_min": [
           -1.773,
@@ -1288,8 +1288,8 @@
         ],
         "bounds_max": [
           1.748,
-          1.768,
-          1.85
+          1.9,
+          1.76
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -1441,8 +1441,8 @@
         "source": "art_source/blender/franks/blacksmith.blend",
         "build_script": "art_source/blender/buildings/franks_blacksmith.py",
         "reference": "res://art/buildings/franks/blacksmith.png",
-        "tris": 507,
-        "materials": 10,
+        "tris": 336,
+        "materials": 12,
         "bounds_min": [
           -1.798,
           -1.776,
@@ -1451,7 +1451,7 @@
         "bounds_max": [
           1.792,
           1.789,
-          2.4
+          2.86
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -1481,7 +1481,7 @@
         "source": "art_source/blender/franks/lumber_camp.blend",
         "build_script": "art_source/blender/buildings/franks_lumber_camp.py",
         "reference": "res://art/buildings/franks/lumber_camp.png",
-        "tris": 509,
+        "tris": 401,
         "materials": 9,
         "bounds_min": [
           -1.78,
@@ -1491,7 +1491,7 @@
         "bounds_max": [
           1.743,
           1.799,
-          1.83
+          1.76
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -1501,8 +1501,8 @@
         "source": "art_source/blender/franks/mining_camp.blend",
         "build_script": "art_source/blender/buildings/franks_mining_camp.py",
         "reference": "res://art/buildings/franks/mining_camp.png",
-        "tris": 709,
-        "materials": 9,
+        "tris": 551,
+        "materials": 10,
         "bounds_min": [
           -1.743,
           -1.735,
@@ -1511,7 +1511,7 @@
         "bounds_max": [
           1.714,
           1.785,
-          1.78
+          2.297
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -1663,8 +1663,8 @@
         "source": "art_source/blender/saracens/blacksmith.blend",
         "build_script": "art_source/blender/buildings/saracens_blacksmith.py",
         "reference": "res://art/buildings/saracens/blacksmith.png",
-        "tris": 655,
-        "materials": 11,
+        "tris": 300,
+        "materials": 10,
         "bounds_min": [
           -1.747,
           -1.798,
@@ -1673,7 +1673,7 @@
         "bounds_max": [
           1.754,
           1.742,
-          2.4
+          2.18
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -1703,17 +1703,17 @@
         "source": "art_source/blender/saracens/lumber_camp.blend",
         "build_script": "art_source/blender/buildings/saracens_lumber_camp.py",
         "reference": "res://art/buildings/saracens/lumber_camp.png",
-        "tris": 495,
-        "materials": 10,
+        "tris": 407,
+        "materials": 9,
         "bounds_min": [
           -1.799,
           -1.783,
           0.0
         ],
         "bounds_max": [
-          1.75,
+          1.94,
           1.72,
-          1.58
+          1.76
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -1723,17 +1723,17 @@
         "source": "art_source/blender/saracens/mining_camp.blend",
         "build_script": "art_source/blender/buildings/saracens_mining_camp.py",
         "reference": "res://art/buildings/saracens/mining_camp.png",
-        "tris": 695,
-        "materials": 10,
+        "tris": 413,
+        "materials": 11,
         "bounds_min": [
           -1.794,
           -1.738,
           0.0
         ],
         "bounds_max": [
-          1.747,
-          1.77,
-          1.58
+          1.94,
+          1.9,
+          2.38
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -1885,8 +1885,8 @@
         "source": "art_source/blender/teutons/blacksmith.blend",
         "build_script": "art_source/blender/buildings/teutons_blacksmith.py",
         "reference": "res://art/buildings/teutons/blacksmith.png",
-        "tris": 723,
-        "materials": 9,
+        "tris": 390,
+        "materials": 11,
         "bounds_min": [
           -1.725,
           -1.745,
@@ -1895,7 +1895,7 @@
         "bounds_max": [
           1.755,
           1.732,
-          2.4
+          3.16
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -1925,17 +1925,17 @@
         "source": "art_source/blender/teutons/lumber_camp.blend",
         "build_script": "art_source/blender/buildings/teutons_lumber_camp.py",
         "reference": "res://art/buildings/teutons/lumber_camp.png",
-        "tris": 617,
-        "materials": 10,
+        "tris": 411,
+        "materials": 8,
         "bounds_min": [
           -1.754,
           -1.748,
           0.0
         ],
         "bounds_max": [
-          1.764,
+          1.94,
           1.747,
-          1.949
+          1.98
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -1945,8 +1945,8 @@
         "source": "art_source/blender/teutons/mining_camp.blend",
         "build_script": "art_source/blender/buildings/teutons_mining_camp.py",
         "reference": "res://art/buildings/teutons/mining_camp.png",
-        "tris": 817,
-        "materials": 9,
+        "tris": 605,
+        "materials": 10,
         "bounds_min": [
           -1.709,
           -1.789,
@@ -1955,7 +1955,7 @@
         "bounds_max": [
           1.749,
           1.762,
-          1.897
+          2.297
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -2107,17 +2107,17 @@
         "source": "art_source/blender/vikings/blacksmith.blend",
         "build_script": "art_source/blender/buildings/vikings_blacksmith.py",
         "reference": "res://art/buildings/vikings/blacksmith.png",
-        "tris": 737,
-        "materials": 10,
+        "tris": 287,
+        "materials": 9,
         "bounds_min": [
           -1.764,
           -1.749,
           0.0
         ],
         "bounds_max": [
-          1.796,
+          1.94,
           1.763,
-          2.591
+          1.76
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -2147,17 +2147,17 @@
         "source": "art_source/blender/vikings/lumber_camp.blend",
         "build_script": "art_source/blender/buildings/vikings_lumber_camp.py",
         "reference": "res://art/buildings/vikings/lumber_camp.png",
-        "tris": 589,
-        "materials": 10,
+        "tris": 491,
+        "materials": 7,
         "bounds_min": [
           -1.773,
           -1.794,
           0.0
         ],
         "bounds_max": [
-          1.748,
+          1.94,
           1.768,
-          2.305
+          1.76
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -2167,8 +2167,8 @@
         "source": "art_source/blender/vikings/mining_camp.blend",
         "build_script": "art_source/blender/buildings/vikings_mining_camp.py",
         "reference": "res://art/buildings/vikings/mining_camp.png",
-        "tris": 789,
-        "materials": 10,
+        "tris": 315,
+        "materials": 9,
         "bounds_min": [
           -1.727,
           -1.753,
@@ -2177,7 +2177,7 @@
         "bounds_max": [
           1.765,
           1.8,
-          2.25
+          1.76
         ],
         "enabled": true,
         "status": "IMPORTED"

@@ -87,42 +87,42 @@
     "ages": {
      "1": {
       "anchor": [
-       68.5,
-       173
+       73.5,
+       180
       ],
-      "h": 174,
+      "h": 181,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/britons/blacksmith_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/britons/blacksmith_a1_t1.png",
       "view": "oblique",
-      "w": 135
+      "w": 159
      },
      "3": {
       "anchor": [
-       68.5,
-       173
+       73.5,
+       180
       ],
-      "h": 174,
+      "h": 181,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/britons/blacksmith_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/britons/blacksmith_a3_t1.png",
       "view": "oblique",
-      "w": 135
+      "w": 159
      }
     },
     "anchor": [
-     68.5,
-     173
+     73.5,
+     180
     ],
-    "h": 174,
+    "h": 181,
     "plane_z": 2,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/britons/blacksmith_t0.png",
     "t1": "res://assets/sprites_px/buildings/britons/blacksmith_t1.png",
     "view": "oblique",
-    "w": 135
+    "w": 159
    },
    "castle": {
     "ages": {
@@ -197,10 +197,10 @@
     "ages": {
      "1": {
       "anchor": [
-       71.5,
-       130
+       70.5,
+       125
       ],
-      "h": 131,
+      "h": 126,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/britons/lumber_camp_a1_t0.png",
@@ -210,10 +210,10 @@
      },
      "3": {
       "anchor": [
-       71.5,
-       130
+       70.5,
+       125
       ],
-      "h": 131,
+      "h": 126,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/britons/lumber_camp_a3_t0.png",
@@ -223,10 +223,10 @@
      }
     },
     "anchor": [
-     71.5,
-     130
+     70.5,
+     125
     ],
-    "h": 131,
+    "h": 126,
     "plane_z": 2,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/britons/lumber_camp_t0.png",
@@ -279,42 +279,42 @@
     "ages": {
      "1": {
       "anchor": [
-       71.5,
-       130
+       70.5,
+       127
       ],
-      "h": 131,
+      "h": 128,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/britons/mining_camp_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/britons/mining_camp_a1_t1.png",
       "view": "oblique",
-      "w": 134
+      "w": 133
      },
      "3": {
       "anchor": [
-       71.5,
-       130
+       70.5,
+       127
       ],
-      "h": 131,
+      "h": 128,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/britons/mining_camp_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/britons/mining_camp_a3_t1.png",
       "view": "oblique",
-      "w": 134
+      "w": 133
      }
     },
     "anchor": [
-     71.5,
-     130
+     70.5,
+     127
     ],
-    "h": 131,
+    "h": 128,
     "plane_z": 2,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/britons/mining_camp_t0.png",
     "t1": "res://assets/sprites_px/buildings/britons/mining_camp_t1.png",
     "view": "oblique",
-    "w": 134
+    "w": 133
    },
    "stable": {
     "ages": {
@@ -527,42 +527,42 @@
     "ages": {
      "1": {
       "anchor": [
-       68.5,
-       173
+       70.5,
+       184
       ],
-      "h": 174,
+      "h": 185,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/byzantines/blacksmith_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/byzantines/blacksmith_a1_t1.png",
       "view": "oblique",
-      "w": 135
+      "w": 155
      },
      "3": {
       "anchor": [
-       68.5,
-       173
+       70.5,
+       184
       ],
-      "h": 174,
+      "h": 185,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/byzantines/blacksmith_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/byzantines/blacksmith_a3_t1.png",
       "view": "oblique",
-      "w": 135
+      "w": 155
      }
     },
     "anchor": [
-     68.5,
-     173
+     70.5,
+     184
     ],
-    "h": 174,
+    "h": 185,
     "plane_z": 2,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/byzantines/blacksmith_t0.png",
     "t1": "res://assets/sprites_px/buildings/byzantines/blacksmith_t1.png",
     "view": "oblique",
-    "w": 135
+    "w": 155
    },
    "castle": {
     "ages": {
@@ -637,42 +637,42 @@
     "ages": {
      "1": {
       "anchor": [
-       71.5,
-       130
+       70.5,
+       131
       ],
-      "h": 131,
+      "h": 132,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/byzantines/lumber_camp_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/byzantines/lumber_camp_a1_t1.png",
       "view": "oblique",
-      "w": 156
+      "w": 155
      },
      "3": {
       "anchor": [
-       71.5,
-       130
+       70.5,
+       131
       ],
-      "h": 131,
+      "h": 132,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/byzantines/lumber_camp_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/byzantines/lumber_camp_a3_t1.png",
       "view": "oblique",
-      "w": 156
+      "w": 155
      }
     },
     "anchor": [
-     71.5,
-     130
+     70.5,
+     131
     ],
-    "h": 131,
+    "h": 132,
     "plane_z": 2,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/byzantines/lumber_camp_t0.png",
     "t1": "res://assets/sprites_px/buildings/byzantines/lumber_camp_t1.png",
     "view": "oblique",
-    "w": 156
+    "w": 155
    },
    "mill": {
     "ages": {
@@ -719,42 +719,42 @@
     "ages": {
      "1": {
       "anchor": [
-       71.5,
-       130
+       62.5,
+       125
       ],
-      "h": 131,
+      "h": 126,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/byzantines/mining_camp_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/byzantines/mining_camp_a1_t1.png",
       "view": "oblique",
-      "w": 134
+      "w": 127
      },
      "3": {
       "anchor": [
-       71.5,
-       130
+       62.5,
+       125
       ],
-      "h": 131,
+      "h": 126,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/byzantines/mining_camp_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/byzantines/mining_camp_a3_t1.png",
       "view": "oblique",
-      "w": 138
+      "w": 129
      }
     },
     "anchor": [
-     71.5,
-     130
+     62.5,
+     125
     ],
-    "h": 131,
+    "h": 126,
     "plane_z": 2,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/byzantines/mining_camp_t0.png",
     "t1": "res://assets/sprites_px/buildings/byzantines/mining_camp_t1.png",
     "view": "oblique",
-    "w": 134
+    "w": 127
    },
    "stable": {
     "ages": {
@@ -967,42 +967,42 @@
     "ages": {
      "1": {
       "anchor": [
-       75.5,
-       173
+       81.5,
+       196
       ],
-      "h": 174,
+      "h": 197,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/chinese/blacksmith_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/chinese/blacksmith_a1_t1.png",
       "view": "oblique",
-      "w": 142
+      "w": 169
      },
      "3": {
       "anchor": [
-       80.5,
-       173
+       81.5,
+       196
       ],
-      "h": 174,
+      "h": 197,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/chinese/blacksmith_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/chinese/blacksmith_a3_t1.png",
       "view": "oblique",
-      "w": 147
+      "w": 169
      }
     },
     "anchor": [
-     80.5,
-     173
+     81.5,
+     196
     ],
-    "h": 174,
+    "h": 197,
     "plane_z": 2,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/chinese/blacksmith_t0.png",
     "t1": "res://assets/sprites_px/buildings/chinese/blacksmith_t1.png",
     "view": "oblique",
-    "w": 147
+    "w": 169
    },
    "castle": {
     "ages": {
@@ -1077,42 +1077,42 @@
     "ages": {
      "1": {
       "anchor": [
-       78.5,
-       130
+       81.5,
+       131
       ],
-      "h": 131,
+      "h": 132,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/chinese/lumber_camp_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/chinese/lumber_camp_a1_t1.png",
       "view": "oblique",
-      "w": 163
+      "w": 144
      },
      "3": {
       "anchor": [
-       78.5,
-       130
+       81.5,
+       131
       ],
-      "h": 131,
+      "h": 132,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/chinese/lumber_camp_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/chinese/lumber_camp_a3_t1.png",
       "view": "oblique",
-      "w": 163
+      "w": 144
      }
     },
     "anchor": [
-     78.5,
-     130
+     81.5,
+     131
     ],
-    "h": 131,
+    "h": 132,
     "plane_z": 2,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/chinese/lumber_camp_t0.png",
     "t1": "res://assets/sprites_px/buildings/chinese/lumber_camp_t1.png",
     "view": "oblique",
-    "w": 163
+    "w": 144
    },
    "mill": {
     "ages": {
@@ -1159,42 +1159,42 @@
     "ages": {
      "1": {
       "anchor": [
-       78.5,
-       130
+       62.5,
+       125
       ],
-      "h": 131,
+      "h": 126,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/chinese/mining_camp_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/chinese/mining_camp_a1_t1.png",
       "view": "oblique",
-      "w": 141
+      "w": 125
      },
      "3": {
       "anchor": [
-       78.5,
-       130
+       62.5,
+       125
       ],
-      "h": 131,
+      "h": 126,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/chinese/mining_camp_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/chinese/mining_camp_a3_t1.png",
       "view": "oblique",
-      "w": 141
+      "w": 125
      }
     },
     "anchor": [
-     78.5,
-     130
+     62.5,
+     125
     ],
-    "h": 131,
+    "h": 126,
     "plane_z": 2,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/chinese/mining_camp_t0.png",
     "t1": "res://assets/sprites_px/buildings/chinese/mining_camp_t1.png",
     "view": "oblique",
-    "w": 141
+    "w": 125
    },
    "stable": {
     "ages": {
@@ -1407,42 +1407,42 @@
     "ages": {
      "1": {
       "anchor": [
-       68.5,
-       173
+       70.5,
+       191
       ],
-      "h": 174,
+      "h": 192,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/franks/blacksmith_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/franks/blacksmith_a1_t1.png",
       "view": "oblique",
-      "w": 135
+      "w": 156
      },
      "3": {
       "anchor": [
-       68.5,
-       173
+       70.5,
+       191
       ],
-      "h": 174,
+      "h": 192,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/franks/blacksmith_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/franks/blacksmith_a3_t1.png",
       "view": "oblique",
-      "w": 135
+      "w": 156
      }
     },
     "anchor": [
-     68.5,
-     173
+     70.5,
+     191
     ],
-    "h": 174,
+    "h": 192,
     "plane_z": 2,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/franks/blacksmith_t0.png",
     "t1": "res://assets/sprites_px/buildings/franks/blacksmith_t1.png",
     "view": "oblique",
-    "w": 135
+    "w": 156
    },
    "castle": {
     "ages": {
@@ -1517,7 +1517,7 @@
     "ages": {
      "1": {
       "anchor": [
-       71.5,
+       70.5,
        130
       ],
       "h": 131,
@@ -1530,7 +1530,7 @@
      },
      "3": {
       "anchor": [
-       71.5,
+       70.5,
        130
       ],
       "h": 131,
@@ -1543,7 +1543,7 @@
      }
     },
     "anchor": [
-     71.5,
+     70.5,
      130
     ],
     "h": 131,
@@ -1599,42 +1599,42 @@
     "ages": {
      "1": {
       "anchor": [
-       71.5,
-       130
+       62.5,
+       125
       ],
-      "h": 131,
+      "h": 126,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/franks/mining_camp_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/franks/mining_camp_a1_t1.png",
       "view": "oblique",
-      "w": 134
+      "w": 125
      },
      "3": {
       "anchor": [
-       71.5,
-       130
+       62.5,
+       125
       ],
-      "h": 131,
+      "h": 126,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/franks/mining_camp_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/franks/mining_camp_a3_t1.png",
       "view": "oblique",
-      "w": 135
+      "w": 126
      }
     },
     "anchor": [
-     71.5,
-     130
+     62.5,
+     125
     ],
-    "h": 131,
+    "h": 126,
     "plane_z": 2,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/franks/mining_camp_t0.png",
     "t1": "res://assets/sprites_px/buildings/franks/mining_camp_t1.png",
     "view": "oblique",
-    "w": 134
+    "w": 125
    },
    "stable": {
     "ages": {
@@ -1847,42 +1847,42 @@
     "ages": {
      "1": {
       "anchor": [
-       75.5,
-       173
+       81.5,
+       136
       ],
-      "h": 174,
+      "h": 137,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/japanese/blacksmith_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/japanese/blacksmith_a1_t1.png",
       "view": "oblique",
-      "w": 142
+      "w": 169
      },
      "3": {
       "anchor": [
-       80.5,
-       173
+       81.5,
+       136
       ],
-      "h": 174,
+      "h": 137,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/japanese/blacksmith_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/japanese/blacksmith_a3_t1.png",
       "view": "oblique",
-      "w": 147
+      "w": 169
      }
     },
     "anchor": [
-     80.5,
-     173
+     81.5,
+     136
     ],
-    "h": 174,
+    "h": 137,
     "plane_z": 2,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/japanese/blacksmith_t0.png",
     "t1": "res://assets/sprites_px/buildings/japanese/blacksmith_t1.png",
     "view": "oblique",
-    "w": 147
+    "w": 169
    },
    "castle": {
     "ages": {
@@ -1957,42 +1957,42 @@
     "ages": {
      "1": {
       "anchor": [
-       78.5,
-       130
+       76.5,
+       136
       ],
-      "h": 131,
+      "h": 137,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/japanese/lumber_camp_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/japanese/lumber_camp_a1_t1.png",
       "view": "oblique",
-      "w": 163
+      "w": 142
      },
      "3": {
       "anchor": [
-       78.5,
-       130
+       76.5,
+       136
       ],
-      "h": 131,
+      "h": 137,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/japanese/lumber_camp_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/japanese/lumber_camp_a3_t1.png",
       "view": "oblique",
-      "w": 163
+      "w": 142
      }
     },
     "anchor": [
-     78.5,
-     130
+     76.5,
+     136
     ],
-    "h": 131,
+    "h": 137,
     "plane_z": 2,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/japanese/lumber_camp_t0.png",
     "t1": "res://assets/sprites_px/buildings/japanese/lumber_camp_t1.png",
     "view": "oblique",
-    "w": 163
+    "w": 142
    },
    "mill": {
     "ages": {
@@ -2039,42 +2039,42 @@
     "ages": {
      "1": {
       "anchor": [
-       78.5,
-       130
+       76.5,
+       127
       ],
-      "h": 131,
+      "h": 128,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/japanese/mining_camp_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/japanese/mining_camp_a1_t1.png",
       "view": "oblique",
-      "w": 141
+      "w": 139
      },
      "3": {
       "anchor": [
-       78.5,
-       130
+       76.5,
+       127
       ],
-      "h": 131,
+      "h": 128,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/japanese/mining_camp_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/japanese/mining_camp_a3_t1.png",
       "view": "oblique",
-      "w": 141
+      "w": 139
      }
     },
     "anchor": [
-     78.5,
-     130
+     76.5,
+     127
     ],
-    "h": 131,
+    "h": 128,
     "plane_z": 2,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/japanese/mining_camp_t0.png",
     "t1": "res://assets/sprites_px/buildings/japanese/mining_camp_t1.png",
     "view": "oblique",
-    "w": 141
+    "w": 139
    },
    "stable": {
     "ages": {
@@ -2727,42 +2727,42 @@
     "ages": {
      "1": {
       "anchor": [
-       63.5,
-       173
+       70.5,
+       184
       ],
-      "h": 174,
+      "h": 185,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/ottomans/blacksmith_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/ottomans/blacksmith_a1_t1.png",
       "view": "oblique",
-      "w": 130
+      "w": 150
      },
      "3": {
       "anchor": [
-       68.5,
-       173
+       70.5,
+       184
       ],
-      "h": 174,
+      "h": 185,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/ottomans/blacksmith_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/ottomans/blacksmith_a3_t1.png",
       "view": "oblique",
-      "w": 135
+      "w": 150
      }
     },
     "anchor": [
-     68.5,
-     173
+     70.5,
+     184
     ],
-    "h": 174,
+    "h": 185,
     "plane_z": 2,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/ottomans/blacksmith_t0.png",
     "t1": "res://assets/sprites_px/buildings/ottomans/blacksmith_t1.png",
     "view": "oblique",
-    "w": 135
+    "w": 150
    },
    "castle": {
     "ages": {
@@ -2837,42 +2837,42 @@
     "ages": {
      "1": {
       "anchor": [
-       62.5,
-       132
+       70.5,
+       128
       ],
-      "h": 133,
+      "h": 129,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/ottomans/lumber_camp_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/ottomans/lumber_camp_a1_t1.png",
       "view": "oblique",
-      "w": 147
+      "w": 155
      },
      "3": {
       "anchor": [
-       71.5,
-       130
+       70.5,
+       128
       ],
-      "h": 131,
+      "h": 129,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/ottomans/lumber_camp_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/ottomans/lumber_camp_a3_t1.png",
       "view": "oblique",
-      "w": 156
+      "w": 155
      }
     },
     "anchor": [
-     71.5,
-     130
+     70.5,
+     128
     ],
-    "h": 131,
+    "h": 129,
     "plane_z": 2,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/ottomans/lumber_camp_t0.png",
     "t1": "res://assets/sprites_px/buildings/ottomans/lumber_camp_t1.png",
     "view": "oblique",
-    "w": 156
+    "w": 155
    },
    "mill": {
     "ages": {
@@ -2919,42 +2919,42 @@
     "ages": {
      "1": {
       "anchor": [
-       63.5,
-       132
+       70.5,
+       129
       ],
-      "h": 133,
+      "h": 130,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/ottomans/mining_camp_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/ottomans/mining_camp_a1_t1.png",
       "view": "oblique",
-      "w": 126
+      "w": 135
      },
      "3": {
       "anchor": [
-       71.5,
-       130
+       70.5,
+       129
       ],
-      "h": 131,
+      "h": 130,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/ottomans/mining_camp_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/ottomans/mining_camp_a3_t1.png",
       "view": "oblique",
-      "w": 134
+      "w": 135
      }
     },
     "anchor": [
-     71.5,
-     130
+     70.5,
+     129
     ],
-    "h": 131,
+    "h": 130,
     "plane_z": 2,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/ottomans/mining_camp_t0.png",
     "t1": "res://assets/sprites_px/buildings/ottomans/mining_camp_t1.png",
     "view": "oblique",
-    "w": 134
+    "w": 135
    },
    "stable": {
     "ages": {
@@ -3167,42 +3167,42 @@
     "ages": {
      "1": {
       "anchor": [
-       63.5,
-       173
+       62.5,
+       144
       ],
-      "h": 174,
+      "h": 145,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/saracens/blacksmith_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/saracens/blacksmith_a1_t1.png",
       "view": "oblique",
-      "w": 130
+      "w": 131
      },
      "3": {
       "anchor": [
-       63.5,
-       173
+       62.5,
+       144
       ],
-      "h": 174,
+      "h": 145,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/saracens/blacksmith_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/saracens/blacksmith_a3_t1.png",
       "view": "oblique",
-      "w": 130
+      "w": 132
      }
     },
     "anchor": [
-     63.5,
-     173
+     62.5,
+     144
     ],
-    "h": 174,
+    "h": 145,
     "plane_z": 2,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/saracens/blacksmith_t0.png",
     "t1": "res://assets/sprites_px/buildings/saracens/blacksmith_t1.png",
     "view": "oblique",
-    "w": 130
+    "w": 132
    },
    "castle": {
     "ages": {
@@ -3277,42 +3277,42 @@
     "ages": {
      "1": {
       "anchor": [
-       62.5,
-       132
+       70.5,
+       129
       ],
-      "h": 133,
+      "h": 130,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/saracens/lumber_camp_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/saracens/lumber_camp_a1_t1.png",
       "view": "oblique",
-      "w": 147
+      "w": 155
      },
      "3": {
       "anchor": [
-       63.5,
-       132
+       70.5,
+       129
       ],
-      "h": 133,
+      "h": 130,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/saracens/lumber_camp_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/saracens/lumber_camp_a3_t1.png",
       "view": "oblique",
-      "w": 148
+      "w": 155
      }
     },
     "anchor": [
-     63.5,
-     132
+     70.5,
+     129
     ],
-    "h": 133,
+    "h": 130,
     "plane_z": 2,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/saracens/lumber_camp_t0.png",
     "t1": "res://assets/sprites_px/buildings/saracens/lumber_camp_t1.png",
     "view": "oblique",
-    "w": 148
+    "w": 155
    },
    "mill": {
     "ages": {
@@ -3359,42 +3359,42 @@
     "ages": {
      "1": {
       "anchor": [
-       63.5,
-       132
+       62.5,
+       125
       ],
-      "h": 133,
+      "h": 126,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/saracens/mining_camp_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/saracens/mining_camp_a1_t1.png",
       "view": "oblique",
-      "w": 126
+      "w": 125
      },
      "3": {
       "anchor": [
-       63.5,
-       132
+       62.5,
+       125
       ],
-      "h": 133,
+      "h": 126,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/saracens/mining_camp_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/saracens/mining_camp_a3_t1.png",
       "view": "oblique",
-      "w": 126
+      "w": 125
      }
     },
     "anchor": [
-     63.5,
-     132
+     62.5,
+     125
     ],
-    "h": 133,
+    "h": 126,
     "plane_z": 2,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/saracens/mining_camp_t0.png",
     "t1": "res://assets/sprites_px/buildings/saracens/mining_camp_t1.png",
     "view": "oblique",
-    "w": 126
+    "w": 125
    },
    "stable": {
     "ages": {
@@ -3607,42 +3607,42 @@
     "ages": {
      "1": {
       "anchor": [
-       68.5,
-       173
+       62.5,
+       189
       ],
-      "h": 174,
+      "h": 190,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/teutons/blacksmith_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/teutons/blacksmith_a1_t1.png",
       "view": "oblique",
-      "w": 135
+      "w": 125
      },
      "3": {
       "anchor": [
-       68.5,
-       173
+       62.5,
+       189
       ],
-      "h": 174,
+      "h": 190,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/teutons/blacksmith_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/teutons/blacksmith_a3_t1.png",
       "view": "oblique",
-      "w": 135
+      "w": 125
      }
     },
     "anchor": [
-     68.5,
-     173
+     62.5,
+     189
     ],
-    "h": 174,
+    "h": 190,
     "plane_z": 2,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/teutons/blacksmith_t0.png",
     "t1": "res://assets/sprites_px/buildings/teutons/blacksmith_t1.png",
     "view": "oblique",
-    "w": 135
+    "w": 125
    },
    "castle": {
     "ages": {
@@ -3717,10 +3717,10 @@
     "ages": {
      "1": {
       "anchor": [
-       71.5,
-       130
+       70.5,
+       132
       ],
-      "h": 131,
+      "h": 133,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/teutons/lumber_camp_a1_t0.png",
@@ -3730,10 +3730,10 @@
      },
      "3": {
       "anchor": [
-       71.5,
-       130
+       70.5,
+       132
       ],
-      "h": 131,
+      "h": 133,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/teutons/lumber_camp_a3_t0.png",
@@ -3743,10 +3743,10 @@
      }
     },
     "anchor": [
-     71.5,
-     130
+     70.5,
+     132
     ],
-    "h": 131,
+    "h": 133,
     "plane_z": 2,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/teutons/lumber_camp_t0.png",
@@ -3799,42 +3799,42 @@
     "ages": {
      "1": {
       "anchor": [
-       71.5,
-       130
+       62.5,
+       125
       ],
-      "h": 131,
+      "h": 126,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/teutons/mining_camp_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/teutons/mining_camp_a1_t1.png",
       "view": "oblique",
-      "w": 134
+      "w": 126
      },
      "3": {
       "anchor": [
-       71.5,
-       130
+       62.5,
+       125
       ],
-      "h": 131,
+      "h": 126,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/teutons/mining_camp_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/teutons/mining_camp_a3_t1.png",
       "view": "oblique",
-      "w": 134
+      "w": 126
      }
     },
     "anchor": [
-     71.5,
-     130
+     62.5,
+     125
     ],
-    "h": 131,
+    "h": 126,
     "plane_z": 2,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/teutons/mining_camp_t0.png",
     "t1": "res://assets/sprites_px/buildings/teutons/mining_camp_t1.png",
     "view": "oblique",
-    "w": 134
+    "w": 126
    },
    "stable": {
     "ages": {
@@ -4047,42 +4047,42 @@
     "ages": {
      "1": {
       "anchor": [
-       70.5,
-       173
+       71.5,
+       125
       ],
-      "h": 174,
+      "h": 126,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/vikings/blacksmith_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/vikings/blacksmith_a1_t1.png",
       "view": "oblique",
-      "w": 137
+      "w": 157
      },
      "3": {
       "anchor": [
-       70.5,
-       173
+       71.5,
+       125
       ],
-      "h": 174,
+      "h": 126,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/vikings/blacksmith_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/vikings/blacksmith_a3_t1.png",
       "view": "oblique",
-      "w": 137
+      "w": 157
      }
     },
     "anchor": [
-     70.5,
-     173
+     71.5,
+     125
     ],
-    "h": 174,
+    "h": 126,
     "plane_z": 2,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/vikings/blacksmith_t0.png",
     "t1": "res://assets/sprites_px/buildings/vikings/blacksmith_t1.png",
     "view": "oblique",
-    "w": 137
+    "w": 157
    },
    "castle": {
     "ages": {
@@ -4157,42 +4157,42 @@
     "ages": {
      "1": {
       "anchor": [
-       73.5,
-       130
+       62.5,
+       125
       ],
-      "h": 131,
+      "h": 126,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/vikings/lumber_camp_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/vikings/lumber_camp_a1_t1.png",
       "view": "oblique",
-      "w": 158
+      "w": 148
      },
      "3": {
       "anchor": [
-       73.5,
-       130
+       62.5,
+       125
       ],
-      "h": 131,
+      "h": 126,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/vikings/lumber_camp_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/vikings/lumber_camp_a3_t1.png",
       "view": "oblique",
-      "w": 158
+      "w": 148
      }
     },
     "anchor": [
-     73.5,
-     130
+     62.5,
+     125
     ],
-    "h": 131,
+    "h": 126,
     "plane_z": 2,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/vikings/lumber_camp_t0.png",
     "t1": "res://assets/sprites_px/buildings/vikings/lumber_camp_t1.png",
     "view": "oblique",
-    "w": 158
+    "w": 148
    },
    "mill": {
     "ages": {
@@ -4239,42 +4239,42 @@
     "ages": {
      "1": {
       "anchor": [
-       73.5,
-       130
+       62.5,
+       125
       ],
-      "h": 131,
+      "h": 126,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/vikings/mining_camp_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/vikings/mining_camp_a1_t1.png",
       "view": "oblique",
-      "w": 136
+      "w": 125
      },
      "3": {
       "anchor": [
-       73.5,
-       130
+       62.5,
+       125
       ],
-      "h": 131,
+      "h": 126,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/vikings/mining_camp_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/vikings/mining_camp_a3_t1.png",
       "view": "oblique",
-      "w": 136
+      "w": 125
      }
     },
     "anchor": [
-     73.5,
-     130
+     62.5,
+     125
     ],
-    "h": 131,
+    "h": 126,
     "plane_z": 2,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/vikings/mining_camp_t0.png",
     "t1": "res://assets/sprites_px/buildings/vikings/mining_camp_t1.png",
     "view": "oblique",
-    "w": 136
+    "w": 125
    },
    "stable": {
     "ages": {

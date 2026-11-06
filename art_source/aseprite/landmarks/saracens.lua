@@ -144,4 +144,30 @@ return function(M)
     M.props(K, s, { { "horse", -1.6, 1.4, "horse_grey" }, { "horse", 1.2, 1.1, "horse_bay" }, { "trough", 0.0, 1.9 }, { "palm", 2.5, 2.4 } })
     M.flag(K, s, -2.75, 2.6, 4.2)
   end
+
+  -- blacksmith: vaulted stone workshop open to the street, the forge and bellows inside, swords hung on the wall
+  SP.vaulted_smithy = function(K, s)
+    M.ground(K, s, 2)
+    M.block(K, s, -1.85, 1.85, 2.0, 1.8, 2.5, { flat = true, merlons = false })
+    A.door(K, -0.4, 2.0, 1.5, 1.8, "arch_pointed", "#2a2234", { frame = s.frame_c })
+    Pr.glow(K, -0.9, 0.1, 2.0, 0.05, 1.1)
+    Pr.swords(K, 0.7, 1.5, 2.0, 1.7)
+    M.props(K, s, { { "anvil", 0.6, 0.7 }, { "bellows", -1.3, 0.7 }, { "jar", 1.5, 0.5 } })
+  end
+
+  -- lumber camp: palm-trunk and reed shelter, stacked imported timber and palm logs
+  SP.palm_shelter = function(K, s)
+    M.ground(K, s, 2)
+    M.open_shed(K, s, -1.85, 0.4, 2.6, 1.2, 1.7, { roof = "shed", roof_mat = "thatch", roof_c = "#B89A62", rise = 0.4, wall = "planks",
+      wall_c = "#8A6A48", base = false, timber = false, posts = false, bay = 0.75 })
+    M.props(K, s, { { "long_logs", 0.6, 0.6, "#8A6A48", 3 }, { "logs", -1.7, 1.2, 1.0, 2 }, { "palm", 1.6, 2.8 } })
+  end
+
+  -- mining camp: a sandstone quarry face, a timber hoist, baskets and a donkey
+  SP.stone_quarry = function(K, s)
+    M.ground(K, s, 2)
+    Pr.quarry(K, -1.85, 1.85, 2.4, "sand")
+    Pr.headframe(K, 1.2, 1.7)
+    M.props(K, s, { { "basket", -1.3, 0.7, "gold" }, { "donkey", -0.2, 0.6 }, { "blocks", 0.9, 0.5, "sand" } })
+  end
 end

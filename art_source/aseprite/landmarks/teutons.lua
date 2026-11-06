@@ -106,4 +106,33 @@ return function(M)
     M.props(K, s, { { "horse", -1.6, 1.4, "horse_bay" }, { "horse", 1.2, 1.1, "horse_grey" }, { "trough", 0.0, 1.9 }, { "hay", 2.3, 2.2 } })
     M.flag(K, s, 2.75, 2.6, 4.4)
   end
+
+  -- blacksmith: Brick Gothic smithy with a big chimney and an open forge arch, tile gable to the street
+  SP.brick_smithy = function(K, s)
+    M.ground(K, s, 2)
+    M.block(K, s, -1.6, 0.9, 2.0, 1.8, 2.2, { roof = "gable_front", rise = 1.4 })
+    A.door(K, -0.35, 2.0, 1.1, 1.5, "arch_pointed", "#2a2234", { frame = s.frame_c })
+    Pr.glow(K, -0.75, 0.05, 2.0, 0.05, 1.0)
+    Pr.chimney(K, 1.3, 2.6, 0.0, 4.6, "brick")
+    M.props(K, s, { { "anvil", 0.6, 0.8 }, { "barrel", -1.4, 0.6 } })
+    M.flag(K, s, -1.85, 0.4, 3.4)
+  end
+
+  -- lumber camp: a half-timbered shed, a log pile and a sawhorse
+  SP.fachwerk_shed = function(K, s)
+    M.ground(K, s, 2)
+    M.block(K, s, -1.85, 0.2, 2.6, 1.2, 1.8, { wall = "plaster", wall_c = s.plaster_c, timber = s.timber_c, braces = true, roof = "gable", rise = 0.8 })
+    M.door(K, s, -0.8, 2.6, 0.8, 1.3, "rect")
+    M.props(K, s, { { "logs", -1.6, 1.2, 1.4, 3 }, { "sawhorse", 0.9, 0.7 }, { "logs", 0.6, 1.9, 1.0, 2 } })
+    M.flag(K, s, 1.85, 0.4, 3.2)
+  end
+
+  -- mining camp: a timber head-frame with the treadwheel windlass (the Harz and Saxon silver mines, Agricola)
+  SP.treadwheel_mine = function(K, s)
+    M.ground(K, s, 2)
+    Pr.headframe(K, 0.5, 2.6)
+    Pr.treadwheel(K, -1.0, 2.2)
+    M.props(K, s, { { "cart", 0.9, 0.6, "stone_grey" }, { "ore", -1.4, 0.6, "gold", 6 }, { "barrel", 1.6, 1.5 } })
+    M.flag(K, s, -1.85, 0.4, 3.2)
+  end
 end

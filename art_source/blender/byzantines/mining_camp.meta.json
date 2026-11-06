@@ -1,16 +1,17 @@
 {
-  "tris": 717,
-  "verts": 1307,
+  "tris": 451,
+  "verts": 667,
   "materials": [
     "PE_Dirt",
+    "PE_PlasterWhite",
     "PE_WoodDark",
-    "TEAM_Trim",
-    "PE_RoofRed",
+    "PE_WoodLight",
+    "PE_Felt",
+    "PE_Window",
     "PE_StoneGrey",
     "PE_Gold",
-    "PE_Iron",
-    "PE_WoodLight",
-    "PE_Banner_byzantines"
+    "PE_Banner_byzantines",
+    "TEAM_Trim"
   ],
   "bounds_min": [
     -1.764,
@@ -19,15 +20,15 @@
   ],
   "bounds_max": [
     1.796,
-    1.763,
-    1.58
+    1.9,
+    2.38
   ],
   "asset_id": "mining_camp",
   "civ": "byzantines",
   "kind": "buildings",
   "blend": "art_source/blender/byzantines/mining_camp.blend",
   "glb": "res://assets/3d/buildings/byzantines/mining_camp.glb",
-  "glb_bytes": 58696,
+  "glb_bytes": 37024,
   "grid": [
     2,
     2

@@ -1,17 +1,14 @@
 {
-  "tris": 589,
-  "verts": 767,
+  "tris": 491,
+  "verts": 769,
   "materials": [
     "PE_Dirt",
-    "PE_WoodLight",
     "PE_WoodDark",
-    "TEAM_Trim",
-    "PE_Shingle",
-    "PE_LacquerRed",
+    "PE_WoodLight",
     "PE_Beam",
-    "PE_Iron",
+    "PE_Gold",
     "PE_Banner_vikings",
-    "PE_Gold"
+    "TEAM_Trim"
   ],
   "bounds_min": [
     -1.773,
@@ -19,16 +16,16 @@
     0.0
   ],
   "bounds_max": [
-    1.748,
+    1.94,
     1.768,
-    2.305
+    1.76
   ],
   "asset_id": "lumber_camp",
   "civ": "vikings",
   "kind": "buildings",
   "blend": "art_source/blender/vikings/lumber_camp.blend",
   "glb": "res://assets/3d/buildings/vikings/lumber_camp.glb",
-  "glb_bytes": 48360,
+  "glb_bytes": 39708,
   "grid": [
     2,
     2

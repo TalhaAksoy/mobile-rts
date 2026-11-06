@@ -108,4 +108,34 @@ return function(M)
     M.props(K, s, { { "trough", 1.9, 1.6 }, { "hay", -2.3, 1.2 }, { "stone_lantern", 2.5, 0.6 } })
     A.standard(K, -2.75, 0.6, 3.4, { form = "nobori", field = "#F0EEE8", ec = "#1D1A19", emblem = s.emblem })
   end
+
+  -- blacksmith: a swordsmith's forge, dark timber shed, clay furnace and bellows, a shimenawa rope over the forge
+  SP.katana_forge = function(K, s)
+    M.ground(K, s, 2)
+    M.open_shed(K, s, -1.85, 1.85, 2.2, 1.6, 2.0, { wall = "planks", wall_c = "wood_dark", roof = "curved", rise = 0.7, base = false,
+      timber = false, posts = false, bay = 1.2, post_c = "wood_dark" })
+    Pr.shimenawa(K, -1.5, 1.5, 2.2, 1.8)
+    M.props(K, s, { { "furnace", -0.7, 2.3 }, { "bellows", 0.4, 2.3 }, { "anvil", 0.6, 0.8 }, { "barrel", -1.4, 0.6 } })
+  end
+
+  -- lumber camp: long cedar (sugi) logs, a bamboo fence and a thatched shed
+  SP.cedar_yard = function(K, s)
+    M.ground(K, s, 2)
+    M.open_shed(K, s, -1.85, 0.2, 2.6, 1.2, 1.8, { roof = "hip", roof_mat = "thatch", roof_c = "#A88A50", rise = 0.7, bay = 0.9 })
+    M.props(K, s, { { "long_logs", 0.8, 1.6, "#9A5A3A", 3 }, { "long_logs", 0.6, 0.6, "#9A5A3A", 2 }, { "bamboo", 1.7, 3.0 }, { "sawhorse", -1.2, 0.6 } })
+  end
+
+  -- mining camp: a timber-framed shaft mouth in the hillside, straw baskets and a heap of stone
+  SP.shaft_mouth = function(K, s)
+    M.ground(K, s, 2)
+    M.open_shed(K, s, -1.85, -0.2, 2.8, 1.0, 1.5, { roof = "hip", roof_mat = "thatch", roof_c = "#A88A50", rise = 0.5, bay = 0.8 })
+    Pr.shaft(K, 0.7, 2.3, 12)                                                               -- shaft mouth under a timber frame
+    local fx, fy = A.px(0.7), A.vy(2.3, 0)
+    P.use(K, "props")
+    P.rect(K, fx - 13, fy - 30, fx - 11, fy - 5, C.wood_dark); P.rect(K, fx + 11, fy - 30, fx + 13, fy - 5, C.wood_dark)
+    P.rect(K, fx - 16, fy - 33, fx + 16, fy - 30, C.wood); P.rect(K, fx - 13, fy - 26, fx + 13, fy - 25, C.wood_dark)
+    P.vline(K, fx, fy - 25, fy - 6, C.straw)
+    P.use(K, "structure")
+    M.props(K, s, { { "basket", -1.2, 0.8, "gold" }, { "basket", -0.5, 0.5, "stone_grey" }, { "ore", 1.3, 0.9, "stone_grey", 10 } })
+  end
 end

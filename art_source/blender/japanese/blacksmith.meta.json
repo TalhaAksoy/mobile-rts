@@ -1,17 +1,16 @@
 {
-  "tris": 724,
-  "verts": 1272,
+  "tris": 306,
+  "verts": 500,
   "materials": [
     "PE_Dirt",
-    "PE_StoneGrey",
-    "PE_PlasterWhite",
     "PE_WoodDark",
-    "PE_Lattice",
-    "TEAM_Trim",
     "PE_RoofDark",
+    "TEAM_Trim",
     "PE_Gold",
-    "PE_Iron",
-    "PE_WoodLight"
+    "PE_WoodLight",
+    "PE_Thatch",
+    "PE_PlasterWhite",
+    "PE_Iron"
   ],
   "bounds_min": [
     -1.798,
@@ -21,14 +20,14 @@
   "bounds_max": [
     1.792,
     1.789,
-    2.4
+    1.88
   ],
   "asset_id": "blacksmith",
   "civ": "japanese",
   "kind": "buildings",
   "blend": "art_source/blender/japanese/blacksmith.blend",
   "glb": "res://assets/3d/buildings/japanese/blacksmith.glb",
-  "glb_bytes": 57444,
+  "glb_bytes": 28584,
   "grid": [
     2,
     2

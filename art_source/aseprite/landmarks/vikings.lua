@@ -148,4 +148,33 @@ return function(M)
     M.props(K, s, { { "horse", -1.6, 1.4, "horse_bay" }, { "horse", 1.2, 1.1, "horse_grey" }, { "trough", 0.0, 1.9 }, { "hay", 2.3, 2.2 } })
     M.flag(K, s, 2.75, 2.6, 4.0)
   end
+
+  -- blacksmith: an open-sided turf-roofed shed, a clay forge with bellows, the anvil on a log
+  SP.turf_forge = function(K, s)
+    M.ground(K, s, 2)
+    M.open_shed(K, s, -1.85, 1.0, 2.2, 1.4, 1.6, { wall = "planks", wall_c = s.timber_c, roof = "gable", roof_mat = "turf",
+      roof_c = "#5E7A3A", rise = 0.8, base = false, timber = false, posts = false, bay = 0.95 })
+    M.props(K, s, { { "furnace", -0.6, 2.4 }, { "bellows", 0.4, 2.4 }, { "stump", 0.5, 0.8 }, { "anvil", -0.6, 0.7 }, { "runestone", 1.6, 1.4 } })
+    M.flag(K, s, 1.85, 0.4, 3.0)
+  end
+
+  -- lumber camp: pine logs, an adze bench and a half-built boat on its trestles
+  SP.boat_yard = function(K, s)
+    M.ground(K, s, 2)
+    Pr.boat(K, 0.0, 2.2)
+    M.props(K, s, { { "logs", -1.7, 1.0, 1.2, 3 }, { "stump", 1.3, 0.8 }, { "sawhorse", 0.4, 0.5 } })
+    M.flag(K, s, 1.85, 0.4, 3.0)
+  end
+
+  -- mining camp: a bog-iron pit, a clay shaft furnace for smelting and heaps of slag
+  SP.bog_iron = function(K, s)
+    M.ground(K, s, 2)
+    local px, py = A.px(-0.6), A.vy(2.2, 0)
+    P.use(K, "props")
+    Pr.blob(K, px, py - 4, 22, 7, P.hex("#4A3A2A"), 3)                                     -- the peat bog pit
+    Pr.blob(K, px - 4, py - 5, 12, 4, P.hex("#6A4A2A"), 5)
+    P.use(K, "structure")
+    M.props(K, s, { { "furnace", 1.1, 2.0 }, { "ore", 1.4, 0.8, "iron_dark", 8 }, { "ore", -1.3, 0.6, "#8A4A2A", 6 }, { "basket", 0.2, 0.6, "#8A4A2A" } })
+    M.flag(K, s, -1.85, 0.4, 3.0)
+  end
 end

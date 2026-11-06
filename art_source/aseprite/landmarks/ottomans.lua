@@ -127,4 +127,34 @@ return function(M)
     M.props(K, s, { { "horse", -1.6, 1.4, "horse_grey" }, { "horse", 1.2, 1.1, "horse_bay" }, { "trough", 0.0, 1.9 }, { "hay", 2.3, 2.2 }, { "cypress", -2.6, 2.6 } })
     M.flag(K, s, 2.75, 2.6, 4.2)
   end
+
+  -- blacksmith: stone shed under a tile roof, a brick chimney, anvil and quench trough under an open timber awning
+  SP.ottoman_smithy = function(K, s)
+    M.ground(K, s, 2)
+    M.block(K, s, -1.85, 0.2, 2.0, 1.8, 2.3, { roof = "hip", rise = 0.8 })
+    M.door(K, s, -0.9, 2.0, 0.7, 1.45, "arch_round")
+    Pr.chimney(K, -1.4, 3.0, 2.6, 4.0, "brick")
+    M.open_shed(K, s, 0.3, 1.85, 1.6, 1.4, 1.8, { wall = "planks", wall_c = s.timber_c, roof = "shed", rise = 0.5, base = false,
+      timber = false, posts = false, bay = 0.8 })
+    M.props(K, s, { { "forge", 1.1, 1.7 }, { "anvil", 0.8, 0.7 }, { "trough", -0.8, 0.5 } })
+    M.flag(K, s, -1.85, 0.5, 3.4)
+  end
+
+  -- lumber camp: open timber shed under a red tile roof, stacked logs, the two-man saw on its trestle
+  SP.ottoman_lumber = function(K, s)
+    M.ground(K, s, 2)
+    M.open_shed(K, s, -1.85, 0.7, 2.6, 1.2, 1.9, { roof = "shed", rise = 0.5, wall = "planks", wall_c = s.timber_c, base = false,
+      timber = false, posts = false, bay = 0.85 })
+    M.props(K, s, { { "logs", -1.7, 1.5, 1.6, 3 }, { "sawhorse", 0.3, 0.6 }, { "logs", 0.9, 1.2, 1.0, 2 }, { "cypress", 1.6, 2.8 } })
+    M.flag(K, s, 1.8, 0.5, 3.2)
+  end
+
+  -- mining camp: timber head-frame over the shaft, ore baskets, a pack donkey
+  SP.ottoman_mine = function(K, s)
+    M.ground(K, s, 2)
+    M.block(K, s, -1.85, -0.3, 2.6, 1.2, 1.8, { roof = "hip", rise = 0.5 })
+    Pr.headframe(K, 0.8, 2.4)
+    M.props(K, s, { { "basket", -1.2, 0.9, "gold" }, { "basket", -0.6, 0.6, "stone_grey" }, { "donkey", 0.6, 0.7 }, { "ore", 1.5, 1.4, "gold", 7 } })
+    M.flag(K, s, -1.85, 0.4, 3.2)
+  end
 end

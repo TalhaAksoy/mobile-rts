@@ -1,18 +1,17 @@
 {
-  "tris": 663,
-  "verts": 1123,
+  "tris": 341,
+  "verts": 517,
   "materials": [
     "PE_Dirt",
     "PE_StoneGrey",
-    "PE_PlasterWhite",
-    "PE_Beam",
-    "PE_Window",
     "PE_WoodDark",
-    "TEAM_Trim",
+    "PE_Iron",
     "PE_Thatch",
     "PE_Gold",
-    "PE_Iron",
-    "PE_WoodLight"
+    "PE_ClothRed",
+    "PE_WoodLight",
+    "PE_Banner_britons",
+    "TEAM_Trim"
   ],
   "bounds_min": [
     -1.771,
@@ -22,14 +21,14 @@
   "bounds_max": [
     1.744,
     1.762,
-    2.4
+    2.41
   ],
   "asset_id": "blacksmith",
   "civ": "britons",
   "kind": "buildings",
   "blend": "art_source/blender/britons/blacksmith.blend",
   "glb": "res://assets/3d/buildings/britons/blacksmith.glb",
-  "glb_bytes": 53380,
+  "glb_bytes": 30352,
   "grid": [
     2,
     2

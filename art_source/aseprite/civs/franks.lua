@@ -35,6 +35,6 @@ S._buildings = {
   shutters = nil, merlon = "rect", paving_c = "#D2C6AA", castle_tower_top = "cone", keep_roof = "hip",
   sails = 4, sail_c = PAL.linen, props = { "well", "barrel", "cart" },
   watch = "pepperpot_tower",
-  barracks = "buttress_hall", archery = "pentice_range", stable = "frank_stable", tc = "cite_palace", castle = "philippe_castle", house = "timber_townhouse", mill = "post_mill",
+  barracks = "buttress_hall", archery = "pentice_range", stable = "frank_stable", smith = "frank_smithy", lumber = "frank_lumber", mine = "frank_mine", tc = "cite_palace", castle = "philippe_castle", house = "timber_townhouse", mill = "post_mill",
 }
 return S

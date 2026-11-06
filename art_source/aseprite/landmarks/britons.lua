@@ -107,4 +107,34 @@ return function(M)
     A.standard(K, 1.3, 1.6, 3.6, { form = "pennon", field = "#B3282D", field2 = "#F2EFE6" })
     M.props(K, s, { { "rack", 2.1, 1.0 }, { "dummy", -1.9, 0.9 }, { "dummy", -1.2, 0.5 }, { "hay", -2.4, 1.6 } })
   end
+
+  -- blacksmith: stone smithy under thatch, an open forge with a hood, horseshoes hung on the wall
+  SP.briton_smithy = function(K, s)
+    M.ground(K, s, 2)
+    M.block(K, s, -1.85, 0.6, 2.0, 1.8, 2.0, { roof = "gable", roof_mat = "thatch", roof_c = s.palette.thatch, rise = 1.0, over = 0.4 })
+    M.door(K, s, -1.2, 2.0, 0.65, 1.4, "rect")
+    Pr.horseshoes(K, -0.6, 0.4, 2.0, 1.5)
+    Pr.chimney(K, 0.3, 3.0, 2.4, 3.8, "stone_dark")
+    M.props(K, s, { { "forge", 1.2, 1.3 }, { "anvil", 0.4, 0.6 }, { "barrel", -1.4, 0.5 } })
+    M.flag(K, s, 1.85, 0.4, 3.2)
+  end
+
+  -- lumber camp: a saw pit with the log on trestles, oak logs, a thatched lean-to
+  SP.sawpit_camp = function(K, s)
+    M.ground(K, s, 2)
+    M.open_shed(K, s, -1.85, 0.0, 2.8, 1.0, 1.6, { roof = "shed", roof_mat = "thatch", roof_c = s.palette.thatch, rise = 0.5,
+      wall = "planks", wall_c = s.timber_c, base = false, timber = false, posts = false, bay = 0.9 })
+    Pr.sawpit(K, 0.6, 1.6)
+    M.props(K, s, { { "logs", -1.7, 1.0, 1.2, 3 }, { "stump", 1.4, 2.6 }, { "hay", 1.5, 0.5 } })
+    M.flag(K, s, 1.85, 0.4, 3.0)
+  end
+
+  -- mining camp: a timber windlass over the shaft, ore barrows (Cornish tin, Welsh lead)
+  SP.windlass_mine = function(K, s)
+    M.ground(K, s, 2)
+    M.block(K, s, -1.85, -0.4, 2.6, 1.2, 1.7, { roof = "gable", rise = 0.6 })
+    Pr.windlass(K, 0.7, 2.2)
+    M.props(K, s, { { "cart", -0.6, 0.7, "stone_grey" }, { "ore", 1.3, 1.0, "stone_grey", 7 }, { "ore", 0.4, 0.5, "gold", 5 } })
+    M.flag(K, s, -1.85, 0.4, 3.0)
+  end
 end

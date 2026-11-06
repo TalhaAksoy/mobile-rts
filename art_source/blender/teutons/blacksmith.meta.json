@@ -1,16 +1,18 @@
 {
-  "tris": 723,
-  "verts": 1243,
+  "tris": 390,
+  "verts": 610,
   "materials": [
     "PE_Dirt",
-    "PE_StoneGrey",
+    "PE_BrickRed",
+    "PE_RoofRed",
     "PE_Window",
-    "PE_WoodDark",
-    "TEAM_Trim",
-    "PE_SlateDark",
+    "PE_StoneGrey",
     "PE_Gold",
+    "TEAM_Trim",
+    "PE_WoodDark",
     "PE_Iron",
-    "PE_WoodLight"
+    "PE_WoodLight",
+    "PE_Banner_teutons"
   ],
   "bounds_min": [
     -1.725,
@@ -20,14 +22,14 @@
   "bounds_max": [
     1.755,
     1.732,
-    2.4
+    3.16
   ],
   "asset_id": "blacksmith",
   "civ": "teutons",
   "kind": "buildings",
   "blend": "art_source/blender/teutons/blacksmith.blend",
   "glb": "res://assets/3d/buildings/teutons/blacksmith.glb",
-  "glb_bytes": 55756,
+  "glb_bytes": 34772,
   "grid": [
     2,
     2

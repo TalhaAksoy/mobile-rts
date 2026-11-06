@@ -372,4 +372,206 @@ Pr.tree_small = function(K, x, d, c)
   use(K, "structure")
 end
 
+---------------------------------------------------------------------------------------------- workshop / camp props
+-- chimney stack (h0 -> h1 m tall at depth d) with a dithered smoke plume
+Pr.chimney = function(K, x, d, h0, h1, c, smoke)
+  local cx, y0, y1 = A.px(x), A.vy(d, h0), A.vy(d, h1)
+  use(K, "props")
+  c = col(c or "brick")
+  for y = y1, y0 do for xx = cx - 3, cx + 3 do put(K, xx, y, A.WALL.brick(c, (xx == cx - 3) and 2 or ((xx == cx + 3) and 4 or 3), xx, y, xx - cx, y, {})) end end
+  P.hline(K, cx - 4, cx + 4, y1, tone(c, 2))
+  if smoke ~= false then
+    for _, q in ipairs({ { 2, -6, 3 }, { 5, -13, 4 }, { 1, -21, 4 } }) do for yy = -q[3], q[3] do for xx = -q[3], q[3] do
+      if xx * xx + yy * yy <= q[3] * q[3] and (xx + yy) % 2 == 0 then put(K, cx + q[1] + xx, y1 + q[2] + yy, C.grey_cloth) end end end end
+  end
+  use(K, "structure")
+end
+-- forge glow inside an opening: a dark mouth with embers (x0..x1 m, at depth d, from h0 to h1 m)
+Pr.glow = function(K, x0, x1, d, h0, h1)
+  local px0, px1, yb, yt = A.px(x0), A.px(x1), A.vy(d, h0), A.vy(d, h1)
+  use(K, "props")
+  for y = yt, yb do for x = px0, px1 do
+    local t = (y - yt) / math.max(1, yb - yt)
+    put(K, x, y, (t > 0.7) and (((x + y) % 3 == 0) and C.yellow or C.orange) or ((t > 0.45) and C.red_dark or P.hex("#2a2234")))
+  end end
+  use(K, "structure")
+end
+Pr.basket = function(K, x, d, load)
+  local px, py = at(x, d)
+  use(K, "props")
+  for y = py - 8, py do for xx = px - 6, px + 6 do put(K, xx, y, tone(C.straw, ((xx + y) % 3 == 0) and 4 or ((xx < px - 3) and 2 or 3))) end end
+  if load then Pr.blob(K, px, py - 9, 5, 3, col(load), 3) end
+  use(K, "structure")
+end
+Pr.donkey = function(K, x, d)
+  local px, py = at(x, d)
+  local c = col("#8A7C6E")
+  A.shadow_ellipse(K, x + 0.1, d, 10, 2)
+  use(K, "props")
+  for _, lx in ipairs({ -6, -3, 4, 7 }) do P.rect(K, px + lx, py - 10, px + lx + 1, py, tone(c, 4)) end
+  for y = -4, 4 do for xx = -9, 9 do if (xx * xx) / 85 + (y * y) / 18 <= 1 then put(K, px + xx, py - 13 + y, tone(c, (y < -1) and 2 or 3)) end end end
+  P.line(K, px - 8, py - 15, px - 11, py - 22, tone(c, 3), 2); P.rect(K, px - 14, py - 24, px - 10, py - 20, tone(c, 3))
+  P.vline(K, px - 12, py - 29, py - 24, tone(c, 4)); P.vline(K, px - 10, py - 29, py - 24, tone(c, 4))       -- long ears
+  for _, sx in ipairs({ -1, 1 }) do Pr.blob(K, px + sx * 4, py - 16, 3, 3, C.straw, 4) end                  -- panniers
+  use(K, "structure")
+end
+-- dark shaft mouth with a timber collar
+Pr.shaft = function(K, x, d, w)
+  local px, py = at(x, d)
+  w = w or 10
+  use(K, "props")
+  P.rect(K, px - w, py - 5, px + w, py, P.hex("#1a1418")); P.hline(K, px - w - 1, px + w + 1, py - 6, C.wood); P.hline(K, px - w - 1, px + w + 1, py, C.wood_dark)
+  use(K, "structure")
+end
+-- hand windlass over a shaft: two posts, a drum with a crank and a rope
+Pr.windlass = function(K, x, d)
+  local px, py = at(x, d)
+  Pr.shaft(K, x, d, 9)
+  use(K, "props")
+  P.vline(K, px - 9, py - 18, py - 5, C.wood_dark); P.vline(K, px + 9, py - 18, py - 5, C.wood_dark)
+  P.rect(K, px - 8, py - 18, px + 8, py - 15, C.wood); P.line(K, px + 9, py - 16, px + 13, py - 12, C.iron, 1)
+  P.vline(K, px, py - 15, py - 6, C.linen)
+  use(K, "structure")
+end
+-- treadwheel windlass (Agricola): a big wheel beside a head-frame
+Pr.treadwheel = function(K, x, d)
+  local px, py = at(x, d)
+  use(K, "props")
+  for k = 0, 99 do                                                          -- rim
+    local ang = k * math.pi / 50
+    put(K, px + math.floor(math.cos(ang) * 15 + 0.5), py - 18 + math.floor(math.sin(ang) * 15 + 0.5), C.wood_dark)
+    put(K, px + math.floor(math.cos(ang) * 14 + 0.5), py - 18 + math.floor(math.sin(ang) * 14 + 0.5), C.wood)
+  end
+  for a = 0, 7 do
+    local ang = a * math.pi / 4
+    P.line(K, px, py - 18, px + math.floor(math.cos(ang) * 14), py - 18 + math.floor(math.sin(ang) * 14), C.wood, 1)
+  end
+  put(K, px, py - 18, C.iron)
+  P.line(K, px - 12, py, px - 4, py - 16, C.wood_dark, 1); P.line(K, px + 12, py, px + 4, py - 16, C.wood_dark, 1)
+  use(K, "structure")
+end
+-- clay shaft furnace (bloomery) with a glowing tuyere
+Pr.furnace = function(K, x, d)
+  local px, py = at(x, d)
+  A.shadow_ellipse(K, x + 0.2, d, 9, 3)
+  use(K, "props")
+  local c = col("#9A6A48")
+  for y = py - 26, py do
+    local hw = 7 - math.floor((py - y) / 8)
+    for xx = px - hw, px + hw do put(K, xx, y, tone(c, (xx < px - hw + 2) and 2 or ((xx > px + hw - 2) and 4 or 3))) end
+  end
+  P.rect(K, px - 2, py - 6, px + 2, py - 3, C.orange); put(K, px, py - 5, C.yellow)
+  for _, q in ipairs({ { 1, -31, 2 }, { 3, -37, 3 } }) do for yy = -q[3], q[3] do for xx = -q[3], q[3] do
+    if xx * xx + yy * yy <= q[3] * q[3] and (xx + yy) % 2 == 0 then put(K, px + q[1] + xx, py + q[2] + yy, C.grey_cloth) end end end end
+  use(K, "structure")
+end
+-- quarry face: stepped benches of cut stone rising behind
+Pr.quarry = function(K, x0, x1, d, c)
+  c = col(c or "sand")
+  use(K, "props")
+  for step = 0, 2 do
+    local yb, yt = A.vy(d + step * 0.35, 0.8 * step), A.vy(d + step * 0.35, 0.8 * (step + 1))
+    for y = yt, yb do for x = A.px(x0 + step * 0.25), A.px(x1 - step * 0.25) do
+      put(K, x, y, A.WALL.ashlar(c, (y < yt + 2) and 2 or ((N(x, y, 9) < 0.2) and 4 or 3), x, y, x, y, {}))
+    end end
+  end
+  use(K, "structure")
+end
+-- adit: a timber-framed tunnel mouth into an earth bank
+Pr.adit = function(K, x, d, bank)
+  local px, py = at(x, d)
+  use(K, "props")
+  Pr.blob(K, px, py - 14, 26, 14, col(bank or "#8A6A48"), 6)
+  P.rect(K, px - 7, py - 18, px + 7, py, P.hex("#1a1418"))
+  P.rect(K, px - 9, py - 20, px - 7, py, C.wood_dark); P.rect(K, px + 7, py - 20, px + 9, py, C.wood_dark)
+  P.rect(K, px - 11, py - 22, px + 11, py - 19, C.wood)
+  use(K, "structure")
+end
+-- half-built boat: curved keel and a few strakes on trestles
+Pr.boat = function(K, x, d)
+  local px, py = at(x, d)
+  A.shadow_ellipse(K, x + 0.6, d, 30, 4)
+  use(K, "props")
+  for i = -28, 28 do
+    local yy = math.floor((i * i) / 90)
+    put(K, px + i, py - 14 + yy, C.wood_dark); put(K, px + i, py - 13 + yy, C.wood_dark)
+    if math.abs(i) < 22 then put(K, px + i, py - 17 + yy, C.wood); put(K, px + i, py - 18 + yy, C.wood_light) end
+  end
+  P.line(K, px - 28, py - 14, px - 32, py - 26, C.wood_dark, 2); P.line(K, px + 28, py - 14, px + 32, py - 26, C.wood_dark, 2)
+  for _, tx in ipairs({ -14, 14 }) do P.vline(K, px + tx, py - 10, py, C.wood_dark) end
+  use(K, "structure")
+end
+-- horseshoes / tools hung on a wall (row at depth d, height h)
+Pr.horseshoes = function(K, x0, x1, d, h)
+  use(K, "props")
+  local y = A.vy(d, h)
+  for x = A.px(x0), A.px(x1), 7 do
+    P.ellipse(K, x, y, 2, 3, C.iron); put(K, x, y + 1, P.hex("#2a2234")); put(K, x, y, P.hex("#2a2234"))
+  end
+  use(K, "structure")
+end
+Pr.swords = function(K, x0, x1, d, h)
+  use(K, "props")
+  local y = A.vy(d, h)
+  for x = A.px(x0), A.px(x1), 6 do
+    P.vline(K, x, y - 12, y, C.steel); P.hline(K, x - 2, x + 2, y - 9, C.gold); put(K, x, y - 13, C.brown)
+  end
+  use(K, "structure")
+end
+-- box bellows / leather bellows beside a forge
+Pr.bellows = function(K, x, d)
+  local px, py = at(x, d)
+  use(K, "props")
+  P.rect(K, px - 8, py - 9, px + 8, py, C.wood); P.hline(K, px - 8, px + 8, py - 9, C.wood_light); P.line(K, px + 8, py - 6, px + 13, py - 6, C.wood_dark, 1)
+  P.vline(K, px - 10, py - 13, py - 4, C.wood_dark)
+  use(K, "structure")
+end
+-- shimenawa: straw rope with white zigzag paper (shide) hung across x0..x1 at height h
+Pr.shimenawa = function(K, x0, x1, d, h)
+  use(K, "props")
+  local y = A.vy(d, h)
+  for x = A.px(x0), A.px(x1) do
+    local sag = math.floor(3 * math.sin((x - A.px(x0)) / math.max(1, A.px(x1) - A.px(x0)) * math.pi))
+    put(K, x, y + sag, C.straw); put(K, x, y + sag + 1, C.straw_dark)
+  end
+  for x = A.px(x0) + 6, A.px(x1) - 4, 10 do
+    local sag = math.floor(3 * math.sin((x - A.px(x0)) / math.max(1, A.px(x1) - A.px(x0)) * math.pi))
+    for k = 0, 5 do put(K, x + ((k % 2 == 0) and 0 or 1), y + sag + 2 + k, C.white) end
+  end
+  use(K, "structure")
+end
+-- saw pit: a dark trench with a log across it on trestles, the top sawyer's saw
+Pr.sawpit = function(K, x, d)
+  local px, py = at(x, d)
+  use(K, "props")
+  P.rect(K, px - 18, py - 5, px + 18, py, P.hex("#2a2026")); P.hline(K, px - 19, px + 19, py - 6, C.wood_dark)
+  P.rect(K, px - 22, py - 11, px + 22, py - 7, C.wood); P.hline(K, px - 22, px + 22, py - 11, C.wood_light)
+  Pr.blob(K, px - 22, py - 9, 3, 3, C.wood_light, 2)
+  P.vline(K, px + 2, py - 22, py - 1, C.steel); P.hline(K, px - 1, px + 5, py - 22, C.wood_dark)
+  use(K, "structure")
+end
+-- marble / ashlar blocks
+Pr.blocks = function(K, x, d, c)
+  local px, py = at(x, d)
+  c = col(c or "#E8E2D6")
+  use(K, "props")
+  for _, q in ipairs({ { -8, 0, 8, 7 }, { 4, 0, 9, 6 }, { -3, -7, 7, 6 } }) do
+    local x0, y0 = px + q[1], py + q[2] - q[4]
+    P.rect(K, x0, y0, x0 + q[3], y0 + q[4], tone(c, 3)); P.hline(K, x0, x0 + q[3], y0, tone(c, 1)); P.vline(K, x0 + q[3], y0, y0 + q[4], tone(c, 4))
+  end
+  use(K, "structure")
+end
+-- cedar / palm logs: long logs lying sideways (reddish cedar or ringed palm trunks)
+Pr.long_logs = function(K, x, d, c, n)
+  local px, py = at(x, d)
+  c = col(c or "wood")
+  use(K, "props")
+  for i = 0, (n or 3) - 1 do
+    local y = py - 3 - i * 5
+    P.rect(K, px - 22 + i * 3, y - 2, px + 22 - i * 3, y + 2, tone(c, 3)); P.hline(K, px - 22 + i * 3, px + 22 - i * 3, y - 2, tone(c, 2))
+    P.ellipse(K, px + 22 - i * 3, y, 2, 2, tone(c, 1))
+  end
+  use(K, "structure")
+end
+
 return Pr

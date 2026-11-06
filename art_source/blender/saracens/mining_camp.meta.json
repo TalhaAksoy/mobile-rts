@@ -1,17 +1,18 @@
 {
-  "tris": 695,
-  "verts": 1273,
+  "tris": 413,
+  "verts": 669,
   "materials": [
     "PE_Dirt",
-    "PE_WoodDark",
     "PE_Sandstone",
-    "PE_ClothRed",
-    "TEAM_Trim",
-    "PE_StoneGrey",
-    "PE_Gold",
-    "PE_Iron",
+    "PE_WoodDark",
     "PE_WoodLight",
-    "PE_Banner_saracens"
+    "PE_Felt",
+    "PE_Window",
+    "PE_Thatch",
+    "PE_Gold",
+    "PE_StoneGrey",
+    "PE_Banner_saracens",
+    "TEAM_Trim"
   ],
   "bounds_min": [
     -1.794,
@@ -19,16 +20,16 @@
     0.0
   ],
   "bounds_max": [
-    1.747,
-    1.77,
-    1.58
+    1.94,
+    1.9,
+    2.38
   ],
   "asset_id": "mining_camp",
   "civ": "saracens",
   "kind": "buildings",
   "blend": "art_source/blender/saracens/mining_camp.blend",
   "glb": "res://assets/3d/buildings/saracens/mining_camp.glb",
-  "glb_bytes": 58308,
+  "glb_bytes": 36148,
   "grid": [
     2,
     2

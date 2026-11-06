@@ -13,8 +13,8 @@ HERE = os.path.dirname(os.path.abspath(__file__))
 for p in (HERE, os.path.join(HERE, "buildings")):
     if p not in sys.path:
         sys.path.insert(0, p)
-import pe_kit, parts, civstyle, castles, towers, barracks, yards, bldtypes
-for _m in (pe_kit, parts, civstyle, castles, towers, barracks, yards, bldtypes):
+import pe_kit, parts, civstyle, castles, towers, barracks, yards, camps, bldtypes
+for _m in (pe_kit, parts, civstyle, castles, towers, barracks, yards, camps, bldtypes):
     importlib.reload(_m)
 
 ONLY = globals().get("ONLY")  # optional list of module names to restrict the build

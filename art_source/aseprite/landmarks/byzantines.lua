@@ -120,4 +120,32 @@ return function(M)
     M.props(K, s, { { "horse", -1.6, 1.4, "horse_bay" }, { "horse", 1.2, 1.1, "horse_grey" }, { "trough", 0.0, 1.9 }, { "jar", 2.4, 2.1 } })
     M.flag(K, s, 2.75, 2.6, 4.2)
   end
+
+  -- blacksmith: banded brick workshop open to the street through an arcade, forge chimney, anvil, a rack of spears
+  SP.byz_smithy = function(K, s)
+    M.ground(K, s, 2)
+    M.block(K, s, -1.85, 1.0, 2.0, 1.7, 2.3, { roof = "gable", rise = 0.7 })
+    for i = 0, 2 do A.door(K, -1.4 + i * 0.95, 2.0, 0.7, 1.4, "arch_round", "#2a2234", { frame = s.frame_c }) end
+    Pr.glow(K, -0.25, 0.25, 2.0, 0.1, 0.9)
+    Pr.chimney(K, 0.6, 3.0, 2.6, 4.0, "brick")
+    M.props(K, s, { { "anvil", -0.3, 0.8 }, { "rack", 1.4, 1.2 }, { "barrel", -1.4, 0.6 } })
+    M.flag(K, s, 1.8, 0.6, 3.4)
+  end
+
+  -- lumber camp: timber shed on stone footings under a tile roof, log stacks
+  SP.byz_lumber = function(K, s)
+    M.ground(K, s, 2)
+    M.open_shed(K, s, -1.85, 0.8, 2.6, 1.2, 1.9, { roof = "gable", rise = 0.5, base = s.base_c, base_h = 0.35, bay = 0.9 })
+    M.props(K, s, { { "logs", -1.7, 1.4, 1.6, 3 }, { "logs", 0.4, 0.8, 1.2, 2 }, { "sawhorse", 1.3, 1.9 }, { "jar", 1.5, 0.5 } })
+    M.flag(K, s, 1.8, 0.4, 3.2)
+  end
+
+  -- mining camp: timber shaft frame, ore carts, cut marble blocks from the quarry
+  SP.byz_quarry = function(K, s)
+    M.ground(K, s, 2)
+    Pr.quarry(K, -1.85, 0.3, 2.4, "#E2DCCC")
+    Pr.headframe(K, 1.0, 2.6)
+    M.props(K, s, { { "blocks", -1.0, 1.0 }, { "cart", 0.4, 0.6, "gold" }, { "ore", 1.5, 1.3, "stone_grey", 7 } })
+    M.flag(K, s, -1.85, 0.4, 3.2)
+  end
 end

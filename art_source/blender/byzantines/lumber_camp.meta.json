@@ -1,16 +1,15 @@
 {
-  "tris": 517,
-  "verts": 655,
+  "tris": 465,
+  "verts": 587,
   "materials": [
     "PE_Dirt",
+    "PE_StoneWarm",
     "PE_WoodDark",
-    "TEAM_Trim",
     "PE_RoofRed",
+    "TEAM_Trim",
     "PE_Beam",
-    "PE_WoodLight",
-    "PE_Iron",
-    "PE_Banner_byzantines",
-    "PE_Gold"
+    "PE_Gold",
+    "PE_Banner_byzantines"
   ],
   "bounds_min": [
     -1.749,
@@ -18,16 +17,16 @@
     0.0
   ],
   "bounds_max": [
-    1.75,
+    1.94,
     1.717,
-    1.58
+    1.92
   ],
   "asset_id": "lumber_camp",
   "civ": "byzantines",
   "kind": "buildings",
   "blend": "art_source/blender/byzantines/lumber_camp.blend",
   "glb": "res://assets/3d/buildings/byzantines/lumber_camp.glb",
-  "glb_bytes": 42420,
+  "glb_bytes": 38596,
   "grid": [
     2,
     2

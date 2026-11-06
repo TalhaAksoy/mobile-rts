@@ -1,17 +1,17 @@
 {
-  "tris": 596,
-  "verts": 1032,
+  "tris": 318,
+  "verts": 562,
   "materials": [
     "PE_Dirt",
     "PE_StoneGrey",
     "PE_LacquerRed",
-    "PE_Lattice",
-    "PE_WoodDark",
+    "PE_RoofDark",
     "TEAM_Trim",
-    "PE_RoofTeal",
     "PE_Gold",
-    "PE_Iron",
-    "PE_WoodLight"
+    "PE_ClothRed",
+    "PE_WoodLight",
+    "PE_WoodDark",
+    "PE_Iron"
   ],
   "bounds_min": [
     -1.749,
@@ -21,14 +21,14 @@
   "bounds_max": [
     1.75,
     1.717,
-    2.4
+    2.36
   ],
   "asset_id": "blacksmith",
   "civ": "chinese",
   "kind": "buildings",
   "blend": "art_source/blender/chinese/blacksmith.blend",
   "glb": "res://assets/3d/buildings/chinese/blacksmith.glb",
-  "glb_bytes": 49188,
+  "glb_bytes": 30776,
   "grid": [
     2,
     2

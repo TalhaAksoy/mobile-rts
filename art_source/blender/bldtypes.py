@@ -7,6 +7,7 @@ import castles
 import towers
 import barracks
 import yards
+import camps
 from pe_kit import Builder
 
 
@@ -119,6 +120,9 @@ def build_stable(civ):
 def build_blacksmith(civ):
     """2x2: small workshop with a big forge chimney, open forge under a lean-to, anvil, quench barrel."""
     b, z0 = _pad(civ, "blacksmith", 1.8, 9)
+    if civ in camps.SMITHS:                 # the civ's own blacksmith (camps.py)
+        camps.SMITHS[civ](b, z0)
+        return b.finalize()
     st = cs.style(civ)
     if civ == "mongols":
         cs.ger(b, -0.45, 0.6, z0, 0.85)
@@ -143,6 +147,9 @@ def build_blacksmith(civ):
 def build_lumber_camp(civ):
     """2x2: open civ shed with stacked logs, log piles, chopping stump, saw-horse, pennant."""
     b, z0 = _pad(civ, "lumber_camp", 1.8, 11)
+    if civ in camps.LUMBER:                 # the civ's own lumber camp (camps.py)
+        camps.LUMBER[civ](b, z0)
+        return b.finalize()
     cs.canopy(b, civ, (0.0, 0.6, z0), 2.4, 1.3, 1.1)
     parts.log_pile(b, (0.2, 0.75, z0), length=1.6, rows=3, r=0.1)
     parts.log_pile(b, (-0.85, -0.75, z0), length=1.0, rows=2, r=0.11, axis="y")
@@ -162,6 +169,9 @@ def build_lumber_camp(civ):
 def build_mining_camp(civ):
     """2x2: open civ shed over ore bins, ore cart on a short track, stone and gold piles, picks."""
     b, z0 = _pad(civ, "mining_camp", 1.8, 13)
+    if civ in camps.MINES:                 # the civ's own mining camp (camps.py)
+        camps.MINES[civ](b, z0)
+        return b.finalize()
     cs.canopy(b, civ, (-0.1, 0.65, z0), 2.3, 1.2, 1.1)
     for x, m in ((-0.7, "PE_StoneGrey"), (0.0, "PE_Gold"), (0.6, "PE_StoneGrey")):
         b.box((x, 0.7, z0 + 0.18), (0.55, 0.7, 0.36), "PE_WoodDark")

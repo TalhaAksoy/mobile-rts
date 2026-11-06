@@ -146,4 +146,34 @@ return function(M)
     M.props(K, s, { { "horse", -1.6, 1.4, "horse_bay" }, { "horse", 1.2, 1.1, "horse_grey" }, { "trough", 0.0, 1.9 }, { "hay", 2.3, 2.2 } })
     M.flag(K, s, 2.75, 2.6, 4.4)
   end
+
+  -- blacksmith: limestone ground floor with an open forge arch and a brick chimney, anvil and quench tub outside
+  SP.frank_smithy = function(K, s)
+    M.ground(K, s, 2)
+    M.block(K, s, -1.85, 0.7, 2.0, 1.8, 2.2, { roof = "hip", rise = 1.3 })
+    A.door(K, -0.4, 2.0, 1.2, 1.5, "arch_pointed", "#2a2234", { frame = s.frame_c })
+    Pr.glow(K, -0.85, 0.05, 2.0, 0.05, 1.0)
+    Pr.chimney(K, 0.3, 3.0, 2.8, 4.3, "brick")
+    M.props(K, s, { { "anvil", 0.6, 0.8 }, { "barrel", 1.3, 0.5 }, { "rack", -1.3, 0.6 } })
+    M.flag(K, s, 1.85, 0.4, 3.4)
+  end
+
+  -- lumber camp: an open timber shed under slate, a saw pit, stacked oak
+  SP.frank_lumber = function(K, s)
+    M.ground(K, s, 2)
+    M.open_shed(K, s, -1.85, 0.5, 2.6, 1.2, 1.9, { roof = "shed", rise = 0.6, wall = "planks", wall_c = s.timber_c, base = false,
+      timber = false, posts = false, bay = 0.8 })
+    Pr.sawpit(K, 0.3, 0.9)
+    M.props(K, s, { { "logs", -1.7, 1.4, 1.4, 3 }, { "logs", 1.0, 2.2, 0.8, 2 } })
+    M.flag(K, s, 1.85, 0.4, 3.2)
+  end
+
+  -- mining camp: a timber head-frame with a windlass, carts and stone rubble
+  SP.frank_mine = function(K, s)
+    M.ground(K, s, 2)
+    Pr.headframe(K, -0.6, 2.6)
+    Pr.windlass(K, 1.1, 2.0)
+    M.props(K, s, { { "cart", 0.2, 0.6, "gold" }, { "ore", -1.4, 0.9, "stone_grey", 9 }, { "ore", 1.5, 0.5, "stone_grey", 5 } })
+    M.flag(K, s, -1.85, 0.4, 3.2)
+  end
 end
