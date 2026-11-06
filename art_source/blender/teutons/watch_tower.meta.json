@@ -1,13 +1,13 @@
 {
-  "tris": 512,
-  "verts": 924,
+  "tris": 308,
+  "verts": 520,
   "materials": [
     "PE_Dirt",
-    "PE_StoneGrey",
+    "PE_BrickRed",
     "PE_Window",
-    "TEAM_Trim",
-    "PE_SlateDark",
     "PE_WoodDark",
+    "TEAM_Trim",
+    "PE_RoofRed",
     "PE_Gold",
     "PE_Banner_teutons",
     "PE_WoodLight"
@@ -20,14 +20,14 @@
   "bounds_max": [
     1.74,
     1.742,
-    6.34
+    4.69
   ],
   "asset_id": "watch_tower",
   "civ": "teutons",
   "kind": "buildings",
   "blend": "art_source/blender/teutons/watch_tower.blend",
   "glb": "res://assets/3d/buildings/teutons/watch_tower.glb",
-  "glb_bytes": 42848,
+  "glb_bytes": 28644,
   "grid": [
     2,
     2

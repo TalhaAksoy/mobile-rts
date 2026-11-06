@@ -35,6 +35,7 @@ S._buildings = {
   tower_round = false, tower_roof = "flat", door_c = PAL.oak, frame_c = PAL.stone_d, arch = "arch_round",
   window = "arch_round", merlon = "rect", keep_flat = true, paving_c = "#B8B2A4", castle_tower_top = "crenel",
   stable_roof = "gable", sails = 4, sail_c = PAL.daub, props = { "hay", "well", "barrel" },
+  watch = "hoarding_tower",
   tc = "norman_keep", house = "cruck_cottage", castle = "concentric", mill = "post_mill", archery = "butts",
   stable = "thatch_stable",
 }

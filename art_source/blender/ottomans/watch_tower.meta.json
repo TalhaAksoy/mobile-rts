@@ -1,13 +1,13 @@
 {
-  "tris": 354,
-  "verts": 528,
+  "tris": 330,
+  "verts": 564,
   "materials": [
     "PE_Dirt",
     "PE_StoneWarm",
-    "PE_PlasterCream",
+    "PE_StoneBrick",
+    "PE_Window",
     "PE_WoodDark",
     "TEAM_Trim",
-    "PE_Window",
     "PE_DomeLead",
     "PE_Gold",
     "PE_Banner_ottomans",
@@ -21,14 +21,14 @@
   "bounds_max": [
     1.795,
     1.771,
-    6.07
+    5.01
   ],
   "asset_id": "watch_tower",
   "civ": "ottomans",
   "kind": "buildings",
   "blend": "art_source/blender/ottomans/watch_tower.blend",
   "glb": "res://assets/3d/buildings/ottomans/watch_tower.glb",
-  "glb_bytes": 32984,
+  "glb_bytes": 30960,
   "grid": [
     2,
     2

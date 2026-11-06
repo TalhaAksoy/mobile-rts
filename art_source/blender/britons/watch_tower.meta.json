@@ -1,17 +1,16 @@
 {
-  "tris": 317,
-  "verts": 455,
+  "tris": 278,
+  "verts": 466,
   "materials": [
     "PE_Dirt",
     "PE_StoneGrey",
-    "TEAM_Trim",
     "PE_Window",
-    "PE_RoofSlate",
-    "PE_Gold",
     "PE_WoodDark",
-    "PE_Beam",
-    "PE_Banner_britons",
-    "PE_WoodLight"
+    "PE_WoodLight",
+    "TEAM_Trim",
+    "PE_Shingle",
+    "PE_Gold",
+    "PE_Banner_britons"
   ],
   "bounds_min": [
     -1.783,
@@ -21,14 +20,14 @@
   "bounds_max": [
     1.755,
     1.773,
-    5.55
+    4.38
   ],
   "asset_id": "watch_tower",
   "civ": "britons",
   "kind": "buildings",
   "blend": "art_source/blender/britons/watch_tower.blend",
   "glb": "res://assets/3d/buildings/britons/watch_tower.glb",
-  "glb_bytes": 28084,
+  "glb_bytes": 26988,
   "grid": [
     2,
     2

@@ -1,15 +1,16 @@
 {
-  "tris": 384,
-  "verts": 648,
+  "tris": 415,
+  "verts": 611,
   "materials": [
     "PE_Dirt",
-    "PE_StoneBrick",
     "PE_StoneWarm",
+    "PE_StoneBrick",
     "PE_Window",
-    "TEAM_Trim",
-    "PE_RoofRed",
-    "PE_Gold",
     "PE_WoodDark",
+    "TEAM_Trim",
+    "PE_Iron",
+    "PE_ClothRed",
+    "PE_Gold",
     "PE_Banner_byzantines",
     "PE_WoodLight"
   ],
@@ -21,14 +22,14 @@
   "bounds_max": [
     1.748,
     1.768,
-    4.4
+    4.42
   ],
   "asset_id": "watch_tower",
   "civ": "byzantines",
   "kind": "buildings",
   "blend": "art_source/blender/byzantines/watch_tower.blend",
   "glb": "res://assets/3d/buildings/byzantines/watch_tower.glb",
-  "glb_bytes": 34832,
+  "glb_bytes": 36996,
   "grid": [
     2,
     2

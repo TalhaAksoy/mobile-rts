@@ -92,4 +92,14 @@ return function(M)
     M.props(K, s, { { "sacks", 1.3, 0.5 }, { "cart", -0.4, 0.2 } })
     M.flag(K, s, 1.9, 0.4, 3.0)
   end
+
+  -- watch tower: slim round limestone tower under a steep slate pepper-pot cone, with a pennon
+  SP.pepperpot_tower = function(K, s)
+    M.ground(K, s, 2)
+    local village = s.age == 1
+    A.round_tower(K, 0, 1.2, 0.72, 6.0, s.wall, s.wall_c, "cone", { top_c = village and s.roof_c or s.tower_c,
+      top_mat = village and s.roof_mat or s.tower_mat, finial = (not village) and s.finial or nil, cone_h = 2.6, windows = 2 })
+    M.door(K, s, 0, 1.2, 0.5, 1.2, "arch_pointed")
+    M.flag(K, s, 0.95, 1.4, 4.8)
+  end
 end

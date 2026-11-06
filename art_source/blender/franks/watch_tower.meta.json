@@ -1,16 +1,14 @@
 {
-  "tris": 317,
-  "verts": 455,
+  "tris": 261,
+  "verts": 371,
   "materials": [
     "PE_Dirt",
-    "PE_StoneGrey",
     "PE_StoneWarm",
     "TEAM_Trim",
     "PE_Window",
     "PE_RoofSlate",
     "PE_Gold",
     "PE_WoodDark",
-    "PE_Banner_franks",
     "PE_WoodLight"
   ],
   "bounds_min": [
@@ -21,14 +19,14 @@
   "bounds_max": [
     1.772,
     1.755,
-    6.83
+    6.13
   ],
   "asset_id": "watch_tower",
   "civ": "franks",
   "kind": "buildings",
   "blend": "art_source/blender/franks/watch_tower.blend",
   "glb": "res://assets/3d/buildings/franks/watch_tower.glb",
-  "glb_bytes": 28096,
+  "glb_bytes": 22976,
   "grid": [
     2,
     2

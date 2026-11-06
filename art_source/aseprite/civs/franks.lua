@@ -34,6 +34,7 @@ S._buildings = {
   finial = "cross", door_c = PAL.oak, frame_c = PAL.lime_d, arch = "arch_pointed", window = "arch_pointed",
   shutters = nil, merlon = "rect", paving_c = "#D2C6AA", castle_tower_top = "cone", keep_roof = "hip",
   sails = 4, sail_c = PAL.linen, props = { "well", "barrel", "cart" },
+  watch = "pepperpot_tower",
   tc = "cite_palace", castle = "philippe_castle", house = "timber_townhouse", mill = "post_mill",
 }
 return S

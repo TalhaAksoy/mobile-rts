@@ -209,7 +209,7 @@
         "source": "art_source/blender/ottomans/watch_tower.blend",
         "build_script": "art_source/blender/buildings/ottomans_watch_tower.py",
         "reference": "res://art/buildings/ottomans/watch_tower.png",
-        "tris": 354,
+        "tris": 330,
         "materials": 10,
         "bounds_min": [
           -1.755,
@@ -219,7 +219,7 @@
         "bounds_max": [
           1.795,
           1.771,
-          6.07
+          5.01
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -431,7 +431,7 @@
         "source": "art_source/blender/japanese/watch_tower.blend",
         "build_script": "art_source/blender/buildings/japanese_watch_tower.py",
         "reference": "res://art/buildings/japanese/watch_tower.png",
-        "tris": 321,
+        "tris": 339,
         "materials": 10,
         "bounds_min": [
           -1.797,
@@ -441,7 +441,7 @@
         "bounds_max": [
           1.772,
           1.755,
-          4.18
+          3.93
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -875,8 +875,8 @@
         "source": "art_source/blender/britons/watch_tower.blend",
         "build_script": "art_source/blender/buildings/britons_watch_tower.py",
         "reference": "res://art/buildings/britons/watch_tower.png",
-        "tris": 317,
-        "materials": 10,
+        "tris": 278,
+        "materials": 9,
         "bounds_min": [
           -1.783,
           -1.75,
@@ -885,7 +885,7 @@
         "bounds_max": [
           1.755,
           1.773,
-          5.55
+          4.38
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -1097,8 +1097,8 @@
         "source": "art_source/blender/byzantines/watch_tower.blend",
         "build_script": "art_source/blender/buildings/byzantines_watch_tower.py",
         "reference": "res://art/buildings/byzantines/watch_tower.png",
-        "tris": 384,
-        "materials": 10,
+        "tris": 415,
+        "materials": 11,
         "bounds_min": [
           -1.773,
           -1.794,
@@ -1107,7 +1107,7 @@
         "bounds_max": [
           1.748,
           1.768,
-          4.4
+          4.42
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -1319,8 +1319,8 @@
         "source": "art_source/blender/chinese/watch_tower.blend",
         "build_script": "art_source/blender/buildings/chinese_watch_tower.py",
         "reference": "res://art/buildings/chinese/watch_tower.png",
-        "tris": 316,
-        "materials": 10,
+        "tris": 459,
+        "materials": 11,
         "bounds_min": [
           -1.727,
           -1.753,
@@ -1329,7 +1329,7 @@
         "bounds_max": [
           1.765,
           1.8,
-          4.53
+          4.03
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -1541,8 +1541,8 @@
         "source": "art_source/blender/franks/watch_tower.blend",
         "build_script": "art_source/blender/buildings/franks_watch_tower.py",
         "reference": "res://art/buildings/franks/watch_tower.png",
-        "tris": 317,
-        "materials": 10,
+        "tris": 261,
+        "materials": 8,
         "bounds_min": [
           -1.797,
           -1.741,
@@ -1551,7 +1551,7 @@
         "bounds_max": [
           1.772,
           1.755,
-          6.83
+          6.13
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -1763,7 +1763,7 @@
         "source": "art_source/blender/saracens/watch_tower.blend",
         "build_script": "art_source/blender/buildings/saracens_watch_tower.py",
         "reference": "res://art/buildings/saracens/watch_tower.png",
-        "tris": 468,
+        "tris": 472,
         "materials": 9,
         "bounds_min": [
           -1.747,
@@ -1773,7 +1773,7 @@
         "bounds_max": [
           1.749,
           1.759,
-          4.19
+          4.96
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -1985,7 +1985,7 @@
         "source": "art_source/blender/teutons/watch_tower.blend",
         "build_script": "art_source/blender/buildings/teutons_watch_tower.py",
         "reference": "res://art/buildings/teutons/watch_tower.png",
-        "tris": 512,
+        "tris": 308,
         "materials": 9,
         "bounds_min": [
           -1.75,
@@ -1995,7 +1995,7 @@
         "bounds_max": [
           1.74,
           1.742,
-          6.34
+          4.69
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -2207,8 +2207,8 @@
         "source": "art_source/blender/vikings/watch_tower.blend",
         "build_script": "art_source/blender/buildings/vikings_watch_tower.py",
         "reference": "res://art/buildings/vikings/watch_tower.png",
-        "tris": 289,
-        "materials": 8,
+        "tris": 340,
+        "materials": 9,
         "bounds_min": [
           -1.698,
           -1.742,
@@ -2217,7 +2217,7 @@
         "bounds_max": [
           1.74,
           1.778,
-          4.2
+          3.88
         ],
         "enabled": true,
         "status": "IMPORTED"

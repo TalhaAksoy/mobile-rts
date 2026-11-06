@@ -85,4 +85,15 @@ return function(M)
     M.props(K, s, { { "horse", -1.6, 1.4, "horse_bay" }, { "horse", 1.2, 1.1, "horse_grey" }, { "trough", 0.0, 1.9 }, { "hay", 2.3, 2.2 } })
     M.flag(K, s, 2.75, 2.6, 4.2)
   end
+
+  -- watch tower: square stone tower, crenels hidden under a timber hoarding (brattice) with a pent roof
+  SP.hoarding_tower = function(K, s)
+    M.ground(K, s, 2)
+    M.block(K, s, -0.85, 0.85, 1.3, 1.6, 5.2, { flat = true, merlons = false })
+    M.windows(K, s, -0.4, 0.4, 1.3, 3.0, 1, 0.22, 0.6)
+    M.door(K, s, 0, 1.3, 0.55, 1.2, "arch_round")
+    M.block(K, s, -1.12, 1.12, 1.05, 2.0, 6.2, { h0 = 5.2, wall = "planks", wall_c = s.timber_c or "wood", roof = "hip",
+      rise = 0.75, roof_mat = "shingle", roof_c = "#6A4A30", base = false, timber = false, posts = false })
+    A.banner(K, 0, 1.3, 4.6, 0.36, 0.9, s.emblem, s.ec)
+  end
 end

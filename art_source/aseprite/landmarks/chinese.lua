@@ -55,4 +55,30 @@ return function(M)
     A.door(K, 0.9, 0.4, 0.6, 1.0, "rect", s.door_c)
     Pr.bamboo(K, -1.7, 0.9)
   end
+
+  -- watch tower: square brick-faced tower with a crenellated top, a small curved-roof pavilion on it and
+  -- beacon smoke rising beside it (the alarm system of the Song frontier)
+  SP.beacon_pavilion = function(K, s)
+    M.ground(K, s, 2)
+    M.block(K, s, -0.9, 0.9, 1.2, 1.7, 4.6, { wall = s.castle_wall or "ashlar", wall_c = s.castle_wall_c or s.wall_c,
+      flat = true, merlons = "rect" })
+    M.door(K, s, 0, 1.2, 0.55, 1.3, "arch_round")
+    M.block(K, s, -0.8, 0.8, 1.45, 1.2, 5.8, { h0 = 4.6, roof = "curved", rise = 0.5 })
+    A.banner(K, 0, 1.2, 3.6, 0.36, 0.9, s.emblem, s.ec)
+    if s.age ~= 1 then                                                -- smoke column from the beacon brazier
+      local bx, by = A.px(1.05), A.vy(1.3, 4.6)
+      P.use(K, "props")
+      for i = 0, 10 do
+        local cx = bx + math.floor(math.sin(i * 0.9) * 2) + i
+        local cy = by - 3 - i * 6
+        local r = 2 + i // 3
+        for dy = -r, r do for dx = -r, r do
+          if dx * dx + dy * dy <= r * r then
+            P.put(K, cx + dx, cy + dy, P.hex((dx + dy > r * 0.6) and "#9A9690" or "#CFCBC3"))
+          end
+        end end
+      end
+      P.use(K, "structure")
+    end
+  end
 end

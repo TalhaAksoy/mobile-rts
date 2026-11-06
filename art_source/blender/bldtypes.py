@@ -4,6 +4,7 @@ Every builder returns the finalized object. Front = -Y (camera side)."""
 import pe_kit, parts
 import civstyle as cs
 import castles
+import towers
 from pe_kit import Builder
 
 
@@ -173,6 +174,13 @@ def build_mining_camp(civ):
 def build_watch_tower(civ):
     """2x2: the civ tower at full size on a stone (or timber) base, with door and flag."""
     b, z0 = _pad(civ, "watch_tower", 1.8, 15)
+    if civ in towers.BUILDERS:                 # every civ but the Mongols: its own tower type (towers.py)
+        towers.BUILDERS[civ](b, z0)
+        if civ not in ("saracens", "franks"):  # those two fly their flag / pennon from the tower itself
+            cs.flagpole(b, civ, 1.25, -1.2, z0, h=1.6, size=(0.45, 0.3))
+        for (x, y) in ((-1.3, -1.25), (-1.0, -1.4)):
+            parts.crate(b, (x, y, z0), s=0.26)
+        return b.finalize()
     st = cs.style(civ)
     if civ not in ("mongols", "vikings"):
         b.box((0, 0.1, z0 + 0.15), (2.0, 2.0, 0.3), st["base"])

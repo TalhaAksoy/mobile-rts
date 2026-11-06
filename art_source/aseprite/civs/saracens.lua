@@ -35,6 +35,7 @@ S._buildings = {
   muqarnas_c = PAL.lime, base_c = "#C4AE84", ground = "sand", paving_c = "#E2D2AE", castle_wall = "ashlar",
   castle_wall_c = PAL.lime, keep_flat = true, castle_tower_top = "crenel", tower_round = false, sail_c = PAL.cotton,
   props = { "palm", "jar", "palm", "well" }, kit_cap = "dome",
+  watch = "stepped_tower",
   tc = "madrasa", castle = "citadel", house = "malqaf_house", mill = "noria", archery = "maydan",
 }
 return S

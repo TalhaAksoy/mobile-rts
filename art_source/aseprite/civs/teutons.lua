@@ -37,6 +37,7 @@ S._buildings = {
   tower_roof = "hip", door_c = PAL.oak, frame_c = PAL.brick_d, arch = "arch_pointed", window = "arch_pointed",
   merlon = "rect", keep_roof = "stepped", paving_c = "#B8A890", castle_wall = "brick", castle_wall_c = PAL.brick,
   castle_tower_top = "crenel", sails = 4, sail_c = PAL.white, props = { "barrel", "cart", "sacks" },
+  watch = "brick_tower",
   tc = "ordensburg", castle = "malbork", house = "fachwerk", mill = "watermill",
 }
 return S

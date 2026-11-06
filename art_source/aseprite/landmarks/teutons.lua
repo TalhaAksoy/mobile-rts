@@ -61,4 +61,13 @@ return function(M)
     M.windows(K, s, -1.1, 1.1, 0.95, 2.3, 2, 0.35, 0.6)
     M.props(K, s, { { "barrel", -1.7, 0.5 }, { "cart", 1.4, 0.4 } })
   end
+
+  -- watch tower: square Brick Gothic tower under a steep tile gable facing the street
+  SP.brick_tower = function(K, s)
+    M.ground(K, s, 2)
+    M.block(K, s, -0.85, 0.85, 1.3, 1.6, 5.4, { roof = "gable_front", rise = 1.9 })
+    M.windows(K, s, -0.45, 0.45, 1.3, 3.6, 2, 0.2, 0.7)
+    M.door(K, s, 0, 1.3, 0.55, 1.3, "arch_pointed")
+    A.banner(K, 0, 1.3, 2.9, 0.36, 0.9, s.emblem, s.ec)
+  end
 end

@@ -1,6 +1,6 @@
 {
-  "tris": 289,
-  "verts": 479,
+  "tris": 340,
+  "verts": 570,
   "materials": [
     "PE_Dirt",
     "PE_WoodDark",
@@ -8,6 +8,7 @@
     "TEAM_Trim",
     "PE_Iron",
     "PE_Shingle",
+    "PE_Felt",
     "PE_Gold",
     "PE_Banner_vikings"
   ],
@@ -19,14 +20,14 @@
   "bounds_max": [
     1.74,
     1.778,
-    4.2
+    3.88
   ],
   "asset_id": "watch_tower",
   "civ": "vikings",
   "kind": "buildings",
   "blend": "art_source/blender/vikings/watch_tower.blend",
   "glb": "res://assets/3d/buildings/vikings/watch_tower.glb",
-  "glb_bytes": 26628,
+  "glb_bytes": 30844,
   "grid": [
     2,
     2

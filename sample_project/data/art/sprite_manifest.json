@@ -403,9 +403,9 @@
      "1": {
       "anchor": [
        62.5,
-       181
+       212
       ],
-      "h": 182,
+      "h": 213,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/britons/watch_tower_a1_t0.png",
@@ -416,9 +416,9 @@
      "3": {
       "anchor": [
        62.5,
-       223
+       212
       ],
-      "h": 224,
+      "h": 213,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/britons/watch_tower_a3_t0.png",
@@ -429,9 +429,9 @@
     },
     "anchor": [
      62.5,
-     223
+     212
     ],
-    "h": 224,
+    "h": 213,
     "plane_z": 2,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/britons/watch_tower_t0.png",
@@ -1283,9 +1283,9 @@
      "1": {
       "anchor": [
        62.5,
-       187
+       196
       ],
-      "h": 188,
+      "h": 197,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/chinese/watch_tower_a1_t0.png",
@@ -1296,9 +1296,9 @@
      "3": {
       "anchor": [
        62.5,
-       242
+       202
       ],
-      "h": 243,
+      "h": 203,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/chinese/watch_tower_a3_t0.png",
@@ -1309,9 +1309,9 @@
     },
     "anchor": [
      62.5,
-     242
+     202
     ],
-    "h": 243,
+    "h": 203,
     "plane_z": 2,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/chinese/watch_tower_t0.png",
@@ -1723,9 +1723,9 @@
      "1": {
       "anchor": [
        62.5,
-       187
+       221
       ],
-      "h": 188,
+      "h": 222,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/franks/watch_tower_a1_t0.png",
@@ -1736,9 +1736,9 @@
      "3": {
       "anchor": [
        62.5,
-       239
+       227
       ],
-      "h": 240,
+      "h": 228,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/franks/watch_tower_a3_t0.png",
@@ -1749,9 +1749,9 @@
     },
     "anchor": [
      62.5,
-     239
+     227
     ],
-    "h": 240,
+    "h": 228,
     "plane_z": 2,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/franks/watch_tower_t0.png",
@@ -3483,9 +3483,9 @@
      "1": {
       "anchor": [
        62.5,
-       181
+       236
       ],
-      "h": 182,
+      "h": 237,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/saracens/watch_tower_a1_t0.png",
@@ -3496,9 +3496,9 @@
      "3": {
       "anchor": [
        62.5,
-       223
+       236
       ],
-      "h": 224,
+      "h": 237,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/saracens/watch_tower_a3_t0.png",
@@ -3509,9 +3509,9 @@
     },
     "anchor": [
      62.5,
-     223
+     236
     ],
-    "h": 224,
+    "h": 237,
     "plane_z": 2,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/saracens/watch_tower_t0.png",
@@ -3923,9 +3923,9 @@
      "1": {
       "anchor": [
        62.5,
-       181
+       225
       ],
-      "h": 182,
+      "h": 226,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/teutons/watch_tower_a1_t0.png",
@@ -3936,9 +3936,9 @@
      "3": {
       "anchor": [
        62.5,
-       236
+       225
       ],
-      "h": 237,
+      "h": 226,
       "plane_z": 2,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/teutons/watch_tower_a3_t0.png",
@@ -3949,9 +3949,9 @@
     },
     "anchor": [
      62.5,
-     236
+     225
     ],
-    "h": 237,
+    "h": 226,
     "plane_z": 2,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/teutons/watch_tower_t0.png",

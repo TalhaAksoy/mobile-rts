@@ -113,4 +113,14 @@ return function(M)
     Pr.palm(K, 2.6, 1.8)
     M.flag(K, s, -2.6, 0.7, 3.8)
   end
+
+  -- watch tower: square ashlar tower with stepped crenellations and a flag on top
+  SP.stepped_tower = function(K, s)
+    M.ground(K, s, 2)
+    M.block(K, s, -0.85, 0.85, 1.3, 1.6, 6.0, { flat = true, merlons = "stepped" })
+    M.windows(K, s, -0.4, 0.4, 1.3, 3.8, 1, 0.24, 0.6)
+    M.door(K, s, 0, 1.3, 0.55, 1.3, "arch_pointed")
+    A.banner(K, 0, 1.3, 3.0, 0.36, 0.9, s.emblem, s.ec)
+    M.flag(K, s, 0.45, 2.3, 8.0)
+  end
 end
