@@ -129,6 +129,12 @@ static func apply(viewport: Viewport, light: DirectionalLight3D = null) -> void:
 	if sh != Shadows.OFF:
 		RenderingServer.directional_shadow_atlas_set_size(SHADOW_ATLAS[sh], true)
 	Engine.max_fps = values["fps"]
+	# Simulation rate follows the frame cap: at 30 fps (Düşük, the low-end preset) the game ticks 30 times a second, one
+	# tick per frame, so the per-frame simulation cost halves and nothing judders; 60 fps presets keep 60 ticks.
+	# At most 2 ticks per frame: on a slow phone a long frame used to run up to 8 catch-up ticks, which made the next
+	# frame longer still (measured with scripts/tools/device_tiers.sh); now the game slows down a little instead.
+	Engine.physics_ticks_per_second = 30 if int(values["fps"]) > 0 and int(values["fps"]) <= 30 else 60
+	Engine.max_physics_steps_per_frame = 2
 	# 3D models or Blender-rendered sprites: read when buildings / map props are created (next match)
 	FactionArtManager.use_3d_building_models = int(values.get("style", 0)) == 0
 
