@@ -5,7 +5,10 @@ One shared humanoid armature (20 bones) for every civ and role. Every body part 
 joined into one "Body" mesh with two materials:
   * PE_UnitPalette : a shared 128x128 palette atlas (16x16 swatches of 8x8 px, each lightly dithered). Every face
                      is UV-mapped inside the swatch of its colour, so ALL units share one texture / material.
-  * TEAM_Trim      : the owning team's colour (Godot remaps it, like the buildings' banners).
+  * team colour    : faces in the team colour use the palette too, on a reserved swatch (TEAM_SWATCH, bottom-right
+                     8x8 px, painted team-0 blue here). The game gives each team a palette copy with its colour
+                     in that swatch (FactionArtManager.team_palette_material), so a unit body is ONE surface / material:
+                     one draw call (plus its X-ray and shadow passes) instead of two.
 Props that the game switches on and off (villager tools, carried cargo) are separate small meshes, named PROP_*.
 
 Animations are authored here once for the shared rig (pose-bone keyframes) and exported as glTF actions:
@@ -31,6 +34,10 @@ FLAT_CELL, FLAT_COLS, FLAT_TOP = 8, 32, 0          # rows y 0..63    : 32 x 8 fl
 PAT_CELL, PAT_COLS, PAT_TOP = 16, 16, 64           # rows y 64..191  : 16 x 8 patterns
 EMB_CELL, EMB_COLS, EMB_TOP = 32, 8, 192           # rows y 192..255 : 8 x 2 emblems
 EMBLEM_DIR = os.path.join(REPO, "art_source", "textures", "emblems")
+# Team colour swatch: the last emblem cell's bottom-right corner (emblems fill cells 0..9 of 16). Godot fills it with
+# each team's colour (keep in sync with FactionArtManager.TEAM_SWATCH: x, y from the top-left, in pixels).
+TEAM_SWATCH = (248, 248, 8, 8)
+TEAM_PREVIEW = (0.18, 0.52, 0.95)                  # team 0 blue, for Blender previews
 
 PALETTE = {
     # skin / hair
@@ -227,6 +234,11 @@ def bake_palette(path):
         for y in range(EMB_CELL):
             for x in range(EMB_CELL):
                 canvas[EMB_TOP + cy * EMB_CELL + y][cx * EMB_CELL + x] = pix[y][x]
+    assert len(EMBLEMS) < EMB_COLS * 2, "emblem cells would reach the team swatch"
+    tx, ty, tw, th = TEAM_SWATCH
+    for y in range(ty, ty + th):
+        for x in range(tx, tx + tw):
+            canvas[y][x] = TEAM_PREVIEW
     img = bpy.data.images.get("PE_UnitPalette") or bpy.data.images.new("PE_UnitPalette", ATLAS, ATLAS, alpha=False)
     flat = []
     for y in range(ATLAS - 1, -1, -1):                 # Blender pixel rows are bottom-up
@@ -247,6 +259,12 @@ def _cell_uv(top, cell, cols, slot, inset=1.5):
     v1 = 1.0 - (top + cy * cell + inset) / ATLAS
     v0 = 1.0 - (top + (cy + 1) * cell - inset) / ATLAS
     return u0, v0, u1, v1
+
+
+def team_uv():
+    tx, ty, tw, th = TEAM_SWATCH
+    inset = 1.5
+    return (tx + inset) / ATLAS, 1.0 - (ty + th - inset) / ATLAS, (tx + tw - inset) / ATLAS, 1.0 - (ty + inset) / ATLAS
 
 
 def swatch_uv(color):
@@ -273,11 +291,6 @@ def get_materials(palette_img):
     nt.links.new(tex.outputs["Color"], bsdf.inputs["Base Color"])
     bsdf.inputs["Roughness"].default_value = 0.9
     mats["palette"] = m
-    t = bpy.data.materials.get("TEAM_Trim") or bpy.data.materials.new("TEAM_Trim")
-    t.use_nodes = True
-    tb = next(n for n in t.node_tree.nodes if n.type == "BSDF_PRINCIPLED")
-    tb.inputs["Base Color"].default_value = (0.18, 0.52, 0.95, 1)
-    mats["team"] = t
     return mats
 
 
@@ -388,11 +401,12 @@ class Body:
         self.tris = 0
 
     def _assign_uv(self, faces, color):
-        if color == "TEAM":
+        if color == "TEAM":                      # the reserved team swatch of the palette (see TEAM_SWATCH)
+            u0, v0, u1, v1 = team_uv()
             for f in faces:
-                f.material_index = 1
-                for l in f.loops:
-                    l[self.uv].uv = (0.5, 0.5)
+                f.material_index = 0
+                for i, l in enumerate(f.loops):
+                    l[self.uv].uv = (u0 + (u1 - u0) * (i % 2), v0 + (v1 - v0) * ((i // 2) % 2))
             return
         if color.startswith("pat:"):
             u0, v0, u1, v1 = pattern_uv(color[4:])
@@ -560,8 +574,7 @@ class Body:
         self.bm.free()
         ob = bpy.data.objects.new(name, me)
         bpy.context.scene.collection.objects.link(ob)
-        me.materials.append(mats["palette"])
-        me.materials.append(mats["team"])
+        me.materials.append(mats["palette"])     # one material: team faces sit on the palette's team swatch
         for bn in self.bones:
             ob.vertex_groups.new(name=bn)
         ob.parent = arm

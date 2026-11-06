@@ -15,5 +15,6 @@
  "props": [],
  "attack": "slash",
  "mount": "",
- "model": "res://assets/3d/units/franks/swordsman.glb"
+ "model": "res://assets/3d/units/franks/swordsman.glb",
+ "age": 2
 }

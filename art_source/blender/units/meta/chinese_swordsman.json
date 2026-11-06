@@ -15,5 +15,6 @@
  "props": [],
  "attack": "slash",
  "mount": "",
- "model": "res://assets/3d/units/chinese/swordsman.glb"
+ "model": "res://assets/3d/units/chinese/swordsman.glb",
+ "age": 2
 }

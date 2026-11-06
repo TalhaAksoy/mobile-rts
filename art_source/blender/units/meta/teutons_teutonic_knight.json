@@ -15,5 +15,6 @@
  "props": [],
  "attack": "slash",
  "mount": "",
- "model": "res://assets/3d/units/teutons/teutonic_knight.glb"
+ "model": "res://assets/3d/units/teutons/teutonic_knight.glb",
+ "age": 2
 }

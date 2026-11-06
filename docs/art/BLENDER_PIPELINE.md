@@ -102,11 +102,16 @@ art_source/blender/units/
 * **Actions.** The actions are written once in Python on pose bones and pushed to NLA tracks. They are exported
   with `export_animation_mode='ACTIONS'`. The `-loop` suffix makes Godot loop the animation and is stripped from the
   name, giving `idle` / `walk` / `attack` / `gather` / `build` / `death`.
-* **Materials.** Two per character: `PE_UnitPalette` and `TEAM_Trim` (the sash). `PE_UnitPalette` is a
-  256×256 atlas shared by every unit, with three regions:
+* **Materials.** One per character: `PE_UnitPalette`, a 256×256 atlas shared by every unit, with three regions:
   - rows 0–63: flat swatches;
   - rows 64–191: 16 px patterns, fitted to each face (`pat:<name>`);
   - rows 192–255: 32 px emblems cut from the gallery flags, mapped planar on shields, pennants, banners and barding.
+
+  Team-coloured faces (the sash, `"TEAM"` capes and plumes) sit on the reserved **team swatch**, the bottom-right
+  8×8 px (`charkit.TEAM_SWATCH`, painted team-0 blue in the PNG). Godot gives each team a palette copy with its colour
+  in that swatch (`FactionArtManager.team_palette_material`, same rect in `TEAM_SWATCH`). So a unit body is one
+  surface: one draw call plus its X-ray and shadow passes, where a separate `TEAM_Trim` surface doubled all three.
+  Keep the emblem count under 16 so the cells never reach the swatch (`bake_palette` asserts it).
 * **Mounts.** `charkit.mounted_bones(kind)` adds the horse or camel bones under the humanoid rider: body, neck,
   head, tail, four two-part legs and a saddle that the rider's hips hang from. Mounted actions:
   `make_mount_actions`.

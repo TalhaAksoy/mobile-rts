@@ -15,5 +15,6 @@
  "props": [],
  "attack": "gun",
  "mount": "",
- "model": "res://assets/3d/units/chinese/chu_ko_nu.glb"
+ "model": "res://assets/3d/units/chinese/chu_ko_nu.glb",
+ "age": 2
 }

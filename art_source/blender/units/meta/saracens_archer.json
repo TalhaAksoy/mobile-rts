@@ -15,5 +15,6 @@
  "props": [],
  "attack": "bow",
  "mount": "",
- "model": "res://assets/3d/units/saracens/archer.glb"
+ "model": "res://assets/3d/units/saracens/archer.glb",
+ "age": 2
 }

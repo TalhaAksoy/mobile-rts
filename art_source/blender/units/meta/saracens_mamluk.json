@@ -15,5 +15,6 @@
  "props": [],
  "attack": "slash",
  "mount": "camel",
- "model": "res://assets/3d/units/saracens/mamluk.glb"
+ "model": "res://assets/3d/units/saracens/mamluk.glb",
+ "age": 2
 }

@@ -15,5 +15,6 @@
  "props": [],
  "attack": "slash",
  "mount": "",
- "model": "res://assets/3d/units/saracens/swordsman.glb"
+ "model": "res://assets/3d/units/saracens/swordsman.glb",
+ "age": 2
 }

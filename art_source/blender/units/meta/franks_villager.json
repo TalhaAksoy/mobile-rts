@@ -17,5 +17,6 @@
  ],
  "attack": "slash",
  "mount": "",
- "model": "res://assets/3d/units/franks/villager.glb"
+ "model": "res://assets/3d/units/franks/villager.glb",
+ "age": 2
 }

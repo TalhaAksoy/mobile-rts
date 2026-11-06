@@ -15,5 +15,6 @@
  "props": [],
  "attack": "bow",
  "mount": "horse",
- "model": "res://assets/3d/units/mongols/horse_archer.glb"
+ "model": "res://assets/3d/units/mongols/horse_archer.glb",
+ "age": 2
 }

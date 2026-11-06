@@ -3,7 +3,7 @@
 Values are palette names (charkit.PALETTE), patterns ("pat:<name>", PATTERNS below) or emblems (the gallery flags,
 charkit.EMBLEMS). Each civ has the sheet's five roles; civs whose sheet has no mounted unit also get "cavalry":
 that civ's swordsman on a horse (the game's generic cavalry). Mounted roles have "mount": "horse" | "camel".
-attack: slash | thrust | bow | gun.  The waist sash is always the team colour (TEAM_Trim) - an intentional change
+attack: slash | thrust | bow | gun.  The waist sash is always the team colour (the palette's team swatch) - an intentional change
 from the sheets so that armies stay readable; everything else follows the sheet. Interpretations are noted per civ.
 """
 

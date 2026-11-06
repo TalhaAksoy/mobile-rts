@@ -15,5 +15,6 @@
  "props": [],
  "attack": "slash",
  "mount": "horse",
- "model": "res://assets/3d/units/teutons/cavalry.glb"
+ "model": "res://assets/3d/units/teutons/cavalry.glb",
+ "age": 2
 }

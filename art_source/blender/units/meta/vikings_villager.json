@@ -17,5 +17,6 @@
  ],
  "attack": "slash",
  "mount": "",
- "model": "res://assets/3d/units/vikings/villager.glb"
+ "model": "res://assets/3d/units/vikings/villager.glb",
+ "age": 2
 }

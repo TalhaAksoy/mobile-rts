@@ -15,5 +15,6 @@
  "props": [],
  "attack": "thrust",
  "mount": "",
- "model": "res://assets/3d/units/japanese/spearman.glb"
+ "model": "res://assets/3d/units/japanese/spearman.glb",
+ "age": 2
 }

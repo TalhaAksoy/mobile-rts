@@ -15,5 +15,6 @@
  "props": [],
  "attack": "bow",
  "mount": "",
- "model": "res://assets/3d/units/britons/archer.glb"
+ "model": "res://assets/3d/units/britons/archer.glb",
+ "age": 2
 }

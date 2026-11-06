@@ -17,5 +17,6 @@
  ],
  "attack": "slash",
  "mount": "",
- "model": "res://assets/3d/units/saracens/villager.glb"
+ "model": "res://assets/3d/units/saracens/villager.glb",
+ "age": 2
 }

@@ -136,8 +136,8 @@ func _run() -> void:
 	# team colour on the sash (TEAM_Trim surface) for both teams
 	var sw0: Unit3D = game.spawn_unit(Unit3D.UnitType.SWORDSMAN, 0, _villager_spot() + Vector3(0, 0, -3))
 	var sw1: Unit3D = game.spawn_unit(Unit3D.UnitType.SWORDSMAN, 1, _villager_spot() + Vector3(1.2, 0, -3))
-	# (the trim is merged into the palette surface and drawn from the team's palette swatch,
-	#  FactionArtManager._merge_unit_team_surface; a model left unmerged keeps its TEAM_* surface)
+	# (team faces sit on the palette's team swatch, charkit.TEAM_SWATCH; each team has its own palette copy,
+	#  FactionArtManager.team_palette_material. An old model with a TEAM_* surface still counts.)
 	var team_cols := []
 	var sw := FactionArtManager.TEAM_SWATCH
 	for u in [sw0, sw1]:
@@ -155,7 +155,7 @@ func _run() -> void:
 	var close := func(a, b): return a != null and (a as Color).is_equal_approx(b) or (a != null and absf(a.r - b.r) + absf(a.g - b.g) + absf(a.b - b.b) < 0.02)
 	_check(close.call(team_cols[0], FactionArtManager.TEAM_COLORS[0]) and close.call(team_cols[1], FactionArtManager.TEAM_COLORS[1]),
 		"3D: sash in the team colour (%s / %s)" % [team_cols[0], team_cols[1]])
-	# one body surface per unit (palette + trim merged): fewer draw calls
+	# one body surface per unit (team colour on the palette): fewer draw calls
 	var surf := 0
 	for mi in sw0.unit_model.find_children("*", "MeshInstance3D", true, false):
 		if mi.skin != null and String(mi.name).begins_with("Body"):

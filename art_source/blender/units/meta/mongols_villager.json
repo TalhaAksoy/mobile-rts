@@ -17,5 +17,6 @@
  ],
  "attack": "slash",
  "mount": "",
- "model": "res://assets/3d/units/mongols/villager.glb"
+ "model": "res://assets/3d/units/mongols/villager.glb",
+ "age": 2
 }

@@ -15,5 +15,6 @@
  "props": [],
  "attack": "slash",
  "mount": "",
- "model": "res://assets/3d/units/japanese/samurai.glb"
+ "model": "res://assets/3d/units/japanese/samurai.glb",
+ "age": 2
 }

@@ -15,5 +15,6 @@
  "props": [],
  "attack": "thrust",
  "mount": "horse",
- "model": "res://assets/3d/units/franks/knight.glb"
+ "model": "res://assets/3d/units/franks/knight.glb",
+ "age": 2
 }

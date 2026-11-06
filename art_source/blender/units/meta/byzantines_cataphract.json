@@ -15,5 +15,6 @@
  "props": [],
  "attack": "thrust",
  "mount": "horse",
- "model": "res://assets/3d/units/byzantines/cataphract.glb"
+ "model": "res://assets/3d/units/byzantines/cataphract.glb",
+ "age": 2
 }
