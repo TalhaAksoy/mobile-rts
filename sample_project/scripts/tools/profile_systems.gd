@@ -53,9 +53,7 @@ func _run() -> void:
 	print("[profile] idle soldiers scanning: %d" % idle_soldiers.size())
 	_time("HUD update (_update_hud)", 50, func(): game._update_hud())
 	_time("fog of war (every 0.2 s)", 10, func(): game.map_gen.update_fog_of_war(game.get_team_units(0), game.get_team_buildings(0), game._hostile_units(), game._hostile_buildings()))
-	_time("separation (2 passes, every tick)", 20, func():
-		for k in game.SEPARATION_PASSES:
-			game._separate_units())
+	_time("separation (2 passes, every tick)", 20, func(): game._separate_units())
 	_time("idle enemy scan, all idle soldiers", 20, func():
 		for u in idle_soldiers:
 			u._find_closest_enemy(6.5))
