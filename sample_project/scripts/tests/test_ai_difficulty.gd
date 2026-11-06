@@ -91,14 +91,15 @@ func _run() -> void:
 	# --- the Zorluk row
 	menu._on_new_game_pressed()
 	await _frames(2)
-	var btns: Array = menu.difficulty_buttons
-	_check(btns.size() == 3 and btns[0].text == "Kolay" and btns[1].text == "Orta" and btns[2].text == "Zor" and btns[0].is_visible_in_tree(),
-		"civ select shows Zorluk: Kolay / Orta / Zor")
-	_check(menu.selected_difficulty == EnemyAI3D.Difficulty.EASY and btns[0].button_pressed and not btns[2].button_pressed, "first launch selects Kolay")
+	var opt: OptionButton = menu.difficulty_option
+	_check(opt != null and opt.item_count == 3 and opt.get_item_text(0) == "Kolay" and opt.get_item_text(1) == "Orta" and opt.get_item_text(2) == "Zor" and opt.is_visible_in_tree(),
+		"civ select shows the Zorluk select box: Kolay / Orta / Zor")
+	_check(menu.selected_difficulty == EnemyAI3D.Difficulty.EASY and opt.selected == 0, "first launch selects Kolay")
 	_check(menu.difficulty_hint.text == EnemyAI3D.DIFFICULTY_HINTS[0], "hint explains Kolay (%s)" % menu.difficulty_hint.text)
-	btns[2].emit_signal("pressed")
+	opt.select(2)
+	opt.item_selected.emit(2)
 	await _frames(1)
-	_check(menu.selected_difficulty == EnemyAI3D.Difficulty.HARD and btns[2].button_pressed and not btns[0].button_pressed, "tapping Zor selects it (one button active)")
+	_check(menu.selected_difficulty == EnemyAI3D.Difficulty.HARD and opt.selected == 2, "picking Zor selects it")
 	var cfg := ConfigFile.new()
 	cfg.load(GraphicsSettings.PATH)
 	_check(int(cfg.get_value("game", "difficulty", -1)) == EnemyAI3D.Difficulty.HARD, "the choice is saved in settings.cfg")

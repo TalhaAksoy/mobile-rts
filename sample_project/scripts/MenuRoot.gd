@@ -11,14 +11,14 @@ signal match_setup_selected(map_size: int, bot_count: int, bot_civs: Array)   # 
 ## Enemy bot difficulty (Kolay / Orta / Zor). First launch: Kolay, so a new player gets time to learn;
 ## afterwards the last choice (settings.cfg, section "game").
 var selected_difficulty: int = EnemyAI3D.Difficulty.EASY
-var difficulty_buttons: Array = []
+var difficulty_option: OptionButton = null     # "Zorluk" select box
+var map_size_option: OptionButton = null       # "Harita Büyüklüğü" select box
 var difficulty_hint: Label = null
 
 ## Map size (Küçük / Orta / Büyük) and how many bots, limited by the size (MapGenerator3D.MAP_SIZE_MAX_BOTS).
 ## Remembered in settings.cfg (section "game", keys map_size and bot_count).
 var selected_map_size: int = MapGenerator3D.MapSize.SMALL
 var selected_bot_count: int = 1
-var map_size_buttons: Array = []
 var bot_count_label: Label = null
 var bot_minus_btn: Button = null
 var bot_plus_btn: Button = null
@@ -43,18 +43,24 @@ var btn_continue: Button = null   # built in code, shown only when a saved game 
 
 # Civ Select Elements
 @onready var civ_list_container: VBoxContainer = get_node_or_null("CivSelectView/HBox/ScrollCivs/CivList")
-@onready var map_option_button: OptionButton = get_node_or_null("CivSelectView/HBox/DetailsScroll/DetailsVBox/MapOption")
-@onready var enemy_civ_option: OptionButton = get_node_or_null("CivSelectView/HBox/DetailsScroll/DetailsVBox/EnemyCivOption")
-@onready var start_btn: Button = get_node_or_null("CivSelectView/HBox/DetailsScroll/DetailsVBox/StartButton")
-@onready var back_btn: Button = get_node_or_null("CivSelectView/HBox/DetailsScroll/DetailsVBox/BackButton")
-@onready var civ_title_label: Label = get_node_or_null("CivSelectView/HBox/DetailsScroll/DetailsVBox/CivTitleLabel")
+# found by name: the civ select layout moves these into its cards (see _build_civ_select_layout)
+@onready var map_option_button: OptionButton = find_child("MapOption", true, false)
+@onready var enemy_civ_option: OptionButton = find_child("EnemyCivOption", true, false)
+@onready var start_btn: Button = find_child("StartButton", true, false)
+@onready var back_btn: Button = find_child("BackButton", true, false)
+@onready var civ_title_label: Label = find_child("CivTitleLabel", true, false)
 @onready var civ_perks_label: Label = get_node_or_null("CivSelectView/HBox/DetailsScroll/DetailsVBox/CivPerksLabel")
 @onready var unique_unit_label: Label = get_node_or_null("CivSelectView/HBox/DetailsScroll/DetailsVBox/UniqueUnitLabel")
 @onready var map_label: Label = get_node_or_null("CivSelectView/HBox/DetailsScroll/DetailsVBox/MapLabel")
 @onready var enemy_label: Label = get_node_or_null("CivSelectView/HBox/DetailsScroll/DetailsVBox/EnemyLabel")
 @onready var details_vbox: VBoxContainer = get_node_or_null("CivSelectView/HBox/DetailsScroll/DetailsVBox")
 var civ_flag_banner: TextureRect = null
-var roster_preview_box: VBoxContainer = null
+var roster_preview_box: BoxContainer = null    # the civ's five units (row of portraits in the bonus card)
+var civ_name_label: Label = null
+var perks_box: VBoxContainer = null
+var unique_icon: TextureRect = null
+var unique_name_label: Label = null
+var unique_desc_label: Label = null
 
 # Settings Elements
 @onready var close_settings_btn: Button = get_node_or_null("SettingsView/Panel/VBox/CloseSettingsButton")
@@ -168,32 +174,7 @@ func _ready() -> void:
 	civ_perks_label.add_theme_font_override("font", ParchmentTheme.get_medieval_font())
 	unique_unit_label.add_theme_font_override("font", ParchmentTheme.get_medieval_font())
 
-	if details_vbox:
-		civ_flag_banner = TextureRect.new()
-		civ_flag_banner.name = "CivFlagBanner"
-		civ_flag_banner.custom_minimum_size = Vector2(0, 96)
-		civ_flag_banner.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
-		civ_flag_banner.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-		details_vbox.add_child(civ_flag_banner)
-		details_vbox.move_child(civ_flag_banner, 0)
-
-		# Unit Roster Preview Container in Civ Select
-		var roster_label = Label.new()
-		roster_label.text = "ORDU BİRLİKLERİ & İŞÇİLER:"
-		roster_label.add_theme_font_override("font", ParchmentTheme.get_medieval_font())
-		roster_label.add_theme_font_size_override("font_size", 14)
-		roster_label.add_theme_color_override("font_color", Color(0.38, 0.24, 0.12))
-		details_vbox.add_child(roster_label)
-
-		var roster_scroll = ScrollContainer.new()
-		roster_scroll.custom_minimum_size = Vector2(0, 180)
-		roster_scroll.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		details_vbox.add_child(roster_scroll)
-
-		roster_preview_box = VBoxContainer.new()
-		roster_preview_box.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-		roster_preview_box.add_theme_constant_override("separation", 6)
-		roster_scroll.add_child(roster_preview_box)
+	_build_civ_select_layout()
 
 	_show_main_menu()
 
@@ -299,17 +280,21 @@ func _populate_enemy_civs() -> void:
 func _populate_player_civs() -> void:
 	for child in civ_list_container.get_children():
 		child.queue_free()
-
+	civ_buttons.clear()
 	for c_type in CivData.CIVS.keys():
 		var c = CivData.get_civ(c_type)
-		var btn = Button.new()
-		btn.text = " %s" % c.get("name")
+		var btn := Button.new()
+		btn.name = "Civ_%d" % c_type
+		btn.text = ""                                   # flag only; the name is in the header
+		btn.tooltip_text = str(c.get("title", c.get("name")))
 		btn.icon = PixelArtTextures.get_civ_flag_texture(c_type)
 		btn.expand_icon = true
-		btn.custom_minimum_size = Vector2(170, 52)
-		ParchmentTheme.apply_parchment_button(btn, 15)
-		btn.alignment = HORIZONTAL_ALIGNMENT_LEFT
-
+		btn.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+		btn.vertical_icon_alignment = VERTICAL_ALIGNMENT_CENTER
+		btn.custom_minimum_size = Vector2(CIV_TILE_W, 70)
+		btn.add_theme_font_override("font", ParchmentTheme.get_medieval_font())
+		btn.add_theme_font_size_override("font_size", 11)
+		btn.add_theme_constant_override("icon_max_width", 52)
 		btn.pressed.connect(func():
 			selected_player_civ = c_type
 			_highlight_selected_button()
@@ -318,90 +303,99 @@ func _populate_player_civs() -> void:
 		)
 		civ_buttons[c_type] = btn
 		civ_list_container.add_child(btn)
-
 	_highlight_selected_button()
 
+## Flag tiles: the picked civ gets a gold frame on a lit tile, the rest a plain leather frame.
 func _highlight_selected_button() -> void:
 	for c_type in civ_buttons.keys():
 		var btn = civ_buttons[c_type] as Button
-		if c_type == selected_player_civ:
-			btn.modulate = Color(1.0, 0.95, 0.5) # Glowing gold leaf
-		else:
-			btn.modulate = Color(1.0, 1.0, 1.0)
+		var on: bool = c_type == selected_player_civ
+		for st in ["normal", "hover", "pressed", "focus"]:
+			btn.add_theme_stylebox_override(st, _civ_tile_style(on, st == "hover"))
+		var ink := ParchmentTheme.INK_DARK if on else ParchmentTheme.INK_MUTED
+		for k in ["font_color", "font_hover_color", "font_pressed_color", "font_focus_color"]:
+			btn.add_theme_color_override(k, ink)
+
+func _civ_tile_style(on: bool, hover: bool) -> StyleBoxFlat:
+	var sb := StyleBoxFlat.new()
+	sb.set_corner_radius_all(8)
+	sb.content_margin_left = 4; sb.content_margin_right = 4
+	sb.content_margin_top = 6; sb.content_margin_bottom = 4
+	if on:
+		sb.bg_color = Color(0.98, 0.88, 0.55)
+		sb.border_color = ParchmentTheme.BRONZE_GOLD
+		sb.set_border_width_all(4)
+		sb.shadow_color = Color(0.78, 0.55, 0.18, 0.55)
+		sb.shadow_size = 6
+	else:
+		sb.bg_color = Color(0.93, 0.86, 0.72) if hover else Color(0.87, 0.78, 0.62)
+		sb.border_color = ParchmentTheme.LEATHER_BORDER
+		sb.set_border_width_all(2)
+	return sb
 
 func _update_civ_preview() -> void:
 	var c = CivData.get_civ(selected_player_civ)
 	if civ_flag_banner:
 		civ_flag_banner.texture = PixelArtTextures.get_civ_flag_texture(selected_player_civ)
+	if civ_name_label:
+		civ_name_label.text = str(c.get("name", ""))
 	civ_title_label.text = "%s" % c.get("title", "")
+	# the old text labels stay filled (other screens / tests read them) but are hidden
 	civ_perks_label.text = "KRALİYET NİTELİKLERİ:\n%s" % c.get("bonus_desc", "")
-	unique_unit_label.text = "ÖZEL BİRİM: %s\n%s" % [
-		c.get("unique_unit_name", ""),
-		c.get("unique_unit_desc", "")
-	]
+	unique_unit_label.text = "ÖZEL BİRİM: %s\n%s" % [c.get("unique_unit_name", ""), c.get("unique_unit_desc", "")]
+
+	if perks_box != null:
+		for child in perks_box.get_children():
+			perks_box.remove_child(child)
+			child.queue_free()
+		for line in str(c.get("bonus_desc", "")).split("\n"):
+			var t := line.strip_edges().trim_prefix("•").strip_edges()
+			if t == "":
+				continue
+			var row := HBoxContainer.new()
+			row.add_theme_constant_override("separation", 8)
+			var dot := Label.new()
+			dot.text = "◆"
+			dot.add_theme_color_override("font_color", Color(0.96, 0.78, 0.32))
+			dot.add_theme_font_size_override("font_size", 12)
+			dot.size_flags_vertical = Control.SIZE_SHRINK_BEGIN
+			row.add_child(dot)
+			var lbl := _card_label(t, 15, Color(0.96, 0.90, 0.78))
+			lbl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			row.add_child(lbl)
+			perks_box.add_child(row)
+
+	var uu := _get_unique_unit_type(selected_player_civ)
+	if unique_icon != null:
+		unique_icon.texture = FactionArtManager.get_unit_texture(selected_player_civ, uu, "pose_01")
+		unique_name_label.text = str(c.get("unique_unit_name", ""))
+		unique_desc_label.text = str(c.get("unique_unit_desc", ""))
 
 	if roster_preview_box != null:
 		for child in roster_preview_box.get_children():
 			roster_preview_box.remove_child(child)
 			child.queue_free()
-
 		var roles = [
-			{"type": Unit3D.UnitType.VILLAGER, "name": "Köylü (İşçi)", "desc": "Kaynak toplama ve inşaat"},
-			{"type": Unit3D.UnitType.SWORDSMAN, "name": "Kılıçlı Asker", "desc": "Temel yakın piyade"},
-			{"type": Unit3D.UnitType.SPEARMAN, "name": "Mızrakçı", "desc": "Süvari karşıtı birlik"},
-			{"type": Unit3D.UnitType.ARCHER, "name": "Okçu", "desc": "Menzilli yaylı ordu"},
-			{"type": _get_unique_unit_type(selected_player_civ), "name": c.get("unique_unit_name", "Özel Birlik"), "desc": c.get("unique_unit_desc", "Krallık elit askeri")}
+			{"type": Unit3D.UnitType.VILLAGER, "name": "Köylü"},
+			{"type": Unit3D.UnitType.SWORDSMAN, "name": "Kılıçlı"},
+			{"type": Unit3D.UnitType.SPEARMAN, "name": "Mızrakçı"},
+			{"type": Unit3D.UnitType.ARCHER, "name": "Okçu"},
+			{"type": uu, "name": str(c.get("unique_unit_name", "Özel"))},
 		]
-
 		for r in roles:
-			var card = PanelContainer.new()
-			card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			card.custom_minimum_size = Vector2(0, 44)
-
-			var c_style = StyleBoxFlat.new()
-			c_style.bg_color = Color(0.22, 0.17, 0.13, 0.90)
-			c_style.border_color = Color(0.65, 0.52, 0.32, 0.75)
-			c_style.set_border_width_all(1)
-			c_style.set_corner_radius_all(6)
-			c_style.content_margin_left = 6
-			c_style.content_margin_right = 6
-			c_style.content_margin_top = 4
-			c_style.content_margin_bottom = 4
-			card.add_theme_stylebox_override("panel", c_style)
-
-			var hbox = HBoxContainer.new()
-			hbox.add_theme_constant_override("separation", 8)
-			card.add_child(hbox)
-
-			var icon_rect = TextureRect.new()
-			icon_rect.custom_minimum_size = Vector2(38, 38)
+			var tile := VBoxContainer.new()
+			tile.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+			tile.add_theme_constant_override("separation", 0)
+			var icon_rect := TextureRect.new()
+			icon_rect.custom_minimum_size = Vector2(0, 60)
 			icon_rect.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
 			icon_rect.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
 			icon_rect.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 			icon_rect.texture = FactionArtManager.get_unit_texture(selected_player_civ, r["type"], "pose_01")
-			hbox.add_child(icon_rect)
-
-			var txt_vbox = VBoxContainer.new()
-			txt_vbox.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-			txt_vbox.alignment = BoxContainer.ALIGNMENT_CENTER
-			hbox.add_child(txt_vbox)
-
-			var n_lbl = Label.new()
-			n_lbl.text = r["name"]
-			n_lbl.add_theme_font_override("font", ParchmentTheme.get_cinzel_font())
-			n_lbl.add_theme_font_size_override("font_size", 12)
-			n_lbl.add_theme_color_override("font_color", Color(0.96, 0.88, 0.55))
-			txt_vbox.add_child(n_lbl)
-
-			var d_lbl = Label.new()
-			d_lbl.text = r["desc"]
-			d_lbl.add_theme_font_override("font", ParchmentTheme.get_medieval_font())
-			d_lbl.add_theme_font_size_override("font_size", 10)
-			d_lbl.add_theme_color_override("font_color", Color(0.78, 0.72, 0.62))
-			d_lbl.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-			txt_vbox.add_child(d_lbl)
-
-			roster_preview_box.add_child(card)
+			tile.add_child(icon_rect)
+			tile.tooltip_text = r["name"]
+			icon_rect.tooltip_text = r["name"]
+			roster_preview_box.add_child(tile)
 
 func _get_unique_unit_type(civ: CivData.CivType) -> Unit3D.UnitType:
 	match civ:
@@ -435,7 +429,7 @@ func _on_start_pressed() -> void:
 
 ## "Harita Boyutu" row under the map, then the opponent count (− n +) and one civ picker per opponent.
 func _build_match_setup() -> void:
-	if not is_instance_valid(enemy_civ_option) or not map_size_buttons.is_empty():
+	if not is_instance_valid(enemy_civ_option) or bots_box != null:
 		return
 	var cfg := ConfigFile.new()
 	if cfg.load(GraphicsSettings.PATH) == OK:
@@ -443,22 +437,16 @@ func _build_match_setup() -> void:
 		selected_bot_count = int(cfg.get_value("game", "bot_count", selected_bot_count))
 	var vbox := enemy_civ_option.get_parent()
 
-	# map size, right after the map picker
-	var at := map_option_button.get_index() + 1
-	var size_label := _setup_label("Harita Boyutu:")
-	size_label.name = "MapSizeLabel"
-	vbox.add_child(size_label)
-	vbox.move_child(size_label, at)
-	map_size_buttons = _gfx_button_row(MapGenerator3D.MAP_SIZE_NAMES, _on_map_size_picked)
-	var size_row: Control = map_size_buttons[0].get_parent()
-	size_row.name = "MapSizeRow"
-	_gfx_rows.erase(size_row)
-	vbox.add_child(size_row)
-	vbox.move_child(size_row, at + 1)
+	# map size: a select box (built in _build_civ_select_layout, filled here)
+	if map_size_option != null:
+		map_size_option.clear()
+		for k in MapGenerator3D.MAP_SIZE_NAMES.size():
+			map_size_option.add_item(MapGenerator3D.MAP_SIZE_NAMES[k], k)
+		map_size_option.item_selected.connect(func(idx): _on_map_size_picked(idx))
 
 	# opponents, in place of the single enemy picker
 	enemy_civ_option.visible = false
-	at = enemy_civ_option.get_index()
+	var at := enemy_civ_option.get_index()
 	var step := HBoxContainer.new()
 	step.name = "BotCountRow"
 	step.add_theme_constant_override("separation", 6)
@@ -474,6 +462,9 @@ func _build_match_setup() -> void:
 	bot_count_label.add_theme_font_size_override("font_size", 20)
 	bot_count_label.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
 	bot_count_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	var opp_icon := _icon("opponents", 40, "Rakip krallıklar")
+	opp_icon.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	step.add_child(opp_icon)
 	step.add_child(bot_minus_btn)
 	step.add_child(bot_count_label)
 	step.add_child(bot_plus_btn)
@@ -503,6 +494,7 @@ func _build_match_setup() -> void:
 		opt.size_flags_horizontal = Control.SIZE_EXPAND_FILL
 		opt.custom_minimum_size = Vector2(0, 44)
 		opt.fit_to_longest_item = false
+		opt.add_theme_constant_override("icon_max_width", 30)        # shuffle icon / flags at one size, rows stay even
 		opt.item_selected.connect(func(_idx): SoundManager.play_sound("click"))
 		row.add_child(opt)
 		bot_civ_options.append(opt)
@@ -524,7 +516,8 @@ func _populate_bot_civs() -> void:
 		var opt: OptionButton = bot_civ_options[i]
 		var keep: int = opt.get_selected_id() if opt.item_count > 0 else (int(CivData.CivType.BYZANTINES) if i == 0 else -1)
 		opt.clear()
-		opt.add_item("Rastgele", -1)
+		opt.add_icon_item(_icon_tex("shuffle"), "", -1)           # crossing arrows = random civ
+		opt.set_item_tooltip(0, "Rastgele")
 		for c_type in CivData.CIVS.keys():
 			opt.add_icon_item(PixelArtTextures.get_civ_flag_texture(c_type), str(CivData.get_civ(c_type).get("name")), c_type)
 		var idx := opt.get_item_index(keep)
@@ -547,8 +540,8 @@ func _set_bot_count(n: int, sound: bool) -> void:
 func _refresh_match_setup() -> void:
 	var mx := MapGenerator3D.max_bots_for(selected_map_size)
 	selected_bot_count = clampi(selected_bot_count, 1, mx)
-	for i in map_size_buttons.size():
-		map_size_buttons[i].set_pressed_no_signal(i == selected_map_size)
+	if map_size_option != null:
+		map_size_option.select(selected_map_size)
 	if bot_count_label != null:
 		bot_count_label.text = str(selected_bot_count)
 		bot_minus_btn.disabled = selected_bot_count <= 1
@@ -578,35 +571,16 @@ func _save_game_setting(key: String, v) -> void:
 	cfg.set_value("game", key, v)
 	cfg.save(GraphicsSettings.PATH)
 
-## "Zorluk" row on the civ select screen, under the enemy kingdom.
+## "Zorluk" select box on the civ select screen (built in _build_civ_select_layout), with a hint under it.
 func _build_difficulty_row() -> void:
-	if not is_instance_valid(enemy_civ_option) or not difficulty_buttons.is_empty():
+	if difficulty_option == null or difficulty_option.item_count > 0:
 		return
 	var cfg := ConfigFile.new()
 	if cfg.load(GraphicsSettings.PATH) == OK:
 		selected_difficulty = clampi(int(cfg.get_value("game", "difficulty", selected_difficulty)), 0, 2)
-	var vbox := enemy_civ_option.get_parent()
-	var at := enemy_civ_option.get_index() + 1
-	var label := Label.new()
-	label.name = "DifficultyLabel"
-	label.text = "Zorluk:"
-	if is_instance_valid(enemy_label):
-		label.add_theme_font_override("font", ParchmentTheme.get_medieval_font())
-		label.add_theme_font_size_override("font_size", enemy_label.get_theme_font_size("font_size"))
-		label.add_theme_color_override("font_color", enemy_label.get_theme_color("font_color"))
-	vbox.add_child(label)
-	vbox.move_child(label, at)
-	difficulty_buttons = _gfx_button_row(EnemyAI3D.DIFFICULTY_NAMES, _on_difficulty_picked)
-	var row: Control = difficulty_buttons[0].get_parent()
-	row.name = "DifficultyRow"
-	_gfx_rows.erase(row)
-	vbox.add_child(row)
-	vbox.move_child(row, at + 1)
-	difficulty_hint = _gfx_label("", 13)
-	difficulty_hint.name = "DifficultyHint"
-	difficulty_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
-	vbox.add_child(difficulty_hint)
-	vbox.move_child(difficulty_hint, at + 2)
+	for k in EnemyAI3D.DIFFICULTY_NAMES.size():
+		difficulty_option.add_item(EnemyAI3D.DIFFICULTY_NAMES[k], k)
+	difficulty_option.item_selected.connect(func(idx): _on_difficulty_picked(idx))
 	_refresh_difficulty()
 
 func _on_difficulty_picked(i: int) -> void:
@@ -619,11 +593,285 @@ func _on_difficulty_picked(i: int) -> void:
 	cfg.save(GraphicsSettings.PATH)
 
 func _refresh_difficulty() -> void:
-	for i in difficulty_buttons.size():
-		difficulty_buttons[i].button_pressed = i == selected_difficulty
+	if difficulty_option != null:
+		difficulty_option.select(selected_difficulty)
 	if difficulty_hint != null:
 		difficulty_hint.text = EnemyAI3D.DIFFICULTY_HINTS[selected_difficulty]
 
+
+# ------------------------------------------------------------------------------------------------
+# Civ select layout (portrait, no horizontal scroll): a narrow column of flag tiles on the left; on the
+# right the civ header (flag + name), the bonus card (perks, unique unit, army row), the match setup
+# card (Zorluk / Harita Büyüklüğü select boxes, battlefield, opponents) and the start / back buttons.
+# ------------------------------------------------------------------------------------------------
+const CIV_TILE_W := 84
+
+func _build_civ_select_layout() -> void:
+	if details_vbox == null or civ_name_label != null:
+		return
+	var scroll_civs := civ_list_container.get_parent() as ScrollContainer
+	scroll_civs.custom_minimum_size = Vector2(CIV_TILE_W + 4, 0)
+	scroll_civs.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	civ_list_container.add_theme_constant_override("separation", 6)
+	var hbox := scroll_civs.get_parent() as HBoxContainer
+	hbox.add_theme_constant_override("separation", 12)
+	hbox.offset_left = 22; hbox.offset_right = -22; hbox.offset_top = 30; hbox.offset_bottom = -30
+	var details_scroll := details_vbox.get_parent() as ScrollContainer
+	details_scroll.horizontal_scroll_mode = ScrollContainer.SCROLL_MODE_DISABLED
+	# still scrolls by drag / wheel, but without the bar on the right edge
+	details_scroll.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_NEVER
+	scroll_civs.vertical_scroll_mode = ScrollContainer.SCROLL_MODE_SHOW_NEVER
+	details_vbox.add_theme_constant_override("separation", 12)
+
+	# the scene's plain labels / separators are replaced by the cards below
+	for n in ["HSep1", "HSep2", "Spacer"]:
+		var node := details_vbox.get_node_or_null(n)
+		if node != null:
+			node.visible = false
+	civ_perks_label.visible = false
+	unique_unit_label.visible = false
+	if is_instance_valid(map_label):
+		map_label.visible = false
+	if is_instance_valid(enemy_label):
+		enemy_label.visible = false
+
+	# 1. header: framed flag + civ name + title
+	var header := HBoxContainer.new()
+	header.name = "CivHeader"
+	header.add_theme_constant_override("separation", 12)
+	var frame := PanelContainer.new()
+	var fs := StyleBoxFlat.new()
+	fs.bg_color = Color(0.20, 0.13, 0.07)
+	fs.border_color = ParchmentTheme.BRONZE_GOLD
+	fs.set_border_width_all(3)
+	fs.set_corner_radius_all(10)
+	fs.set_content_margin_all(5)
+	fs.shadow_color = Color(0.08, 0.04, 0.02, 0.5)
+	fs.shadow_size = 4
+	frame.add_theme_stylebox_override("panel", fs)
+	civ_flag_banner = TextureRect.new()
+	civ_flag_banner.name = "CivFlagBanner"
+	civ_flag_banner.custom_minimum_size = Vector2(76, 76)
+	civ_flag_banner.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	civ_flag_banner.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	civ_flag_banner.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	frame.add_child(civ_flag_banner)
+	header.add_child(frame)
+	var names := VBoxContainer.new()
+	names.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	names.alignment = BoxContainer.ALIGNMENT_CENTER
+	names.add_theme_constant_override("separation", 2)
+	civ_name_label = Label.new()
+	civ_name_label.name = "CivNameLabel"
+	civ_name_label.add_theme_font_override("font", ParchmentTheme.get_cinzel_font())
+	civ_name_label.add_theme_font_size_override("font_size", 28)
+	civ_name_label.add_theme_color_override("font_color", ParchmentTheme.INK_DARK)
+	civ_name_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	names.add_child(civ_name_label)
+	civ_title_label.reparent(names)
+	civ_title_label.add_theme_font_size_override("font_size", 15)
+	civ_title_label.add_theme_color_override("font_color", ParchmentTheme.INK_MUTED)
+	civ_title_label.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	header.add_child(names)
+	details_vbox.add_child(header)
+	details_vbox.move_child(header, 0)
+
+	# 2. bonus card (dark leather): perks, unique unit, the army row
+	var card := _card(Color(0.20, 0.14, 0.09, 0.96), ParchmentTheme.BRONZE_GOLD)
+	card.name = "BonusCard"
+	var cv := card.get_child(0) as VBoxContainer
+	cv.add_child(_card_icon_heading("crown", "Kraliyet nitelikleri"))
+	perks_box = VBoxContainer.new()
+	perks_box.name = "PerksBox"
+	perks_box.add_theme_constant_override("separation", 4)
+	cv.add_child(perks_box)
+	cv.add_child(_card_rule())
+	cv.add_child(_card_icon_heading("star", "Özel birim"))
+	var uu := HBoxContainer.new()
+	uu.add_theme_constant_override("separation", 10)
+	var portrait := PanelContainer.new()
+	var ps := StyleBoxFlat.new()
+	ps.bg_color = Color(0.32, 0.24, 0.15)
+	ps.border_color = Color(0.65, 0.52, 0.32)
+	ps.set_border_width_all(2)
+	ps.set_corner_radius_all(8)
+	ps.set_content_margin_all(2)
+	portrait.add_theme_stylebox_override("panel", ps)
+	unique_icon = TextureRect.new()
+	unique_icon.custom_minimum_size = Vector2(60, 60)
+	unique_icon.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	unique_icon.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	unique_icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	portrait.add_child(unique_icon)
+	uu.add_child(portrait)
+	var ut := VBoxContainer.new()
+	ut.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	ut.alignment = BoxContainer.ALIGNMENT_CENTER
+	unique_name_label = _card_label("", 17, Color(0.98, 0.84, 0.45))
+	unique_name_label.add_theme_font_override("font", ParchmentTheme.get_cinzel_font())
+	unique_desc_label = _card_label("", 13, Color(0.86, 0.79, 0.66))
+	ut.add_child(unique_name_label)
+	ut.add_child(unique_desc_label)
+	uu.add_child(ut)
+	cv.add_child(uu)
+	cv.add_child(_card_rule())
+	cv.add_child(_card_icon_heading("swords", "Ordu"))
+	roster_preview_box = HBoxContainer.new()
+	roster_preview_box.name = "RosterRow"
+	roster_preview_box.add_theme_constant_override("separation", 2)
+	cv.add_child(roster_preview_box)
+	details_vbox.add_child(card)
+	details_vbox.move_child(card, 1)
+
+	# 3. match setup card (parchment): select boxes + the opponents
+	var setup := _card(Color(0.95, 0.89, 0.76, 0.85), ParchmentTheme.LEATHER_BORDER)
+	setup.name = "SetupCard"
+	var sv := setup.get_child(0) as VBoxContainer
+	sv.add_theme_constant_override("separation", 6)
+	difficulty_option = _select_box("DifficultyOption")
+	sv.add_child(_icon_row("skull", "Zorluk", difficulty_option))
+	difficulty_hint = _gfx_label("", 12)
+	difficulty_hint.name = "DifficultyHint"
+	difficulty_hint.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	sv.add_child(difficulty_hint)
+	map_size_option = _select_box("MapSizeOption")
+	sv.add_child(_icon_row("map", "Harita büyüklüğü", map_size_option))
+	var bf_row := _icon_row("battlefield", "Savaş meydanı", null)
+	sv.add_child(bf_row)
+	map_option_button.reparent(bf_row)
+	_style_select_box(map_option_button)
+	enemy_civ_option.reparent(sv)        # hidden; _build_match_setup puts the stepper + bot rows in its place
+	details_vbox.add_child(setup)
+	details_vbox.move_child(setup, 2)
+
+	# 4. start / back: a fixed bar under the scrolling panel, always in reach
+	hbox.offset_bottom = -104
+	var bar := HBoxContainer.new()
+	bar.name = "StartBar"
+	bar.add_theme_constant_override("separation", 10)
+	bar.anchor_left = 0.0; bar.anchor_right = 1.0; bar.anchor_top = 1.0; bar.anchor_bottom = 1.0
+	bar.offset_left = 22; bar.offset_right = -22; bar.offset_top = -94; bar.offset_bottom = -30
+	civ_select_view.add_child(bar)
+	back_btn.reparent(bar)
+	start_btn.reparent(bar)
+	back_btn.text = ""
+	back_btn.icon = _icon_tex("back")
+	back_btn.tooltip_text = "Ana menüye dön"
+	back_btn.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	back_btn.add_theme_constant_override("icon_max_width", 40)
+	back_btn.custom_minimum_size = Vector2(96, 60)
+	start_btn.custom_minimum_size = Vector2(0, 60)
+	start_btn.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	for st in ["normal", "hover", "pressed", "focus"]:
+		var sb := ParchmentTheme.get_button_style("hover" if st == "hover" else ("pressed" if st == "pressed" else "normal"))
+		sb.bg_color = Color(0.93, 0.74, 0.32) if st != "pressed" else Color(0.80, 0.60, 0.24)
+		if st == "hover":
+			sb.bg_color = Color(0.98, 0.82, 0.42)
+		sb.border_color = Color(0.42, 0.24, 0.06)
+		start_btn.add_theme_stylebox_override(st, sb)
+	start_btn.text = ""
+	start_btn.icon = _icon_tex("start")
+	start_btn.tooltip_text = "Seferi başlat"
+	start_btn.icon_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	start_btn.add_theme_constant_override("icon_max_width", 44)
+
+func _card(bg: Color, border: Color) -> PanelContainer:
+	var p := PanelContainer.new()
+	var sb := StyleBoxFlat.new()
+	sb.bg_color = bg
+	sb.border_color = border
+	sb.set_border_width_all(2)
+	sb.set_corner_radius_all(12)
+	sb.content_margin_left = 14; sb.content_margin_right = 14
+	sb.content_margin_top = 12; sb.content_margin_bottom = 12
+	sb.shadow_color = Color(0.08, 0.04, 0.02, 0.35)
+	sb.shadow_size = 5
+	sb.shadow_offset = Vector2(0, 3)
+	p.add_theme_stylebox_override("panel", sb)
+	var v := VBoxContainer.new()
+	v.add_theme_constant_override("separation", 8)
+	p.add_child(v)
+	return p
+
+const ICON_DIR := "res://assets/ui/icons/"
+
+func _icon_tex(name: String) -> Texture2D:
+	return load(ICON_DIR + name + ".png") as Texture2D
+
+func _icon(name: String, px: int, tip: String) -> TextureRect:
+	var t := TextureRect.new()
+	t.name = "Icon_" + name
+	t.texture = _icon_tex(name)
+	t.custom_minimum_size = Vector2(px, px)
+	t.expand_mode = TextureRect.EXPAND_IGNORE_SIZE
+	t.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	t.texture_filter = CanvasItem.TEXTURE_FILTER_NEAREST
+	t.tooltip_text = tip
+	t.mouse_filter = Control.MOUSE_FILTER_PASS
+	return t
+
+## card section heading: an icon followed by a thin gold rule (no words)
+func _card_icon_heading(icon: String, tip: String) -> HBoxContainer:
+	var h := HBoxContainer.new()
+	h.add_theme_constant_override("separation", 8)
+	h.add_child(_icon(icon, 30, tip))
+	var r := _card_rule()
+	r.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	r.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	h.add_child(r)
+	return h
+
+## icon + control on one row (the icon says what the select box is for)
+func _icon_row(icon: String, tip: String, ctl: Control) -> HBoxContainer:
+	var h := HBoxContainer.new()
+	h.name = "Row_" + icon
+	h.add_theme_constant_override("separation", 8)
+	var ic := _icon(icon, 40, tip)
+	ic.size_flags_vertical = Control.SIZE_SHRINK_CENTER
+	h.add_child(ic)
+	if ctl != null:
+		ctl.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+		h.add_child(ctl)
+	return h
+
+func _card_heading(text: String) -> Label:
+	var l := _card_label(text, 13, Color(0.86, 0.66, 0.30))
+	l.add_theme_font_override("font", ParchmentTheme.get_cinzel_font())
+	return l
+
+func _card_label(text: String, size: int, color: Color) -> Label:
+	var l := Label.new()
+	l.text = text
+	l.add_theme_font_override("font", ParchmentTheme.get_medieval_font())
+	l.add_theme_font_size_override("font_size", size)
+	l.add_theme_color_override("font_color", color)
+	l.autowrap_mode = TextServer.AUTOWRAP_WORD_SMART
+	return l
+
+func _card_rule() -> ColorRect:
+	var r := ColorRect.new()
+	r.color = Color(0.65, 0.52, 0.32, 0.45)
+	r.custom_minimum_size = Vector2(0, 1)
+	return r
+
+func _field_label(text: String) -> Label:
+	var l := _card_label(text, 14, ParchmentTheme.INK_MUTED)
+	l.add_theme_font_override("font", ParchmentTheme.get_cinzel_font())
+	return l
+
+func _select_box(node_name: String) -> OptionButton:
+	var o := OptionButton.new()
+	o.name = node_name
+	_style_select_box(o)
+	return o
+
+func _style_select_box(o: OptionButton) -> void:
+	o.custom_minimum_size = Vector2(0, 46)
+	o.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	o.fit_to_longest_item = false
+	o.clip_text = true
+	ParchmentTheme.apply_parchment_button(o, 16)
+	ParchmentTheme.apply_parchment_popup(o.get_popup(), 16)
 
 # ------------------------------------------------------------------------------------------------
 # Settings persistence (user://settings.cfg) and the graphics section

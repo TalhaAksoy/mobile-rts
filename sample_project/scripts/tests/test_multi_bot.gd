@@ -97,7 +97,7 @@ func _run() -> void:
 	var menu = game.ui_manager.menu_root
 	menu._on_new_game_pressed()
 	await _frames(2)
-	menu.map_size_buttons[MapGenerator3D.MapSize.LARGE].emit_signal("pressed")
+	menu.map_size_option.select(MapGenerator3D.MapSize.LARGE); menu.map_size_option.item_selected.emit(MapGenerator3D.MapSize.LARGE)
 	await _frames(1)
 	var rows_shown := 0
 	for r in menu.bots_box.get_children():
@@ -109,10 +109,10 @@ func _run() -> void:
 	await _frames(1)
 	menu.bot_civ_options[1].select(menu.bot_civ_options[1].get_item_index(CivData.CivType.MONGOLS))
 	_check(menu.selected_bot_count == 4 and menu.bot_count_label.text == "4" and not menu.bots_box.get_child(4).visible, "− makes it 4 opponents")
-	menu.map_size_buttons[MapGenerator3D.MapSize.SMALL].emit_signal("pressed")
+	menu.map_size_option.select(MapGenerator3D.MapSize.SMALL); menu.map_size_option.item_selected.emit(MapGenerator3D.MapSize.SMALL)
 	await _frames(1)
 	_check(menu.selected_bot_count == 1 and menu.bot_minus_btn.disabled and menu.bot_plus_btn.disabled, "Küçük: 1 opponent, the stepper is locked")
-	menu.map_size_buttons[MapGenerator3D.MapSize.MEDIUM].emit_signal("pressed")
+	menu.map_size_option.select(MapGenerator3D.MapSize.MEDIUM); menu.map_size_option.item_selected.emit(MapGenerator3D.MapSize.MEDIUM)
 	menu.bot_minus_btn.emit_signal("pressed")
 	await _frames(1)
 	menu.bot_civ_options[1].select(menu.bot_civ_options[1].get_item_index(CivData.CivType.MONGOLS))
