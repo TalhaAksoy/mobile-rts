@@ -46,6 +46,9 @@ Target period: c. 1200–1370 (Chinggis Khan to the Yuan/Ilkhanate). A nomadic c
 - **horse_archer:** helmet (tall conical bowl with a tube plume of red horsehair, leather flaps) or fur hat; a light lamellar or padded coat; bow drawn on horseback, two quivers, a sabre. **Horse:** the **Mongolian pony**: short (~13 hands), stocky, big head, thick neck, shaggy mane, dun/bay/grey; high wooden saddle with raised front and rear arches, very short stirrups (rider stands high), no barding. Reads as: small horse + bow.
 - Heavy cavalry (optional): full lamellar with lamellar horse barding in five pieces (Carpini describes it).
 
+
+**People (physique).** A little shorter (-2 %) and stocky (+6 % torso), the build of lifelong riders. Skin: honey, weathered tan and warm tones. Hair black: **crown shaved, a small forelock, the side locks braided into loops behind the ears** (Carpini, Rubruck); thin moustache. Tones, hair colours and the roles that get each are set in `art_source/blender/units/unitstyle.py` (PHYSIQUE) and mirrored in `art_source/aseprite/physique.lua`. Facial features (eyes, nose, cheekbones) are deliberately the same for every civ: varying them reads as caricature in this style.
+
 ## 4. Heraldry and emblems
 
 - **Tug/sulde:** a spear-tipped pole with a ring of horsehair below the blade. The **black tug was the war banner**, the **white tug (nine-tailed) the peace/enthronement banner** (*Secret History* style accounts). For 5–9 px: a black horsetail standard, or a white tug.

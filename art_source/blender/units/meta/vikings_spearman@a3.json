@@ -1,9 +1,9 @@
 {
  "civ": "vikings",
  "role": "spearman",
- "tris": 1260,
+ "tris": 1354,
  "bones": 18,
- "height": 2.25,
+ "height": 2.34,
  "actions": [
   "attack",
   "build-loop",

@@ -1,9 +1,9 @@
 {
  "civ": "vikings",
  "role": "villager",
- "tris": 858,
+ "tris": 882,
  "bones": 18,
- "height": 1.83,
+ "height": 1.903,
  "actions": [
   "attack",
   "build-loop",

@@ -1,9 +1,9 @@
 {
  "civ": "teutons",
  "role": "swordsman",
- "tris": 838,
+ "tris": 908,
  "bones": 18,
- "height": 1.78,
+ "height": 1.833,
  "actions": [
   "attack",
   "build-loop",

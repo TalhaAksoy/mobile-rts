@@ -68,6 +68,9 @@ func _run() -> void:
 				n.queue_free()
 		d.clear()
 	HD2DScatter.hide_cells(mg.scatter_cell_index, Vector2i.ZERO, Vector2i(mg.MAP_WIDTH, mg.MAP_HEIGHT))
+	for k in mg._tree_batches:                       # 3D trees are drawn through batched MultiMeshes
+		if is_instance_valid(mg._tree_batches[k].get("mmi")):
+			mg._tree_batches[k]["mmi"].visible = false
 	for u in game.units.duplicate():
 		u.queue_free()
 	game.units.clear()

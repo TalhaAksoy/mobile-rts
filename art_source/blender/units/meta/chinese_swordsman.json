@@ -1,9 +1,9 @@
 {
  "civ": "chinese",
  "role": "swordsman",
- "tris": 854,
+ "tris": 1004,
  "bones": 18,
- "height": 2.08,
+ "height": 2.038,
  "actions": [
   "attack",
   "build-loop",

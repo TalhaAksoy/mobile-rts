@@ -37,6 +37,7 @@ end
 local ages = {}
 for _, a in ipairs(args.ages or { 1, 2, 3 }) do ages[#ages + 1] = tonumber(a) end
 local AG = dofile(GEN_ROOT .. "/ages.lua")
+local PH = dofile(GEN_ROOT .. "/physique.lua")
 local function sfx(age) return (age == 2) and "" or ("@a" .. age) end
 local function nm(id, age) return (age == 2) and id or (id .. "_a" .. age) end
 
@@ -46,7 +47,7 @@ if kinds.units then
     for _, role in ipairs(roles(civ)) do
       for _, age in ipairs(ages) do
         if age == 2 or not CIVS[civ][role].villager then
-          U.build(AG.unit(CIVS[civ][role], age, civ, role), civ, role, {
+          U.build(PH.apply(AG.unit(CIVS[civ][role], age, civ, role), civ, role), civ, role, {
             name = nm(role, age),
             aseprite = string.format("%s/art_source/aseprite/src/units/%s/%s.aseprite", root, civ, nm(role, age)),
             png_dir = string.format("%s/units/%s", game_dir, civ),

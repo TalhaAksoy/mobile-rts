@@ -1,9 +1,9 @@
 {
  "civ": "franks",
  "role": "swordsman",
- "tris": 782,
+ "tris": 864,
  "bones": 18,
- "height": 1.9,
+ "height": 1.919,
  "actions": [
   "attack",
   "build-loop",

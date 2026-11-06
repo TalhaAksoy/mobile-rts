@@ -1,9 +1,9 @@
 {
  "civ": "teutons",
  "role": "spearman",
- "tris": 904,
+ "tris": 974,
  "bones": 18,
- "height": 2.25,
+ "height": 2.317,
  "actions": [
   "attack",
   "build-loop",

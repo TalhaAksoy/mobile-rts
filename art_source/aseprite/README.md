@@ -88,4 +88,5 @@ The 3D units have the same three looks (`art_source/blender/units/unitstyle.py`,
 - `env.lua` trees, bushes and mines per biome, farm fields, civ upgrade kits (back + front halves)
 - `ui.lua` portraits (pose_01 idle, pose_02 walk, action_reference attack, rear_reference mirrored walk), icons, posters
 - `ages.lua` Age I / III transforms for units and buildings (see above)
+- `physique.lua` the people per civ: stature (pixel rows added / removed at shin and waist, `units.lua`), torso width, a range of skin tones and hair colours spread over the roles, hair / beard customs. Mirrors `art_source/blender/units/unitstyle.py` PHYSIQUE; see the "People" note in `docs/art/culture/<civ>.md`
 - `run.lua` entry point, `update_manifest.py` manifest merge

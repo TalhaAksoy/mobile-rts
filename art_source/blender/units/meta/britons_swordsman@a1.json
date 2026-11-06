@@ -1,9 +1,9 @@
 {
  "civ": "britons",
  "role": "swordsman",
- "tris": 790,
+ "tris": 860,
  "bones": 18,
- "height": 1.78,
+ "height": 1.816,
  "actions": [
   "attack",
   "build-loop",

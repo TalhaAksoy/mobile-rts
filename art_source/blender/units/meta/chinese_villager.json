@@ -1,9 +1,9 @@
 {
  "civ": "chinese",
  "role": "villager",
- "tris": 680,
+ "tris": 830,
  "bones": 18,
- "height": 1.8,
+ "height": 1.793,
  "actions": [
   "attack",
   "build-loop",

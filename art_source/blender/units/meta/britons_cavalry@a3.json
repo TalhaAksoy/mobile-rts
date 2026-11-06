@@ -1,9 +1,9 @@
 {
  "civ": "britons",
  "role": "cavalry",
- "tris": 1440,
+ "tris": 1510,
  "bones": 31,
- "height": 2.52,
+ "height": 2.57,
  "actions": [
   "attack",
   "build-loop",

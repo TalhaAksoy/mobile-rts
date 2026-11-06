@@ -1,9 +1,9 @@
 {
  "civ": "saracens",
  "role": "archer",
- "tris": 1218,
+ "tris": 1288,
  "bones": 18,
- "height": 1.86,
+ "height": 1.841,
  "actions": [
   "attack",
   "build-loop",

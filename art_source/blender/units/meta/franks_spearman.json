@@ -1,9 +1,9 @@
 {
  "civ": "franks",
  "role": "spearman",
- "tris": 832,
+ "tris": 914,
  "bones": 18,
- "height": 2.25,
+ "height": 2.273,
  "actions": [
   "attack",
   "build-loop",

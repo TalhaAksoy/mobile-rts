@@ -1,9 +1,9 @@
 {
  "civ": "japanese",
  "role": "swordsman",
- "tris": 978,
+ "tris": 888,
  "bones": 18,
- "height": 1.83,
+ "height": 1.69,
  "actions": [
   "attack",
   "build-loop",

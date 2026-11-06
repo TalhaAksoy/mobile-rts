@@ -1,9 +1,9 @@
 {
  "civ": "saracens",
  "role": "mamluk",
- "tris": 1694,
+ "tris": 1764,
  "bones": 31,
- "height": 2.91,
+ "height": 2.881,
  "actions": [
   "attack",
   "build-loop",

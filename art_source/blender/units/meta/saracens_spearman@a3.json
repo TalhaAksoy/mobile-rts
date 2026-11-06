@@ -1,9 +1,9 @@
 {
  "civ": "saracens",
  "role": "spearman",
- "tris": 1368,
+ "tris": 1438,
  "bones": 18,
- "height": 2.25,
+ "height": 2.227,
  "actions": [
   "attack",
   "build-loop",

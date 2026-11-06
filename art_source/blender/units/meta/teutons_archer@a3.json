@@ -1,9 +1,9 @@
 {
  "civ": "teutons",
  "role": "archer",
- "tris": 962,
+ "tris": 1032,
  "bones": 18,
- "height": 1.9,
+ "height": 1.957,
  "actions": [
   "attack",
   "build-loop",

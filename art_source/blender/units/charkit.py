@@ -42,6 +42,11 @@ TEAM_PREVIEW = (0.18, 0.52, 0.95)                  # team 0 blue, for Blender pr
 PALETTE = {
     # skin / hair
     "skin": "e0a57a", "skin_dark": "b97c55", "skin_pale": "ecc29a", "skin_tan": "c98d5e",
+    # skin-tone ranges per civ (unitstyle.PHYSIQUE): each tone + its "_dark" (nose / shading block)
+    "skin_fair": "ebc4a4", "skin_fair_dark": "c4967a", "skin_ruddy": "e3a88a", "skin_ruddy_dark": "b87a62",
+    "skin_light": "e0ae88", "skin_light_dark": "b8845f", "skin_olive": "c99c72", "skin_olive_dark": "9f744c",
+    "skin_tanned": "b98159", "skin_tanned_dark": "8e5a3a", "skin_brown": "9c6844", "skin_brown_dark": "70462c",
+    "skin_warm": "e3b68e", "skin_warm_dark": "bb8c64", "skin_honey": "cf9f70", "skin_honey_dark": "a3764c",
     "hair_black": "2a211c", "hair_brown": "5a3a22", "hair_blond": "c79a52", "hair_red": "9a4a26", "hair_grey": "8c8478",
     "beard_black": "2e2420", "beard_brown": "4e3220", "beard_blond": "b0843e", "beard_red": "8a4222",
     "eye": "1e1612", "mouth": "7a3a2a", "tattoo": "2e5a9a",
@@ -565,6 +570,16 @@ class Body:
         for f in [ff, bf] + sides:
             f.smooth = False
         return [ff]
+
+    def apply_build(self, build):
+        """Wider or narrower torso (unitstyle.PHYSIQUE "build"): x of the verts on the hips / spine / chest bones.
+        Limbs, head and the bones themselves stay, so the shared rig and animations are untouched."""
+        if abs(build - 1.0) < 1e-4:
+            return
+        ids = {self.bone_index[n] for n in ("hips", "spine", "chest") if n in self.bone_index}
+        for v in self.bm.verts:
+            if any(g in ids for g in v[self.dl].keys()):
+                v.co.x *= build
 
     def to_object(self, name, arm, mats):
         bmesh.ops.remove_doubles(self.bm, verts=self.bm.verts, dist=1e-5)

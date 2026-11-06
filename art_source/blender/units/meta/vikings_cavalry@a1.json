@@ -1,9 +1,9 @@
 {
  "civ": "vikings",
  "role": "cavalry",
- "tris": 1384,
+ "tris": 1478,
  "bones": 31,
- "height": 2.42,
+ "height": 2.538,
  "actions": [
   "attack",
   "build-loop",

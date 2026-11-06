@@ -45,6 +45,9 @@ Target period: c. 950–1200 (Middle Byzantine, Macedonian/Komnenian). Late Pala
 - **archer (toxotes):** no metal armour, just a padded *kavadion*, often in faded red; phakeolion or felt cap; composite bow, a large quiver on the back or hip, a small buckler at most. Beard. Reads as: no shield, padded coat.
 - **cataphract:** iron helmet with **mail face-veil hiding the face**; lamellar klibanion with a hanging skirt and arm guards, sometimes a cloth surcoat (*epilorikion*); lance or **iron mace** (*siderorabdion*); small round or kite shield. **Horse:** large Anatolian/Cappadocian type with full **felt or lamellar barding** down to the knees, eyes exposed, in red or blue. Reads as: armoured horse + faceless rider.
 
+
+**People (physique).** Average stature and build. Skin: olive, light and tanned tones (an empire from the Balkans to Anatolia and Syria). Hair black or dark brown; full beards were the norm for grown men. Tones, hair colours and the roles that get each are set in `art_source/blender/units/unitstyle.py` (PHYSIQUE) and mirrored in `art_source/aseprite/physique.lua`. Facial features (eyes, nose, cheekbones) are deliberately the same for every civ: varying them reads as caricature in this style.
+
 ## 4. Heraldry and emblems
 
 - **Safest:** a simple Christian **cross** or **Chi-Rho** on a red, blue or white field. The radial and geometric shield patterns are period-correct.

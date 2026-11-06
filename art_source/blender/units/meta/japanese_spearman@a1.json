@@ -1,9 +1,9 @@
 {
  "civ": "japanese",
  "role": "spearman",
- "tris": 604,
+ "tris": 664,
  "bones": 18,
- "height": 2.3,
+ "height": 2.208,
  "actions": [
   "attack",
   "build-loop",

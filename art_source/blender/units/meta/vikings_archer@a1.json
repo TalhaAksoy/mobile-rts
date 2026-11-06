@@ -1,9 +1,9 @@
 {
  "civ": "vikings",
  "role": "archer",
- "tris": 1026,
+ "tris": 1050,
  "bones": 18,
- "height": 1.74,
+ "height": 1.81,
  "actions": [
   "attack",
   "build-loop",

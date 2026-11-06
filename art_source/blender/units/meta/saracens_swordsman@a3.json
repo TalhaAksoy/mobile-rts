@@ -1,9 +1,9 @@
 {
  "civ": "saracens",
  "role": "swordsman",
- "tris": 1426,
+ "tris": 1496,
  "bones": 18,
- "height": 1.86,
+ "height": 1.841,
  "actions": [
   "attack",
   "build-loop",

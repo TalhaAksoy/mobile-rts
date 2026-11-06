@@ -1,9 +1,9 @@
 {
  "civ": "japanese",
  "role": "samurai",
- "tris": 588,
+ "tris": 648,
  "bones": 18,
- "height": 1.8,
+ "height": 1.728,
  "actions": [
   "attack",
   "build-loop",

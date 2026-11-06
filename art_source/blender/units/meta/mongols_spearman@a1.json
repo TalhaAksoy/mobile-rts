@@ -1,9 +1,9 @@
 {
  "civ": "mongols",
  "role": "spearman",
- "tris": 1092,
+ "tris": 1188,
  "bones": 18,
- "height": 2.25,
+ "height": 2.205,
  "actions": [
   "attack",
   "build-loop",

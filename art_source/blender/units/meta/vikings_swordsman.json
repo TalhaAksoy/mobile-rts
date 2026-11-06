@@ -1,9 +1,9 @@
 {
  "civ": "vikings",
  "role": "swordsman",
- "tris": 1306,
+ "tris": 1400,
  "bones": 18,
- "height": 1.82,
+ "height": 1.893,
  "actions": [
   "attack",
   "build-loop",

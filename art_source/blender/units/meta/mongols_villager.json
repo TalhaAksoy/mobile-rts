@@ -1,9 +1,9 @@
 {
  "civ": "mongols",
  "role": "villager",
- "tris": 942,
+ "tris": 1038,
  "bones": 18,
- "height": 1.86,
+ "height": 1.823,
  "actions": [
   "attack",
   "build-loop",

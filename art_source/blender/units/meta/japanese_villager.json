@@ -1,9 +1,9 @@
 {
  "civ": "japanese",
  "role": "villager",
- "tris": 846,
+ "tris": 836,
  "bones": 18,
- "height": 1.8,
+ "height": 1.728,
  "actions": [
   "attack",
   "build-loop",

@@ -1,9 +1,9 @@
 {
  "civ": "mongols",
  "role": "archer",
- "tris": 1250,
+ "tris": 1346,
  "bones": 18,
- "height": 2.089,
+ "height": 2.047,
  "actions": [
   "attack",
   "build-loop",

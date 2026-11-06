@@ -59,6 +59,9 @@ This differs from the current bible, which calls for "heavy grey stone, near-bla
 - **cavalry:** a mounted knight brother in a great helm with a white surcoat, black cross and lance. As a variant, an imperial knight with a gold surcoat and black eagle.
   - **Horse:** a heavy warhorse with a white caparison bearing a black cross and a high saddle.
 
+
+**People (physique).** Stature +3 %, slightly broad (+3 % torso). Skin: fair, ruddy and light tones. Hair blond or brown; full beards. Tones, hair colours and the roles that get each are set in `art_source/blender/units/unitstyle.py` (PHYSIQUE) and mirrored in `art_source/aseprite/physique.lua`. Facial features (eyes, nose, cheekbones) are deliberately the same for every civ: varying them reads as caricature in this style.
+
 ## 4. Heraldry
 
 - **Teutonic Order:** a **black cross on white**. Knight brothers wore white mantles; serving brothers and sergeants wore **grey** with a **black tau (T) cross**, though sources differ on the details. For a 5-9 px emblem use a plain black cross on white.

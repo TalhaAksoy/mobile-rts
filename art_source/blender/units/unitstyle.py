@@ -456,6 +456,66 @@ def _age_style(st, civ, role, age):
     return o
 
 
+# ---------------------------------------------------------------------------------------------------------------
+# Physique per civ: the people differ, not only their clothes. Mirrored in the 2D sprites
+# (art_source/aseprite/civs/<civ>.lua, PHYS). Only what history and the culture briefs support
+# (docs/art/culture/<civ>.md):
+#   height  stature within the medieval averages (~157-172 cm across these peoples): +-4 % at most
+#   build   torso width: +-6 % at most (stocky steppe riders, lean desert infantry ...)
+#   skins   a RANGE of 2-3 tones; roles pick different ones so an army reads as many people, never one flat tone
+#   hair    colours (roles pick in turn) and the documented hair / beard customs
+# Facial features (eyes, nose, cheekbones) are deliberately NOT varied by civ: in this chunky style that reads
+# as caricature, and the briefs do not ask for it.
+# ---------------------------------------------------------------------------------------------------------------
+PHYSIQUE = {
+    "britons":    dict(height=1.02, build=1.00, skins=["skin_fair", "skin_ruddy", "skin_light"],
+                       hair=["hair_brown", "hair_red", "hair_blond"], hair_style="short"),
+    "franks":     dict(height=1.01, build=1.00, skins=["skin_light", "skin_fair", "skin_ruddy"],
+                       hair=["hair_brown", "hair_brown", "hair_blond"], hair_style="bowl"),
+    "teutons":    dict(height=1.03, build=1.03, skins=["skin_fair", "skin_ruddy", "skin_light"],
+                       hair=["hair_blond", "hair_brown", "hair_blond"], hair_style="short"),
+    "vikings":    dict(height=1.04, build=1.05, skins=["skin_fair", "skin_ruddy", "skin_fair"],
+                       hair=["hair_blond", "hair_red", "hair_brown"], hair_style="long", beard_kind="braided"),
+    "byzantines": dict(height=1.00, build=1.00, skins=["skin_olive", "skin_light", "skin_tanned"],
+                       hair=["hair_black", "hair_brown", "hair_black"], hair_style="short"),
+    "ottomans":   dict(height=1.00, build=1.02, skins=["skin_light", "skin_olive", "skin_tanned"],
+                       hair=["hair_black", "hair_brown", "hair_black"], hair_style="short"),
+    "saracens":   dict(height=0.99, build=0.96, skins=["skin_tanned", "skin_olive", "skin_brown"],
+                       hair=["hair_black", "hair_black", "hair_brown"], hair_style="short"),
+    "mongols":    dict(height=0.98, build=1.06, skins=["skin_honey", "skin_tanned", "skin_warm"],
+                       hair=["hair_black", "hair_black", "hair_black"], hair_style="mongol"),
+    "chinese":    dict(height=0.98, build=0.98, skins=["skin_warm", "skin_honey", "skin_light"],
+                       hair=["hair_black", "hair_black", "hair_black"], hair_style="bun"),
+    "japanese":   dict(height=0.96, build=0.98, skins=["skin_warm", "skin_honey", "skin_light"],
+                       hair=["hair_black", "hair_black", "hair_black"], hair_style="chonmage"),
+}
+# which of the civ's tones / hair colours a role gets (fixed, so a unit always looks the same)
+_ROLE_PICK = {"villager": 0, "swordsman": 1, "spearman": 2, "archer": 0, "cavalry": 1}
+_BEARD_FOR_HAIR = {"hair_black": "beard_black", "hair_brown": "beard_brown", "hair_blond": "beard_blond",
+                   "hair_red": "beard_red", "hair_grey": "beard_brown"}
+
+
+def _apply_physique(st, civ, role):
+    ph = PHYSIQUE.get(civ)
+    if not ph:
+        return st
+    o = dict(st)
+    i = _ROLE_PICK.get(role, 2)
+    skin = ph["skins"][i % len(ph["skins"])]
+    o.setdefault("skin", skin)
+    o.setdefault("skin_dark", o["skin"] + "_dark" if o["skin"].startswith("skin_") and o["skin"] != "skin" else "skin_dark")
+    hair = ph["hair"][i % len(ph["hair"])]
+    o["hair"] = hair if "hair" not in st or role != "berserker" else st["hair"]
+    if o.get("beard") and role != "berserker":
+        o["beard"] = _BEARD_FOR_HAIR.get(o["hair"], o["beard"])
+    o.setdefault("hair_style", ph["hair_style"])
+    if ph.get("beard_kind") and o.get("beard") and "beard_kind" not in st:
+        o["beard_kind"] = ph["beard_kind"]
+    o["height"] = ph["height"]
+    o["build"] = ph["build"]
+    return o
+
+
 def get(civ, role, age=2):
     st = {k: v for k, v in STYLES[civ][role].items() if v is not None}
-    return _age_style(st, civ, role, age)
+    return _apply_physique(_age_style(st, civ, role, age), civ, role)

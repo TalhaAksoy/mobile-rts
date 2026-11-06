@@ -1,9 +1,9 @@
 {
  "civ": "mongols",
  "role": "swordsman",
- "tris": 1246,
+ "tris": 1342,
  "bones": 18,
- "height": 2.089,
+ "height": 2.047,
  "actions": [
   "attack",
   "build-loop",

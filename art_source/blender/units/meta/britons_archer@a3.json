@@ -1,9 +1,9 @@
 {
  "civ": "britons",
  "role": "archer",
- "tris": 882,
+ "tris": 952,
  "bones": 18,
- "height": 1.82,
+ "height": 1.856,
  "actions": [
   "attack",
   "build-loop",

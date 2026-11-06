@@ -1,9 +1,9 @@
 {
  "civ": "chinese",
  "role": "cavalry",
- "tris": 1280,
+ "tris": 1430,
  "bones": 31,
- "height": 2.42,
+ "height": 2.479,
  "actions": [
   "attack",
   "build-loop",

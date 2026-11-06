@@ -1,9 +1,9 @@
 {
  "civ": "chinese",
  "role": "spearman",
- "tris": 1008,
+ "tris": 1158,
  "bones": 18,
- "height": 2.25,
+ "height": 2.205,
  "actions": [
   "attack",
   "build-loop",

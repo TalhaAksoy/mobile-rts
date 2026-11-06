@@ -1,9 +1,9 @@
 {
  "civ": "chinese",
  "role": "chu_ko_nu",
- "tris": 816,
+ "tris": 966,
  "bones": 18,
- "height": 1.72,
+ "height": 1.793,
  "actions": [
   "attack",
   "build-loop",

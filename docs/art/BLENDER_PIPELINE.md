@@ -112,6 +112,11 @@ art_source/blender/units/
   in that swatch (`FactionArtManager.team_palette_material`, same rect in `TEAM_SWATCH`). So a unit body is one
   surface: one draw call plus its X-ray and shadow passes, where a separate `TEAM_Trim` surface doubled all three.
   Keep the emblem count under 16 so the cells never reach the swatch (`bake_palette` asserts it).
+* **People.** `unitstyle.PHYSIQUE` gives each civ a stature (the whole rig scaled uniformly at export, so the shared
+  animations stay valid; at most +-4 %), a torso width (`Body.apply_build`: x of the hips / spine / chest verts, at most
+  +-6 %), 2-3 skin tones and hair colours that the roles pick in turn, and the documented hair and beard customs
+  (`outfit.head`: `hair_style` short / long / bowl / bun / mongol / chonmage, beard `braided`). Facial features stay the
+  same for every civ on purpose. The 2D sprites mirror it in `art_source/aseprite/physique.lua`.
 * **Mounts.** `charkit.mounted_bones(kind)` adds the horse or camel bones under the humanoid rider: body, neck,
   head, tail, four two-part legs and a saddle that the rider's hips hang from. Mounted actions:
   `make_mount_actions`.

@@ -1,9 +1,9 @@
 {
  "civ": "japanese",
  "role": "cavalry",
- "tris": 1470,
+ "tris": 1530,
  "bones": 31,
- "height": 2.8,
+ "height": 2.688,
  "actions": [
   "attack",
   "build-loop",

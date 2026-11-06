@@ -181,14 +181,36 @@ def head(b, s):
                 b.box((0, -0.20, HEAD_Z - 0.31), (0.12, 0.06, 0.12), "head", beard)
         if kind == "goatee":
             b.box((0, -0.21, HEAD_Z - 0.18), (0.10, 0.06, 0.10), "head", beard)
+        if kind == "braided":              # Norse: a long beard bound into a braid
+            b.box((0, -0.17, HEAD_Z - 0.17), (0.30, 0.12, 0.12), "head", beard)
+            b.box((0, -0.19, HEAD_Z - 0.27), (0.10, 0.07, 0.16), "head", beard)
+            b.box((0, -0.19, HEAD_Z - 0.37), (0.07, 0.06, 0.06), "head", "gold_dark")
         b.box((0, -0.245, HEAD_Z - 0.085), (0.18, 0.03, 0.035), "head", beard)          # moustache
     if s.get("veil"):                      # face veil (Saracen archer / mamluk)
         b.box((0, -0.16, HEAD_Z - 0.13), (0.44, 0.16, 0.18), "head", s["veil"])
     hair = s.get("hair")
-    if hair:                               # hair on the top and back of the head, the brow stays free
+    style = s.get("hair_style", "short")
+    if hair and style == "mongol":
+        # crown shaved (the skin shows), a small forelock, the side locks braided into loops behind the ears
+        b.box((0, -0.20, HEAD_Z + 0.20), (0.10, 0.08, 0.10), "head", hair)
+        b.box((0, 0.17, HEAD_Z - 0.04), (0.40, 0.14, 0.22), "head", hair)
+        for x in (0.25, -0.25):
+            b.torus((x, 0.07, HEAD_Z - 0.13), 0.055, 0.022, "head", hair, rot=(0, math.pi / 2, 0), segs=6, tube_segs=3)
+    elif hair and style == "chonmage":
+        # shaved pate, hair kept at the sides and back, the queue folded forward over the top
+        b.box((0, 0.11, HEAD_Z - 0.01), (0.50, 0.25, 0.30), "head", hair)
+        for x in (0.235, -0.235):
+            b.box((x, 0.0, HEAD_Z + 0.04), (0.05, 0.30, 0.22), "head", hair)
+        b.box((0, 0.02, HEAD_Z + 0.27), (0.07, 0.24, 0.06), "head", hair)
+        b.box((0, 0.13, HEAD_Z + 0.24), (0.08, 0.06, 0.08), "head", hair)
+    elif hair:                             # hair on the top and back of the head, the brow stays free
         b.box((0, 0.10, HEAD_Z + 0.0), (0.49, 0.26, 0.38), "head", hair)
         b.half_ball((0, 0.05, HEAD_Z + 0.11), (0.52, 0.50, 0.34), "head", hair, segs=10)
-        if s.get("topknot"):
+        if style == "bowl":                # Frankish / Norman bowl cut: a straight fringe all round
+            b.box((0, -0.205, HEAD_Z + 0.17), (0.44, 0.06, 0.07), "head", hair)
+        if style == "long":                # Norse: worn long down the back
+            b.box((0, 0.16, HEAD_Z - 0.22), (0.44, 0.12, 0.30), "head", hair)
+        if style == "bun" or s.get("topknot"):
             b.ball((0, 0.06, HEAD_Z + 0.30), (0.14, 0.14, 0.14), "head", hair)
         if s.get("braids"):
             for x in (0.2, -0.2):

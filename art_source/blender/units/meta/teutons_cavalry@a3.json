@@ -1,9 +1,9 @@
 {
  "civ": "teutons",
  "role": "cavalry",
- "tris": 1450,
+ "tris": 1520,
  "bones": 31,
- "height": 2.6,
+ "height": 2.678,
  "actions": [
   "attack",
   "build-loop",

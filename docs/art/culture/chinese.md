@@ -46,6 +46,9 @@ Target period: c. 1000–1450. Song architecture (*Yingzao Fashi*, 1103) and ear
 - **chu_ko_nu (repeating crossbow):** a light padded or paper-armour vest, a cloth hat; a **crossbow with a tall box magazine on top and a rear lever**, worked with both hands; a bolt bag. Reads as: crossbow + box, lever up. *The weapon's Song service is debated; Wujing Zongyao and Ming Wubei Zhi describe it. Treat it as a militia/defence weapon.*
 - **cavalry:** iron helmet with a red plume/tassel, full lamellar with arm guards and a round chest-mirror plate (*huxinjing*); **lance with a pennon** or a dao, bow case. **Horse:** a medium-sized Mongolian/North China type, sturdy; a saddle with a padded cloth, red tassels hanging under the neck and at the breast strap; optional **lamellar barding** for heavy cavalry, red or black lacquered.
 
+
+**People (physique).** A little shorter (-2 %), slightly slender (-2 % torso). Skin: warm, honey and light tones. Hair black, gathered in a **topknot (bun)** under the cap; moustache or moustache with a small beard. Tones, hair colours and the roles that get each are set in `art_source/blender/units/unitstyle.py` (PHYSIQUE) and mirrored in `art_source/aseprite/physique.lua`. Facial features (eyes, nose, cheekbones) are deliberately the same for every civ: varying them reads as caricature in this style.
+
 ## 4. Heraldry and emblems
 
 - **Flags:** rectangular or triangular banners with a **single large surname or dynasty character** (宋 Song, 明 Ming) in black on red, or on white. A serrated "flame" border is common in Song/Ming paintings.

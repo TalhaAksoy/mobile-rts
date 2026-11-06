@@ -1,9 +1,9 @@
 {
  "civ": "britons",
  "role": "spearman",
- "tris": 774,
+ "tris": 844,
  "bones": 18,
- "height": 2.25,
+ "height": 2.295,
  "actions": [
   "attack",
   "build-loop",

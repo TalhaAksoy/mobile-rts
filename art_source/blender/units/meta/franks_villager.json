@@ -1,9 +1,9 @@
 {
  "civ": "franks",
  "role": "villager",
- "tris": 838,
+ "tris": 920,
  "bones": 18,
- "height": 1.78,
+ "height": 1.798,
  "actions": [
   "attack",
   "build-loop",

@@ -1,9 +1,9 @@
 {
  "civ": "britons",
  "role": "longbowman",
- "tris": 994,
+ "tris": 1064,
  "bones": 18,
- "height": 1.919,
+ "height": 1.957,
  "actions": [
   "attack",
   "build-loop",

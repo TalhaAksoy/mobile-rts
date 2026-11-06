@@ -53,6 +53,9 @@ The big tower-keep (tenshu) castle such as Himeji or Osaka begins only with Azuc
 - **cavalry:** a mounted samurai in **ō-yoroi**, the box-like lamellar armour of the mounted archer. He carries a yumi or a yari, with a horo cape optional.
   - **Horse:** a **small, stocky native horse** with a thick mane, about pony height to European eyes. It has a lacquered wooden saddle, slipper-shaped abumi stirrups and red silk crupper tassels (shirigai), and **no barding**.
 
+
+**People (physique).** The shortest people in the game (-4 %, about 157-160 cm: the medieval Japanese average), slightly slender. Skin: warm, honey and light tones. Hair black in the **chonmage**: the pate shaved (sakayaki), the queue tied and folded forward over the top; thin moustache. Tones, hair colours and the roles that get each are set in `art_source/blender/units/unitstyle.py` (PHYSIQUE) and mirrored in `art_source/aseprite/physique.lua`. Facial features (eyes, nose, cheekbones) are deliberately the same for every civ: varying them reads as caricature in this style.
+
 ## 4. Heraldry
 
 Use **mon**, simple circular crests, in black or white on a contrasting field.

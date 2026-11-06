@@ -117,10 +117,53 @@ local function finish(K)
   return K
 end
 
+-- Stature (physique.lua): +n duplicates n pixel rows of the figure, -n removes n, at the shin and the waist of a
+-- foot soldier (the rider's waist only on a mount, the animal keeps its size). Done on the flat image and the owner
+-- map before the layers are split, so outline, shadow and team colours follow.
+local function shift_rows(K, row, insert)
+  local W, H = K.w, K.h
+  local src = Image(K.flat)
+  local owner = {}
+  local flat = Image(W, H, ColorMode.RGB)
+  for idx, n in pairs(K.owner) do
+    local x, y = idx % W, idx // W
+    local c = src:getPixel(x, y)
+    local targets
+    if insert then
+      if y < row then targets = { y - 1 } elseif y == row then targets = { row - 1, row } else targets = { y } end
+    else
+      if y < row then targets = { y + 1 } elseif y == row then targets = {} else targets = { y } end
+    end
+    for _, ny in ipairs(targets) do
+      if ny >= 0 and ny < H and (owner[ny * W + x] == nil or ny ~= y) then
+        flat:drawPixel(x, ny, c)
+        owner[ny * W + x] = n
+      end
+    end
+  end
+  K.flat = flat
+  K.owner = owner
+end
+
+local function stature(K, st)
+  local n = st.stature or 0
+  if n == 0 then return end
+  local feet = st.mount and (K.rider_oy or K.oy) or K.oy
+  local rows = st.mount and { feet - 30, feet - 30 } or { feet - 10, feet - 30 }    -- shin, waist (canvas y)
+  local done = 0
+  for k = 1, math.min(math.abs(n), #rows) do
+    local r = rows[k]
+    if n > 0 then r = r - done else r = r + done end   -- earlier shifts moved the rows above
+    shift_rows(K, r, n > 0)
+    done = done + 1
+  end
+end
+
 local function render(st, pose)
   local K = new_canvas()
   ground_shadow(K, st.mount ~= nil)
   if st.mount then CH.draw_mounted(K, st, pose) else CH.draw(K, st, pose) end
+  stature(K, st)
   return finish(K)
 end
 

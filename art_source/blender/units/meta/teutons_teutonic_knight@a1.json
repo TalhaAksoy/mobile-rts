@@ -1,9 +1,9 @@
 {
  "civ": "teutons",
  "role": "teutonic_knight",
- "tris": 766,
+ "tris": 836,
  "bones": 18,
- "height": 1.78,
+ "height": 1.833,
  "actions": [
   "attack",
   "build-loop",

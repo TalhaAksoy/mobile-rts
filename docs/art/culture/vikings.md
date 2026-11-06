@@ -51,6 +51,9 @@ Target look: low, long timber halls with curved walls and huge roofs of shingle,
 - **cavalry:** a game invention, since Vikings rode to battle and fought on foot. Use a mounted warrior with a spear, round shield and helmet.
   - **Horse:** a small, sturdy Nordic horse (Icelandic- or Fjord-type with a dun coat and dark mane). Simple saddle and bridle, no barding, a woven saddle blanket in red or blue.
 
+
+**People (physique).** The tallest people in the game (+4 %), broad (+5 % torso), matching skeletal studies of Norse populations. Skin: fair and ruddy. Hair blond, red or brown, worn long; beards long and often braided (the sagas and grave finds show beard care, combs and rings). Tones, hair colours and the roles that get each are set in `art_source/blender/units/unitstyle.py` (PHYSIQUE) and mirrored in `art_source/aseprite/physique.lua`. Facial features (eyes, nose, cheekbones) are deliberately the same for every civ: varying them reads as caricature in this style.
+
 ## 4. Heraldry
 
 There was no formal heraldry before about 1150.

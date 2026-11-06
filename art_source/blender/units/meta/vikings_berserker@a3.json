@@ -1,9 +1,9 @@
 {
  "civ": "vikings",
  "role": "berserker",
- "tris": 982,
+ "tris": 1064,
  "bones": 18,
- "height": 1.89,
+ "height": 1.966,
  "actions": [
   "attack",
   "build-loop",

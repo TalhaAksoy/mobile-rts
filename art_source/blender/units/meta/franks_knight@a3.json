@@ -1,9 +1,9 @@
 {
  "civ": "franks",
  "role": "knight",
- "tris": 1504,
+ "tris": 1586,
  "bones": 31,
- "height": 3.49,
+ "height": 3.525,
  "actions": [
   "attack",
   "build-loop",

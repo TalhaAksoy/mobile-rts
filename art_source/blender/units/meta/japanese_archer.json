@@ -1,9 +1,9 @@
 {
  "civ": "japanese",
  "role": "archer",
- "tris": 1166,
+ "tris": 1076,
  "bones": 18,
- "height": 2.078,
+ "height": 1.995,
  "actions": [
   "attack",
   "build-loop",

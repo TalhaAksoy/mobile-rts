@@ -51,6 +51,9 @@ Target look: Norman and Edwardian England. The buildings are squat, massive grey
 - **cavalry:** a mounted knight in a great helm or bascinet, mail and plate, with a red surcoat bearing three gold lions and a lance.
   - **Horse:** a solid bay or grey with a red caparison bearing gold lions, a high saddle and a breastband.
 
+
+**People (physique).** Stature a little above the shared base (+2 %), average build. Skin: fair, ruddy and light tones, spread over the roles. Hair brown, red or blond; beards short or full, clean-shaven also common. Tones, hair colours and the roles that get each are set in `art_source/blender/units/unitstyle.py` (PHYSIQUE) and mirrored in `art_source/aseprite/physique.lua`. Facial features (eyes, nose, cheekbones) are deliberately the same for every civ: varying them reads as caricature in this style.
+
 ## 4. Heraldry
 
 - **Royal arms:** *Gules, three lions passant guardant Or*. They first appear on Richard I's second great seal, made in 1195 and in use from 1198. At 5-9 px use **three tiny gold horizontal lion-stripes on red**, or one lion.

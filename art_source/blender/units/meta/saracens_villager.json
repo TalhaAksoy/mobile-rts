@@ -1,9 +1,9 @@
 {
  "civ": "saracens",
  "role": "villager",
- "tris": 1086,
+ "tris": 1156,
  "bones": 18,
- "height": 1.86,
+ "height": 1.841,
  "actions": [
   "attack",
   "build-loop",

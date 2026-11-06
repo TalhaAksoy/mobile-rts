@@ -56,7 +56,8 @@ func _run() -> void:
 			_check(ok_anims and inst.find_children("*", "Skeleton3D", true, false).size() == 1, tag + ": skeleton + idle/walk/gather/build loops, attack/death once")
 			var box: AABB = FactionArtManager.compute_visual_aabb(inst)
 			var mounted: bool = e.get("mount", "") != ""
-			var hi_ok: bool = (box.end.y > 2.3 and box.end.y < 3.5) if mounted else (box.end.y > 1.5 and box.end.y < 2.4)
+			# (tops include raised spears and lances; +4 % room for the tallest physique, unitstyle.PHYSIQUE height)
+			var hi_ok: bool = (box.end.y > 2.3 and box.end.y < 3.65) if mounted else (box.end.y > 1.5 and box.end.y < 2.5)
 			_check(absf(box.position.y) < 0.05 and hi_ok, tag + ": feet / hooves on the ground, %.2f m tall%s" % [box.end.y, " (mounted)" if mounted else ""])
 			var tris := 0
 			var mats := {}

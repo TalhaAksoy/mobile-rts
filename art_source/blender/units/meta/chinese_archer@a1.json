@@ -1,9 +1,9 @@
 {
  "civ": "chinese",
  "role": "archer",
- "tris": 852,
+ "tris": 1002,
  "bones": 18,
- "height": 1.72,
+ "height": 1.793,
  "actions": [
   "attack",
   "build-loop",

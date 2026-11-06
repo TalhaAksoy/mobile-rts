@@ -118,7 +118,7 @@ end
 local function torso(K, st, p)
   local b, lean = p.bob, p.lean
   local top, waist = -38 + b, -22 + b
-  local x0, x1 = -8 + lean, 7 + lean
+  local x0, x1 = -8 + lean - math.max(0, st.build_px or 0), 7 + lean + math.min(0, st.build_px or 0)   -- physique.lua build
   local akind = st.armor_kind or (st.armor and "mail") or "cloth"
   local base = col(st.armor) or col(st.shirt) or C.cream
   P.use(K, (akind ~= "cloth") and "armor" or "body")
@@ -216,7 +216,9 @@ local function face(K, st, hx, hy, opt)
       end end
       for y = hy + 4, hy + 9 do for x = hx + 8, hx + 11 do put(K, x, y, tone(hair, 4)) end end
       if style == "long" then for y = hy + 9, hy + 15 do for x = hx + 8, hx + 11 do put(K, x, y, tone(hair, (x == hx + 8) and 3 or 4)) end end end
-      if style == "topknot" then P.rect(K, hx + 6, hy - 3, hx + 9, hy, tone(hair, 3)); put(K, hx + 6, hy - 3, tone(hair, 2)) end
+      if style == "topknot" or style == "bun" then P.rect(K, hx + 6, hy - 3, hx + 9, hy, tone(hair, 3)); put(K, hx + 6, hy - 3, tone(hair, 2)) end
+      if style == "bun" then put(K, hx + 7, hy - 4, tone(hair, 2)); put(K, hx + 8, hy - 4, tone(hair, 3)) end
+      if style == "bowl" then for x = hx + 1, hx + 4 do put(K, x, hy + 3, tone(hair, 3)) end; put(K, hx + 1, hy + 4, tone(hair, 4)) end  -- straight fringe
       if style == "braids" then for y = hy + 9, hy + 17 do put(K, hx + 9, y, tone(hair, (y % 2 == 0) and 3 or 4)) end end
       put(K, hx + 3, hy + 1, tone(hair, 2))
     end
@@ -235,6 +237,13 @@ local function face(K, st, hx, hy, opt)
       put(K, ex, ey + 4, tone(bc, 3)); put(K, ex + 1, ey + 4, tone(bc, 3)); put(K, ex + 2, ey + 4, tone(bc, 4)); put(K, ex - 1, ey + 5, tone(bc, 3))
     end
     if bstyle == "moustache_long" then put(K, ex - 1, ey + 6, tone(bc, 3)); put(K, ex + 3, ey + 5, tone(bc, 4)); put(K, ex + 3, ey + 6, tone(bc, 4)) end
+    if bstyle == "braided" then                     -- Norse: a long beard bound into a braid with a ring
+      for y = ey + 5, ey + 8 do for x = hx, hx + 7 do
+        if not (y == ey + 5 and (x == ex + 1 or x == ex + 2)) and x < hx + 7 - (y - ey - 5) then put(K, x, y, tone(bc, (x > hx + 5) and 4 or 3)) end
+      end end
+      for y = ey + 9, ey + 11 do put(K, ex + 1, y, tone(bc, 3)); put(K, ex + 2, y, tone(bc, 4)) end
+      put(K, ex + 1, ey + 12, C.gold); put(K, ex + 2, ey + 12, tone(C.gold, 4))
+    end
     if bstyle == "full" or bstyle == "short" then
       local len = (bstyle == "full") and 4 or 2
       for y = ey + 5, ey + 5 + len do for x = hx, hx + 7 do
@@ -967,6 +976,7 @@ function M.draw_mounted(K, st, p)
   local sy = mount(K, st, p)
   local ox, oy = K.ox, K.oy
   K.oy = oy + sy + 20 - 1
+  K.rider_oy = K.oy                                 -- the rider's feet line, for the stature rows (units.lua)
   K.ox = ox + 2
   local rp = {}
   for k, v in pairs(p) do rp[k] = v end

@@ -1,9 +1,9 @@
 {
  "civ": "britons",
  "role": "villager",
- "tris": 838,
+ "tris": 908,
  "bones": 18,
- "height": 1.78,
+ "height": 1.816,
  "actions": [
   "attack",
   "build-loop",

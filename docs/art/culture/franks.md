@@ -52,6 +52,9 @@ Note: both azure and red are also team colours, so keep the team sash and trim s
 - **knight (mounted):** a cylinder great helm with a crest or fan, a mail hauberk with mail chausses, an azure surcoat semé with gold lis and a heater shield to match. He carries a long lance with a pennon.
   - **Horse:** a tall, heavy destrier with a full-length azure caparison semé with lis, a high-cantled war saddle and a red bridle.
 
+
+**People (physique).** Stature +1 %, average build. Skin: light, fair and ruddy tones. Hair mostly brown, some blond, worn in the Norman / Capetian **bowl cut** (a straight fringe); short beards or clean-shaven. Tones, hair colours and the roles that get each are set in `art_source/blender/units/unitstyle.py` (PHYSIQUE) and mirrored in `art_source/aseprite/physique.lua`. Facial features (eyes, nose, cheekbones) are deliberately the same for every civ: varying them reads as caricature in this style.
+
 ## 4. Heraldry
 
 - **Arms:** *Azure semé de lis Or*, the field strewn with gold fleurs-de-lis. These are royal from about 1180-1200 (Philip Augustus's seal shows the lis by 1180). At 5-9 px use **one gold lis on blue**.

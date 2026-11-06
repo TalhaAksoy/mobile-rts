@@ -45,6 +45,7 @@ def build_one(civ, role, palette_img, preview=False, age=2):
     else:
         arm = charkit.build_armature("Rig")
         body = outfit.build_body(style, role)
+    body.apply_build(style.get("build", 1.0))     # torso width (unitstyle.PHYSIQUE)
     ob = body.to_object("Body", arm, mats)
     tris = body.tris
     if role == "villager":
@@ -56,6 +57,9 @@ def build_one(civ, role, palette_img, preview=False, age=2):
         charkit.make_mount_actions(arm, style.get("attack", "slash"))
     else:
         charkit.make_actions(arm, style.get("attack", "slash"))
+    h = style.get("height", 1.0)                  # stature: the whole rig scaled uniformly (animations stay valid)
+    arm.scale = (h, h, h)
+    bpy.context.view_layer.update()
     out = os.path.join(GODOT, "assets", "3d", "units", civ, name + ".glb")
     charkit.export_glb(out)
     zs = [(ob.matrix_world @ v.co).z for v in ob.data.vertices]

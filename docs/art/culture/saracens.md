@@ -45,6 +45,9 @@ Target period: c. 1170–1500 (Saladin's Ayyubids to late Mamluk Cairo/Damascus/
 - **archer:** turban, no armour, composite bow, a cylindrical quiver at the hip, thumb ring; bright sash. Reads as: no shield, bow.
 - **mamluk (camel):** elite Turkic/Circassian slave-soldier. **Red or yellow *kalawta* cap with a white turban wound round it**, or a fluted steel helmet with a mail aventail; full beard; mail or lamellar (*jawshan*) under a coloured *qaba*; bow case **and** quiver, a lance, a sword, and a mace at the saddle. **Camel:** a single-hump dromedary, light tan, with a saddle frame on the hump, coloured tassels, a woven saddle bag, and a rope bridle with a nose peg. *Historical note: Mamluks fought on horseback and camels were for Bedouin auxiliaries and transport. So keep the rider pure mamluk and the tack Bedouin.* Reads as: tall silhouette + yellow/red cap.
 
+
+**People (physique).** Average stature (-1 %), lean build (-4 % torso). Skin: tanned, olive and brown tones (Egypt and Syria; the mamluks were Turkic and Circassian recruits). Hair black or dark brown; full beards. Tones, hair colours and the roles that get each are set in `art_source/blender/units/unitstyle.py` (PHYSIQUE) and mirrored in `art_source/aseprite/physique.lua`. Facial features (eyes, nose, cheekbones) are deliberately the same for every civ: varying them reads as caricature in this style.
+
 ## 4. Heraldry and emblems
 
 - **Mamluk blazon** (well documented): a roundel (circle), simple undivided in the Bahri period (pre-1382), later split into three fields. Office emblems: **cup** (cup-bearer), **pen box** (secretary), **two crossed polo sticks** (polo master), **napkin rhombus** (robe master), sword, bow, and the **lion of Baybars**, a walking lion. For 5–9 px: a **red cup on a yellow band** in a white roundel.

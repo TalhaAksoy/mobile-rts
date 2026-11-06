@@ -46,6 +46,9 @@ Target period: c. 1400–1550 (early Ottoman Bursa/Edirne style through early Is
 - **janissary:** **tall white felt *börk* with a long flap hanging down the back** and a brass spoon-holder plate at the front; **moustache, no beard** (janissaries were forbidden beards); long blue *dolama* coat with skirts tucked up into the sash; long matchlock *tüfek* with a short butt; *yatağan* at the belt. No armour, no shield. Reads as: white hat tail + gun.
 - **cavalry (sipahi):** turban wrapped round a pointed helmet, or *çiçak*; mail-and-plate (mail with small plates at chest), vambraces; crimson kaftan; round *kalkan*; lance with a small pennon, *kılıç*, bow case. **Horse:** lean Turkoman/Arab type, small head, long neck; deep saddle, short stirrups, colourful saddle cloth, tassels and brass plaques on the bridle, horsetail tassel under the neck. No barding for standard sipahi.
 
+
+**People (physique).** Average stature, slightly sturdy (+2 % torso). Skin: light, olive and tanned tones (Anatolian, Balkan and Caucasian recruits). Hair black or dark brown, kept short or shaved under the turban; full beards, except the janissaries (moustache only). Tones, hair colours and the roles that get each are set in `art_source/blender/units/unitstyle.py` (PHYSIQUE) and mirrored in `art_source/aseprite/physique.lua`. Facial features (eyes, nose, cheekbones) are deliberately the same for every civ: varying them reads as caricature in this style.
+
 ## 4. Heraldry and emblems
 
 - **Safest:** a **red field with a white crescent** (no star). Sources tie crescents to Ottoman standards from at least the late 15th century (Rhodes 1480, ships in 1487). A tradition that ties them to Orhan (1320s–60s) is weaker evidence.
