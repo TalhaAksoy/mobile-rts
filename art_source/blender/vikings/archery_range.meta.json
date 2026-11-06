@@ -1,37 +1,35 @@
 {
-  "tris": 1332,
-  "verts": 1996,
+  "tris": 953,
+  "verts": 1153,
   "materials": [
     "PE_Dirt",
-    "PE_StoneGrey",
     "PE_WoodDark",
-    "PE_WoodLight",
-    "PE_Window",
+    "PE_Grass",
     "TEAM_Trim",
-    "PE_Shingle",
-    "PE_LacquerRed",
-    "PE_Banner_vikings",
-    "PE_Gold",
     "PE_Thatch",
     "PE_ClothRed",
-    "PE_Iron"
+    "PE_Gold",
+    "PE_Felt",
+    "PE_StoneGrey",
+    "PE_Iron",
+    "PE_Banner_vikings"
   ],
   "bounds_min": [
-    -2.613,
+    -2.75,
     -2.643,
     0.0
   ],
   "bounds_max": [
-    2.84,
+    2.611,
     2.633,
-    2.972
+    2.36
   ],
   "asset_id": "archery_range",
   "civ": "vikings",
   "kind": "buildings",
   "blend": "art_source/blender/vikings/archery_range.blend",
   "glb": "res://assets/3d/buildings/vikings/archery_range.glb",
-  "glb_bytes": 96988,
+  "glb_bytes": 66724,
   "grid": [
     3,
     3

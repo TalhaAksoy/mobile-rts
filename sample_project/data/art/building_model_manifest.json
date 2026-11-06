@@ -109,17 +109,17 @@
         "source": "art_source/blender/ottomans/archery_range.blend",
         "build_script": "art_source/blender/buildings/ottomans_archery_range.py",
         "reference": "res://art/buildings/ottomans/archery_range.png",
-        "tris": 1152,
-        "materials": 14,
+        "tris": 767,
+        "materials": 11,
         "bounds_min": [
-          -2.624,
+          -2.72,
           -2.613,
           0.0
         ],
         "bounds_max": [
-          2.84,
+          2.94,
           2.623,
-          2.46
+          2.36
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -189,15 +189,15 @@
         "source": "art_source/blender/ottomans/stable.blend",
         "build_script": "art_source/blender/buildings/ottomans_stable.py",
         "reference": "res://art/buildings/ottomans/stable.png",
-        "tris": 967,
-        "materials": 13,
+        "tris": 701,
+        "materials": 12,
         "bounds_min": [
-          -2.636,
+          -2.72,
           -2.66,
           0.0
         ],
         "bounds_max": [
-          2.89,
+          2.94,
           2.675,
           2.36
         ],
@@ -311,17 +311,17 @@
         "source": "art_source/blender/japanese/archery_range.blend",
         "build_script": "art_source/blender/buildings/japanese_archery_range.py",
         "reference": "res://art/buildings/japanese/archery_range.png",
-        "tris": 1216,
-        "materials": 13,
+        "tris": 652,
+        "materials": 7,
         "bounds_min": [
           -2.668,
           -2.614,
           0.0
         ],
         "bounds_max": [
-          2.84,
+          2.632,
           2.611,
-          2.475
+          2.08
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -411,17 +411,17 @@
         "source": "art_source/blender/japanese/stable.blend",
         "build_script": "art_source/blender/buildings/japanese_stable.py",
         "reference": "res://art/buildings/japanese/stable.png",
-        "tris": 1138,
-        "materials": 13,
+        "tris": 584,
+        "materials": 9,
         "bounds_min": [
-          -2.593,
+          -2.65,
           -2.666,
           0.0
         ],
         "bounds_max": [
-          2.89,
+          2.73,
           2.63,
-          2.36
+          2.08
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -755,17 +755,17 @@
         "source": "art_source/blender/britons/archery_range.blend",
         "build_script": "art_source/blender/buildings/britons_archery_range.py",
         "reference": "res://art/buildings/britons/archery_range.png",
-        "tris": 1248,
-        "materials": 13,
+        "tris": 1123,
+        "materials": 10,
         "bounds_min": [
-          -2.646,
+          -2.75,
           -2.605,
           0.0
         ],
         "bounds_max": [
-          2.84,
+          2.7,
           2.636,
-          2.46
+          2.36
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -855,7 +855,7 @@
         "source": "art_source/blender/britons/stable.blend",
         "build_script": "art_source/blender/buildings/britons_stable.py",
         "reference": "res://art/buildings/britons/stable.png",
-        "tris": 1085,
+        "tris": 653,
         "materials": 11,
         "bounds_min": [
           -2.645,
@@ -863,7 +863,7 @@
           0.0
         ],
         "bounds_max": [
-          2.89,
+          2.94,
           2.659,
           2.36
         ],
@@ -977,17 +977,17 @@
         "source": "art_source/blender/byzantines/archery_range.blend",
         "build_script": "art_source/blender/buildings/byzantines_archery_range.py",
         "reference": "res://art/buildings/byzantines/archery_range.png",
-        "tris": 1118,
-        "materials": 13,
+        "tris": 970,
+        "materials": 12,
         "bounds_min": [
-          -2.556,
+          -2.65,
           -2.587,
           0.0
         ],
         "bounds_max": [
-          2.84,
+          2.94,
           2.597,
-          2.46
+          2.56
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -1077,15 +1077,15 @@
         "source": "art_source/blender/byzantines/stable.blend",
         "build_script": "art_source/blender/buildings/byzantines_stable.py",
         "reference": "res://art/buildings/byzantines/stable.png",
-        "tris": 925,
-        "materials": 12,
+        "tris": 688,
+        "materials": 11,
         "bounds_min": [
           -2.585,
           -2.602,
           0.0
         ],
         "bounds_max": [
-          2.89,
+          2.94,
           2.63,
           2.36
         ],
@@ -1199,17 +1199,17 @@
         "source": "art_source/blender/chinese/archery_range.blend",
         "build_script": "art_source/blender/buildings/chinese_archery_range.py",
         "reference": "res://art/buildings/chinese/archery_range.png",
-        "tris": 1078,
-        "materials": 13,
+        "tris": 653,
+        "materials": 11,
         "bounds_min": [
-          -2.585,
+          -2.72,
           -2.602,
           0.0
         ],
         "bounds_max": [
-          2.84,
-          2.63,
-          2.46
+          2.72,
+          2.695,
+          2.38
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -1299,17 +1299,17 @@
         "source": "art_source/blender/chinese/stable.blend",
         "build_script": "art_source/blender/buildings/chinese_stable.py",
         "reference": "res://art/buildings/chinese/stable.png",
-        "tris": 935,
-        "materials": 13,
+        "tris": 670,
+        "materials": 11,
         "bounds_min": [
-          -2.613,
+          -2.65,
           -2.643,
           0.0
         ],
         "bounds_max": [
-          2.89,
+          2.65,
           2.633,
-          2.36
+          2.38
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -1421,17 +1421,17 @@
         "source": "art_source/blender/franks/archery_range.blend",
         "build_script": "art_source/blender/buildings/franks_archery_range.py",
         "reference": "res://art/buildings/franks/archery_range.png",
-        "tris": 1082,
-        "materials": 13,
+        "tris": 1119,
+        "materials": 10,
         "bounds_min": [
-          -2.668,
+          -2.75,
           -2.614,
           0.0
         ],
         "bounds_max": [
-          2.84,
+          2.757,
           2.611,
-          2.46
+          2.56
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -1521,7 +1521,7 @@
         "source": "art_source/blender/franks/stable.blend",
         "build_script": "art_source/blender/buildings/franks_stable.py",
         "reference": "res://art/buildings/franks/stable.png",
-        "tris": 897,
+        "tris": 689,
         "materials": 12,
         "bounds_min": [
           -2.593,
@@ -1529,9 +1529,9 @@
           0.0
         ],
         "bounds_max": [
-          2.89,
+          2.94,
           2.63,
-          2.36
+          2.98
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -1643,17 +1643,17 @@
         "source": "art_source/blender/saracens/archery_range.blend",
         "build_script": "art_source/blender/buildings/saracens_archery_range.py",
         "reference": "res://art/buildings/saracens/archery_range.png",
-        "tris": 1270,
-        "materials": 12,
+        "tris": 643,
+        "materials": 9,
         "bounds_min": [
           -2.655,
           -2.644,
           0.0
         ],
         "bounds_max": [
-          2.84,
+          2.89,
           2.647,
-          2.46
+          3.68
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -1743,7 +1743,7 @@
         "source": "art_source/blender/saracens/stable.blend",
         "build_script": "art_source/blender/buildings/saracens_stable.py",
         "reference": "res://art/buildings/saracens/stable.png",
-        "tris": 1179,
+        "tris": 643,
         "materials": 11,
         "bounds_min": [
           -2.641,
@@ -1751,9 +1751,9 @@
           0.0
         ],
         "bounds_max": [
-          2.89,
+          2.84,
           2.664,
-          2.36
+          2.56
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -1865,17 +1865,17 @@
         "source": "art_source/blender/teutons/archery_range.blend",
         "build_script": "art_source/blender/buildings/teutons_archery_range.py",
         "reference": "res://art/buildings/teutons/archery_range.png",
-        "tris": 1298,
-        "materials": 12,
+        "tris": 905,
+        "materials": 10,
         "bounds_min": [
-          -2.63,
+          -2.75,
           -2.624,
           0.0
         ],
         "bounds_max": [
-          2.84,
+          2.75,
           2.647,
-          2.593
+          2.56
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -1965,7 +1965,7 @@
         "source": "art_source/blender/teutons/stable.blend",
         "build_script": "art_source/blender/buildings/teutons_stable.py",
         "reference": "res://art/buildings/teutons/stable.png",
-        "tris": 1005,
+        "tris": 767,
         "materials": 11,
         "bounds_min": [
           -2.623,
@@ -1973,9 +1973,9 @@
           0.0
         ],
         "bounds_max": [
-          2.89,
+          2.94,
           2.615,
-          2.443
+          3.18
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -2087,17 +2087,17 @@
         "source": "art_source/blender/vikings/archery_range.blend",
         "build_script": "art_source/blender/buildings/vikings_archery_range.py",
         "reference": "res://art/buildings/vikings/archery_range.png",
-        "tris": 1332,
-        "materials": 13,
+        "tris": 953,
+        "materials": 11,
         "bounds_min": [
-          -2.613,
+          -2.75,
           -2.643,
           0.0
         ],
         "bounds_max": [
-          2.84,
+          2.611,
           2.633,
-          2.972
+          2.36
         ],
         "enabled": true,
         "status": "IMPORTED"
@@ -2187,17 +2187,17 @@
         "source": "art_source/blender/vikings/stable.blend",
         "build_script": "art_source/blender/buildings/vikings_stable.py",
         "reference": "res://art/buildings/vikings/stable.png",
-        "tris": 1117,
-        "materials": 12,
+        "tris": 533,
+        "materials": 10,
         "bounds_min": [
           -2.624,
           -2.637,
           0.0
         ],
         "bounds_max": [
-          2.89,
+          2.94,
           2.575,
-          2.822
+          2.36
         ],
         "enabled": true,
         "status": "IMPORTED"

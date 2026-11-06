@@ -1,37 +1,34 @@
 {
-  "tris": 1082,
-  "verts": 1592,
+  "tris": 1119,
+  "verts": 1465,
   "materials": [
     "PE_Dirt",
-    "PE_StoneGrey",
-    "PE_StoneWarm",
-    "PE_Window",
     "PE_WoodDark",
-    "TEAM_Trim",
     "PE_RoofSlate",
-    "PE_Banner_franks",
-    "PE_Gold",
-    "PE_WoodLight",
+    "TEAM_Trim",
     "PE_Thatch",
     "PE_ClothRed",
-    "PE_Iron"
+    "PE_Gold",
+    "PE_Iron",
+    "PE_WoodLight",
+    "PE_Banner_franks"
   ],
   "bounds_min": [
-    -2.668,
+    -2.75,
     -2.614,
     0.0
   ],
   "bounds_max": [
-    2.84,
+    2.757,
     2.611,
-    2.46
+    2.56
   ],
   "asset_id": "archery_range",
   "civ": "franks",
   "kind": "buildings",
   "blend": "art_source/blender/franks/archery_range.blend",
   "glb": "res://assets/3d/buildings/franks/archery_range.glb",
-  "glb_bytes": 80360,
+  "glb_bytes": 76724,
   "grid": [
     3,
     3

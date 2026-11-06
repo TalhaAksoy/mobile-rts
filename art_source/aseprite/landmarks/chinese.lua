@@ -97,4 +97,27 @@ return function(M)
     P.ellipse(K, dx, dy - 18, 8, 7, C.lacquer_red); P.ellipse(K, dx, dy - 18, 6, 5, C.straw)
     P.use(K, "structure")
   end
+
+  -- archery range: walled yard, round straw targets painted with concentric rings, a covered viewing pavilion
+  SP.she_pavilion = function(K, s)
+    M.ground(K, s, 3)
+    M.block(K, s, -2.8, 2.8, 5.0, 0.4, 1.5, { wall = s.castle_wall or "ashlar", wall_c = s.castle_wall_c or s.wall_c,
+      roof = "gable", rise = 0.3 })                                                         -- tile-capped back wall
+    for i, x in ipairs({ -1.9, -0.7, 0.5 }) do Pr.target(K, x, 3.8 + (i % 2) * 0.25) end
+    M.open_shed(K, s, 1.0, 2.7, 1.6, 1.4, 1.7, { roof = "curved", rise = 0.6, bay = 0.85 })   -- viewing pavilion
+    M.props(K, s, { { "rack", -1.4, 1.2 }, { "lion", -2.5, 0.6 } })
+    A.standard(K, 0.3, 0.8, 3.6, { form = "qi", field = "#C8382F", ec = "#1D1A19", emblem = "hanzi" })
+  end
+
+  -- stable: an open-sided timber shed under a tile roof, troughs, a stone hitching post
+  SP.ma_peng = function(K, s)
+    M.ground(K, s, 3)
+    M.open_shed(K, s, -2.8, 2.8, 2.7, 2.2, 2.1, { roof = "curved", rise = 0.9, bay = 1.4 })
+    for i, x in ipairs({ -1.9, -0.4, 1.1 }) do Pr.horse(K, x, 2.8, (i == 2) and "horse_grey" or "horse_bay") end
+    M.props(K, s, { { "trough", -1.0, 1.6 }, { "trough", 1.4, 1.6 }, { "hay", 2.4, 1.0 } })
+    local hx, hy = A.px(-2.3), A.vy(1.0, 0)                                               -- stone hitching post
+    P.use(K, "props"); P.rect(K, hx - 2, hy - 16, hx + 2, hy, P.hex("#9A968C")); P.rect(K, hx - 3, hy - 18, hx + 3, hy - 16, P.hex("#C8C4BC"))
+    P.use(K, "structure")
+    A.standard(K, 2.75, 0.6, 3.6, { form = "qi", field = "#C8382F", ec = "#1D1A19", emblem = "hanzi" })
+  end
 end

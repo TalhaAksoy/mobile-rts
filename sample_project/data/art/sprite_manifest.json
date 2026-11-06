@@ -445,7 +445,7 @@
     "ages": {
      "1": {
       "anchor": [
-       97.5,
+       100.5,
        189
       ],
       "h": 190,
@@ -454,11 +454,11 @@
       "t0": "res://assets/sprites_px/buildings/byzantines/archery_range_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/byzantines/archery_range_a1_t1.png",
       "view": "oblique",
-      "w": 210
+      "w": 213
      },
      "3": {
       "anchor": [
-       97.5,
+       100.5,
        189
       ],
       "h": 190,
@@ -467,11 +467,11 @@
       "t0": "res://assets/sprites_px/buildings/byzantines/archery_range_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/byzantines/archery_range_a3_t1.png",
       "view": "oblique",
-      "w": 210
+      "w": 213
      }
     },
     "anchor": [
-     97.5,
+     100.5,
      189
     ],
     "h": 190,
@@ -480,7 +480,7 @@
     "t0": "res://assets/sprites_px/buildings/byzantines/archery_range_t0.png",
     "t1": "res://assets/sprites_px/buildings/byzantines/archery_range_t1.png",
     "view": "oblique",
-    "w": 210
+    "w": 213
    },
    "barracks": {
     "ages": {
@@ -885,7 +885,7 @@
     "ages": {
      "1": {
       "anchor": [
-       105.5,
+       109.5,
        189
       ],
       "h": 190,
@@ -894,11 +894,11 @@
       "t0": "res://assets/sprites_px/buildings/chinese/archery_range_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/chinese/archery_range_a1_t1.png",
       "view": "oblique",
-      "w": 218
+      "w": 226
      },
      "3": {
       "anchor": [
-       105.5,
+       109.5,
        189
       ],
       "h": 190,
@@ -907,11 +907,11 @@
       "t0": "res://assets/sprites_px/buildings/chinese/archery_range_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/chinese/archery_range_a3_t1.png",
       "view": "oblique",
-      "w": 218
+      "w": 226
      }
     },
     "anchor": [
-     105.5,
+     109.5,
      189
     ],
     "h": 190,
@@ -920,7 +920,7 @@
     "t0": "res://assets/sprites_px/buildings/chinese/archery_range_t0.png",
     "t1": "res://assets/sprites_px/buildings/chinese/archery_range_t1.png",
     "view": "oblique",
-    "w": 218
+    "w": 226
    },
    "barracks": {
     "ages": {
@@ -1325,42 +1325,42 @@
     "ages": {
      "1": {
       "anchor": [
-       99.5,
-       193
+       100.5,
+       189
       ],
-      "h": 194,
+      "h": 190,
       "plane_z": 3,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/franks/archery_range_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/franks/archery_range_a1_t1.png",
       "view": "oblique",
-      "w": 212
+      "w": 195
      },
      "3": {
       "anchor": [
-       99.5,
-       193
+       100.5,
+       189
       ],
-      "h": 194,
+      "h": 190,
       "plane_z": 3,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/franks/archery_range_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/franks/archery_range_a3_t1.png",
       "view": "oblique",
-      "w": 212
+      "w": 196
      }
     },
     "anchor": [
-     99.5,
-     193
+     100.5,
+     189
     ],
-    "h": 194,
+    "h": 190,
     "plane_z": 3,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/franks/archery_range_t0.png",
     "t1": "res://assets/sprites_px/buildings/franks/archery_range_t1.png",
     "view": "oblique",
-    "w": 212
+    "w": 195
    },
    "barracks": {
     "ages": {
@@ -1640,42 +1640,42 @@
     "ages": {
      "1": {
       "anchor": [
-       102.5,
-       203
+       100.5,
+       189
       ],
-      "h": 204,
+      "h": 190,
       "plane_z": 3,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/franks/stable_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/franks/stable_a1_t1.png",
       "view": "oblique",
-      "w": 217
+      "w": 215
      },
      "3": {
       "anchor": [
-       102.5,
-       203
+       100.5,
+       189
       ],
-      "h": 204,
+      "h": 190,
       "plane_z": 3,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/franks/stable_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/franks/stable_a3_t1.png",
       "view": "oblique",
-      "w": 217
+      "w": 215
      }
     },
     "anchor": [
-     102.5,
-     203
+     100.5,
+     189
     ],
-    "h": 204,
+    "h": 190,
     "plane_z": 3,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/franks/stable_t0.png",
     "t1": "res://assets/sprites_px/buildings/franks/stable_t1.png",
     "view": "oblique",
-    "w": 217
+    "w": 215
    },
    "town_center": {
     "ages": {
@@ -1774,7 +1774,7 @@
       "t0": "res://assets/sprites_px/buildings/japanese/archery_range_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/japanese/archery_range_a1_t1.png",
       "view": "oblique",
-      "w": 218
+      "w": 217
      },
      "3": {
       "anchor": [
@@ -1787,7 +1787,7 @@
       "t0": "res://assets/sprites_px/buildings/japanese/archery_range_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/japanese/archery_range_a3_t1.png",
       "view": "oblique",
-      "w": 218
+      "w": 217
      }
     },
     "anchor": [
@@ -1800,7 +1800,7 @@
     "t0": "res://assets/sprites_px/buildings/japanese/archery_range_t0.png",
     "t1": "res://assets/sprites_px/buildings/japanese/archery_range_t1.png",
     "view": "oblique",
-    "w": 218
+    "w": 217
    },
    "barracks": {
     "ages": {
@@ -2080,7 +2080,7 @@
     "ages": {
      "1": {
       "anchor": [
-       112.5,
+       107.5,
        189
       ],
       "h": 190,
@@ -2089,11 +2089,11 @@
       "t0": "res://assets/sprites_px/buildings/japanese/stable_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/japanese/stable_a1_t1.png",
       "view": "oblique",
-      "w": 231
+      "w": 224
      },
      "3": {
       "anchor": [
-       112.5,
+       107.5,
        189
       ],
       "h": 190,
@@ -2102,11 +2102,11 @@
       "t0": "res://assets/sprites_px/buildings/japanese/stable_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/japanese/stable_a3_t1.png",
       "view": "oblique",
-      "w": 231
+      "w": 224
      }
     },
     "anchor": [
-     112.5,
+     107.5,
      189
     ],
     "h": 190,
@@ -2115,7 +2115,7 @@
     "t0": "res://assets/sprites_px/buildings/japanese/stable_t0.png",
     "t1": "res://assets/sprites_px/buildings/japanese/stable_t1.png",
     "view": "oblique",
-    "w": 231
+    "w": 224
    },
    "town_center": {
     "ages": {
@@ -2960,7 +2960,7 @@
     "ages": {
      "1": {
       "anchor": [
-       94.5,
+       100.5,
        189
       ],
       "h": 190,
@@ -2969,7 +2969,7 @@
       "t0": "res://assets/sprites_px/buildings/ottomans/stable_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/ottomans/stable_a1_t1.png",
       "view": "oblique",
-      "w": 209
+      "w": 215
      },
      "3": {
       "anchor": [
@@ -3409,7 +3409,7 @@
       "t0": "res://assets/sprites_px/buildings/saracens/stable_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/saracens/stable_a1_t1.png",
       "view": "oblique",
-      "w": 209
+      "w": 208
      },
      "3": {
       "anchor": [
@@ -3422,7 +3422,7 @@
       "t0": "res://assets/sprites_px/buildings/saracens/stable_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/saracens/stable_a3_t1.png",
       "view": "oblique",
-      "w": 209
+      "w": 208
      }
     },
     "anchor": [
@@ -3435,7 +3435,7 @@
     "t0": "res://assets/sprites_px/buildings/saracens/stable_t0.png",
     "t1": "res://assets/sprites_px/buildings/saracens/stable_t1.png",
     "view": "oblique",
-    "w": 209
+    "w": 208
    },
    "town_center": {
     "ages": {
@@ -3525,7 +3525,7 @@
     "ages": {
      "1": {
       "anchor": [
-       97.5,
+       94.5,
        189
       ],
       "h": 190,
@@ -3534,11 +3534,11 @@
       "t0": "res://assets/sprites_px/buildings/teutons/archery_range_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/teutons/archery_range_a1_t1.png",
       "view": "oblique",
-      "w": 210
+      "w": 209
      },
      "3": {
       "anchor": [
-       97.5,
+       94.5,
        189
       ],
       "h": 190,
@@ -3547,11 +3547,11 @@
       "t0": "res://assets/sprites_px/buildings/teutons/archery_range_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/teutons/archery_range_a3_t1.png",
       "view": "oblique",
-      "w": 210
+      "w": 209
      }
     },
     "anchor": [
-     97.5,
+     94.5,
      189
     ],
     "h": 190,
@@ -3560,7 +3560,7 @@
     "t0": "res://assets/sprites_px/buildings/teutons/archery_range_t0.png",
     "t1": "res://assets/sprites_px/buildings/teutons/archery_range_t1.png",
     "view": "oblique",
-    "w": 210
+    "w": 209
    },
    "barracks": {
     "ages": {
@@ -3841,9 +3841,9 @@
      "1": {
       "anchor": [
        100.5,
-       200
+       198
       ],
-      "h": 201,
+      "h": 199,
       "plane_z": 3,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/teutons/stable_a1_t0.png",
@@ -3854,9 +3854,9 @@
      "3": {
       "anchor": [
        100.5,
-       200
+       198
       ],
-      "h": 201,
+      "h": 199,
       "plane_z": 3,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/teutons/stable_a3_t0.png",
@@ -3867,9 +3867,9 @@
     },
     "anchor": [
      100.5,
-     200
+     198
     ],
-    "h": 201,
+    "h": 199,
     "plane_z": 3,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/teutons/stable_t0.png",
@@ -3965,42 +3965,42 @@
     "ages": {
      "1": {
       "anchor": [
-       99.5,
-       194
+       102.5,
+       189
       ],
-      "h": 195,
+      "h": 190,
       "plane_z": 3,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/vikings/archery_range_a1_t0.png",
       "t1": "res://assets/sprites_px/buildings/vikings/archery_range_a1_t1.png",
       "view": "oblique",
-      "w": 212
+      "w": 197
      },
      "3": {
       "anchor": [
-       99.5,
-       194
+       102.5,
+       189
       ],
-      "h": 195,
+      "h": 190,
       "plane_z": 3,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/vikings/archery_range_a3_t0.png",
       "t1": "res://assets/sprites_px/buildings/vikings/archery_range_a3_t1.png",
       "view": "oblique",
-      "w": 212
+      "w": 200
      }
     },
     "anchor": [
-     99.5,
-     194
+     102.5,
+     189
     ],
-    "h": 195,
+    "h": 190,
     "plane_z": 3,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/vikings/archery_range_t0.png",
     "t1": "res://assets/sprites_px/buildings/vikings/archery_range_t1.png",
     "view": "oblique",
-    "w": 212
+    "w": 197
    },
    "barracks": {
     "ages": {
@@ -4281,9 +4281,9 @@
      "1": {
       "anchor": [
        102.5,
-       208
+       189
       ],
-      "h": 209,
+      "h": 190,
       "plane_z": 3,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/vikings/stable_a1_t0.png",
@@ -4294,9 +4294,9 @@
      "3": {
       "anchor": [
        102.5,
-       208
+       189
       ],
-      "h": 209,
+      "h": 190,
       "plane_z": 3,
       "px_per_m": 32,
       "t0": "res://assets/sprites_px/buildings/vikings/stable_a3_t0.png",
@@ -4307,9 +4307,9 @@
     },
     "anchor": [
      102.5,
-     208
+     189
     ],
-    "h": 209,
+    "h": 190,
     "plane_z": 3,
     "px_per_m": 32,
     "t0": "res://assets/sprites_px/buildings/vikings/stable_t0.png",

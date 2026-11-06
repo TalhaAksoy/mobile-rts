@@ -1,37 +1,35 @@
 {
-  "tris": 935,
-  "verts": 1675,
+  "tris": 670,
+  "verts": 1174,
   "materials": [
     "PE_Dirt",
     "PE_StoneGrey",
     "PE_LacquerRed",
-    "PE_Lattice",
-    "PE_RoofTeal",
-    "PE_Gold",
-    "PE_WoodDark",
-    "PE_WoodLight",
+    "PE_RoofDark",
     "TEAM_Trim",
-    "PE_Banner_chinese",
+    "PE_WoodDark",
     "PE_Beam",
     "PE_Window",
-    "PE_Thatch"
+    "PE_PlasterWhite",
+    "PE_Thatch",
+    "PE_ClothRed"
   ],
   "bounds_min": [
-    -2.613,
+    -2.65,
     -2.643,
     0.0
   ],
   "bounds_max": [
-    2.89,
+    2.65,
     2.633,
-    2.36
+    2.38
   ],
   "asset_id": "stable",
   "civ": "chinese",
   "kind": "buildings",
   "blend": "art_source/blender/chinese/stable.blend",
   "glb": "res://assets/3d/buildings/chinese/stable.glb",
-  "glb_bytes": 75644,
+  "glb_bytes": 56004,
   "grid": [
     3,
     3

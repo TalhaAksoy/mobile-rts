@@ -117,4 +117,14 @@ return function(M)
     M.T.market(K, s)
     for i = 0, 2 do A.dome(K, -1.45 + i * 1.45, 4.4, 0.55, 0.4, 2.8, s.dome_c, "ball") end
   end
+
+  -- stable: long stone and brick building under a red tile roof, round-arched doorways, hay and a trough
+  SP.ottoman_stable = function(K, s)
+    M.ground(K, s, 3)
+    M.block(K, s, -2.8, 2.8, 3.0, 2.6, 2.3, { roof = "hip", rise = 1.0 })
+    for x = -2.3, 2.2, 1.15 do A.door(K, x + 0.45, 3.0, 0.8, 1.6, "arch_round", s.door_c, { frame = s.frame_c }) end
+    Pr.fence(K, -2.8, 2.8, 0.35)
+    M.props(K, s, { { "horse", -1.6, 1.4, "horse_grey" }, { "horse", 1.2, 1.1, "horse_bay" }, { "trough", 0.0, 1.9 }, { "hay", 2.3, 2.2 }, { "cypress", -2.6, 2.6 } })
+    M.flag(K, s, 2.75, 2.6, 4.2)
+  end
 end

@@ -98,4 +98,26 @@ return function(M)
     M.props(K, s, { { "rack", 1.9, 1.0 }, { "rack", -1.9, 1.0 }, { "dummy", 0.6, 0.7 } })
     M.flag(K, s, 2.75, 1.3, 4.6)
   end
+
+  -- archery range: walled courtyard, a covered round-arched arcade at the back, straw butts in the yard
+  SP.byz_range = function(K, s)
+    M.ground(K, s, 3)
+    M.block(K, s, -2.8, 2.8, 4.1, 1.5, 2.0, { roof = "gable", rise = 0.7 })
+    for i = 0, 4 do A.door(K, -2.2 + i * 1.1, 4.1, 0.75, 1.45, "arch_round", "#2a2234", { frame = s.frame_c }) end
+    for i, x in ipairs({ -1.8, -0.6, 0.6, 1.8 }) do Pr.target(K, x, 3.0 + (i % 2) * 0.25) end
+    M.block(K, s, -2.8, -0.7, 0.25, 0.3, 0.9, { flat = true, merlons = false })         -- low front wall, gate gap
+    M.block(K, s, 0.7, 2.8, 0.25, 0.3, 0.9, { flat = true, merlons = false })
+    M.props(K, s, { { "rack", -2.0, 1.4 }, { "jar", 2.3, 1.3 } })
+    M.flag(K, s, 2.7, 0.9, 4.4)
+  end
+
+  -- stable: long single-storey banded brick building, round-arched doors, tiled gable roof, water trough
+  SP.byz_stable = function(K, s)
+    M.ground(K, s, 3)
+    M.block(K, s, -2.8, 2.8, 3.0, 2.4, 2.1, { roof = "gable", rise = 0.8 })
+    for x = -2.3, 2.2, 1.15 do A.door(K, x + 0.45, 3.0, 0.8, 1.6, "arch_round", s.door_c, { frame = s.frame_c }) end
+    Pr.fence(K, -2.8, 2.8, 0.35)
+    M.props(K, s, { { "horse", -1.6, 1.4, "horse_bay" }, { "horse", 1.2, 1.1, "horse_grey" }, { "trough", 0.0, 1.9 }, { "jar", 2.4, 2.1 } })
+    M.flag(K, s, 2.75, 2.6, 4.2)
+  end
 end

@@ -1,19 +1,19 @@
 {
-  "tris": 897,
-  "verts": 1589,
+  "tris": 689,
+  "verts": 1211,
   "materials": [
     "PE_Dirt",
-    "PE_StoneGrey",
     "PE_StoneWarm",
-    "PE_Window",
-    "PE_RoofSlate",
+    "PE_PlasterCream",
+    "PE_Beam",
     "PE_WoodDark",
     "PE_WoodLight",
+    "PE_RoofSlate",
     "TEAM_Trim",
-    "PE_Banner_franks",
+    "PE_Window",
+    "PE_Thatch",
     "PE_Gold",
-    "PE_Beam",
-    "PE_Thatch"
+    "PE_Banner_franks"
   ],
   "bounds_min": [
     -2.593,
@@ -21,16 +21,16 @@
     0.0
   ],
   "bounds_max": [
-    2.89,
+    2.94,
     2.63,
-    2.36
+    2.98
   ],
   "asset_id": "stable",
   "civ": "franks",
   "kind": "buildings",
   "blend": "art_source/blender/franks/stable.blend",
   "glb": "res://assets/3d/buildings/franks/stable.glb",
-  "glb_bytes": 72176,
+  "glb_bytes": 57832,
   "grid": [
     3,
     3

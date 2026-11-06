@@ -1,37 +1,34 @@
 {
-  "tris": 1248,
-  "verts": 1892,
+  "tris": 1123,
+  "verts": 1561,
   "materials": [
     "PE_Dirt",
-    "PE_StoneGrey",
-    "PE_PlasterWhite",
-    "PE_Beam",
-    "PE_Window",
     "PE_WoodDark",
-    "TEAM_Trim",
     "PE_Thatch",
-    "PE_Banner_britons",
+    "TEAM_Trim",
+    "PE_Grass",
+    "PE_ClothRed",
     "PE_Gold",
     "PE_WoodLight",
-    "PE_ClothRed",
-    "PE_Iron"
+    "PE_Beam",
+    "PE_Banner_britons"
   ],
   "bounds_min": [
-    -2.646,
+    -2.75,
     -2.605,
     0.0
   ],
   "bounds_max": [
-    2.84,
+    2.7,
     2.636,
-    2.46
+    2.36
   ],
   "asset_id": "archery_range",
   "civ": "britons",
   "kind": "buildings",
   "blend": "art_source/blender/britons/archery_range.blend",
   "glb": "res://assets/3d/buildings/britons/archery_range.glb",
-  "glb_bytes": 92020,
+  "glb_bytes": 81092,
   "grid": [
     3,
     3

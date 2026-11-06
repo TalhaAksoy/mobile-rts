@@ -117,4 +117,35 @@ return function(M)
     M.props(K, s, { { "rack", 2.0, 0.9 }, { "runestone", -2.2, 0.8 }, { "barrel", -1.4, 0.6 } })
     M.flag(K, s, 2.7, 1.4, 4.2)
   end
+
+  -- archery range: a cleared yard, straw and hide targets on posts, a turf-roofed lean-to
+  SP.hide_targets = function(K, s)
+    M.ground(K, s, 3)
+    M.open_shed(K, s, -2.8, -0.6, 3.6, 1.4, 1.6, { wall = "planks", wall_c = s.timber_c, roof = "shed", rise = 0.6,
+      roof_mat = "turf", roof_c = "#5E7A3A", base = false, timber = false, posts = false, bay = 1.1 })
+    for i, x in ipairs({ 0.2, 1.2, 2.2 }) do
+      Pr.target(K, x, 3.5 + (i % 2) * 0.3)
+      local px, py = A.px(x), A.vy(3.5 + (i % 2) * 0.3, 0) - 18                           -- stretched hide over it
+      P.use(K, "props"); P.rect(K, px - 5, py - 6, px + 5, py + 6, P.hex("#B08A60")); P.ellipse(K, px, py, 2, 2, C.red)
+      P.use(K, "structure")
+    end
+    M.props(K, s, { { "rack", -1.8, 1.4 }, { "runestone", 2.4, 1.2 }, { "barrel", -0.4, 0.8 } })
+    M.flag(K, s, -2.6, 0.8, 4.0)
+  end
+
+  -- stable: a low turf-roofed byre with wattle partitions between the stalls
+  SP.byre = function(K, s)
+    M.ground(K, s, 3)
+    M.open_shed(K, s, -2.8, 2.8, 3.0, 2.2, 1.5, { wall = "planks", wall_c = s.timber_c, roof = "gable", roof_mat = "turf",
+      roof_c = "#5E7A3A", rise = 1.1, base = false, timber = false, posts = false, bay = 1.4 })
+    for i, x in ipairs({ -1.4, 0.0, 1.4 }) do                                             -- wattle partitions
+      local px, py = A.px(x), A.vy(3.0, 0)
+      P.use(K, "props")
+      for y = py - 20, py do for xx = px - 2, px + 2 do P.put(K, xx, y, tone(C.wood, ((y + xx) % 3 == 0) and 4 or 2)) end end
+      P.use(K, "structure")
+    end
+    Pr.fence(K, -2.8, 2.8, 0.35)
+    M.props(K, s, { { "horse", -1.6, 1.4, "horse_bay" }, { "horse", 1.2, 1.1, "horse_grey" }, { "trough", 0.0, 1.9 }, { "hay", 2.3, 2.2 } })
+    M.flag(K, s, 2.75, 2.6, 4.0)
+  end
 end

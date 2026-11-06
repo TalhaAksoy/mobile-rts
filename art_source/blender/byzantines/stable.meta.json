@@ -1,19 +1,18 @@
 {
-  "tris": 925,
-  "verts": 1629,
+  "tris": 688,
+  "verts": 1190,
   "materials": [
     "PE_Dirt",
     "PE_StoneBrick",
-    "PE_StoneWarm",
-    "PE_Window",
-    "PE_RoofRed",
     "PE_WoodDark",
-    "PE_WoodLight",
+    "PE_StoneWarm",
     "TEAM_Trim",
-    "PE_Banner_byzantines",
-    "PE_Gold",
+    "PE_RoofRed",
     "PE_Beam",
-    "PE_Thatch"
+    "PE_Window",
+    "PE_Thatch",
+    "PE_Gold",
+    "PE_Banner_byzantines"
   ],
   "bounds_min": [
     -2.585,
@@ -21,7 +20,7 @@
     0.0
   ],
   "bounds_max": [
-    2.89,
+    2.94,
     2.63,
     2.36
   ],
@@ -30,7 +29,7 @@
   "kind": "buildings",
   "blend": "art_source/blender/byzantines/stable.blend",
   "glb": "res://assets/3d/buildings/byzantines/stable.glb",
-  "glb_bytes": 73704,
+  "glb_bytes": 56632,
   "grid": [
     3,
     3

@@ -79,4 +79,33 @@ return function(M)
     for _, x in ipairs({ -2.4, -1.5, 1.5, 2.4 }) do A.standard(K, x, 1.2, 3.6, { form = "nobori", field = "#F0EEE8", ec = "#1D1A19", emblem = s.emblem }) end
     M.props(K, s, { { "rack", -0.6, 1.0 }, { "rack", 0.6, 1.0 }, { "stone_lantern", 2.1, 0.6 } })
   end
+
+  -- archery range: the covered shooting shed (iba) in front, round paper targets (mato) on an earth bank behind
+  SP.iba = function(K, s)
+    M.ground(K, s, 3)
+    local P2 = P
+    local by = A.vy(4.6, 0)
+    P.use(K, "props")
+    for x = A.px(-2.7), A.px(2.7) do for y = by - 14, by do                                   -- earth bank (azuchi)
+      P.put(K, x, y, tone(P.hex("#8A6A48"), (y < by - 11) and 2 or ((P.noise(x, y, 5) < 0.2) and 4 or 3)))
+    end end
+    for i, x in ipairs({ -1.6, -0.5, 0.6, 1.7 }) do                                         -- mato: white with black rings
+      local px, py = A.px(x), by - 8
+      P.ellipse(K, px, py, 5, 5, P.hex("#1D1A19")); P.ellipse(K, px, py, 4, 4, P.hex("#F0EEE8"))
+      P.ellipse(K, px, py, 3, 3, P.hex("#1D1A19")); P.ellipse(K, px, py, 2, 2, P.hex("#F0EEE8")); P.put(K, px, py, P.hex("#1D1A19"))
+    end
+    P.use(K, "structure")
+    M.open_shed(K, s, -2.6, 2.6, 1.0, 1.3, 1.8, { roof = "curved", rise = 0.6, bay = 1.3 })
+    A.standard(K, 2.75, 0.6, 3.4, { form = "nobori", field = "#F0EEE8", ec = "#1D1A19", emblem = s.emblem })
+  end
+
+  -- stable: umaya, an open-fronted timber stable under a thatched roof, horses tethered in the stalls
+  SP.umaya = function(K, s)
+    M.ground(K, s, 3)
+    M.open_shed(K, s, -2.8, 2.8, 2.6, 2.2, 2.0, { roof = "hip", roof_mat = "thatch", roof_c = "#A88A50", rise = 1.0, bay = 1.4,
+      post_c = "wood_dark" })
+    for i, x in ipairs({ -2.0, -0.6, 0.8 }) do Pr.horse(K, x, 2.7, (i == 2) and "horse_grey" or "horse_bay") end
+    M.props(K, s, { { "trough", 1.9, 1.6 }, { "hay", -2.3, 1.2 }, { "stone_lantern", 2.5, 0.6 } })
+    A.standard(K, -2.75, 0.6, 3.4, { form = "nobori", field = "#F0EEE8", ec = "#1D1A19", emblem = s.emblem })
+  end
 end

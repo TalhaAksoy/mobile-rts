@@ -6,6 +6,7 @@ import civstyle as cs
 import castles
 import towers
 import barracks
+import yards
 from pe_kit import Builder
 
 
@@ -55,6 +56,9 @@ def _pad(civ, name, half, k):
 def build_archery_range(civ):
     """3x3: hall back-left, open shooting shed back-right, row of straw butts along the front."""
     b, z0 = _pad(civ, "archery_range", 2.7, 5)
+    if civ in yards.RANGES:                   # the civ's own range (yards.py)
+        yards.RANGES[civ](b, z0)
+        return b.finalize()
     if civ == "mongols":
         cs.ger(b, -1.0, 1.2, z0, 1.05)
     else:
@@ -81,6 +85,9 @@ def build_archery_range(civ):
 def build_stable(civ):
     """3x3: long low stable with a row of stall doors at the back, fenced paddock with horses in front."""
     b, z0 = _pad(civ, "stable", 2.7, 7)
+    if civ in yards.STABLES:                  # the civ's own stable (yards.py)
+        yards.STABLES[civ](b, z0)
+        return b.finalize()
     if civ == "mongols":
         cs.ger(b, -1.3, 1.3, z0, 0.95)
         cs.canopy(b, civ, (1.1, 1.3, z0), 2.4, 1.3, 1.0)

@@ -36,6 +36,6 @@ S._buildings = {
   door_c = "#5A4030", frame_c = PAL.tar, arch = "rect", window = "rect", tower_top = "none", tower_round = false,
   tower_roof = "gable", merlon = false, castle_wall = "planks", castle_wall_c = PAL.tar, paving_c = nil,
   kit_fence = true, kit_post = "runestone", stable_roof = "gable", sail_c = PAL.wool, props = { "runestone", "barrel" },
-  barracks = "trelleborg_hall", tc = "great_hall", castle = "trelleborg", house = "turf_house", watch = "horn_tower", mill = "norse_mill",
+  barracks = "trelleborg_hall", archery = "hide_targets", stable = "byre", tc = "great_hall", castle = "trelleborg", house = "turf_house", watch = "horn_tower", mill = "norse_mill",
 }
 return S

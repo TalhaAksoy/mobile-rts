@@ -115,6 +115,21 @@ local function round_tower(K, s, cx, d, r, h, top)
 end
 M.door, M.windows, M.banners, M.flag, M.ground, M.props, M.civ_props, M.round_tower = door, windows, banners, flag, ground, props, civ_props, round_tower
 
+-- open-fronted shed (shooting shed, open stable, lean-to): the block with its front opened into a dark interior
+-- between posts every `bay` m. o: the M.block options plus post_c
+function M.open_shed(K, s, x0, x1, d, D, h, o)
+  o = o or {}
+  local b = M.block(K, s, x0, x1, d, D, h, o)
+  local f = b.facade
+  P.use(K, "structure")
+  for y = f.yt + 4, f.yb - 2 do for x = f.x0 + 3, f.x1 - 3 do P.put(K, x, y, tone(P.hex("#2a2234"), (y < f.yt + 9) and 4 or 3)) end end
+  local pc = tone(col(o.post_c or s.posts_c or s.timber_c or "wood_dark"), 3)
+  local bay = A.px(o.bay or 1.2)
+  for x = f.x0, f.x1 - 2, bay do P.rect(K, x, f.yt, x + 2, f.yb, pc) end
+  P.rect(K, f.x1 - 2, f.yt, f.x1, f.yb, pc)
+  return b
+end
+
 -- a mill stream / race on the ground: x0..x1 m wide, from d1 (behind) to d0 (front) m, rounded ends, dark banks,
 -- light ripples; stays inside the pad so it never looks cut off at the sprite edge
 function M.stream(K, x0, x1, d0, d1)

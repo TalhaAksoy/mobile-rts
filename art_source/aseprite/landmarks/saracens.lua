@@ -134,4 +134,14 @@ return function(M)
     A.standard(K, -2.7, 1.5, 4.4, { form = "alam", field = "#D6A62B", field2 = "#F3EFE6", ec = "#2a2234" })
     M.props(K, s, { { "rack", 2.4, 1.1 }, { "jar", -1.8, 0.8 }, { "palm", 2.6, 0.4 } })
   end
+
+  -- stable: istabl, a long stone stable with pointed-arch doors under a flat roof, hay, a water trough
+  SP.istabl = function(K, s)
+    M.ground(K, s, 3)
+    M.block(K, s, -2.8, 2.8, 3.0, 2.4, 2.3, { flat = true, merlons = false })
+    for x = -2.3, 2.2, 1.15 do A.door(K, x + 0.45, 3.0, 0.8, 1.6, "arch_pointed", s.door_c, { frame = s.frame_c }) end
+    Pr.fence(K, -2.8, 2.8, 0.35)
+    M.props(K, s, { { "horse", -1.6, 1.4, "horse_grey" }, { "horse", 1.2, 1.1, "horse_bay" }, { "trough", 0.0, 1.9 }, { "palm", 2.5, 2.4 } })
+    M.flag(K, s, -2.75, 2.6, 4.2)
+  end
 end

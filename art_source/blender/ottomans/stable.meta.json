@@ -1,28 +1,27 @@
 {
-  "tris": 967,
-  "verts": 1731,
+  "tris": 701,
+  "verts": 1201,
   "materials": [
     "PE_Dirt",
     "PE_StoneWarm",
-    "PE_PlasterCream",
-    "PE_Window",
-    "PE_RoofRed",
+    "PE_StoneBrick",
     "PE_WoodDark",
-    "PE_DomeLead",
-    "PE_Gold",
-    "PE_WoodLight",
     "TEAM_Trim",
-    "PE_Banner_ottomans",
-    "PE_Beam",
-    "PE_Thatch"
+    "PE_RoofRed",
+    "PE_PlasterWhite",
+    "PE_Window",
+    "PE_Thatch",
+    "PE_Foliage",
+    "PE_Gold",
+    "PE_Banner_ottomans"
   ],
   "bounds_min": [
-    -2.636,
+    -2.72,
     -2.66,
     0.0
   ],
   "bounds_max": [
-    2.89,
+    2.94,
     2.675,
     2.36
   ],
@@ -31,7 +30,7 @@
   "kind": "buildings",
   "blend": "art_source/blender/ottomans/stable.blend",
   "glb": "res://assets/3d/buildings/ottomans/stable.glb",
-  "glb_bytes": 77916,
+  "glb_bytes": 57824,
   "grid": [
     3,
     3

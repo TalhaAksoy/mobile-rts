@@ -1,38 +1,35 @@
 {
-  "tris": 1152,
-  "verts": 1734,
+  "tris": 767,
+  "verts": 1029,
   "materials": [
     "PE_Dirt",
     "PE_StoneWarm",
-    "PE_PlasterCream",
-    "PE_Window",
     "PE_WoodDark",
-    "TEAM_Trim",
     "PE_RoofRed",
-    "PE_DomeLead",
-    "PE_Gold",
-    "PE_Banner_ottomans",
-    "PE_WoodLight",
+    "TEAM_Trim",
+    "PE_PlasterWhite",
     "PE_Thatch",
     "PE_ClothRed",
-    "PE_Iron"
+    "PE_Gold",
+    "PE_Foliage",
+    "PE_Banner_ottomans"
   ],
   "bounds_min": [
-    -2.624,
+    -2.72,
     -2.613,
     0.0
   ],
   "bounds_max": [
-    2.84,
+    2.94,
     2.623,
-    2.46
+    2.36
   ],
   "asset_id": "archery_range",
   "civ": "ottomans",
   "kind": "buildings",
   "blend": "art_source/blender/ottomans/archery_range.blend",
   "glb": "res://assets/3d/buildings/ottomans/archery_range.glb",
-  "glb_bytes": 86352,
+  "glb_bytes": 58448,
   "grid": [
     3,
     3

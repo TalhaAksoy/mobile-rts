@@ -82,4 +82,28 @@ return function(M)
     M.props(K, s, { { "rack", 2.0, 1.0 }, { "dummy", -1.9, 0.9 }, { "barrel", -2.5, 1.5 } })
     M.flag(K, s, 2.75, 1.5, 4.6)
   end
+
+  -- archery range: brick-walled yard with a timber shooting shed (tile pent roof) and crossbow targets
+  SP.brick_yard = function(K, s)
+    M.ground(K, s, 3)
+    M.block(K, s, -2.8, 2.8, 5.0, 0.4, 1.6, { flat = true, merlons = "rect" })            -- back wall
+    M.open_shed(K, s, -2.6, -0.4, 3.4, 1.4, 1.9, { wall = "planks", wall_c = s.timber_c, roof = "shed", rise = 0.7, base = false,
+      timber = false, posts = false, bay = 1.1 })
+    for i, x in ipairs({ 0.4, 1.3, 2.2 }) do Pr.target(K, x, 3.6 + (i % 2) * 0.25) end
+    M.block(K, s, -2.8, -0.7, 0.25, 0.3, 1.0, { flat = true, merlons = false })
+    M.block(K, s, 0.7, 2.8, 0.25, 0.3, 1.0, { flat = true, merlons = false })
+    M.props(K, s, { { "rack", 1.5, 1.4 }, { "barrel", -2.1, 1.5 } })
+    M.flag(K, s, 2.75, 0.9, 4.4)
+  end
+
+  -- stable: brick ground floor with a half-timbered hay loft above, red tile roof
+  SP.loft_stable = function(K, s)
+    M.ground(K, s, 3)
+    M.block(K, s, -2.8, 2.8, 3.0, 2.4, 1.9, { upper = { h = 1.2, wall = "plaster", c = s.plaster_c, timber = s.timber_c },
+      roof = "gable", rise = 1.4 })
+    for x = -2.3, 2.2, 1.15 do A.door(K, x + 0.45, 3.0, 0.8, 1.6, "arch_pointed", s.door_c, { frame = s.frame_c }) end
+    Pr.fence(K, -2.8, 2.8, 0.35)
+    M.props(K, s, { { "horse", -1.6, 1.4, "horse_bay" }, { "horse", 1.2, 1.1, "horse_grey" }, { "trough", 0.0, 1.9 }, { "hay", 2.3, 2.2 } })
+    M.flag(K, s, 2.75, 2.6, 4.4)
+  end
 end
