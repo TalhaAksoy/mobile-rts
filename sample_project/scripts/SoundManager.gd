@@ -10,13 +10,35 @@ static func play_sound(sound_type: String) -> void:
 	if instance != null:
 		instance._play(sound_type)
 
+## Each sound is synthesised once and cached; a small pool of players is reused round-robin, and the same sound
+## plays at most once per MIN_GAP_MS. Every call used to synthesise the waveform again (a ~4,400-sample GDScript
+## loop) and add a new AudioStreamPlayer: in a fight of 60 per team that was ~1 ms per physics tick on desktop,
+## most of the combat cost on a slow phone (scripts/tools/device_tiers.sh). Overlapping copies of one sound within
+## a few frames were heard as one anyway.
+const POOL_SIZE := 8
+const MIN_GAP_MS := 50
+var _streams := {}
+var _pool: Array[AudioStreamPlayer] = []
+var _next := 0
+var _last_ms := {}
+
 func _play(sound_type: String) -> void:
-	var player = AudioStreamPlayer.new()
-	add_child(player)
-	player.stream = _create_sound_stream(sound_type)
-	player.volume_db = -6.0
+	var now := Time.get_ticks_msec()
+	if now - int(_last_ms.get(sound_type, -100000)) < MIN_GAP_MS:
+		return
+	_last_ms[sound_type] = now
+	if _pool.is_empty():
+		for i in POOL_SIZE:
+			var p := AudioStreamPlayer.new()
+			p.volume_db = -6.0
+			add_child(p)
+			_pool.append(p)
+	if not _streams.has(sound_type):
+		_streams[sound_type] = _create_sound_stream(sound_type)
+	var player: AudioStreamPlayer = _pool[_next]
+	_next = (_next + 1) % POOL_SIZE
+	player.stream = _streams[sound_type]
 	player.play()
-	player.finished.connect(func(): player.queue_free())
 
 func _create_sound_stream(type: String) -> AudioStreamWAV:
 	var stream = AudioStreamWAV.new()
