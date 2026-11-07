@@ -357,6 +357,12 @@ func _unhandled_input(event: InputEvent) -> void:
 	# Mouse / Touch press
 	if (event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT) or (event is InputEventScreenTouch and event.index == 0):
 		if event.pressed:
+			# A press on the HUD belongs to the HUD, never to the map behind it. Godot's GUI normally keeps
+			# such presses from reaching _unhandled_input, but on a phone the real touch and the emulated
+			# mouse event are separate events; whatever slips through must not become an order.
+			if ui_blocks_point(event.position):
+				is_touch_active = false
+				return
 			drag_start_pos = event.position
 			drag_last_pos = event.position
 			drag_start_time_msec = Time.get_ticks_msec()
@@ -365,6 +371,11 @@ func _unhandled_input(event: InputEvent) -> void:
 			is_drag_box_selecting = false
 			_long_press_box = false
 		else:
+			# A release whose press never reached the game (it landed on the HUD, or the button under the
+			# finger was rebuilt in between) is not a tap: it used to be handled with the stale press
+			# position, so a tap on the menu sent the selected army somewhere behind the menu.
+			if not is_touch_active:
+				return
 			is_touch_active = false
 			var elapsed_ms = Time.get_ticks_msec() - drag_start_time_msec
 			var total_move = event.position.distance_to(drag_start_pos)
@@ -401,6 +412,8 @@ func _unhandled_input(event: InputEvent) -> void:
 			_handle_3d_click(mouse_pos, hit_ground)
 
 	elif ((event is InputEventMouseMotion and (event.button_mask & MOUSE_BUTTON_MASK_LEFT) != 0) or (event is InputEventScreenDrag and event.index == 0)):
+		if not is_touch_active:
+			return                                   # a drag that started on the HUD never pans the map
 		var cur_pos = event.position
 		if not has_dragged_significantly and (cur_pos - drag_start_pos).length() > DRAG_THRESHOLD:
 			has_dragged_significantly = true
@@ -413,6 +426,23 @@ func _unhandled_input(event: InputEvent) -> void:
 				var delta = cur_pos - drag_last_pos
 				camera.pan_by_screen_delta(delta)
 		drag_last_pos = cur_pos
+
+## True when a screen point (viewport coordinates) is covered by HUD that takes presses: a visible Control
+## with MOUSE_FILTER_STOP (buttons, panels, the minimap, open menus). Pass-through roots and labels do not count.
+func ui_blocks_point(pos: Vector2) -> bool:
+	if ui_manager == null:
+		return false
+	for c in ui_manager.find_children("*", "Control", true, false):
+		var ctl := c as Control
+		if ctl.mouse_filter != Control.MOUSE_FILTER_STOP or not ctl.is_visible_in_tree():
+			continue
+		if not ctl.get_global_rect().has_point(pos):
+			continue
+		var layer := ctl.get_canvas_layer_node()
+		if layer != null and not layer.visible:
+			continue
+		return true
+	return false
 
 func _handle_3d_click(screen_pos: Vector2, ground_pos: Vector3) -> void:
 	var clicked_entity = _get_entity_at_position(screen_pos, ground_pos)
@@ -462,7 +492,11 @@ func _handle_3d_click(screen_pos: Vector2, ground_pos: Vector3) -> void:
 		# Town Center), only a PRECISE resource hit (exact cell / collider ray) may override it; the fuzzy
 		# 48 px screen search would otherwise grab a base-cluster bush/mine next to the TC.
 		var ally_building_tapped = clicked_entity is Building3D and clicked_entity.team == 0
-		var res_info = _find_resource_at_click(screen_pos, ground_pos, ally_building_tapped)
+		# A tap whose ground point is on one of our fields is for that field, even where a tree in front of
+		# it draws its canopy over the field (its click collider then caught the tap: the field behind a row
+		# of trees could not be given a farmer). The tree is still picked on its own cell.
+		var field_tapped: bool = ally_building_tapped and clicked_entity.building_type == Building3D.BuildingType.FARM
+		var res_info = {} if field_tapped else _find_resource_at_click(screen_pos, ground_pos, ally_building_tapped)
 		if res_info.has("type") and res_info.has("cell") and res_info.get("amount", 0) > 0:
 			var r_cell = res_info["cell"] as Vector2i
 			var r_type = res_info["type"] as String
@@ -504,10 +538,17 @@ func _handle_3d_click(screen_pos: Vector2, ground_pos: Vector3) -> void:
 				var others: Array = selected_units.filter(func(u): return u.unit_type != Unit3D.UnitType.VILLAGER)
 				if not vills.is_empty():
 					var first = vills[0]
+					var placed := 0
 					if map_gen.claim_field(clicked_entity.origin_cell, first):
 						first.command_gather(clicked_entity.origin_cell, "food")
 						vills.remove_at(0)
-					send_villagers_to_fields(vills, 0, clicked_entity.global_position)
+						placed += 1
+					placed += send_villagers_to_fields(vills, 0, clicked_entity.global_position)
+					if placed == 0:
+						# one farmer per field and no free field nearby: say so instead of silently doing nothing
+						ui_manager.notify_banner("BU TARLADA ÇİFTÇİ VAR, BOŞ TARLA YOK", Color(1.0, 0.75, 0.35))
+						SoundManager.play_sound("hit")
+						return
 					_spawn_click_marker(clicked_entity.global_position, "gather")
 				for u in others:
 					u.command_move(ground_pos)
@@ -647,7 +688,10 @@ func _find_unit_near_screen(screen_pos: Vector2, max_screen_dist: float = 36.0) 
 		if not is_instance_valid(u) or u.hp <= 0:
 			continue
 		var s_feet = camera.unproject_position(u.global_position)
-		var s_head = camera.unproject_position(u.global_position + Vector3(0, 1.8, 0))
+		# 2D style: the flat sprite is drawn on the ground north of the feet (the head is further north on
+		# screen); 3D: the body stands up
+		var head_off := Vector3(0, 0, -1.5) if FactionArtManager.top_down() else Vector3(0, 1.8, 0)
+		var s_head = camera.unproject_position(u.global_position + head_off)
 		var d = _dist_to_segment_2d(screen_pos, s_feet, s_head)
 		if d < best_dist:
 			best_dist = d
@@ -756,14 +800,43 @@ func _building_screen_rect(b: Building3D) -> Rect2:
 				r = r.expand(camera.unproject_position(b.global_position + Vector3(x, y, z)))
 	return r
 
+## Triangle meshes of building models, per mesh resource (built once, used to test taps against the model).
+var _tri_mesh_cache: Dictionary = {}
+
+## True when the camera ray through screen_pos hits the building's 3D model (its real triangles). Buildings
+## shown as a 2D sprite have no model: their screen box (the footprint, seen straight down) decides.
+func _model_covers_screen_point(b: Building3D, screen_pos: Vector2) -> bool:
+	if not is_instance_valid(b.building_model) or not b.building_model.is_visible_in_tree():
+		return true
+	var from := camera.project_ray_origin(screen_pos)
+	var dir := camera.project_ray_normal(screen_pos)
+	for mi in b.building_model.find_children("*", "MeshInstance3D", true, false):
+		var m: MeshInstance3D = mi
+		if m.mesh == null or not m.is_visible_in_tree():
+			continue
+		var key := m.mesh.get_rid()
+		if not _tri_mesh_cache.has(key):
+			_tri_mesh_cache[key] = m.mesh.generate_triangle_mesh()
+		var tm: TriangleMesh = _tri_mesh_cache[key]
+		if tm == null:
+			continue
+		var inv := m.global_transform.affine_inverse()
+		var hit: Dictionary = tm.intersect_ray(inv * from, (inv.basis * dir).normalized())
+		if not hit.is_empty():
+			return true
+	return false
+
 func _get_entity_at_position(screen_pos: Vector2, ground_pos: Vector3) -> Node3D:
-	# 1. Units ALWAYS have absolute priority over buildings!
-	var unit_by_screen = _find_unit_near_screen(screen_pos, 36.0)
+	# 1. Units have priority over buildings. On a farm field the tap must hit the unit's body: a farmer
+	#    walks the whole field, and the generous radius made half the taps on a worked field select him
+	#    instead of giving the order for the field.
+	var on_field: bool = map_gen.field_origin_at(map_gen.world_to_cell(ground_pos)) != Vector2i(-1, -1)
+	var unit_by_screen = _find_unit_near_screen(screen_pos, 18.0 if on_field else 36.0)
 	if unit_by_screen != null:
 		return unit_by_screen
 
 	var best_ground_unit: Unit3D = null
-	var min_g_dist: float = 1.3
+	var min_g_dist: float = 0.6 if on_field else 1.3
 	for u in units:
 		if is_instance_valid(u) and u.hp > 0:
 			var gd = u.global_position.distance_to(ground_pos)
@@ -786,7 +859,9 @@ func _get_entity_at_position(screen_pos: Vector2, ground_pos: Vector3) -> Node3D
 		for b in buildings:
 			if is_instance_valid(b) and b.hp > 0 and b.building_type != Building3D.BuildingType.FARM:
 				var r := _building_screen_rect(b)
-				if r.has_point(screen_pos):
+				# the box is only a quick reject: a 3D model covers the field only where its triangles do
+				# (the Mill's box reached over the whole field behind it, so that field could not be tapped)
+				if r.has_point(screen_pos) and _model_covers_screen_point(b, screen_pos):
 					var d := screen_pos.distance_to(r.get_center())
 					if d < cover_d:
 						cover_d = d
@@ -958,6 +1033,9 @@ func place_building(b_type: Building3D.BuildingType, team: int, cell: Vector2i, 
 	else:
 		map_gen.register_building_cells(cell, b_size, b)
 		_eject_units_from_footprint(cell, b_size)
+		for u in units:                            # walkers whose route crosses the new site go round it
+			if is_instance_valid(u) and u.hp > 0:
+				u.repath_if_crossing(cell, b_size)
 	buildings.append(b)
 	return b
 

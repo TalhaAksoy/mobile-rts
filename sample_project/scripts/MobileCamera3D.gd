@@ -41,10 +41,26 @@ func _apply_view_mode() -> void:
 		# Classic 2.5D / HD-2D Diorama angle (45 degrees)
 		rotation_degrees = Vector3(-45, 0, 0)
 
+## World size of the map (x 0..map_size.x, z 0..map_size.y).
+var map_size := Vector2(60, 92)
+## Screen strips covered by the HUD (viewport px): the top bar and the bottom menu with whatever is open
+## above it (build panel, queue, placement bar). UIManager3D updates them every frame.
+var screen_inset_top := 0.0
+var screen_inset_bottom := 0.0
+## How far past the map edge the visible area may go, so the outermost cells are not stuck under the HUD.
+const EDGE_MARGIN := 1.5
+
 func setup_bounds(width: float, height: float) -> void:
+	map_size = Vector2(width, height)
 	map_bounds_min = Vector2(4, 4)
 	map_bounds_max = Vector2(width - 4, height - 4)
 	_clamp_camera()
+
+## Called by the HUD; only stored: a menu opening or closing never jumps the view, the next pan or zoom
+## respects the new limits.
+func set_screen_insets(top_px: float, bottom_px: float) -> void:
+	screen_inset_top = maxf(0.0, top_px)
+	screen_inset_bottom = maxf(0.0, bottom_px)
 
 func pan_by_screen_delta(delta_pixels: Vector2) -> void:
 	var factor = (position.y / 800.0) * 1.6
@@ -100,6 +116,15 @@ func _process(delta: float) -> void:
 	if abs(position.y - target_height) > 0.05:
 		position.y = lerp(position.y, target_height, delta * 10.0)
 		_clamp_camera()
+	elif not is_zero_approx(delta):
+		# the HUD shrank (a menu closed): ease back inside the new limits instead of jumping on the next pan
+		var lim := camera_limits()
+		var want := Vector2(clampf(position.x, lim["min"].x, lim["max"].x), clampf(position.z, lim["min"].y, lim["max"].y))
+		var cur := Vector2(position.x, position.z)
+		if cur.distance_to(want) > 0.01:
+			cur = cur.lerp(want, minf(1.0, delta * 6.0))
+			position.x = cur.x
+			position.z = cur.y
 	if top_down:
 		size = position.y * TOP_DOWN_SIZE_PER_HEIGHT
 
@@ -121,17 +146,44 @@ func jump_to(target_pos: Vector3, smooth: bool = true) -> void:
 	_clamp_camera()
 
 func _clamp_camera() -> void:
-	if top_down:
-		# orthographic, straight down: keep the view centre inside the map
-		position.x = clamp(position.x, map_bounds_min.x + 4.0, map_bounds_max.x - 4.0)
-		position.z = clamp(position.z, map_bounds_min.y + 4.0, max(map_bounds_min.y + 4.0, map_bounds_max.y - 4.0))
-		return
-	var offset_z = position.y * 1.0
-	var bottom_view_offset = position.y / tan(deg_to_rad(45.0 + fov * 0.5))
-	position.x = clamp(position.x, map_bounds_min.x + 4.0, map_bounds_max.x - 4.0)
-	var min_z = map_bounds_min.y + offset_z
-	var max_z = map_bounds_max.y + bottom_view_offset - 2.0
-	position.z = clamp(position.z, min_z, max(min_z, max_z))
+	var lim := camera_limits()
+	position.x = clamp(position.x, lim["min"].x, lim["max"].x)
+	position.z = clamp(position.z, lim["min"].y, lim["max"].y)
+
+## Ground point (y = 0) seen at a viewport pixel, relative to the camera's x/z. The offset does not depend on
+## where the camera is, only on its height, angle and zoom, so it turns screen rows into camera limits.
+func _ground_offset(px: Vector2) -> Vector2:
+	var o := project_ray_origin(px)
+	var n := project_ray_normal(px)
+	if n.y > -0.01:
+		n.y = -0.01
+	var hit := o + n * (o.y / -n.y)
+	return Vector2(hit.x - position.x, hit.z - position.z)
+
+## Camera x/z range ({"min": Vector2, "max": Vector2}) that lets every map edge be brought into the part of
+## the screen the HUD leaves free, EDGE_MARGIN past it:
+##  * bottom edge -> just above the bottom menu (whatever is open), left / right edges -> the screen sides
+##    on the lowest free row (the narrowest one in perspective), so all four corners can be reached
+##  * top edge -> just under the top bar (top-down 2D); in the 3D perspective the top rows look far past the
+##    map, so the middle of the free area is used instead
+func camera_limits() -> Dictionary:
+	var vs := get_viewport().get_visible_rect().size if is_inside_tree() else Vector2(540, 960)
+	var top_row := clampf(screen_inset_top, 0.0, vs.y - 2.0)
+	var bottom_row := clampf(vs.y - screen_inset_bottom, top_row + 1.0, vs.y)
+	var ref_top_row := top_row if top_down else (top_row + bottom_row) * 0.5
+	var off_top := _ground_offset(Vector2(vs.x * 0.5, ref_top_row))
+	var off_bottom := _ground_offset(Vector2(vs.x * 0.5, bottom_row - 1.0))
+	var off_left := _ground_offset(Vector2(0.0, bottom_row - 1.0))
+	var off_right := _ground_offset(Vector2(vs.x, bottom_row - 1.0))
+	var mn := Vector2(-EDGE_MARGIN - off_left.x, -EDGE_MARGIN - off_top.y)
+	var mx := Vector2(map_size.x + EDGE_MARGIN - off_right.x, map_size.y + EDGE_MARGIN - off_bottom.y)
+	if mn.x > mx.x:
+		mn.x = (mn.x + mx.x) * 0.5
+		mx.x = mn.x
+	if mn.y > mx.y:
+		mn.y = (mn.y + mx.y) * 0.5
+		mx.y = mn.y
+	return {"min": mn, "max": mx}
 
 ## Where a screen point hits the ground. With a terrain (`terrain` = MapGenerator3D) the ray is
 ## marched down to the hill surface, so a tap on a hilltop lands on the hilltop and not on the

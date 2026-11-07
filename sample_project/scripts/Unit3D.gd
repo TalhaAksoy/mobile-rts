@@ -1343,6 +1343,25 @@ func _find_next_resource(type: String = "") -> void:
 			current_path.clear()
 			velocity = Vector3.ZERO
 
+## A building was just placed on cells origin..origin+size: when what is left of this unit's path crosses
+## them, the path to the same goal is found again (round the new construction site).
+func repath_if_crossing(origin: Vector2i, size: Vector2i) -> bool:
+	if map_gen == null or current_path.is_empty() or path_idx >= current_path.size():
+		return false
+	var pts: Array[Vector3] = [global_position]
+	pts.append_array(current_path.slice(path_idx))
+	for i in pts.size() - 1:
+		var a: Vector3 = pts[i]
+		var b: Vector3 = pts[i + 1]
+		var n := maxi(1, int(_hdist(a, b) / 0.4))
+		for k in n + 1:
+			var c: Vector2i = map_gen.world_to_cell(a.lerp(b, float(k) / n))
+			if c.x >= origin.x and c.x < origin.x + size.x and c.y >= origin.y and c.y < origin.y + size.y:
+				var goal: Vector3 = current_path[current_path.size() - 1]
+				_calculate_path(goal)
+				return true
+	return false
+
 func _calculate_path(target_pos: Vector3) -> void:
 	crowd_goal = Vector3.INF
 	if map_gen != null:

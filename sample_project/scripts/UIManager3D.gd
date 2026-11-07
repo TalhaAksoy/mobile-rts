@@ -451,6 +451,30 @@ func _update_bottom_bar_height(expanded: bool) -> void:
 	if build_panel != null and build_panel.visible:
 		build_panel.offset_bottom = target_top - 6.0
 
+## Tells the camera which screen strips the HUD covers, so the map can be scrolled until its edges sit
+## just inside the free part of the screen (the bottom row of the map above an open build menu).
+func hud_screen_insets() -> Vector2:
+	var vh := get_viewport().get_visible_rect().size.y
+	var tb := hud_root.get_node_or_null("TopBar") as Control
+	var top := 0.0
+	if tb != null and tb.is_visible_in_tree():
+		top = tb.get_global_rect().end.y
+	var bottom_top := vh
+	for c in [bottom_bar, build_panel, queue_bar, placement_bar]:
+		var ctl := c as Control
+		if ctl != null and is_instance_valid(ctl) and ctl.is_visible_in_tree() and ctl.size.y > 1.0:
+			bottom_top = minf(bottom_top, ctl.get_global_rect().position.y)
+	return Vector2(top, vh - bottom_top)
+
+func _report_screen_insets(_tb: Control) -> void:
+	if game_controller == null or not ("camera" in game_controller) or game_controller.camera == null:
+		return
+	var cam = game_controller.camera
+	if not cam.has_method("set_screen_insets"):
+		return
+	var ins := hud_screen_insets()
+	cam.set_screen_insets(ins.x, ins.y)
+
 func _process(_delta: float) -> void:
 	_update_message_stack()
 	var tb := hud_root.get_node_or_null("TopBar") as Control
@@ -467,6 +491,7 @@ func _process(_delta: float) -> void:
 	if group_box != null and zb != null:
 		group_box.offset_top = zb.offset_top + zb.size.y + 14.0
 	_refresh_group_buttons()
+	_report_screen_insets(tb)
 	if placement_bar != null and placement_bar.visible:
 		placement_bar.offset_bottom = bottom_bar.offset_top - 6.0
 		placement_bar.offset_top = placement_bar.offset_bottom - 56.0

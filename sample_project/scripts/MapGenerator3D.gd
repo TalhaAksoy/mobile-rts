@@ -1123,7 +1123,9 @@ func _spawn_3d_tree(cell: Vector2i) -> void:
 		spr.position = Vector3(0, 1.7, 0)
 		tree_node.add_child(spr)
 
-	_create_resource_area(tree_node, cell, "wood", 0.95, 3.6, 1.8)
+	# the canopy, from 1 m up: a ray passing low over the ground behind the trunk sees the ground there (a
+	# field behind a tree stays tappable); a tap on the tree's own cell still picks it (exact cell match)
+	_create_resource_area(tree_node, cell, "wood", 0.95, 2.6, 2.3)
 	tree_node.visible = false
 
 	props_container.add_child(tree_node)
@@ -1352,8 +1354,20 @@ func get_path_to_target(from_world: Vector3, to_world: Vector3) -> Array[Vector3
 
 	var pts2d = astar.get_point_path(from_id, to_id)
 	var pts3d: Array[Vector3] = []
+	var prev := Vector2i(-1, -1)
 	for p in pts2d:
-		pts3d.append(cell_to_world(Vector2i(int(p.x), int(p.y))))
+		var c := Vector2i(int(p.x), int(p.y))
+		# A diagonal step past a blocked side cell would cut through that cell's corner (a building, also one
+		# still under construction): walk round the corner through the free side cell instead.
+		if prev != Vector2i(-1, -1) and absi(c.x - prev.x) == 1 and absi(c.y - prev.y) == 1:
+			var side_a := Vector2i(c.x, prev.y)
+			var side_b := Vector2i(prev.x, c.y)
+			var a_free := is_valid_cell(side_a.x, side_a.y) and not astar.is_point_disabled(_cell_to_id(side_a.x, side_a.y))
+			var b_free := is_valid_cell(side_b.x, side_b.y) and not astar.is_point_disabled(_cell_to_id(side_b.x, side_b.y))
+			if a_free != b_free:
+				pts3d.append(cell_to_world(side_a if a_free else side_b))
+		pts3d.append(cell_to_world(c))
+		prev = c
 	return pts3d
 
 ## Save / load: what is left of every resource node, by type ("wood", "gold", "stone", "food").
