@@ -103,6 +103,10 @@ const BOTTOM_BAR_COMPACT_TOP: float = -105.0
 const BOTTOM_BAR_EXPANDED_TOP: float = -245.0
 
 func _ready() -> void:
+	# every list (build menu, action buttons, civ list...) scrolls with a finger started on a button too
+	var touch_scroll := TouchScroll.new()
+	touch_scroll.name = "TouchScroll"
+	add_child(touch_scroll)
 	# Apply Medieval Parchment Theme
 	var p_theme = ParchmentTheme.create_theme()
 	menu_root.theme = p_theme
