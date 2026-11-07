@@ -131,6 +131,31 @@ func _hud(style: String) -> void:
 		_check(on_ui > 20 and reached == 0, "%s %s: finger taps on the HUD never reach the map (%d of %d)" % [style, mode, reached, on_ui])
 	ui.build_panel.visible = false
 	game.pending_army_command = ""
+	# the control-group column never sits on the build panel (it covered "Kapat" and the right card column);
+	# the hidden buttons come back when the panel closes
+	_select(v)
+	await _frames(2)
+	for b in ui.find_children("*", "Button", true, false):
+		if b.text.contains("İNŞA ET") and b.is_visible_in_tree():
+			b.pressed.emit()
+			break
+	await _frames(3)
+	var panel: Rect2 = ui.build_panel.get_global_rect()
+	var over := 0
+	var shown := 0
+	for b in ui.group_buttons:
+		if b.is_visible_in_tree():
+			shown += 1
+			if b.get_global_rect().intersects(panel):
+				over += 1
+	var close_free: bool = game.ui_blocks_point(ui.close_build_btn.get_global_rect().get_center()) \
+		and ui.group_buttons.all(func(b): return not b.is_visible_in_tree() or not b.get_global_rect().has_point(ui.close_build_btn.get_global_rect().get_center()))
+	_check(ui.build_panel.visible and over == 0 and shown >= 1 and close_free,
+		"%s: with the build panel open no group button covers it (%d over, %d still shown, Kapat free: %s)" % [style, over, shown, close_free])
+	ui.close_build_btn.pressed.emit()
+	await _frames(3)
+	_check(not ui.build_panel.visible and ui.group_buttons.all(func(b): return b.is_visible_in_tree()),
+		"%s: the panel closed -> all four group buttons are back" % style)
 	# a touch that got past the GUI anyway, straight into the game's handler, over the bottom menu
 	var army := _villagers().slice(0, 3)
 	game._clear_selection()

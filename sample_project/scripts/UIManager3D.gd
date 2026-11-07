@@ -491,6 +491,7 @@ func _process(_delta: float) -> void:
 	if group_box != null and zb != null:
 		group_box.offset_top = zb.offset_top + zb.size.y + 14.0
 	_refresh_group_buttons()
+	_fit_group_buttons()
 	_report_screen_insets(tb)
 	if placement_bar != null and placement_bar.visible:
 		placement_bar.offset_bottom = bottom_bar.offset_top - 6.0
@@ -1020,6 +1021,24 @@ func _on_group_released(i: int) -> void:
 	else:
 		group_tapped.emit(i)
 		_group_last_tap_ms[i] = now
+
+## The right column runs down to where the bottom stack (menu, build panel, queue, placement bar) starts;
+## a group button that would sit on it is hidden while that panel is open (it drew over the build panel's
+## "Kapat" and the right card column) and comes back when the panel closes. Positions are worked out from
+## the buttons' minimum sizes, so hiding one never moves the others.
+func _fit_group_buttons() -> void:
+	if group_box == null or group_buttons.is_empty():
+		return
+	var vh := get_viewport().get_visible_rect().size.y
+	var limit := vh - hud_screen_insets().y - 6.0
+	var sep := float(group_box.get_theme_constant("separation"))
+	var y := group_box.get_global_rect().position.y
+	for b in group_buttons:
+		var h: float = (b as Button).get_combined_minimum_size().y
+		var fits := y + h <= limit
+		if b.visible != fits:
+			b.visible = fits
+		y += h + sep
 
 func _refresh_group_buttons() -> void:
 	if group_buttons.is_empty() or game_controller == null or not ("control_groups" in game_controller):
